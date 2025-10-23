@@ -158,7 +158,7 @@ namespace Services.Project
                     {
                         new DomainBasic.SystemBizLogApp().Write("厅管转移", ModelDb.sys_biz_log.log_type_enum.产品模块.ToSByte(), new UserIdentityBag().user_sn, $"厅管{item.username}转移至{new DomainBasic.UserApp().GetInfoByUserSn(req.GetPara("yy_sn_after")).username}");
                     }
-                    
+
                     return new JsonResultAction();
                 }
                 #endregion
@@ -579,7 +579,7 @@ namespace Services.Project
                     //2.获取当前登录user_sn指定关系类型的转移操作记录
                     var filter = new DoMySql.Filter
                     {
-                        where = where ,
+                        where = where,
                         orderby = "create_time desc"
                     };
                     return new CtlListDisplay.ListData().getList<ModelDb.user_relation_log, ItemDataModel>(filter, reqJson);

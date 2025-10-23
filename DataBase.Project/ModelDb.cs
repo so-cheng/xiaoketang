@@ -1832,9 +1832,7 @@ namespace WeiCode.ModelDbs
 		/// </summary>
 		public string brand{ get; set; }
 		/// <summary>
-		/// 所属公司
 		/// </summary>
-		public string company_id{ get; set; }
 		/// <summary>
 		/// 登记日期
 		/// </summary>
@@ -1962,6 +1960,10 @@ namespace WeiCode.ModelDbs
 		/// </summary>
 		public Nullable<int> num{ get; set; }
 		/// <summary>
+		/// 所属基地
+		/// </summary>
+		public string zt_user_sn{ get; set; }
+		/// <summary>
 		/// 审核事由
 		/// </summary>
 		public string cause{ get; set; }
@@ -2009,6 +2011,10 @@ namespace WeiCode.ModelDbs
 		/// 审核事由
 		/// </summary>
 		public string cause{ get; set; }
+		/// <summary>
+		/// 所属基地
+		/// </summary>
+		public string zt_user_sn{ get; set; }
 		/// <summary>
 		/// 约定入库时间
 		/// </summary>
@@ -2079,6 +2085,10 @@ namespace WeiCode.ModelDbs
 		/// </summary>
 		public string cause{ get; set; }
 		/// <summary>
+		/// 所属基地
+		/// </summary>
+		public string zt_user_sn{ get; set; }
+		/// <summary>
 		/// 转移日期
 		/// </summary>
 		public Nullable<DateTime> ac_date{ get; set; }
@@ -2147,6 +2157,10 @@ namespace WeiCode.ModelDbs
 		/// </summary>
 		public string cause{ get; set; }
 		/// <summary>
+		/// 所属基地
+		/// </summary>
+		public string zt_user_sn{ get; set; }
+		/// <summary>
 		/// 约定转移时间
 		/// </summary>
 		public Nullable<DateTime> plan_time{ get; set; }
@@ -2182,6 +2196,10 @@ namespace WeiCode.ModelDbs
 		/// 领用人编号
 		/// </summary>
 		public string user_sn{ get; set; }
+		/// <summary>
+		/// 所属基地
+		/// </summary>
+		public string zt_user_sn{ get; set; }
 		/// <summary>
 		/// 出库数量
 		/// </summary>
@@ -2242,6 +2260,10 @@ namespace WeiCode.ModelDbs
 		/// </summary>
 		public string cause{ get; set; }
 		/// <summary>
+		/// 所属基地
+		/// </summary>
+		public string zt_user_sn{ get; set; }
+		/// <summary>
 		/// 约定出库时间
 		/// </summary>
 		public Nullable<DateTime> plan_time{ get; set; }
@@ -2292,6 +2314,10 @@ namespace WeiCode.ModelDbs
 		/// 筛选使用人范围
 		/// </summary>
 		public string user_sns{ get; set; }
+		/// <summary>
+		/// 所属基地
+		/// </summary>
+		public string zt_user_sn{ get; set; }
 		/// <summary>
 		/// 盘点状态#enum:盘点中=0;已完成=1;已取消=2
 		/// </summary>
@@ -2365,6 +2391,10 @@ namespace WeiCode.ModelDbs
 			在用=1,
 			待入=2,
 		}
+		/// <summary>
+		/// 所属基地
+		/// </summary>
+		public string zt_user_sn{ get; set; }
 		/// <summary>
 		/// 盘点备注
 		/// </summary>
@@ -3370,6 +3400,14 @@ namespace WeiCode.ModelDbs
 														this.tenday_income_avg_3 =  1m;
 														this.total_income =  1m;
 														this.total_income_avg =  1m;
+														this.tenday_income_proportion_1 =  1m;
+														this.undone_income_1 =  1m;
+														this.tenday_income_proportion_2 =  1m;
+														this.undone_income_2 =  1m;
+														this.tenday_income_proportion_3 =  1m;
+														this.undone_income_3 =  1m;
+														this.tenday_income_proportion =  1m;
+														this.undone_income =  1m;
 												}
 				}
 			/// <summary>
@@ -3576,6 +3614,38 @@ namespace WeiCode.ModelDbs
 		/// 日均音浪
 		/// </summary>
 		public Nullable<decimal> total_income_avg{ get; set; }
+		/// <summary>
+		/// 第一阶段完成占比
+		/// </summary>
+		public Nullable<decimal> tenday_income_proportion_1{ get; set; }
+		/// <summary>
+		/// 第一阶段未完成音浪
+		/// </summary>
+		public Nullable<decimal> undone_income_1{ get; set; }
+		/// <summary>
+		/// 第二阶段完成占比
+		/// </summary>
+		public Nullable<decimal> tenday_income_proportion_2{ get; set; }
+		/// <summary>
+		/// 第二阶段未完成音浪
+		/// </summary>
+		public Nullable<decimal> undone_income_2{ get; set; }
+		/// <summary>
+		/// 第三阶段完成占比
+		/// </summary>
+		public Nullable<decimal> tenday_income_proportion_3{ get; set; }
+		/// <summary>
+		/// 第三阶段未完成音浪
+		/// </summary>
+		public Nullable<decimal> undone_income_3{ get; set; }
+		/// <summary>
+		/// 月度完成占比
+		/// </summary>
+		public Nullable<decimal> tenday_income_proportion{ get; set; }
+		/// <summary>
+		/// 月度未完成音浪
+		/// </summary>
+		public Nullable<decimal> undone_income{ get; set; }
 			}
 	    			/// <summary>
 			/// 表实体-抖音数据-每日-主播 
@@ -6519,6 +6589,81 @@ namespace WeiCode.ModelDbs
 		/// 建联数指标
 		/// </summary>
 		public Nullable<decimal> contact_num{ get; set; }
+			}
+	    			/// <summary>
+			/// 表实体-绩效-厅目标 
+			/// </summary>	
+			public class p_jixiao_target_tg : ModelDbBase
+			{    
+							public p_jixiao_target_tg(){}
+				public p_jixiao_target_tg(bool isDefault = false)
+				{
+					if (isDefault)
+					{
+													this.id =  1;
+														this.tenant_id =  1;
+														this.amount =  1m;
+														this.amount_target_1 =  1m;
+														this.amount_target_2 =  1m;
+														this.amount_target_3 =  1m;
+														this.new_num =  1;
+														this.amount_2 =  1m;
+														this.num_2 =  1;
+														this.contact_num =  1;
+												}
+				}
+			/// <summary>
+		/// 租户id
+		/// </summary>
+		public Nullable<int> tenant_id{ get; set; }
+		/// <summary>
+		/// 所属厅管用户编号
+		/// </summary>
+		public string tg_user_sn{ get; set; }
+		/// <summary>
+		/// 厅sn
+		/// </summary>
+		public string ting_sn{ get; set; }
+		/// <summary>
+		/// 目标月份
+		/// </summary>
+		public string yearmonth{ get; set; }
+		/// <summary>
+		/// 目标音浪
+		/// </summary>
+		public Nullable<decimal> amount{ get; set; }
+		/// <summary>
+		/// 目标音浪-阶段一
+		/// </summary>
+		public Nullable<decimal> amount_target_1{ get; set; }
+		/// <summary>
+		/// 目标音浪-阶段二
+		/// </summary>
+		public Nullable<decimal> amount_target_2{ get; set; }
+		/// <summary>
+		/// 目标音浪-阶段三
+		/// </summary>
+		public Nullable<decimal> amount_target_3{ get; set; }
+		/// <summary>
+		/// 目标拉新
+		/// </summary>
+		public Nullable<int> new_num{ get; set; }
+		/// <summary>
+		/// 目标二消
+		/// </summary>
+		public Nullable<decimal> amount_2{ get; set; }
+		/// <summary>
+		/// 目标二消数
+		/// </summary>
+		public Nullable<int> num_2{ get; set; }
+		/// <summary>
+		/// 目标建联
+		/// </summary>
+		public Nullable<int> contact_num{ get; set; }
+		/// <summary>
+		/// 所属运营用户编号
+		/// </summary>
+		public string yy_user_sn{ get; set; }
 			}
 	    			/// <summary>
 			/// 表实体-绩效-厅战数据 

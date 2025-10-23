@@ -617,13 +617,6 @@ namespace Services.Project
                             return asset.name;
                         }
                     }
-                    public string company_text
-                    {
-                        get
-                        {
-                            return new DomainBasic.DictionaryApp().GetKeyFromValue("公司名称", asset.company_id);
-                        }
-                    }
 
                     public string user_name
                     {
@@ -1204,13 +1197,7 @@ namespace Services.Project
                             return asset.name;
                         }
                     }
-                    public string company_text
-                    {
-                        get
-                        {
-                            return new DomainBasic.DictionaryApp().GetKeyFromValue("公司名称", asset.company_id);
-                        }
-                    }
+                  
                     public string user_name
                     {
                         get
@@ -1743,13 +1730,7 @@ namespace Services.Project
                             return asset.name;
                         }
                     }
-                    public string company_text
-                    {
-                        get
-                        {
-                            return new DomainBasic.DictionaryApp().GetKeyFromValue("公司名称", asset.company_id);
-                        }
-                    }
+              
                 }
                 #endregion
             }
@@ -1993,13 +1974,7 @@ namespace Services.Project
                             return status.ToEnum<ModelDb.asset.status_enum>();
                         }
                     }
-                    public string company_text
-                    {
-                        get
-                        {
-                            return new DomainBasic.DictionaryApp().GetKeyFromValue("公司名称", company_id);
-                        }
-                    }
+
                 }
                 #endregion
             }

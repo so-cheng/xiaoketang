@@ -26,7 +26,7 @@ namespace WebProject.Areas.UserInfo.Controllers
             var req = new PageFactory.UserInfo.TgInfoList.DtoReq();
             var pageModel = new PageFactory.UserInfo.TgInfoList().Get(req);
             pageModel.listDisplay.listData.attachFilterSql = $"zt_user_sn = '{new UserIdentityBag().user_sn}'";
-            pageModel.listDisplay.listOperateItems.Find(x => x.name == "Del").disabled = true;
+            pageModel.listDisplay.listOperateItems.Find(x => x.name == "Del").disabled = false;
             return View(pageModel);
             
         }

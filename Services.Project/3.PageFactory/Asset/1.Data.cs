@@ -323,13 +323,6 @@ namespace Services.Project
                             return status.ToEnum<ModelDb.asset.status_enum>();
                         }
                     }
-                    public string company_text
-                    {
-                        get
-                        {
-                            return new DomainBasic.DictionaryApp().GetKeyFromValue("公司名称", company_id);
-                        }
-                    }
                     public string category
                     {
                         get
@@ -460,14 +453,6 @@ namespace Services.Project
                         defaultValue = asset.brand,
                         colLength = 6
                     });
-                    formDisplay.formItems.Add(new ModelBasic.EmtSelect("company_id")
-                    {
-                        title = "*所属公司",
-                        options = new DomainBasic.DictionaryApp().GetListForOption("公司名称"),
-                        defaultValue = asset.company_id,
-                        colLength = 6
-                    });
-
                     formDisplay.formItems.Add(new ModelBasic.EmtSelectFull("cj_user_sn")
                     {
                         options = DoMySql.FindListBySql<ModelDoBasic.Option>($"select user_sn as value,name as text from user_base"),
@@ -559,7 +544,6 @@ namespace Services.Project
                     var in_sn = "RK" + UtilityStatic.CommonHelper.CreateUniqueSn();
                     int num = dtoReqData.num;
                     if (asset.name.IsNullOrEmpty()) throw new WeicodeException("资产名称不可为空！");
-                    if (asset.company_id.IsNullOrEmpty()) throw new WeicodeException("所属公司不可为空！");
                     if (asset.asset_sn.IsNullOrEmpty()) throw new WeicodeException("资产编号不可为空！");
                     if (asset.category_id.ToString().IsNullOrEmpty()) throw new WeicodeException("资产类别不可为空！");
                     if (dtoReqData.id < 1)
@@ -898,7 +882,6 @@ namespace Services.Project
                         asset.user_sn = user_name.user_sn;
                         asset.cj_user_sn = cj_user_name.user_sn;
                         asset.category_id = asset_category.id;
-                        asset.company_id = company_id;
                         lSql.Add(asset.InsertTran());
                     }
                     DoMySql.ExecuteSqlTran(lSql);

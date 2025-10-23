@@ -28,6 +28,7 @@ namespace WebProject.Areas.UserInfo.Controllers
         {
             var req = new PageFactory.UserInfo.Tg_AccountList.DtoReq();
             var pageModel = new PageFactory.UserInfo.Tg_AccountList().Get(req);
+            pageModel.listDisplay.listData.attachFilterSql = $"zt_user_sn = '{new UserIdentityBag().user_sn}'";
             return View(pageModel);
         }
 

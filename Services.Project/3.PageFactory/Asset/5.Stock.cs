@@ -348,7 +348,6 @@ namespace Services.Project
                             user_sn = item.user_sn,
                             p_status = ModelDb.asset_stock_item.p_status_enum.待盘点.ToSByte(),
                             stock_sn = stock_sn,
-                            company_id = item.company_id
                         }.InsertTran());
                     }
                     dateRangeTime = UtilityStatic.CommonHelper.DateRangeFormat(dtoReqData.plan_time, 0);

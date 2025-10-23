@@ -450,7 +450,7 @@
 
                     @{
                         var zhuboCount = DoMySql.FindListBySql<ModelDb.user_relation>(new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.厅管邀主播, new UserIdentityBag().user_sn)).Count;
-                        if (DateTime.Today.ToString("dd").ToInt() >= 25 && DoMySql.FindList<ModelDb.p_jixiao_target>($"tg_user_sn='{new UserIdentityBag().user_sn}' and yearmonth='{DateTime.Today.AddMonths(1).ToString("yyyy-MM")}'").Count < zhuboCount)
+                        if (DateTime.Today.ToString("dd").ToInt() >= 25 && DoMySql.FindList<ModelDb._p_jixiao_target>($"tg_user_sn='{new UserIdentityBag().user_sn}' and yearmonth='{DateTime.Today.AddMonths(1).ToString("yyyy-MM")}'").Count < zhuboCount)
                         {
                             <div class="layui-col-sm6 layui-col-md6">
                                 <div class="layui-card">

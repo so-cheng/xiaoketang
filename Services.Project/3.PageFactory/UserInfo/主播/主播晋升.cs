@@ -149,7 +149,7 @@ namespace Services.Project
                                 {
                                     "status", (sbyte)ModelDb.user_info_promotion_zhubo_apply.status_enum.同意
                                 }
-                            }
+                        }
                         }
                     });
                     listDisplay.listOperateItems.Add(new ModelBasic.EmtModel.ListOperateItem
@@ -168,6 +168,13 @@ namespace Services.Project
                                     "status", (sbyte)ModelDb.user_info_promotion_zhubo_apply.status_enum.拒绝
                                 }
                             }
+                        },
+                        hideWith = new EmtModel.ListOperateItem.HideWith()
+                        {
+                            compareMode = EmtModel.ListOperateItem.CompareMode.字段比较,
+                            compareType = EmtModel.ListOperateItem.CompareType.包含,
+                            field = "status",
+                            value = "1,2"
                         }
                     });
                     listDisplay.listOperateItems.Add(new ModelBasic.EmtModel.ListOperateItem

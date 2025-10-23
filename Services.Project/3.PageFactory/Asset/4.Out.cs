@@ -503,13 +503,7 @@ namespace Services.Project
                             return asset.name;
                         }
                     }
-                    public string company_text
-                    {
-                        get
-                        {
-                            return new DomainBasic.DictionaryApp().GetKeyFromValue("公司名称", asset.company_id);
-                        }
-                    }
+                
                     public string status_text
                     {
                         get

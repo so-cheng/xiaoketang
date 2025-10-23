@@ -268,6 +268,7 @@ namespace Services.Project
             #endregion 直播厅
 
             #region 普通直播厅
+
             #region 申请转主播
             /// <summary>
             /// 主播转厅提交页
@@ -331,7 +332,7 @@ namespace Services.Project
                             attachUserType = new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType()
                             {
                                 UserSn = new UserIdentityBag().user_sn,
-                                userType = ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType.UserType.厅
+                                userType = ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType.UserType.厅管
                             },
                             attachWhere = "p_ting_sn = ''",
                         }),
@@ -439,7 +440,7 @@ namespace Services.Project
                             userType = ServiceFactory.UserInfo.Zhubo.ZbBaseInfoFilter.AttachUserType.UserType.厅,
                             UserSn = req.GetPara("ting_sn"),
                         },
-                        status = ServiceFactory.UserInfo.Zhubo.ZbBaseInfoFilter.Status.待开账号
+                        status = ServiceFactory.UserInfo.Zhubo.ZbBaseInfoFilter.Status.正常
                     });
 
                     foreach (var item in list)
@@ -1251,12 +1252,13 @@ namespace Services.Project
                             UserSn = new UserIdentityBag().user_sn,
                             userType = ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType.UserType.运营
                         },
+                        status = ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.Status.正常,
                         attachWhere = "p_ting_sn = ''"
                     });
 
                     var formDisplay = pageModel.formDisplay;
                     #region 表单元素
-                    formDisplay.formItems.Add(new EmtSelectFull("user_sn_before")
+                    formDisplay.formItems.Add(new EmtSelectFull("ting_sn_before")
                     {
                         title = "当前厅",
                         options = options,
@@ -1265,7 +1267,7 @@ namespace Services.Project
                             eventComponent = new EmtDataSelect.Js("l_move").clear()
                         }
                     });
-                    formDisplay.formItems.Add(new EmtSelectFull("user_sn_after")
+                    formDisplay.formItems.Add(new EmtSelectFull("ting_sn_after")
                     {
                         title = "转移至",
                         options = options,
@@ -1277,7 +1279,7 @@ namespace Services.Project
                     formDisplay.formItems.Add(new ModelBasic.EmtDataSelect("l_move")
                     {
                         title = "转移账号",
-                        selectUrl = $"ZhuboSelect?user_sn=<%=page.user_sn_before.value%>&type_id={req.type_id}&isolated=0",
+                        selectUrl = $"ZhuboSelect?user_sn=<%=page.ting_sn_before.value%>&type_id={req.type_id}&isolated=0",
                         buttonText = "选择需要流转的账号",
                         buttonAddOneText = null,
                         colItems = new List<ModelBasic.EmtDataSelect.ColItem>
@@ -1320,13 +1322,13 @@ namespace Services.Project
                 public JsonResultAction PostAction(JsonRequestAction req)
                 {
                     //1.数据校验
-                    if (req.GetPara("user_sn_before").IsNullOrEmpty()) throw new WeicodeException("选择当前厅管不能为空!");
-                    if (req.GetPara("user_sn_after").IsNullOrEmpty()) throw new WeicodeException("选择目标厅管不能为空!");
+                    if (req.GetPara("ting_sn_before").IsNullOrEmpty()) throw new WeicodeException("选择当前厅不能为空!");
+                    if (req.GetPara("ting_sn_after").IsNullOrEmpty()) throw new WeicodeException("选择目标厅不能为空!");
                     var moveItems = req.GetPara<List<DomainUserBasic.UserRelationApp.MoveItem>>("l_move");
                     if (moveItems == null || moveItems.Count < 1) throw new WeicodeException("请选择用户!");
 
                     //2.转移到目标用户
-                    var _ = new DomainUserBasic.UserRelationApp().MoveNextUsersToUserSn(ModelEnum.UserRelationTypeEnum.厅管邀主播, req.GetPara("user_sn_before"), moveItems, req.GetPara("user_sn_after"), req.GetPara("cause"));
+                    var _ = new DomainUserBasic.UserRelationApp().MoveNextUsersToUserSn(ModelEnum.UserRelationTypeEnum.厅管邀主播, req.GetPara("ting_sn_before"), moveItems, req.GetPara("ting_sn_after"), req.GetPara("cause"));
 
                     //更新user_info_zb表的tg_user_sn与ting_sn字段
                     foreach (var item in moveItems)
@@ -1335,18 +1337,18 @@ namespace Services.Project
                         var zhubo = new ServiceFactory.UserInfo.Zhubo().GetZhuboInfo(user_relation.t_user_sn);
                         new ModelDb.user_info_zb
                         {
-                            ting_sn = req.GetPara("user_sn_after"),
-                            tg_user_sn = req.GetPara("user_sn_after"),
+                            ting_sn = req.GetPara("ting_sn_after"),
+                            tg_user_sn = new ServiceFactory.UserInfo.Ting().GetTingBySn(req.GetPara("ting_sn_after")).tg_user_sn,
                         }.Update($"user_sn = '{user_relation.t_user_sn}'");
 
                         new ModelDb.user_info_zhubo
                         {
-                            ting_sn = req.GetPara("user_sn_after"),
-                            tg_user_sn = req.GetPara("user_sn_after"),
+                            ting_sn = req.GetPara("ting_sn_after"),
+                            tg_user_sn = new ServiceFactory.UserInfo.Ting().GetTingBySn(req.GetPara("ting_sn_after")).tg_user_sn,
                         }.Update($"user_sn = '{user_relation.t_user_sn}'");
                         var sql = new ServiceFactory.UserInfo.Zhubo().AddZhuboLog(
                             ModelDb.user_info_zhubo_log.c_type_enum.转厅,
-                            $"主播'{zhubo.username}'转移到厅'{new ServiceFactory.UserInfo.Ting().GetTingBySn(req.GetPara("user_sn_after")).ting_name}'",
+                            $"主播'{zhubo.username}'转移到厅'{new ServiceFactory.UserInfo.Ting().GetTingBySn(req.GetPara("ting_sn_after")).ting_name}'",
                             zhubo
                             );
                         MysqlHelper.ExecuteSql(sql);
@@ -2093,6 +2095,7 @@ namespace Services.Project
                     var filter = new DoMySql.Filter
                     {
                         where = where,
+                        orderby = "create_time desc",
                     };
                     return new CtlListDisplay.ListData().getList<ModelDb.user_info_zhubo_log, ItemDataModel>(filter, reqJson);
                 }
