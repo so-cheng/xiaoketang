@@ -1,0 +1,245 @@
+﻿
+@using System;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+
+<style>
+    .tag-container {
+        margin: 20px;
+    }
+
+    .layui-tag {
+        margin-right: 10px;
+        margin-bottom: 10px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .tag-close {
+        margin-left: 5px;
+        cursor: pointer;
+        color: #999;
+    }
+
+        .tag-close:hover {
+            color: #ff5722;
+        }
+</style>
+<form class="layui-form" action="" style="margin-top:20px">
+    <div class="layui-form-item">
+        <label class="layui-form-label">配置字段</label>
+        <div class="layui-input-inline">
+            <select name="zd" id="zd">
+                <option value="">配置字段</option>
+                <option value="总人数">总人数</option>
+                <option value="档位数量">档位数量</option>
+                <option value="开播时长">开播时长</option>
+                <option value="访客数">访客数</option>
+                <option value="每小时访客数">每小时访客数</option>
+                <option value="直播推荐占比">直播推荐占比</option>
+                <option value="进入率">进入率</option>
+                <option value="互动人数">互动人数</option>
+                <option value="付费用户总数">付费用户总数</option>
+                <option value="新付费用户数">新付费用户数</option>
+                <option value="平均二消">平均二消</option>
+                <option value="A类用户数">A类用户数</option>
+                <option value="B类用户数">B类用户数</option>
+                <option value="C类用户数">C类用户数</option>
+                <option value="近5天A类用户数">近5天A类用户数</option>
+                <option value="近10天A类用户数">近10天A类用户数</option>
+                <option value="近15天A类用户数">近15天A类用户数</option>
+                <option value="3天内老用户数">3天内老用户数</option>
+                <option value="5天内老用户数">5天内老用户数</option>
+                <option value="7天内老用户数">7天内老用户数</option>
+                <option value="15天内老用户数">15天内老用户数</option>
+                <option value="5天内升A类的用户数">5天内升A类的用户数</option>
+                <option value="总音浪值">总音浪值</option>
+            </select>
+        </div>
+        <div class="layui-input-inline">
+            <select name="fw" id="fw">
+                <option value="">选择比较范围</option>
+                <option value=">">></option>
+                <option value="<"><</option>
+                <option value="=">=</option>
+                <option value=">=">>=</option>
+                <option value="<="><=</option>
+            </select>
+        </div>
+        <div class="layui-input-inline">
+            <div class="layui-input-inline layui-input-wrap">
+                <input type="text" name="value" id="value" placeholder="输入比较值" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-input-inline" style="display: flex;">
+            <div id="colors"></div>
+            <input type="text" name="color" value="" placeholder="请选择颜色" disabled class="layui-input" id="color">
+        </div>
+        <div class="layui-input-inline" style="width: 120px;">
+            <button type="button" class="layui-btn" onclick="addTag()">添加</button>
+        </div>
+    </div>
+
+    <div class="layui-panel">
+        <div style="padding: 32px;" id="ruledata">
+            <div id="tagList">
+                请选择字段进行配置
+            </div>
+
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text" style="margin-top:10px">
+        <label class="layui-form-label">普通文本域</label>
+        <div class="layui-input-block">
+            <textarea placeholder="请输入内容" id="remake" class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn" onclick="save()">保存</button>
+            <button type="button" class="layui-btn layui-btn-primary" onclick="closeCurrentIframe()">关闭</button>
+            @*<button type="reset" class="layui-btn layui-btn-primary">关闭</button>*@
+        </div>
+    </div>
+</form>
+<script src="https://www.layuicdn.com/layui-v2.6.8/layui.js"></script>
+<script>
+
+    window.onload = function () {
+        var json = @Html.Raw(ViewBag.Rule);
+        if (json != null) {
+            document.getElementById('tagList').innerText = "";
+            var arry = json.c_rule.split(";");
+            arry.forEach((data, index) => {
+                var c_rule = data.split(",");
+                var c_rule_json = {};
+                c_rule_json.zd = c_rule[0];
+                c_rule_json.fw = c_rule[1];
+                c_rule_json.value = c_rule[2];
+                c_rule_json.color = c_rule[3];
+                keydata.push(c_rule_json)
+                loadRag(c_rule_json);
+            });
+            document.getElementById("remake").value = json.remake;
+
+
+        }
+    }
+
+    //配置标签集合
+    let keydata = [];
+    //保存内容
+    function save() {
+        var json = {};
+        var rule = getRuleText(keydata)
+
+        if (@ViewBag.id!= 0) {
+            json.id = @ViewBag.id;
+        }
+        json.c_rule = rule;
+        json.remake = document.getElementById("remake").value;
+
+        $.ajax({
+            url: "/DataAnalysis/Rule/Insert",
+            method: "POST",
+            dataType: "json",
+            data: {
+                rule: json
+            },
+            success: function (response) {
+                if (response.code == 0) {
+                    layer.msg(response.msg);
+                    setTimeout(closeCurrentIframe, 1000)
+                } else {
+                    layer.msg(response.msg);
+                }
+            }
+        });
+    }
+    function getRuleText(data) {
+        var text="";
+        keydata.forEach((data, index) => {
+            text += data.zd + ',' + data.fw + ',' + data.value + ',' + data.color + ';'
+        });
+        return text.substring(0,text.length - 1);
+    }
+    //关闭当前页面
+    function closeCurrentIframe() {
+        var index = parent.layer.getFrameIndex(window.name); // 获取当前iframe层的索引
+        parent.layer.close(index); // 关闭当前层
+    }
+    //删除配置标签
+    function removeTag(element,zd) {
+        var data = keydata.find(a => a.zd = zd);
+        keydata = keydata.filter(item => item !== data);
+        element.parentElement.remove();
+    }
+    //添加字段配置标签
+    function addTag() {
+        if (document.getElementById("tagList").innerText == "请选择字段进行配置") {
+            document.getElementById('tagList').innerText = "";
+        }
+        var data = {};
+        data.zd = document.getElementById("zd").value
+        data.fw = document.getElementById("fw").value
+        data.value = document.getElementById("value").value
+        data.color = document.getElementById("color").value
+        if (data.zd == "") {
+            layer.msg('请选择字段!');
+            return;
+        }
+        if (data.fw == "") {
+            layer.msg('请选择比较范围!');
+            return;
+        } if (data.value == "") {
+            layer.msg('请输入比较值!');
+            return;
+        } if (data.color == "") {
+            layer.msg('请选择颜色!');
+            return;
+        }
+        const tagHtml = `
+          <span class="layui-tag">
+            <span style="color:${data.color}">${data.zd}</span>
+            <i class="layui-icon tag-close" onclick="removeTag(this,'${data.zd}')">&#x1006;</i>
+          </span>
+        `;
+        document.getElementById('tagList').insertAdjacentHTML('beforeend', tagHtml);
+        keydata.push(data);
+    }
+
+    function loadRag(data) {
+        const tagHtml = `
+          <span class="layui-tag">
+            <span style="color:${data.color}">${data.zd}</span>
+            <i class="layui-icon tag-close" onclick="removeTag(this, '${data.zd}')">&#x1006;</i>
+          </span>
+        `;
+        document.getElementById('tagList').insertAdjacentHTML('beforeend', tagHtml);
+    }
+
+    //渲染颜色选择器
+    layui.use(function () {
+        var colorpicker = layui.colorpicker;
+        var $ = layui.$;
+        // 渲染
+        colorpicker.render({
+            elem: '#colors',
+            color: '#1c97f5',
+            done: function (color) {
+                document.getElementById("color").value = color;
+            }
+        });
+
+
+    });
+</script>

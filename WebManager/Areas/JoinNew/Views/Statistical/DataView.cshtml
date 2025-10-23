@@ -1,0 +1,197 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+
+    /* 表头固定样式 */
+    .layui-table {
+        position: relative;
+    }
+
+        .layui-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: white;
+        }
+
+            .layui-table thead tr:first-child {
+                position: sticky;
+                top: 0;
+                z-index: 11;
+                background-color: #FFF3CA;
+            }
+
+            .layui-table thead tr:nth-child(2) {
+                position: sticky;
+                top: 50px; /* 第一行表头的高度 */
+                z-index: 11;
+                background-color: #FCE4D3;
+            }
+
+            /* 确保表头有足够的背景色 */
+            .layui-table thead th {
+                background-color: inherit;
+            }
+
+    .layadmin-header {
+        display: none;
+        height: 50px;
+        line-height: 50px;
+        margin-bottom: 0;
+        border-radius: 0
+    }
+
+        .layadmin-header .layui-breadcrumb {
+            padding: 0 15px
+        }
+
+    .layui-card-header {
+        position: relative
+    }
+
+        .layui-card-header .layui-icon {
+            line-height: initial;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            margin-top: -7px
+        }
+
+    .layuiadmin-card-list {
+        padding: 15px
+    }
+
+        .layuiadmin-card-list p.layuiadmin-big-font {
+            font-size: 36px;
+            color: #5f5f5f;
+            line-height: 36px;
+            padding: 5px 0 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-all;
+            white-space: nowrap
+        }
+
+        .layuiadmin-card-list p.layuiadmin-normal-font {
+            padding-bottom: 10px;
+            font-size: 20px;
+            color: #5f5f5f;
+            line-height: 24px
+        }
+</style>
+@{
+    var zb_count_sum = DoMySql.FindField<ModelDb.p_join_apply>("sum(zb_count)", $"tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and status <= {ModelDb.p_join_apply.status_enum.已完成.ToSByte()} and create_time >= '{DateTime.Today.AddDays(-10).ToString("yyyy-MM-dd")}' and create_time <= '{DateTime.Today.AddDays(-3).ToString("yyyy-MM-dd")}'")[0].ToInt();
+    var real_zb_count_sum = DoMySql.FindField<ModelDb.p_join_new_info>("count(1)", $"tg_need_id in (select id from p_join_apply where tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and status <= {ModelDb.p_join_apply.status_enum.已完成.ToSByte()} and create_time >= '{DateTime.Today.AddDays(-10).ToString("yyyy-MM-dd")}' and create_time <= '{DateTime.Today.AddDays(-3).ToString("yyyy-MM-dd")}') and (status = {ModelDb.p_join_new_info.status_enum.等待培训.ToSByte()} or status = {ModelDb.p_join_new_info.status_enum.补人完成.ToSByte()})")[0].ToInt();
+    var rate = zb_count_sum > 0 ? Math.Round((real_zb_count_sum.ToDecimal() / zb_count_sum.ToDecimal() * 100), 2).ToString() + "%" : "0%";
+}
+<!-- 以下书写自己的页面内容代码 -->
+<div class="layui-col-sm6 layui-col-md3" style="float: none;">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            公会补人率
+        </div>
+        <div class="layui-card-body layuiadmin-card-list">
+            <p class="layuiadmin-big-font">@rate</p>
+        </div>
+    </div>
+    <a href="javascript:win_pop_iframe('查看图表', '/JoinNew/Statistical/LineChart', window.innerWidth * 0.8, window.innerHeight * 0.8);" class="layui-btn layui-bg-blue">查看图表</a>
+</div>
+<div class="layui-row">
+    <div class="layui-col-md12">
+        <table class="layui-table" style="text-align:center;width:100%;" id="table1" name="table1">
+            <thead>
+                <tr style="background-color: #B4C6E7;">
+                    <th>档位</th>
+                    <th>补人率</th>
+                    <th>男/女厅补人率</th>
+                    <th>盈余紧缺</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in new DomainBasic.DictionaryApp().GetListForKv(ModelEnum.DictCategory.档位时段))
+                {
+                    var zb_count_sum_dangwei = DoMySql.FindField<ModelDb.p_join_apply_item>("sum(zb_count)", $"tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and dangwei = '{item.Value}' and apply_sn in (select apply_sn from p_join_apply where tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and status <= {ModelDb.p_join_apply.status_enum.已完成.ToSByte()} and create_time >= '{DateTime.Today.AddDays(-10).ToString("yyyy-MM-dd")}' and create_time <= '{DateTime.Today.AddDays(-3).ToString("yyyy-MM-dd")}')")[0].ToInt();
+                    var real_zb_count_sum_dangwei = DoMySql.FindField<ModelDb.p_join_new_info>("count(1)", $"tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and tg_dangwei in (select id from p_join_apply_item where tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and dangwei = '{item.Value}' and apply_sn in (select apply_sn from p_join_apply where tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and status <= {ModelDb.p_join_apply.status_enum.已完成.ToSByte()} and create_time >= '{DateTime.Today.AddDays(-10).ToString("yyyy-MM-dd")}' and create_time <= '{DateTime.Today.AddDays(-3).ToString("yyyy-MM-dd")}')) and (status = {ModelDb.p_join_new_info.status_enum.等待培训.ToSByte()} or status = {ModelDb.p_join_new_info.status_enum.补人完成.ToSByte()})")[0].ToInt();
+
+                    var rate_dangwei = zb_count_sum_dangwei > 0 ? Math.Round((real_zb_count_sum_dangwei.ToDecimal() / zb_count_sum_dangwei.ToDecimal() * 100), 2).ToString() + "%" : "0%";
+                    <tr>
+                        <th>@item.Key</th>
+                        <th>@rate_dangwei</th>
+                        <th>男厅：@GetRate("男", item.Value)<br />女厅：@GetRate("女", item.Value)</th>
+                        <th>男厅：@GetText("男", item.Value)<br />女厅：@GetText("女", item.Value)</th>
+                    </tr>
+                }
+                <tr>
+                    <th>合计</th>
+                    <th>@rate</th>
+                    <th>男厅：@GetRate("男")<br />女厅：@GetRate("女")</th>
+                    <th>男厅：@GetText("男")<br />女厅：@GetText("女")</th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        var layer = layui.layer;
+    });
+</script>
+@functions{
+    public string GetText(string sex, string dangwei = "")
+    {
+        // 当前档位未分配新人主播数
+        int zb_count = new ServiceFactory.JoinNew().GetUnShareZbCountByDangwei(sex, dangwei);
+
+        // 当前档位厅申请未分配新人主播数（包括审批中的人数）
+        var apply_zb_count = new ServiceFactory.JoinNew().GetApplyZbCountByDangwei(sex, dangwei);
+
+        // 盈余数量 = 当前档位未分配新人主播数 - 申请中人数（当前档位厅申请未分配新人主播数）
+        int surplus = zb_count - apply_zb_count;
+
+        return $"申请中{apply_zb_count}人，{(surplus > 0 ? $"盈余{surplus}人" : $"紧张{surplus}人")}";
+    }
+
+    public string GetRate(string sex, string dangwei = "")
+    {
+        string where1 = $"tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and apply_sn in (select apply_sn from p_join_apply where tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and tg_sex = '{sex}' and status <= {ModelDb.p_join_apply.status_enum.已完成.ToSByte()} and create_time >= '{DateTime.Today.AddDays(-10).ToString("yyyy-MM-dd")}' and create_time <= '{DateTime.Today.AddDays(-3).ToString("yyyy-MM-dd")}')";
+        if (dangwei != "") where1 += $" and dangwei = '{dangwei}'";
+        var zb_count_sum_dangwei = DoMySql.FindField<ModelDb.p_join_apply_item>("sum(zb_count)", where1)[0].ToInt();
+
+        string where2 = $"select id from p_join_apply_item where tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and apply_sn in (select apply_sn from p_join_apply where tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and tg_sex = '{sex}' and status <= {ModelDb.p_join_apply.status_enum.已完成.ToSByte()} and create_time >= '{DateTime.Today.AddDays(-10).ToString("yyyy-MM-dd")}' and create_time <= '{DateTime.Today.AddDays(-3).ToString("yyyy-MM-dd")}')";
+        if (dangwei != "") where2 += $" and dangwei = '{dangwei}'";
+        var real_zb_count_sum_dangwei = DoMySql.FindField<ModelDb.p_join_new_info>("count(1)", $"tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and tg_dangwei in ({where2}) and (status = {ModelDb.p_join_new_info.status_enum.等待培训.ToSByte()} or status = {ModelDb.p_join_new_info.status_enum.补人完成.ToSByte()})")[0].ToInt();
+
+        return zb_count_sum_dangwei > 0 ? Math.Round((real_zb_count_sum_dangwei.ToDecimal() / zb_count_sum_dangwei.ToDecimal() * 100), 2).ToString() + "%" : "0%";
+    }
+}

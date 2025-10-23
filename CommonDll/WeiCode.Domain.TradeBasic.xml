@@ -1,0 +1,507 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WeiCode.Domain.TradeBasic</name>
+    </assembly>
+    <members>
+        <member name="T:WeiCode.Domain.TradeBasic.ModularAuthorize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.TradeBasic.ModularAuthorize.getName">
+            <summary>
+            模块名称
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderPay">
+            <summary>
+            支付订单Domain
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderPay.Template`3">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderPay.Template`3.Execute(`0,`1,`2)">
+            <summary>
+            注册事件处理（创建订单）
+            </summary>
+            <param name="req"></param>
+            <param name="res"></param>
+            <param name="log"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderPay.Template`3.Before(`0,`1)">
+            <summary>
+            业务逻辑处理前执行
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderPay.Template`3.CreateGoods(`0,`1)">
+            <summary>
+            创建/编辑 创建商品
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderPay.Template`3.PushSupport(`0,`1)">
+            <summary>
+            统一处理事务
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderPay.Template`3.Complete(`0,`1)">
+            <summary>
+            其它业务逻辑
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderPay.DtoBaseReq">
+            <summary>
+            创建订单实体（输入）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderPay.DtoBaseReq.formData">
+            <summary>
+            外部条件参数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderPay.DtoBaseReq.FormData">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderPay.DtoBaseReq.supportConfig">
+            <summary>
+            支持配置
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderPay.DtoBaseReq.SupportConfig">
+            <summary>
+            支持配置
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderPay.DtoBaseReq.SupportConfig.isUserUniqe">
+            <summary>
+            是否为整个用户表唯一
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderPay.DtoBaseReq.SupportConfig.doMySqlsHelper">
+            <summary>
+            多库链接对象
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderPay.DtoBaseRes">
+            <summary>
+            创建订单实体（输出）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderPay.DtoBaseRes.user_id">
+            <summary>
+            注册用户id
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderPay.DtoBaseLog">
+            <summary>
+            创建订单实体（日志）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderPay.DtoBaseLog.formData">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreatePay">
+            <summary>
+            创建并使用余额支付订单Domain
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreatePay.Template`3">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreatePay.Template`3.Execute(`0,`1,`2)">
+            <summary>
+            注册事件处理（创建订单）
+            </summary>
+            <param name="req"></param>
+            <param name="res"></param>
+            <param name="log"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreatePay.Template`3.Before(`0,`1)">
+            <summary>
+            业务逻辑处理前执行
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreatePay.Template`3.CreateGoods(`0,`1)">
+            <summary>
+            创建/编辑 创建商品
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreatePay.Template`3.PushSupport(`0,`1)">
+            <summary>
+            统一处理事务
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreatePay.Template`3.Complete(`0,`1)">
+            <summary>
+            其它业务逻辑
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreatePay.DtoBaseReq">
+            <summary>
+            创建订单实体（输入）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreatePay.DtoBaseReq.formData">
+            <summary>
+            外部条件参数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreatePay.DtoBaseReq.FormData">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreatePay.DtoBaseReq.supportConfig">
+            <summary>
+            支持配置
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreatePay.DtoBaseReq.SupportConfig">
+            <summary>
+            支持配置
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreatePay.DtoBaseReq.SupportConfig.isUserUniqe">
+            <summary>
+            是否为整个用户表唯一
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreatePay.DtoBaseReq.SupportConfig.doMySqlsHelper">
+            <summary>
+            多库链接对象
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreatePay.DtoBaseRes">
+            <summary>
+            创建订单实体（输出）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreatePay.DtoBaseRes.user_id">
+            <summary>
+            注册用户id
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreatePay.DtoBaseLog">
+            <summary>
+            创建订单实体（日志）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreatePay.DtoBaseLog.formData">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreate">
+            <summary>
+            创建订单Domain
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreate.Template`3">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreate.Template`3.Execute(`0,`1,`2)">
+            <summary>
+            注册事件处理（创建订单）
+            </summary>
+            <param name="req"></param>
+            <param name="res"></param>
+            <param name="log"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreate.Template`3.Before(`0,`1)">
+            <summary>
+            业务逻辑处理前执行
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreate.Template`3.CreateGoods(`0,`1)">
+            <summary>
+            创建/编辑 创建商品
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreate.Template`3.PushSupport(`0,`1)">
+            <summary>
+            统一处理事务
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreate.Template`3.Complete(`0,`1)">
+            <summary>
+            其它业务逻辑
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreate.DtoBaseReq">
+            <summary>
+            创建订单实体（输入）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreate.DtoBaseReq.formData">
+            <summary>
+            外部条件参数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreate.DtoBaseReq.FormData">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreate.DtoBaseReq.supportConfig">
+            <summary>
+            支持配置
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreate.DtoBaseReq.SupportConfig">
+            <summary>
+            支持配置
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreate.DtoBaseReq.SupportConfig.isUserUniqe">
+            <summary>
+            是否为整个用户表唯一
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreate.DtoBaseReq.SupportConfig.doMySqlsHelper">
+            <summary>
+            多库链接对象
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreate.DtoBaseRes">
+            <summary>
+            创建订单实体（输出）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreate.DtoBaseRes.user_id">
+            <summary>
+            注册用户id
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreate.DtoBaseLog">
+            <summary>
+            创建订单实体（日志）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicSaleOrderCreate.DtoBaseLog.formData">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicGoodsCreate">
+            <summary>
+            创建订单Domain
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicGoodsCreate.Template`3">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.TradeBasic.DomainTradeBasicGoodsCreate.Template`3.Execute(`0,`1,`2)">
+            <summary>
+            注册事件处理（创建商品）
+            </summary>
+            <param name="req"></param>
+            <param name="res"></param>
+            <param name="log"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.TradeBasic.DomainTradeBasicGoodsCreate.Template`3.Before(`0,`1)">
+            <summary>
+            业务逻辑处理前执行
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.TradeBasic.DomainTradeBasicGoodsCreate.Template`3.CreateGoods(`0,`1)">
+            <summary>
+            创建/编辑 创建商品
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.TradeBasic.DomainTradeBasicGoodsCreate.Template`3.PushSupport(`0,`1)">
+            <summary>
+            统一处理事务
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.TradeBasic.DomainTradeBasicGoodsCreate.Template`3.Complete(`0,`1)">
+            <summary>
+            其它业务逻辑
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicGoodsCreate.DtoBaseReq">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicGoodsCreate.DtoBaseReq.formData">
+            <summary>
+            外部条件参数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicGoodsCreate.DtoBaseReq.FormData">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicGoodsCreate.DtoBaseReq.supportConfig">
+            <summary>
+            支持配置
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicGoodsCreate.DtoBaseReq.SupportConfig">
+            <summary>
+            支持配置
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicGoodsCreate.DtoBaseReq.SupportConfig.isUserUniqe">
+            <summary>
+            是否为整个用户表唯一
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicGoodsCreate.DtoBaseReq.SupportConfig.doMySqlsHelper">
+            <summary>
+            多库链接对象
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicGoodsCreate.DtoBaseRes">
+            <summary>
+            用户注册实体（输出）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicGoodsCreate.DtoBaseRes.user_id">
+            <summary>
+            注册用户id
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.TradeBasic.DomainTradeBasicGoodsCreate.DtoBaseLog">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.TradeBasic.DomainTradeBasicGoodsCreate.DtoBaseLog.formData">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.DomainTradeBasic">
+            <summary>
+            领域函数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.DomainTradeBasic.GradeApp">
+            <summary>
+            用户等级
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainTradeBasic.GradeApp.change(System.Int32)">
+            <summary>
+            用户等级变更
+            </summary>
+            <param name="confirm_node_id">当前步骤id</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.UserBasic.BalanceType">
+            <summary>
+            余额类型
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.UserBasic.BalanceType.现金余额">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.UserBasic.BalanceType.交易余额">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.UserBasic.BalanceType.积分余额">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.UserBasic.BalanceMoveType">
+            <summary>
+            余额转移类型
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.UserBasic.BalanceMoveType.交易余额转现金余额">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.UserBasic.BalanceMoveType.现金余额转交易余额">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.UserBasic.BalanceOperateType">
+            <summary>
+            余额操作类型
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.UserBasic.BalanceOperateType.收入">
+            <summary>
+            余额加
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.UserBasic.BalanceOperateType.支出">
+            <summary>
+            余额减
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.UserBasic.GradeChangeType">
+            <summary>
+            等级变更类型
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.UserBasic.GradeChangeType.升级">
+            <summary>
+            升级
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.UserBasic.GradeChangeType.降级">
+            <summary>
+            降级
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.ModelDoUserBasic">
+            <summary>
+            基础Model
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbTradeBasic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbTradeBasic.trade_goods_base">
+            <summary>
+            实体:商品基础信息
+            </summary>	
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbTradeBasic.trade_goods_base.goods_sn">
+            <summary>
+            商品编号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbTradeBasic.trade_goods_base.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbTradeBasic.trade_goods_base.name">
+            <summary>
+            商品名称
+            </summary>
+        </member>
+    </members>
+</doc>

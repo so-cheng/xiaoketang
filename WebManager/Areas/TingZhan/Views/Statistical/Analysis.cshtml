@@ -1,0 +1,225 @@
+﻿
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+    var p_tingzhan = new ModelDb.p_tingzhan();
+    if (ViewBag.id > 0)
+    {
+        p_tingzhan = DoMySql.FindEntity<ModelDb.p_tingzhan>($"id = {ViewBag.id}", false);
+    }
+    else
+    {
+        p_tingzhan = new ServiceFactory.TingZhanService().getNewTingzhan();
+    }
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-collapse: collapse;
+        border-style: solid;
+        border-width: 1px;
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    .layui-table td {
+        font-size: 15px;
+    }
+
+    /* 表头固定样式 */
+    .layui-table {
+        position: relative;
+    }
+
+        .layui-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: white;
+        }
+
+            .layui-table thead tr:first-child {
+                position: sticky;
+                top: 0;
+                z-index: 11;
+                background-color: #FFF3CA;
+            }
+
+            .layui-table thead tr:nth-child(2) {
+                position: sticky;
+                top: 50px; /* 第一行表头的高度 */
+                z-index: 11;
+                background-color: #FCE4D3;
+            }
+
+            /* 确保表头有足够的背景色 */
+            .layui-table thead th {
+                background-color: inherit;
+            }
+</style>
+<!-- 以下书写自己的页面内容代码 -->
+<form class="layui-form">
+    <div class="layui-row">
+        <div class="layui-col-md10">
+            <div class="layui-col-md8" style="text-align:right">
+                <div class="layui-inline">
+                    <label class="layui-input-inline" style="font-size:18px; font-weight:bold">厅战时间：@p_tingzhan.c_date.ToDate().ToString("yyyy-MM-dd")</label>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card" style="width:95%;top:30px;margin:0 auto">
+            @if (ViewBag.targets.Count > 0)
+            {
+                <table class="layui-table" style="width: 100%; table-layout: fixed; ">
+                    <thead>
+                        <tr style="background-color: #B4C6E7;">
+                            <td style="text-align: center">运营</td>
+                            <td style="text-align: center">直播厅</td>
+                            <td style="text-align: center">任务目标音浪</td>
+                            <td style="text-align: center">实际音浪</td>
+                            <td style="text-align: center">单厅目标完成度</td>
+                            <td style="text-align: center">目标数据总和</td>
+                            <td style="text-align: center">厅战数据总和</td>
+                            <td style="text-align: center">完成目标度</td>
+                            <td style="text-align: center">总流水占比</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            // 目标数据总和
+                            decimal amontsum_total = 0;
+                            // 厅战数据总和（所有A厅战绩+所有B厅战绩）
+                            decimal scoresum_total = decimal.Add(DoMySql.FindListBySql<ModelDb.p_tingzhan_mate>($"SELECT sum(score_1) amont FROM p_tingzhan_mate where tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and tingzhan_id = {p_tingzhan.id}")[0].amont.ToDecimal(), DoMySql.FindListBySql<ModelDb.p_tingzhan_mate>($"SELECT sum(score_2) amont FROM p_tingzhan_mate where tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and tingzhan_id = {p_tingzhan.id}")[0].amont.ToDecimal());
+                            foreach (var item in ViewBag.targets)
+                            {
+                                var p_tingzhan_target_list = DoMySql.FindList<ModelDb.p_tingzhan_target>($"tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and tingzhan_id = {p_tingzhan.id} and yy_user_sn = '{@item.yy_user_sn}' and amont > 0 order by id"); // 获取运营下提报的数据
+                                int index = 0;
+                                foreach (var p_tingzhan_target in p_tingzhan_target_list)
+                                {
+                                    // 厅名
+                                    var ting_name = new ServiceFactory.UserInfo.Ting().GetTingBySn(p_tingzhan_target.ting_sn).ting_name;
+
+                                    // 该厅总战绩（左战绩+右战绩）
+                                    var score = decimal.Add(DoMySql.FindEntity<ModelDb.p_tingzhan_mate>($"tingzhan_id = {p_tingzhan.id} and ting_sn1 = '{p_tingzhan_target.ting_sn}'", false).score_1.ToDecimal(), DoMySql.FindEntity<ModelDb.p_tingzhan_mate>($"tingzhan_id = {p_tingzhan.id} and ting_sn2 = '{p_tingzhan_target.ting_sn}'", false).score_2.ToDecimal());
+
+                                    // 完成率 = 厅总战绩 / 提报目标
+                                    var completion = (p_tingzhan_target.amont > 0) ? Math.Round((score / p_tingzhan_target.amont * 100).ToDecimal(), 2) : 0;
+
+                                    //
+                                    if (index == 0)
+                                    {
+                                        // 运营总提报目标
+                                        var amont_sum = DoMySql.FindListBySql<ModelDb.p_tingzhan_target>($"SELECT sum(amont) amont FROM p_tingzhan_target where tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and tingzhan_id = {p_tingzhan.id} and yy_user_sn = '{@item.yy_user_sn}'")[0].amont;
+
+                                        // 运营总战绩（左战绩+右战绩）
+                                        var score_sum = decimal.Add(DoMySql.FindListBySql<ModelDb.p_tingzhan_mate>($"SELECT sum(score_1) amont FROM p_tingzhan_mate where tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and tingzhan_id = {p_tingzhan.id} and ting_sn1 in (SELECT ting_sn FROM p_tingzhan_target where tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and tingzhan_id = {p_tingzhan.id} and yy_user_sn = '{@item.yy_user_sn}')")[0].amont.ToDecimal(), DoMySql.FindListBySql<ModelDb.p_tingzhan_mate>($"SELECT sum(score_2) amont FROM p_tingzhan_mate where tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and tingzhan_id = {p_tingzhan.id} and ting_sn2 in (SELECT ting_sn FROM p_tingzhan_target where tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and tingzhan_id = {p_tingzhan.id} and yy_user_sn = '{@item.yy_user_sn}')")[0].amont.ToDecimal());
+
+                                        // 运营完成率 = 运营总战绩 / 提报目标
+                                        var completion_sum = Math.Round((score_sum / amont_sum * 100).ToDecimal(), 2);
+
+                                        int rowspan = p_tingzhan_target_list.Count;
+                                        <tr style="background-color: #FFF2CC;">
+                                            <td style="text-align: center;" rowspan="@rowspan">@(new ServiceFactory.UserInfo.Yy().GetInfoByUserSn(p_tingzhan_target.yy_user_sn).name)</td>
+                                            <td style="text-align: center;">@ting_name</td>
+                                            <td style="text-align: center;">@p_tingzhan_target.amont</td>
+                                            <td style="text-align: center;">@score</td>
+                                            <td style="text-align: center;">
+                                                @{
+                                                    if (completion < 100)
+                                                    {
+                                                        <span style="color:red;">@(completion)%</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@(completion)%</span>
+                                                    }
+                                                }
+                                            </td>
+                                            <td style="text-align: center;" rowspan="@rowspan">@amont_sum</td>
+                                            <td style="text-align: center;" rowspan="@rowspan">@score_sum</td>
+                                            <td style="text-align: center;" rowspan="@rowspan">
+                                                @{
+                                                    if (completion_sum < 100)
+                                                    {
+                                                        <span style="color:red;">@(completion_sum)%</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@(completion_sum)%</span>
+                                                    }
+                                                }
+                                            </td>
+                                            <td style="text-align: center;" rowspan="@rowspan">@(scoresum_total > 0 ? Math.Round((amont_sum / scoresum_total * 100).ToDecimal(), 2) : 0)%</td>
+                                        </tr>
+                                        amontsum_total += amont_sum.ToDecimal();
+                                    }
+                                    else
+                                    {
+                                        <tr style="background-color: #FFF2CC;">
+                                            <td style="text-align: center;">@ting_name</td>
+                                            <td style="text-align: center;">@p_tingzhan_target.amont</td>
+                                            <td style="text-align: center;">@score</td>
+                                            <td style="text-align: center;">
+                                                @{
+                                                    if (completion < 100)
+                                                    {
+                                                        <span style="color:red;">@(completion)%</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@(completion)%</span>
+                                                    }
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                    index++;
+                                }
+                            }
+                        }
+                        <tr style="background-color: #E3F2D9;">
+                            <td style="text-align: center;">合计</td>
+                            <td style="text-align: center;"></td>
+                            <td style="text-align: center;"></td>
+                            <td style="text-align: center;"></td>
+                            <td style="text-align: center;"></td>
+                            <td style="text-align: center;">@amontsum_total</td>
+                            <td style="text-align: center;">@scoresum_total</td>
+                            <td style="text-align: center;">@Math.Round((scoresum_total / amontsum_total * 100).ToDecimal(), 2)%</td>
+                            <td style="text-align: center;"></td>
+                        </tr>
+                </table>
+            }
+        </div>
+    </div>
+    @if (ViewBag.targets.Count == 0)
+    {
+        <div class="layui-card-body layui-text">
+            <blockquote class="layui-elem-quote" style="border: none;">
+                <p style="color: orangered;">无提报数据</p>
+            </blockquote>
+        </div>
+    }
+</form>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        form.render('select'); // 仅渲染 select 元素
+    });
+</script>

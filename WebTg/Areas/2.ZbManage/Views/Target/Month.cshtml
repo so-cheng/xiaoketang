@@ -1,0 +1,166 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+@{ Layout = ModelBasic.PageModel.GetLayout(); }
+
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.js"></script>
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+</style>
+
+@{
+    // 获取当前月份的每一天
+    string date = DateTime.Today.ToString("yyyy-MM-dd");
+    int year = date.ToDate().Year;
+    int month = date.ToDate().Month;
+    int days = DateTime.DaysInMonth(year, month);
+}
+<div class="layui-card" style="width:100%;overflow-x:auto">
+    <div class="layui-inline">
+        <form class="layui-form">
+            @{
+                <div class="layui-input-inline">
+                    <label class="layui-form-label">月份</label>
+                </div>
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("c_date")
+                        {
+                            title = "日期",
+                            mold = ModelBasic.EmtTimeSelect.Mold.month,
+                            defaultValue = date,
+                            eventJsChange = new EmtFormBase.EventJsChange
+                            {
+                                eventJavascript = new EventJavascript
+                                {
+                                    code = "window.location.href = '/Waixuan/Yaoyue/Report?c_date=' + page.c_date.value;"
+                                },
+                            }
+                        })
+                    </div>
+                </div>
+            }
+        </form>
+    </div>
+
+<div id="tables">
+
+    @{
+        var jixiao = new ServiceFactory.JixiaoService().GetJixiaoData(new UserIdentityBag().user_sn,DateTime.Today);
+        var standard = new ServiceFactory.JixiaoService().GetStandardData(new UserIdentityBag().user_sn, DateTime.Today);
+        <table class="layui-table" style="text-align:center;">
+            <thead>
+                <tr>
+                        <td colspan="@(days + 3)" style="text-align: center; background-color: #FFF3CA; font-size: 18px; font-weight: 700 ">厅本月总目标</td>
+                </tr>
+                <tr style="background-color: #FCE4D3;font-weight:700;">
+                    <th>主播</th>
+                    <th>项目\日期</th>
+                    @{
+                        for (int k = 1; k <= days; k++)
+                        {
+                            <th>@($"{month}-{k}".ToDateString("MM-dd"))</th>
+                        }
+                    }
+                    <th>合计</th>
+                </tr>
+            </thead>
+            @{
+                foreach (var item in new DomainUserBasic.UserRelationApp().GetNextUsers(ModelEnum.UserRelationTypeEnum.厅管邀主播, new UserIdentityBag().user_sn))
+                {
+                    decimal sum = 0;
+                    
+                    <tr>
+                        <td rowspan="5">@item.name</td>
+                        <td>目标音浪</td>
+                        @{
+                            sum = 0;
+                            for (DateTime d = DateTime.Today.ToString("yyyy-MM-01").ToDate(); d.Month == DateTime.Today.Month; d = d.AddDays(1))
+                            {
+                                DataRow[] zb_standard = standard.Select($"zb_user_sn = '{item.user_sn}' and s_date<'{d.ToString("yyyy-MM-dd")}' and e_date>'{d.ToString("yyyy-MM-dd")}'");
+                                decimal value = zb_standard.Length == 0 ? 0 : Convert.ToDecimal(zb_standard[0][3]);
+                                sum += value;
+                                <td>
+                                    @value
+                                </td>
+                            }
+                        }
+                        <td>@sum</td>
+                    </tr>
+                    <tr>
+                        <td>已完成音浪</td>
+                        @{
+                            sum = 0;
+                            for (DateTime d = DateTime.Today.ToString("yyyy-MM-01").ToDate(); d.Month == DateTime.Today.Month; d=d.AddDays(1))
+                            {
+                                DataRow[] zb_jixiao = jixiao.Select($"zb_user_sn = '{item.user_sn}' and c_date='{d.ToString("yyyy-MM-dd")}'");
+
+                                decimal value = zb_jixiao.Length == 0 ? 0 : Convert.ToDecimal(zb_jixiao[0][2]);
+                                sum += value;
+                                <td>
+                                    @value
+                                </td>
+                            }
+                        }
+                        <td>@sum</td>
+                    </tr>
+                    <tr>
+                        <td>上月音浪</td>
+
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>同比增长率</td>
+
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>本月完成率</td>
+
+                        <td></td>
+                    </tr>
+                }
+            }
+            
+        </table>
+        
+    }
+</div>
+</div>
+
+
+@*@ViewModelBag.Load(Html, new ModelBasic.AdjScreenshot("screenshot")
+    {
+        elem = "tables"
+    })*@
+
+

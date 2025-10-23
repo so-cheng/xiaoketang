@@ -1,0 +1,80 @@
+﻿
+@{
+    Layout = null;
+}
+
+@using WeiCode.Utility;
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>layui.dtree帮助手册</title>
+    <link rel="stylesheet" href="@ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css">
+    <script type="text/javascript" src="@ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.js"></script>
+
+    <link rel="stylesheet" href="@ConfigHelper.GetConfigString("ResourceUrl")/layui/lay/exts/dtree/dtree.css">
+    <link rel="stylesheet" href="@ConfigHelper.GetConfigString("ResourceUrl")/layui/lay/exts/dtree/font/dtreefont.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="layui-row layui-col-space10">
+            <div class="layui-fluid">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>在线示例</legend>
+                    <div class="layui-field-box">
+                        <div class="layui-row layui-col-space10" style="margin-top: 10px;">
+                            <div class="layui-col-xs12">
+                                <div id="toolbarDiv" style="overflow: auto">
+                                    <ul id="demoTree" class="dtree" data-id="0"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>在线示例1</legend>
+                    <div class="layui-field-box">
+                        <div class="layui-row layui-col-space10" style="margin-top: 10px;">
+                            <div class="layui-col-xs12">
+                                <div id="toolbarDiv" style="overflow: auto">
+                                    <ul id="demoTree1" class="dtree" data-id="0"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    layui.extend({
+        dtree: '@ConfigHelper.GetConfigString("ResourceUrl")/layui/lay/exts/dtree/dtree'
+    }).use(['element', 'layer', 'table', 'code', 'util', 'dtree', 'form'], function () {
+        var element = layui.element, layer = layui.layer, table = layui.table, util = layui.util, dtree = layui.dtree, form = layui.form, $ = layui.$;
+
+        var data = @Html.Raw(ViewBag.json);
+
+        var DTree = dtree.renderSelect({
+            elem: "#demoTree",
+            data: data.children,
+            //url: "please input your url"
+        });
+
+        dtree.on("node(demoTree)", function (obj) {
+            layer.msg(JSON.stringify(obj.param));
+        })
+
+        dtree.render({
+            elem: "#demoTree1",
+            data: data.children,
+            //url: "please input your url"
+        });
+    });
+</script>
+</html>
+

@@ -1,0 +1,212 @@
+﻿@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@model ServiceFactory.MengxinZbService.p_join_need
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.js"></script>
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 14px;
+    }
+
+    .layui-table td {
+        font-size: 14px;
+    }
+</style>
+
+<style>
+    .layuiadmin-big-font {
+        font-weight: bold;
+        font-size: 42px;
+        margin: 10px;
+    }
+</style>
+
+
+<blockquote class="layui-elem-quote news_search">
+
+    <div class="layui-inline">
+        <form class="layui-form">
+
+            <div class="layui-input-inline">
+                <label class="layui-form-label">日期</label>
+            </div>
+
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("dateRange")
+                    {
+                        title = "申请日期",
+                        defaultValue = ViewBag.dateRange,
+                        mold = ModelBasic.EmtTimeSelect.Mold.date_range,
+                        eventJsChange = new EmtFormBase.EventJsChange
+                        {
+                            eventJavascript = new EventJavascript
+                            {
+                                code = "window.location.href = '/Waixuan/Datas/ApproveSumTable?dateRange=' + page.dateRange.value;"
+                            },
+                        },
+                        placeholder="补人申请日期筛选",
+                    })
+                </div>
+            </div>
+
+
+
+        </form>
+    </div>
+</blockquote>
+<body>
+    <div>
+        <table class="layui-table"  style="text-align: center; background-color: #FCE4D3;" id="table1" name="table1">
+            <colgroup>
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+            </colgroup>
+            <thead>
+                <tr style="background-color: #FFF3CA; ">
+                    <th rowspan="2">运营团队</th>
+                    <th rowspan="2">申请数</th>
+                    <th rowspan="2">未分配</th>
+                    <th rowspan="2">待拉群</th>
+                    <th rowspan="2">已拉群</th>
+                    <th rowspan="2">流失数</th>
+
+                    <th colspan="2">申请数</th>
+                    <th colspan="2">培训名单总数</th>
+                    <th colspan="2">已分配总数</th>
+                    <th colspan="2">已拉群总数</th>
+                </tr>
+
+                <tr style="background-color: #FFF3CA; ">
+                    <th>男生数</th>
+                    <th>女生数</th>
+                    <th>男生数</th>
+                    <th>女生数</th>
+                    <th>男生数</th>
+                    <th>女生数</th>
+                    <th>男生数</th>
+                    <th>女生数</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @{
+                    string where = $"tenant_id='{new DomainBasic.TenantApp().GetInfo().id}' and yy_user_sn = '{new UserIdentityBag().user_sn}'";
+                    string feild = "";
+                    feild += "tg_user_sn,";
+                    feild += "sum(zb_count) as zb_sum,";
+                    feild += "sum(zb_count-supplement_count) as unsupplement_sum,";
+                    feild += "sum(supplement_count-inqun_count) as uninqun_sum,";
+                    feild += "sum(inqun_count) as inqun_sum,";
+                    feild += "sum(quit_count) as quit_sum,";
+                    feild += "sum(if(tg_sex='男',zb_count,0)) as male_zb_sum,";
+                    feild += "sum(if(tg_sex='女',zb_count,0)) as female_zb_sum,";
+
+                    feild += "sum(if(tg_sex='男',supplement_count,0)) as male_supplement_sum,";
+                    feild += "sum(if(tg_sex='女',supplement_count,0)) as female_supplement_sum,";
+
+                    feild += "sum(if(tg_sex='男',inqun_count,0)) as male_inqun_sum,";
+                    feild += "sum(if(tg_sex='女',inqun_count,0)) as female_inqun_sum";
+
+                    string dateRange = ViewBag.dateRange;
+                    if (!dateRange.IsNullOrEmpty())
+                    {
+                        var range = UtilityStatic.CommonHelper.DateRangeFormat(dateRange, 0);
+                        where += $" and create_time >= '{range.date_range_s}' and create_time < '{range.date_range_e.ToDate().AddDays(1).ToString("yyyy-MM-dd")}'";
+                    }
+
+                    var list = DoMySql.FindListBySql<ServiceFactory.MengxinZbService.p_join_need>($"SELECT {feild} FROM `p_join_need` where {where} group by tg_user_sn");
+                }
+                <tr style="background-color: #D9E1F2">
+                    <td>合计(@(list.Count)个厅)</td>
+                    <td>@(list.Sum(x=>x.zb_sum.ToInt()))</td>
+                    <td>@(list.Sum(x=>x.unsupplement_sum.ToInt()))</td>
+                    <td>@(list.Sum(x=>x.uninqun_sum.ToInt()))</td>
+                    <td>@(list.Sum(x=>x.inqun_sum.ToInt()))</td>
+                    <td>@(list.Sum(x=>x.quit_sum.ToInt()))</td>
+                    <td>@(list.Sum(x=>x.male_zb_sum.ToInt()))</td>
+                    <td>@(list.Sum(x=>x.female_zb_sum.ToInt()))</td>
+                    <td>@(list.Sum(x=>x.male_zb_sum.ToInt() - x.male_supplement_sum.ToInt()))</td>
+                    <td>@(list.Sum(x=>x.female_zb_sum.ToInt() - x.female_supplement_sum.ToInt()))</td>
+                    <td>@(list.Sum(x=>x.male_supplement_sum.ToInt()))</td>
+                    <td>@(list.Sum(x=>x.female_supplement_sum.ToInt()))</td>
+                    <td>@(list.Sum(x=>x.male_inqun_sum.ToInt()))</td>
+                    <td>@(list.Sum(x=>x.female_inqun_sum.ToInt()))</td>
+                </tr>
+                @foreach (var item in list)
+                {
+                    <tr>
+                        <td>@(new DomainBasic.UserApp().GetInfoByUserSn(item.tg_user_sn).username)</td>
+                        <td>@item.zb_sum</td>
+                        <td>@item.unsupplement_sum</td>
+                        <td>@item.uninqun_sum</td>
+                        <td>@item.inqun_sum</td>
+                        <td>@item.quit_sum</td>
+                        <td>@item.male_zb_sum</td>
+                        <td>@item.female_zb_sum</td>
+                        <td>@item.male_zb_sum</td>
+                        <td>@item.female_zb_sum</td>
+                        <td>@item.male_supplement_sum</td>
+                        <td>@item.female_supplement_sum</td>
+                        <td>@item.male_inqun_sum</td>
+                        <td>@item.female_inqun_sum</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
+
+<script>
+    layui.use(function () {
+        var form = layui.form;
+        var layer = layui.layer;
+        // select 事件
+
+    });
+
+    function applicationlist(dateRange, yy_user_sn, status) {
+        win_pop_iframe('明细', '/Waixuan/Datas/ApproveApplicationList?dateRange=' + dateRange + '&yy_user_sn=' + yy_user_sn + '&status=' + status, 1600, 800);
+    }
+</script>
+
+
+@{
+    
+}

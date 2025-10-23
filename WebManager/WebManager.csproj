@@ -1,0 +1,778 @@
+﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0E88467F-29BF-4D8C-928A-93BD88891BF9}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WebProject</RootNamespace>
+    <AssemblyName>WebProject</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <UseIISExpress>false</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AppLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CommonDll\AppLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.0.0.999, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.1.0.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="LitJSON, Version=0.16.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LitJson.0.16.0\lib\net45\LitJSON.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MvcContrib, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CommonDll\MvcContrib.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI, Version=2.4.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.4.1\lib\net45\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML, Version=2.4.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.4.1\lib\net45\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net, Version=2.4.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.4.1\lib\net45\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats, Version=2.4.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.4.1\lib\net45\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="WeiCode.DataBase, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CommonDll\WeiCode.DataBase.dll</HintPath>
+    </Reference>
+    <Reference Include="WeiCode.Domain.Basic, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CommonDll\WeiCode.Domain.Basic.dll</HintPath>
+    </Reference>
+    <Reference Include="WeiCode.Domain.Crm">
+      <HintPath>..\CommonDll\WeiCode.Domain.Crm.dll</HintPath>
+    </Reference>
+    <Reference Include="WeiCode.Domain.Site, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CommonDll\WeiCode.Domain.Site.dll</HintPath>
+    </Reference>
+    <Reference Include="WeiCode.Domain.TradeBasic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CommonDll\WeiCode.Domain.TradeBasic.dll</HintPath>
+    </Reference>
+    <Reference Include="WeiCode.Domain.UserBasic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CommonDll\WeiCode.Domain.UserBasic.dll</HintPath>
+    </Reference>
+    <Reference Include="WeiCode.Modular.Basic, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CommonDll\WeiCode.Modular.Basic.dll</HintPath>
+    </Reference>
+    <Reference Include="WeiCode.Modular.Crm">
+      <HintPath>..\CommonDll\WeiCode.Modular.Crm.dll</HintPath>
+    </Reference>
+    <Reference Include="WeiCode.Modular.Site, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CommonDll\WeiCode.Modular.Site.dll</HintPath>
+    </Reference>
+    <Reference Include="WeiCode.Modular.TradeBasic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CommonDll\WeiCode.Modular.TradeBasic.dll</HintPath>
+    </Reference>
+    <Reference Include="WeiCode.Modular.UserBasic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CommonDll\WeiCode.Modular.UserBasic.dll</HintPath>
+    </Reference>
+    <Reference Include="WeiCode.Services, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CommonDll\WeiCode.Services.dll</HintPath>
+    </Reference>
+    <Reference Include="WeiCode.Utility, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CommonDll\WeiCode.Utility.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.4\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.4\lib\net45\System.Web.Webpages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Deployment">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.4\lib\net45\System.Web.Webpages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.4\lib\net45\System.Web.Webpages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Helpers">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.4\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.4\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Cencai\Views\PK\PKDataList.cshtml" />
+    <Content Include="Areas\Cencai\Views\web.config" />
+    <Content Include="Areas\Cencai\Views\Zb\List.cshtml" />
+    <Content Include="Assets\assembly\css\admin.css" />
+    <Content Include="Assets\assembly\css\layui.css" />
+    <Content Include="Assets\assembly\js\css\modules\layer\default\layer.css" />
+    <Content Include="Assets\assembly\js\echarts.min.js" />
+    <Content Include="Assets\assembly\js\layui.js" />
+    <Content Include="Assets\assembly\lib\admin.css" />
+    <Content Include="Assets\assembly\lib\admin.js" />
+    <Content Include="Assets\assembly\modules\common.js" />
+    <Content Include="Assets\assembly\config.js" />
+    <Content Include="Assets\assembly\js\lay\modules\element.js" />
+    <Content Include="Assets\assembly\js\lay\modules\function.js" />
+    <Content Include="Assets\assembly\lib\index.js" />
+    <Content Include="Assets\assembly\js\lay\modules\jquery.js" />
+    <Content Include="Assets\assembly\js\lay\modules\layer.js" />
+    <Content Include="Assets\assembly\js\lay\modules\laytpl.js" />
+    <Content Include="Assets\assembly\lib\layui.css" />
+    <Content Include="Assets\assembly\js\lay\modules\layui.js" />
+    <Content Include="Assets\assembly\lib\like.css" />
+    <Content Include="Assets\assembly\lib\Time.js" />
+    <Content Include="Assets\assembly\js\lay\modules\util.js" />
+    <Content Include="Assets\assembly\lib\view.js" />
+    <Content Include="Assets\call_function\copy.js" />
+    <Content Include="Assets\css\global.css" />
+    <Content Include="Assets\css\login.css" />
+    <Content Include="Assets\css\main.css" />
+    <Content Include="Assets\css\PagedList.css" />
+    <Content Include="Assets\images\alipay.jpg" />
+    <Content Include="Assets\images\code.jpg" />
+    <Content Include="Assets\images\face.jpg" />
+    <Content Include="Assets\images\rank1.png" />
+    <Content Include="Assets\images\rank2.png" />
+    <Content Include="Assets\images\rank3.png" />
+    <Content Include="Assets\images\rank4.png" />
+    <Content Include="Assets\images\rank5.png" />
+    <Content Include="Assets\images\reg_bg.jpg" />
+    <Content Include="Assets\images\userface1.jpg" />
+    <Content Include="Assets\images\userface2.jpg" />
+    <Content Include="Assets\images\userface3.jpg" />
+    <Content Include="Assets\images\userface4.jpg" />
+    <Content Include="Assets\images\userface5.jpg" />
+    <Content Include="Assets\images\wechat.jpg" />
+    <Content Include="Assets\js\bodyTab.js" />
+    <Content Include="Assets\js\common.js" />
+    <Content Include="Assets\js\index.js" />
+    <Content Include="Assets\js\jquery.js" />
+    <Content Include="Assets\js\layui.js" />
+    <Content Include="Assets\js\leftNav.js" />
+    <Content Include="Assets\js\login.js" />
+    <Content Include="Assets\js\main.js" />
+    <Content Include="Assets\laydate\laydate.js" />
+    <Content Include="Assets\laydate\theme\default\font\iconfont.svg" />
+    <Content Include="Assets\laydate\theme\default\laydate.css" />
+    <Content Include="Assets\layuiExample\admin\admin.css" />
+    <Content Include="Assets\layuiExample\admin\layui.css" />
+    <Content Include="Assets\layuiExample\admin\layui.js" />
+    <Content Include="Assets\layuiExample\homepage\admin.css" />
+    <Content Include="Assets\layuiExample\homepage\admin.js" />
+    <Content Include="Assets\layuiExample\homepage\common.js" />
+    <Content Include="Assets\layuiExample\homepage\config.js" />
+    <Content Include="Assets\layuiExample\homepage\element.js" />
+    <Content Include="Assets\layuiExample\homepage\index.js" />
+    <Content Include="Assets\layuiExample\homepage\layer.css" />
+    <Content Include="Assets\layuiExample\homepage\layer.js" />
+    <Content Include="Assets\layuiExample\homepage\laytpl.js" />
+    <Content Include="Assets\layuiExample\homepage\layui.css" />
+    <Content Include="Assets\layuiExample\homepage\layui.js" />
+    <Content Include="Assets\layuiExample\homepage\template.css" />
+    <Content Include="Assets\layuiExample\homepage\util.js" />
+    <Content Include="Assets\layuiExample\homepage\view.js" />
+    <Content Include="Assets\layuiExample\lay\modules\form.js" />
+    <Content Include="Assets\layuiExample\global.css" />
+    <Content Include="Assets\layuiExample\global.js" />
+    <Content Include="Assets\layuiExample\layui.css" />
+    <Content Include="Assets\layuiExample\layui.js" />
+    <Content Include="Assets\layui\common.js" />
+    <Content Include="Assets\layui\css\%40layui.css" />
+    <Content Include="Assets\layui\css\global.css" />
+    <Content Include="Assets\layui\css\layui.css" />
+    <Content Include="Assets\layui\css\layui.mobile.css" />
+    <Content Include="Assets\layui\css\modules\code.css" />
+    <Content Include="Assets\layui\css\modules\laydate\default\laydate.css" />
+    <Content Include="Assets\layui\css\modules\laydate\icon.png" />
+    <Content Include="Assets\layui\css\modules\laydate\laydate.css" />
+    <Content Include="Assets\layui\css\modules\layer\default\icon-ext.png" />
+    <Content Include="Assets\layui\css\modules\layer\default\icon.png" />
+    <Content Include="Assets\layui\css\modules\layer\default\layer.css" />
+    <Content Include="Assets\layui\css\modules\layer\default\loading-0.gif" />
+    <Content Include="Assets\layui\css\modules\layer\default\loading-1.gif" />
+    <Content Include="Assets\layui\css\modules\layer\default\loading-2.gif" />
+    <Content Include="Assets\layui\font\iconfont.svg" />
+    <Content Include="Assets\layui\global.js" />
+    <Content Include="Assets\layui\images\face\0.gif" />
+    <Content Include="Assets\layui\images\face\1.gif" />
+    <Content Include="Assets\layui\images\face\10.gif" />
+    <Content Include="Assets\layui\images\face\11.gif" />
+    <Content Include="Assets\layui\images\face\12.gif" />
+    <Content Include="Assets\layui\images\face\13.gif" />
+    <Content Include="Assets\layui\images\face\14.gif" />
+    <Content Include="Assets\layui\images\face\15.gif" />
+    <Content Include="Assets\layui\images\face\16.gif" />
+    <Content Include="Assets\layui\images\face\17.gif" />
+    <Content Include="Assets\layui\images\face\18.gif" />
+    <Content Include="Assets\layui\images\face\19.gif" />
+    <Content Include="Assets\layui\images\face\2.gif" />
+    <Content Include="Assets\layui\images\face\20.gif" />
+    <Content Include="Assets\layui\images\face\21.gif" />
+    <Content Include="Assets\layui\images\face\22.gif" />
+    <Content Include="Assets\layui\images\face\23.gif" />
+    <Content Include="Assets\layui\images\face\24.gif" />
+    <Content Include="Assets\layui\images\face\25.gif" />
+    <Content Include="Assets\layui\images\face\26.gif" />
+    <Content Include="Assets\layui\images\face\27.gif" />
+    <Content Include="Assets\layui\images\face\28.gif" />
+    <Content Include="Assets\layui\images\face\29.gif" />
+    <Content Include="Assets\layui\images\face\3.gif" />
+    <Content Include="Assets\layui\images\face\30.gif" />
+    <Content Include="Assets\layui\images\face\31.gif" />
+    <Content Include="Assets\layui\images\face\32.gif" />
+    <Content Include="Assets\layui\images\face\33.gif" />
+    <Content Include="Assets\layui\images\face\34.gif" />
+    <Content Include="Assets\layui\images\face\35.gif" />
+    <Content Include="Assets\layui\images\face\36.gif" />
+    <Content Include="Assets\layui\images\face\37.gif" />
+    <Content Include="Assets\layui\images\face\38.gif" />
+    <Content Include="Assets\layui\images\face\39.gif" />
+    <Content Include="Assets\layui\images\face\4.gif" />
+    <Content Include="Assets\layui\images\face\40.gif" />
+    <Content Include="Assets\layui\images\face\41.gif" />
+    <Content Include="Assets\layui\images\face\42.gif" />
+    <Content Include="Assets\layui\images\face\43.gif" />
+    <Content Include="Assets\layui\images\face\44.gif" />
+    <Content Include="Assets\layui\images\face\45.gif" />
+    <Content Include="Assets\layui\images\face\46.gif" />
+    <Content Include="Assets\layui\images\face\47.gif" />
+    <Content Include="Assets\layui\images\face\48.gif" />
+    <Content Include="Assets\layui\images\face\49.gif" />
+    <Content Include="Assets\layui\images\face\5.gif" />
+    <Content Include="Assets\layui\images\face\50.gif" />
+    <Content Include="Assets\layui\images\face\51.gif" />
+    <Content Include="Assets\layui\images\face\52.gif" />
+    <Content Include="Assets\layui\images\face\53.gif" />
+    <Content Include="Assets\layui\images\face\54.gif" />
+    <Content Include="Assets\layui\images\face\55.gif" />
+    <Content Include="Assets\layui\images\face\56.gif" />
+    <Content Include="Assets\layui\images\face\57.gif" />
+    <Content Include="Assets\layui\images\face\58.gif" />
+    <Content Include="Assets\layui\images\face\59.gif" />
+    <Content Include="Assets\layui\images\face\6.gif" />
+    <Content Include="Assets\layui\images\face\60.gif" />
+    <Content Include="Assets\layui\images\face\61.gif" />
+    <Content Include="Assets\layui\images\face\62.gif" />
+    <Content Include="Assets\layui\images\face\63.gif" />
+    <Content Include="Assets\layui\images\face\64.gif" />
+    <Content Include="Assets\layui\images\face\65.gif" />
+    <Content Include="Assets\layui\images\face\66.gif" />
+    <Content Include="Assets\layui\images\face\67.gif" />
+    <Content Include="Assets\layui\images\face\68.gif" />
+    <Content Include="Assets\layui\images\face\69.gif" />
+    <Content Include="Assets\layui\images\face\7.gif" />
+    <Content Include="Assets\layui\images\face\70.gif" />
+    <Content Include="Assets\layui\images\face\71.gif" />
+    <Content Include="Assets\layui\images\face\8.gif" />
+    <Content Include="Assets\layui\images\face\9.gif" />
+    <Content Include="Assets\layui\layui.js" />
+    <Content Include="Assets\layui\layuiadmin\config.js" />
+    <Content Include="Assets\layui\layuiadmin\lib\admin.js" />
+    <Content Include="Assets\layui\layuiadmin\lib\index.js" />
+    <Content Include="Assets\layui\layuiadmin\lib\view.js" />
+    <Content Include="Assets\layui\layuiadmin\modules\common.js" />
+    <Content Include="Assets\layui\layuiadmin\style\admin.css" />
+    <Content Include="Assets\layui\lay\dest\layui.all.js" />
+    <Content Include="Assets\layui\lay\modules\carousel.js" />
+    <Content Include="Assets\layui\lay\modules\code.js" />
+    <Content Include="Assets\layui\lay\modules\colorpicker.js" />
+    <Content Include="Assets\layui\lay\modules\common.js" />
+    <Content Include="Assets\layui\lay\modules\element.js" />
+    <Content Include="Assets\layui\lay\modules\flow.js" />
+    <Content Include="Assets\layui\lay\modules\form.js" />
+    <Content Include="Assets\layui\lay\modules\jquery.js" />
+    <Content Include="Assets\layui\lay\modules\laydate.js" />
+    <Content Include="Assets\layui\lay\modules\layedit.js" />
+    <Content Include="Assets\layui\lay\modules\layer.js" />
+    <Content Include="Assets\layui\lay\modules\layim.js" />
+    <Content Include="Assets\layui\lay\modules\laypage.js" />
+    <Content Include="Assets\layui\lay\modules\laytpl.js" />
+    <Content Include="Assets\layui\lay\modules\mobile.js" />
+    <Content Include="Assets\layui\lay\modules\rate.js" />
+    <Content Include="Assets\layui\lay\modules\slider.js" />
+    <Content Include="Assets\layui\lay\modules\table.js" />
+    <Content Include="Assets\layui\lay\modules\tree.js" />
+    <Content Include="Assets\layui\lay\modules\upload.js" />
+    <Content Include="Assets\layui\lay\modules\util.js" />
+    <Content Include="Assets\video\login.mp4" />
+    <Content Include="Global.asax" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Areas\Asset\AssetAreaRegistration.cs" />
+    <Compile Include="Areas\Asset\Controllers\1.DataController.cs" />
+    <Compile Include="Areas\Asset\Controllers\2.OpController.cs" />
+    <Compile Include="Areas\Asset\Controllers\3.InController.cs" />
+    <Compile Include="Areas\Asset\Controllers\4.OutController.cs" />
+    <Compile Include="Areas\Asset\Controllers\5.StockController.cs" />
+    <Compile Include="Areas\Asset\Models\Data.cs" />
+    <Compile Include="Areas\DangBiao\Controllers\DangBiaoController.cs" />
+    <Compile Include="Areas\DangBiao\DangBiaoAreaRegistration.cs" />
+    <Compile Include="Areas\DataAnalysis\Controllers\TgRankController.cs" />
+    <Compile Include="Areas\DataAnalysis\Controllers\TingCoreDataController.cs" />
+    <Compile Include="Areas\DataAnalysis\Controllers\YyRankController.cs" />
+    <Compile Include="Areas\DataAnalysis\Controllers\ZbRankController.cs" />
+    <Compile Include="Areas\DataAnalysis\DataAnalysisAreaRegistration.cs" />
+    <Compile Include="Areas\DataAnalysis\Data\Rule.cs" />
+    <Compile Include="Areas\DouData\Controllers\账号管理_换厅监测Controller.cs" />
+    <Compile Include="Areas\DouData\Controllers\账号管理_流水无归属Controller.cs" />
+    <Compile Include="Areas\DouData\DouDataAreaRegistration.cs" />
+    <Compile Include="Areas\Help\Controllers\CenterController.cs" />
+    <Compile Include="Areas\Help\HelpAreaRegistration.cs" />
+    <Compile Include="Areas\Jiezou\Controllers\JiezouDayController.cs" />
+    <Compile Include="Areas\Jiezou\Controllers\JiezouMonthController.cs" />
+    <Compile Include="Areas\Jiezou\Controllers\ZhuboJiezouController.cs" />
+    <Compile Include="Areas\Jiezou\JiezouAreaRegistration.cs" />
+    <Compile Include="Areas\JixiaoDay\Controllers\ReportDayController.cs" />
+    <Compile Include="Areas\JixiaoDay\Controllers\ShangjiaoController.cs" />
+    <Compile Include="Areas\JixiaoDay\JixiaoDayAreaRegistration.cs" />
+    <Compile Include="Areas\Jixiao\Controllers\RankController.cs" />
+    <Compile Include="Areas\JoinNew\Controllers\ApproveApplicationController.cs" />
+    <Compile Include="Areas\JoinNew\Controllers\CitysController.cs" />
+    <Compile Include="Areas\JoinNew\Controllers\CreateZBAccountController.cs" />
+    <Compile Include="Areas\JoinNew\Controllers\DatasShowController.cs" />
+    <Compile Include="Areas\JoinNew\Controllers\InterpolateApproveController.cs" />
+    <Compile Include="Areas\JoinNew\Controllers\PeiXunController.cs" />
+    <Compile Include="Areas\JoinNew\Controllers\PinToTopController.cs" />
+    <Compile Include="Areas\JoinNew\Controllers\ShareController.cs" />
+    <Compile Include="Areas\JoinNew\Controllers\StatisticalController.cs" />
+    <Compile Include="Areas\JoinNew\Controllers\WeightController.cs" />
+    <Compile Include="Areas\JoinNew\Controllers\YyCityController.cs" />
+    <Compile Include="Areas\JoinNew\JoinNewAreaRegistration.cs" />
+    <Compile Include="Areas\KuaFang\Controllers\KuaFangController.cs" />
+    <Compile Include="Areas\KuaFang\Controllers\MateController.cs" />
+    <Compile Include="Areas\KuaFang\KuaFangAreaRegistration.cs" />
+    <Compile Include="Areas\LiuLiang\Controllers\提成Commission.cs" />
+    <Compile Include="Areas\LiuLiang\Controllers\提成规则CommissionRule.cs" />
+    <Compile Include="Areas\LiuLiang\Controllers\数据Data.cs" />
+    <Compile Include="Areas\LiuLiang\Controllers\统计Statistical.cs" />
+    <Compile Include="Areas\LiuLiang\LiuLiangAreaRegistration.cs" />
+    <Compile Include="Areas\PBasic\Controllers\SystemController.cs" />
+    <Compile Include="Areas\ProjectBasic\Controllers\DataRuleController.cs" />
+    <Compile Include="Areas\ProjectBasic\ProjectBasicAreaRegistration.cs" />
+    <Compile Include="Areas\QianYue\Controllers\提成Commission.cs" />
+    <Compile Include="Areas\QianYue\Controllers\提成规则CommissionRule.cs" />
+    <Compile Include="Areas\QianYue\Controllers\数据Data.cs" />
+    <Compile Include="Areas\QianYue\Controllers\统计Statistical.cs" />
+    <Compile Include="Areas\QianYue\QianYueAreaRegistration.cs" />
+    <Compile Include="Areas\Support\Controllers\BindController.cs" />
+    <Compile Include="Areas\Support\SupportAreaRegistration.cs" />
+    <Compile Include="Areas\Task\Controllers\FaceController.cs" />
+    <Compile Include="Areas\Task\TaskAreaRegistration.cs" />
+    <Compile Include="Areas\TgManage\Controllers\TgAccountController.cs" />
+    <Compile Include="Areas\TgManage\TgManageAreaRegistration.cs" />
+    <Compile Include="Areas\Cencai\CencaiAreaRegistration.cs" />
+    <Compile Include="Areas\Cencai\Controllers\PKController.cs" />
+    <Compile Include="Areas\Cencai\Controllers\ZbController.cs" />
+    <Compile Include="Areas\Jixiao\Controllers\DangBiaoController.cs" />
+    <Compile Include="Areas\Jixiao\Controllers\JiezouController.cs" />
+    <Compile Include="Areas\Jixiao\Controllers\TingZhanController.cs" />
+    <Compile Include="Areas\PBasic\Controllers\ManageController.cs" />
+    <Compile Include="Areas\PBasic\PBasicAreaRegistration.cs" />
+    <Compile Include="Areas\PCrm\Controllers\2.TypeController.cs" />
+    <Compile Include="Areas\PCrm\Controllers\3.GradeController.cs" />
+    <Compile Include="Areas\PCrm\Controllers\PCrmController.cs" />
+    <Compile Include="Areas\PCrm\CrmAreaRegistration.cs" />
+    <Compile Include="Areas\Jixiao\Controllers\ReportDayController.cs" />
+    <Compile Include="Areas\Jixiao\Controllers\UploadController.cs" />
+    <Compile Include="Areas\Jixiao\JixiaoAreaRegistration.cs" />
+    <Compile Include="Areas\PUserBasic\Controllers\NewcomerController.cs" />
+    <Compile Include="Areas\PUserBasic\Controllers\UserOrganizationController.cs" />
+    <Compile Include="Areas\PUserBasic\Controllers\UserRelationController.cs" />
+    <Compile Include="Areas\PUserBasic\PUserBasicAreaRegistration.cs" />
+    <Compile Include="Areas\Service\Controllers\FeedBackController.cs" />
+    <Compile Include="Areas\Service\ServiceAreaRegistration.cs" />
+    <Compile Include="Areas\TingZhan\Controllers\FlowController.cs" />
+    <Compile Include="Areas\TingZhan\Controllers\MateController.cs" />
+    <Compile Include="Areas\TingZhan\Controllers\PaibuController.cs" />
+    <Compile Include="Areas\TingZhan\Controllers\RuleController.cs" />
+    <Compile Include="Areas\TingZhan\Controllers\ScoreController.cs" />
+    <Compile Include="Areas\TingZhan\Controllers\StatisticalController.cs" />
+    <Compile Include="Areas\TingZhan\Controllers\TargetController.cs" />
+    <Compile Include="Areas\TingZhan\TingZhanAreaRegistration.cs" />
+    <Compile Include="Areas\UserGuanxi\Controllers\1.用户转移Move.cs" />
+    <Compile Include="Areas\UserGuanxi\Controllers\2.基地组织JdOrganize.cs" />
+    <Compile Include="Areas\UserGuanxi\UserGuanxiAreaRegistration.cs" />
+    <Compile Include="Areas\UserInfo\Controllers\厅管升运营Controller.cs" />
+    <Compile Include="Areas\UserInfo\Controllers\厅管账号TgAccount.cs" />
+    <Compile Include="Areas\UserInfo\Controllers\直播厅TingInfo.cs" />
+    <Compile Include="Areas\UserInfo\Controllers\主播规则XinRenPanding.cs" />
+    <Compile Include="Areas\UserInfo\Controllers\账号管理Account.cs" />
+    <Compile Include="Areas\UserInfo\Controllers\运营账号YyAccount.cs" />
+    <Compile Include="Areas\UserInfo\Controllers\主播名单Zhubo.cs" />
+    <Compile Include="Areas\UserInfo\Controllers\账号管理_开厅受理Accer_TingApply.cs" />
+    <Compile Include="Areas\UserInfo\UserInfoAreaRegistration.cs" />
+    <Compile Include="Areas\UserTable\Controllers\GradeController.cs" />
+    <Compile Include="Areas\UserTable\Controllers\TgInfoController.cs" />
+    <Compile Include="Areas\UserTable\UserTableAreaRegistration.cs" />
+    <Compile Include="Areas\Work\Controllers\TodoRuleController.cs" />
+    <Compile Include="Areas\Work\WorkAreaRegistration.cs" />
+    <Compile Include="Areas\Xianxiabiao\XianxiabiaoAreaRegistration.cs" />
+    <Compile Include="Areas\Xianxiazp\Controllers\InterviewerController.cs" />
+    <Compile Include="Areas\Xianxiazp\Controllers\YaoYueController.cs" />
+    <Compile Include="Areas\Xianxiazp\XianxiazpAreaRegistration.cs" />
+    <Compile Include="Areas\Xianxia\Controllers\DouyinController.cs" />
+    <Compile Include="Areas\Xianxia\Controllers\QianyueController.cs" />
+    <Compile Include="Areas\Xianxia\XianxiaAreaRegistration.cs" />
+    <Compile Include="Areas\Xuexi\Controllers\ManageController.cs" />
+    <Compile Include="Areas\Xuexi\Controllers\PageController.cs" />
+    <Compile Include="Areas\Xuexi\XuexiAreaRegistration.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\web.config" />
+    <Content Include="Assets\images\Thumbs.db" />
+    <Content Include="Assets\laydate\theme\default\font\iconfont.eot" />
+    <Content Include="Assets\laydate\theme\default\font\iconfont.ttf" />
+    <Content Include="Assets\laydate\theme\default\font\iconfont.woff" />
+    <Content Include="Assets\layui\font\iconfont.eot" />
+    <Content Include="Assets\layui\font\iconfont.ttf" />
+    <Content Include="Assets\layui\font\iconfont.woff" />
+    <Content Include="Areas\Web.config" />
+    <Content Include="Areas\PCrm\Views\web.config" />
+    <Content Include="Areas\Jixiao\Views\web.config" />
+    <Content Include="Areas\Jixiao\Views\ReportDay\Index.cshtml" />
+    <Content Include="Areas\Jixiao\Views\Target\Index.cshtml" />
+    <Content Include="Areas\Jixiao\Views\ReportDay\List.cshtml" />
+    <Content Include="Areas\Jixiao\Views\ReportDay\Datas.cshtml" />
+    <Content Include="Areas\PBasic\Views\web.config" />
+    <Content Include="Areas\Service\Views\web.config" />
+    <Content Include="Areas\PUserBasic\Views\web.config" />
+    <Content Include="Areas\PUserBasic\Views\UserOrganization\Index.cshtml" />
+    <Content Include="Areas\Jixiao\Views\DangBiao\ShowCurrentTable.cshtml" />
+    <Content Include="Areas\Jixiao\Views\DangBiao\ShowTableById.cshtml" />
+    <Content Include="Areas\Jixiao\Views\Target\DayTarget.cshtml" />
+    <Content Include="Areas\Jixiao\Views\Target\TGDayTarget.cshtml" />
+    <Content Include="Areas\Jixiao\Views\Jiezou\Item.cshtml" />
+    <Content Include="Areas\Jixiao\Views\Jiezou\QNSIndex.cshtml" />
+    <Content Include="Areas\Jixiao\Views\Jiezou\Total.cshtml" />
+    <Content Include="Areas\Jixiao\Views\Jiezou\TgDetail.cshtml" />
+    <Content Include="Areas\Jixiao\Views\Jiezou\TgMissing.cshtml" />
+    <Content Include="Areas\TgManage\Views\TgAccount\FastLogin.cshtml" />
+    <Content Include="Areas\TgManage\Views\web.config" />
+    <Content Include="Areas\Cencai\Views\Zb\List2.cshtml" />
+    <Content Include="Areas\UserInfo\Views\TgAccount\FastLogin.cshtml" />
+    <Content Include="Areas\UserInfo\Views\web.config" />
+    <Content Include="Areas\JixiaoDay\Views\ReportDay\Datas.cshtml" />
+    <Content Include="Areas\JixiaoDay\Views\ReportDay\Index.cshtml" />
+    <Content Include="Areas\JixiaoDay\Views\ReportDay\List.cshtml" />
+    <Content Include="Areas\JixiaoDay\Views\web.config" />
+    <Content Include="Areas\DangBiao\Views\DangBiao\ShowCurrentTable.cshtml" />
+    <Content Include="Areas\DangBiao\Views\DangBiao\ShowTableById.cshtml" />
+    <Content Include="Areas\DangBiao\Views\web.config" />
+    <Content Include="Areas\TgManage\Views\Rank\RankList.cshtml" />
+    <Content Include="Areas\Jixiao\Views\Rank\TgAmount2RankTable.cshtml" />
+    <Content Include="Areas\Jixiao\Views\Rank\TgContactNumRankTable.cshtml" />
+    <Content Include="Areas\Jixiao\Views\Rank\TgNewNumRankTable.cshtml" />
+    <Content Include="Areas\Jixiao\Views\Rank\TgNum2RankTable.cshtml" />
+    <Content Include="Areas\Jixiao\Views\Rank\YyAmount2RankTable.cshtml" />
+    <Content Include="Areas\Jixiao\Views\Rank\YyContactNumRankTable.cshtml" />
+    <Content Include="Areas\Jixiao\Views\Rank\YyNewNumRankTable.cshtml" />
+    <Content Include="Areas\Jixiao\Views\Rank\YyNum2RankTable.cshtml" />
+    <Content Include="Areas\Jixiao\Views\Rank\ZbAmount2RankTable.cshtml" />
+    <Content Include="Areas\Jixiao\Views\Rank\ZbContactNumRankTable.cshtml" />
+    <Content Include="Areas\Jixiao\Views\Rank\ZbNewNumRankTable.cshtml" />
+    <Content Include="Areas\Jixiao\Views\Rank\ZbNum2RankTable.cshtml" />
+    <Content Include="Areas\Jixiao\Views\Rank\RuleDefinition.cshtml" />
+    <Content Include="Areas\Jixiao\Views\Rank\TingRuleDefinition.cshtml" />
+    <Content Include="Areas\Jixiao\Views\Rank\YyRuleDefinition.cshtml" />
+    <Content Include="Areas\DataAnalysis\Views\TgRank\TgAmount2RankTable.cshtml" />
+    <Content Include="Areas\DataAnalysis\Views\TgRank\TgContactNumRankTable.cshtml" />
+    <Content Include="Areas\DataAnalysis\Views\TgRank\TgNewNumRankTable.cshtml" />
+    <Content Include="Areas\DataAnalysis\Views\TgRank\TgNum2RankTable.cshtml" />
+    <Content Include="Areas\DataAnalysis\Views\web.config" />
+    <Content Include="Areas\DataAnalysis\Views\YyRank\YyAmount2RankTable.cshtml" />
+    <Content Include="Areas\DataAnalysis\Views\YyRank\YyContactNumRankTable.cshtml" />
+    <Content Include="Areas\DataAnalysis\Views\YyRank\YyNewNumRankTable.cshtml" />
+    <Content Include="Areas\DataAnalysis\Views\YyRank\YyNum2RankTable.cshtml" />
+    <Content Include="Areas\DataAnalysis\Views\ZbRank\ZbAmount2RankTable.cshtml" />
+    <Content Include="Areas\DataAnalysis\Views\ZbRank\ZbContactNumRankTable.cshtml" />
+    <Content Include="Areas\DataAnalysis\Views\ZbRank\ZbNewNumRankTable.cshtml" />
+    <Content Include="Areas\DataAnalysis\Views\ZbRank\ZbNum2RankTable.cshtml" />
+    <Content Include="Areas\UserTable\Views\Grade\Table.cshtml" />
+    <Content Include="Areas\UserTable\Views\TgInfo\RankList.cshtml" />
+    <Content Include="Areas\UserTable\Views\web.config" />
+    <Content Include="Areas\KuaFang\Views\Mate\List.cshtml" />
+    <Content Include="Areas\KuaFang\Views\web.config" />
+    <Content Include="Areas\JixiaoDay\Views\ReportDay\DataOnDateRangeList.cshtml" />
+    <Content Include="Areas\Help\Views\web.config" />
+    <Content Include="Areas\DataAnalysis\Views\TgRank\LineChart.cshtml" />
+    <Content Include="Areas\DataAnalysis\Views\YyRank\LineChart.cshtml" />
+    <Content Include="Areas\DataAnalysis\Views\ZbRank\LineChart.cshtml" />
+    <Content Include="Areas\Support\Views\Bind\Page.cshtml" />
+    <Content Include="Areas\Support\Views\web.config" />
+    <Content Include="Areas\UserTable\Views\Grade\LineChart.cshtml" />
+    <Content Include="Areas\DouData\Views\web.config" />
+    <Content Include="Areas\TingZhan\Views\Mate\Index.cshtml" />
+    <Content Include="Areas\TingZhan\Views\Score\Total.cshtml" />
+    <Content Include="Areas\TingZhan\Views\Statistical\Analysis.cshtml" />
+    <Content Include="Areas\TingZhan\Views\Statistical\MateRanking.cshtml" />
+    <Content Include="Areas\TingZhan\Views\Statistical\TargetTotal.cshtml" />
+    <Content Include="Areas\TingZhan\Views\Target\GradeList.cshtml" />
+    <Content Include="Areas\TingZhan\Views\web.config" />
+    <Content Include="Areas\Task\Views\web.config" />
+    <Content Include="Areas\Jiezou\Views\JiezouDay\Detail.cshtml" />
+    <Content Include="Areas\Jiezou\Views\JiezouDay\Item.cshtml" />
+    <Content Include="Areas\Jiezou\Views\JiezouDay\RuleDefinition.cshtml" />
+    <Content Include="Areas\Jiezou\Views\JiezouMonth\Detail.cshtml" />
+    <Content Include="Areas\Jiezou\Views\JiezouMonth\Item.cshtml" />
+    <Content Include="Areas\Jiezou\Views\web.config" />
+    <Content Include="Areas\Jiezou\Views\JiezouDay\TingStandardChart.cshtml" />
+    <Content Include="Areas\JixiaoDay\Views\ReportDay\MobileDataList.cshtml" />
+    <Content Include="Areas\DataAnalysis\Views\TingCoreData\Item.cshtml" />
+    <Content Include="Areas\UserGuanxi\Views\web.config" />
+    <Content Include="Areas\QianYue\Views\Commission\Total.cshtml" />
+    <Content Include="Areas\QianYue\Views\Statistical\Total.cshtml" />
+    <Content Include="Areas\QianYue\Views\web.config" />
+    <Content Include="Areas\LiuLiang\Views\Commission\Total.cshtml" />
+    <Content Include="Areas\LiuLiang\Views\Statistical\Total.cshtml" />
+    <Content Include="Areas\LiuLiang\Views\web.config" />
+    <Content Include="Areas\DataAnalysis\Views\Rule\Add.cshtml" />
+    <Content Include="Areas\DataAnalysis\Views\Rule\List.cshtml" />
+    <Content Include="Areas\DataAnalysis\Views\TingCoreData\LineChart.cshtml" />
+    <Content Include="Areas\ProjectBasic\Views\web.config" />
+    <Content Include="Areas\ProjectBasic\Views\DataRule\Edit.cshtml" />
+    <Content Include="Areas\JoinNew\Views\Citys\SelectCity.cshtml" />
+    <Content Include="Areas\JoinNew\Views\DatasShow\ApproveSumTable.cshtml" />
+    <Content Include="Areas\JoinNew\Views\DatasShow\DayGetview.cshtml" />
+    <Content Include="Areas\JoinNew\Views\DatasShow\WaitOverview.cshtml" />
+    <Content Include="Areas\JoinNew\Views\PeiXun\Index.cshtml" />
+    <Content Include="Areas\JoinNew\Views\Statistical\AllocateTotal.cshtml" />
+    <Content Include="Areas\JoinNew\Views\Statistical\DataAnalysis.cshtml" />
+    <Content Include="Areas\JoinNew\Views\Statistical\DataView.cshtml" />
+    <Content Include="Areas\JoinNew\Views\Statistical\LineChart.cshtml" />
+    <Content Include="Areas\JoinNew\Views\Statistical\MxRank.cshtml" />
+    <Content Include="Areas\JoinNew\Views\Statistical\TingJoinData.cshtml" />
+    <Content Include="Areas\JoinNew\Views\Statistical\UnAllocate.cshtml" />
+    <Content Include="Areas\JoinNew\Views\web.config" />
+    <Content Include="Areas\JoinNew\Views\YyCity\SelectCity.cshtml" />
+    <Content Include="Areas\Asset\Views\Index.cshtml" />
+    <Content Include="Areas\Asset\Views\web.config" />
+    <None Include="Areas\Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Areas\Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <Content Include="Assets\assembly\font\iconfont.woff2" />
+    <Content Include="Assets\layuiExample\font\iconfont.woff" />
+    <Content Include="Areas\Xuexi\Views\web.config" />
+    <Content Include="Areas\Xuexi\Views\Page\Index.cshtml" />
+    <Content Include="Areas\Xianxia\Views\web.config" />
+    <Content Include="Areas\Xianxiabiao\Views\web.config" />
+    <Content Include="Areas\Work\Views\web.config" />
+    <Content Include="Areas\Xianxiazp\Views\Interviewer\Statistical.cshtml" />
+    <Content Include="Areas\Xianxiazp\Views\web.config" />
+    <Content Include="Areas\Xianxiazp\Views\YaoYue\Statistical.cshtml" />
+    <Content Include="Areas\Xianxiazp\Views\Interviewer\ZPStatistics.cshtml" />
+    <None Include="packages.config" />
+    <Content Include="Views\Home\MIndex.cshtml" />
+    <Content Include="Views\Home\WechatRegist.cshtml" />
+    <Content Include="Views\Home\Main.cshtml" />
+    <Content Include="Views\Home\MobileView.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Areas\Asset\Views\Accept\" />
+    <Folder Include="Areas\Asset\Views\Back\" />
+    <Folder Include="Areas\Asset\Views\Data\" />
+    <Folder Include="Areas\Asset\Views\Move\" />
+    <Folder Include="Areas\Asset\Views\Shared\" />
+    <Folder Include="Areas\Cencai\Data\" />
+    <Folder Include="Areas\Cencai\Views\Shared\" />
+    <Folder Include="Areas\DangBiao\Data\" />
+    <Folder Include="Areas\DouData\Data\" />
+    <Folder Include="Areas\DouData\Views\Shared\" />
+    <Folder Include="Areas\Help\Data\" />
+    <Folder Include="Areas\Help\Views\Shared\" />
+    <Folder Include="Areas\Jiezou\Data\" />
+    <Folder Include="Areas\Jiezou\Views\Shared\" />
+    <Folder Include="Areas\JixiaoDay\Data\" />
+    <Folder Include="Areas\Jixiao\Data\" />
+    <Folder Include="Areas\Jixiao\Views\Shared\" />
+    <Folder Include="Areas\Jixiao\Views\TingZhan\" />
+    <Folder Include="Areas\Jixiao\Views\Upload\" />
+    <Folder Include="Areas\JoinNew\Data\" />
+    <Folder Include="Areas\JoinNew\Views\ApproveApplication\" />
+    <Folder Include="Areas\JoinNew\Views\CreateZBAccount\" />
+    <Folder Include="Areas\JoinNew\Views\Shared\" />
+    <Folder Include="Areas\JoinNew\Views\Share\" />
+    <Folder Include="Areas\KuaFang\Data\" />
+    <Folder Include="Areas\KuaFang\Views\Shared\" />
+    <Folder Include="Areas\LiuLiang\Data\" />
+    <Folder Include="Areas\LiuLiang\Views\Data\" />
+    <Folder Include="Areas\LiuLiang\Views\Shared\" />
+    <Folder Include="Areas\PBasic\Data\" />
+    <Folder Include="Areas\PBasic\Views\Manage\" />
+    <Folder Include="Areas\PBasic\Views\Shared\" />
+    <Folder Include="Areas\PCrm\Data\" />
+    <Folder Include="Areas\PCrm\Views\PCrm\" />
+    <Folder Include="Areas\PCrm\Views\Shared\" />
+    <Folder Include="Areas\ProjectBasic\Data\" />
+    <Folder Include="Areas\ProjectBasic\Views\Shared\" />
+    <Folder Include="Areas\PUserBasic\Data\" />
+    <Folder Include="Areas\PUserBasic\Views\Newcomer\" />
+    <Folder Include="Areas\PUserBasic\Views\Shared\" />
+    <Folder Include="Areas\PUserBasic\Views\TingZhan\" />
+    <Folder Include="Areas\PUserBasic\Views\UserRelation\" />
+    <Folder Include="Areas\QianYue\Data\" />
+    <Folder Include="Areas\QianYue\Views\Shared\" />
+    <Folder Include="Areas\Service\Data\" />
+    <Folder Include="Areas\Service\Views\FeedBack\" />
+    <Folder Include="Areas\Service\Views\Shared\" />
+    <Folder Include="Areas\Support\Data\" />
+    <Folder Include="Areas\Support\Views\Shared\" />
+    <Folder Include="Areas\Task\Data\" />
+    <Folder Include="Areas\Task\Views\Face\" />
+    <Folder Include="Areas\Task\Views\Shared\" />
+    <Folder Include="Areas\TgManage\Data\" />
+    <Folder Include="Areas\TingZhan\Data\" />
+    <Folder Include="Areas\TingZhan\Views\Shared\" />
+    <Folder Include="Areas\UserGuanxi\Data\" />
+    <Folder Include="Areas\UserGuanxi\Views\Move\" />
+    <Folder Include="Areas\UserGuanxi\Views\Shared\" />
+    <Folder Include="Areas\UserInfo\Data\" />
+    <Folder Include="Areas\UserInfo\Views\Accer_Ting\" />
+    <Folder Include="Areas\UserTable\Data\" />
+    <Folder Include="Areas\Work\Data\" />
+    <Folder Include="Areas\Work\Views\Shared\" />
+    <Folder Include="Areas\Xianxiabiao\Controllers\" />
+    <Folder Include="Areas\Xianxiabiao\Data\" />
+    <Folder Include="Areas\Xianxiabiao\Views\Shared\" />
+    <Folder Include="Areas\Xianxiazp\Data\" />
+    <Folder Include="Areas\Xianxiazp\Views\Shared\" />
+    <Folder Include="Areas\Xianxia\Data\" />
+    <Folder Include="Areas\Xianxia\Views\Qianyue\" />
+    <Folder Include="Areas\Xianxia\Views\Shared\" />
+    <Folder Include="Areas\Xuexi\Data\" />
+    <Folder Include="Areas\Xuexi\Views\Shared\" />
+    <Folder Include="Assets\layuiExample\admin\font\" />
+    <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataBase.Project\DataBase.Project.csproj">
+      <Project>{58f33d56-6a64-46c6-a85d-99ddde28c9d1}</Project>
+      <Name>DataBase.Project</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Services.Project\Services.Project.csproj">
+      <Project>{db70a22c-a6a1-4153-855e-12f45d1e21ac}</Project>
+      <Name>Services.Project</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TaskProject\TaskProject.csproj">
+      <Project>{f7fe9934-6e07-40bc-828a-fb441e87c125}</Project>
+      <Name>TaskProject</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ViewPage.Project\ViewPage.Project.csproj">
+      <Project>{fb5fefe0-cf8c-4fee-a0ca-1081394f5bf5}</Project>
+      <Name>ViewPage.Project</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

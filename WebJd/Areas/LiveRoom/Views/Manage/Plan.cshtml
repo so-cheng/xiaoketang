@@ -1,0 +1,524 @@
+﻿
+
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.ModelDbs;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Web;
+@using System.Web.Mvc;
+@using WeiCode.Services;
+
+@using WeiCode.ModelDbs;
+@using Services.Project;
+@using WeiCode.Domain;
+@using WeiCode.ModelDbs;
+@using WeiCode.Models;
+@using WeiCode.Domain;
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>扬州中台办公区域平面图</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background-color: #f5f5f5;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 300px;
+            background-color: #fff;
+            border-right: 1px solid #ddd;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .main-content {
+            flex: 1;
+            position: relative;
+            overflow: auto;
+            background-color: #fff;
+        }
+
+
+        .background-info {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #666;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+
+        .whiteboard-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-height: 800px;
+            background: #fff;
+            cursor: default;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: #f8f9fa;
+        }
+
+            .whiteboard-container.has-background {
+                background-color: #fff;
+            }
+
+        .area-box {
+            position: absolute;
+            border: 2px solid #28a745;
+            background: rgba(40, 167, 69, 0.1);
+            cursor: pointer;
+            z-index: 200;
+            min-width: 50px;
+            min-height: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            padding: 8px;
+        }
+
+            .area-box:hover {
+                transform: scale(1.02);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            }
+
+            .area-box.selected {
+                border-width: 3px;
+                border-color: #dc3545 !important;
+                box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.3);
+                transform: scale(1.05);
+                z-index: 300;
+            }
+
+        .area-label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            word-break: break-all;
+            max-width: 100%;
+            margin-bottom: 4px;
+        }
+
+        .area-user {
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+            word-break: break-all;
+            max-width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .sidebar h3 {
+            margin-bottom: 15px;
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+
+        .area-list {
+            margin-bottom: 20px;
+        }
+
+        .area-item {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+            .area-item:hover {
+                background: #e9ecef;
+                border-color: #adb5bd;
+            }
+
+            .area-item.selected {
+                background: #d4edda;
+                border-color: #28a745;
+            }
+
+            .area-item .area-name {
+                font-weight: bold;
+                margin-bottom: 6px;
+                display: flex;
+                align-items: center;
+            }
+
+            .area-item .area-coords {
+                font-size: 12px;
+                color: #6c757d;
+                margin-bottom: 2px;
+            }
+
+                .area-item .area-coords:last-child {
+                    margin-bottom: 0;
+                }
+
+        .instructions {
+            background: #e7f3ff;
+            border: 1px solid #b8daff;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #004085;
+        }
+
+            .instructions h4 {
+                margin-bottom: 5px;
+                color: #004085;
+            }
+
+            .instructions ul {
+                margin: 5px 0 0 20px;
+            }
+
+            .instructions li {
+                margin-bottom: 3px;
+            }
+
+        .stats {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+
+            .stats h4 {
+                margin-bottom: 8px;
+                color: #495057;
+            }
+
+            .stats div {
+                font-size: 13px;
+                color: #6c757d;
+                margin-bottom: 3px;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>区域管理</h3>
+
+            <div class="instructions">
+                <h4>使用说明：</h4>
+                <ul>
+                    <li>点击区域可查看详细信息</li>
+                    <li>左侧列表显示所有区域</li>
+                    <li>点击列表项可高亮显示对应区域</li>
+                </ul>
+            </div>
+
+            <div class="stats">
+                <h4>统计信息</h4>
+                <div id="total-areas">总区域数: 0</div>
+                <div id="selected-area">当前选中: 无</div>
+            </div>
+            <div class="instructions" style="margin-bottom: 15px;">
+                <h4 style="margin-bottom: 8px;">图例说明：</h4>
+                <div style="font-size: 12px; line-height: 1.8;">
+                    <div>🟨 黄色 - 会议室</div>
+                    <div>🟦 蓝色 - 办公区</div>
+                    <div>🟩 绿色 - 休息区</div>
+                    <div>🟪 紫色 - 前台</div>
+                    <div>🟧 橙色 - 培训室</div>
+                </div>
+            </div>
+
+            <div class="area-list">
+                <h4>区域列表</h4>
+                <div id="area-list-container">
+                    <div style="text-align: center; color: #6c757d; font-size: 13px; padding: 20px;">
+                        暂无区域数据
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="background-info" id="background-info">
+                平面图查看模式
+            </div>
+
+            <div class="whiteboard-container" id="whiteboard-container">
+                <!-- 白板内容区域 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class WhiteboardManager {
+            constructor() {
+                this.areas = [];
+                this.selectedArea = null;
+                this.backgroundImage = null;
+
+                this.init();
+            }
+
+            init() {
+                this.loadData();
+                this.updateStats();
+            }
+
+            // 从服务器或本地数据加载平面图数据
+            loadData() {
+                var that = this;
+                // 实际使用时，从服务器加载数据
+                $.ajax({
+                    type: "POST",
+                    url: "/LiveRoom/Manage/GetFix",
+                    data: "",
+                    async: false,
+                    dataType: 'json',
+                    success: function (response) {
+
+                        that.areas = response;
+                        that.renderAreas();
+                        that.updateAreaList();
+                        that.updateStats();
+                        that.setBackground("");
+                    },
+                    error: function (e) {
+                        alert('操作失败');
+                    }
+                });
+            }
+
+            // 加载示例数据（用于演示）
+            loadSampleData() {
+                const sampleAreas = [
+                    {
+                        id: 1,
+                        name: '会议室A',
+                        x: 100,
+                        y: 100,
+                        width: 200,
+                        height: 150,
+                        backgroundColor: 'rgba(255, 193, 7, 0.3)',
+                        borderColor: '#FFC107',
+                        user: '张三,李四'
+                    },
+                    {
+                        id: 2,
+                        name: '办公区',
+                        x: 350,
+                        y: 100,
+                        width: 300,
+                        height: 200,
+                        backgroundColor: 'rgba(33, 150, 243, 0.3)',
+                        borderColor: '#2196F3',
+                        user: '李四'
+                    },
+                    {
+                        id: 3,
+                        name: '休息区',
+                        x: 100,
+                        y: 300,
+                        width: 150,
+                        height: 100,
+                        backgroundColor: 'rgba(76, 175, 80, 0.3)',
+                        borderColor: '#4CAF50',
+                        user: '王五'
+                    },
+                    {
+                        id: 4,
+                        name: '前台',
+                        x: 700,
+                        y: 100,
+                        width: 180,
+                        height: 120,
+                        backgroundColor: 'rgba(156, 39, 176, 0.3)',
+                        borderColor: '#9C27B0',
+                        user: '赵六'
+                    },
+                    {
+                        id: 5,
+                        name: '培训室',
+                        x: 400,
+                        y: 350,
+                        width: 250,
+                        height: 180,
+                        backgroundColor: 'rgba(255, 87, 34, 0.3)',
+                        borderColor: '#FF5722',
+                        user: '刘七'
+                    }
+                ];
+
+                this.areas = sampleAreas;
+                this.renderAreas();
+                this.updateAreaList();
+                this.updateStats();
+                
+            }
+
+            // 设置背景图（用于从服务器加载的数据）
+            setBackground(imageData) {
+                const container = document.getElementById('whiteboard-container');
+                this.backgroundImage = imageData;
+                container.style.backgroundImage = `url(${imageData})`;
+                container.style.backgroundSize = 'contain';
+                container.classList.add('has-background');
+            }
+
+            // 渲染所有区域
+            renderAreas() {
+                const container = document.getElementById('whiteboard-container');
+                this.areas.forEach(area => {
+                    this.createAreaElement(area);
+                });
+            }
+
+            createAreaElement(area) {
+                const container = document.getElementById('whiteboard-container');
+                const areaElement = document.createElement('div');
+                areaElement.className = 'area-box';
+                areaElement.id = `area-${area.id}`;
+                areaElement.style.left = area.x + 'px';
+                areaElement.style.top = area.y + 'px';
+                areaElement.style.width = area.width + 'px';
+                areaElement.style.height = area.height + 'px';
+
+                // 应用自定义背景色和边框色
+                if (area.backgroundColor) {
+                    areaElement.style.background = area.backgroundColor;
+                }
+                if (area.borderColor) {
+                    areaElement.style.borderColor = area.borderColor;
+                }
+
+                // 设置tooltip
+                const tooltipText = [
+                    `区域: ${area.name}`,
+                    area.user ? `使用者: ${area.user}` : '',
+                    `位置: (${area.x}, ${area.y})`,
+                    `大小: ${area.width}×${area.height}`
+                ].filter(text => text).join('\n');
+                areaElement.title = tooltipText;
+
+                // 区域名称
+                const label = document.createElement('div');
+                label.className = 'area-label';
+                label.textContent = area.name;
+                areaElement.appendChild(label);
+
+                // 使用者信息
+                if (area.user) {
+                    const userLabel = document.createElement('div');
+                    userLabel.className = 'area-user';
+                    userLabel.textContent = `👤 ${area.user}`;
+                    areaElement.appendChild(userLabel);
+                }
+
+                areaElement.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.selectArea(area.id);
+                });
+
+                container.appendChild(areaElement);
+            }
+
+            selectArea(areaId) {
+                // 清除之前的选择
+                document.querySelectorAll('.area-box').forEach(el => el.classList.remove('selected'));
+                document.querySelectorAll('.area-item').forEach(el => el.classList.remove('selected'));
+
+                // 选择新区域
+                const area = this.areas.find(a => a.id === areaId);
+                if (area) {
+                    this.selectedArea = area;
+                    const areaElement = document.getElementById(`area-${areaId}`);
+                    const listItem = document.querySelector(`[data-area-id="${areaId}"]`);
+
+                    if (areaElement) areaElement.classList.add('selected');
+                    if (listItem) listItem.classList.add('selected');
+
+                    this.updateStats();
+                }
+            }
+
+            updateAreaList() {
+                const container = document.getElementById('area-list-container');
+
+                if (this.areas.length === 0) {
+                    container.innerHTML = `
+                                            <div style="text-align: center; color: #6c757d; font-size: 13px; padding: 20px;">
+                                                暂无区域数据
+                                            </div>
+                                        `;
+                    return;
+                }
+
+                container.innerHTML = this.areas.map(area => {
+                    const colorIndicator = area.backgroundColor ?
+                        `<span style="display: inline-block; width: 12px; height: 12px; background: ${area.backgroundColor}; border: 1px solid ${area.borderColor || '#ddd'}; border-radius: 2px; margin-right: 6px; vertical-align: middle;"></span>` : '';
+
+                    return `
+                                            <div class="area-item" data-area-id="${area.id}" onclick="whiteboardManager.selectArea(${area.id})">
+                                                <div class="area-name">${colorIndicator}${area.name}</div>
+                                                ${area.user ? `<div class="area-coords">👤 使用者: ${area.user}</div>` : ''}
+                                                <div class="area-coords">位置: (${area.x}, ${area.y}) 大小: ${area.width}×${area.height}</div>
+                                            </div>
+                                        `;
+                }).join('');
+            }
+
+            updateStats() {
+                document.getElementById('total-areas').textContent = `总区域数: ${this.areas.length}`;
+
+                if (this.selectedArea) {
+                    const selectedInfo = this.selectedArea.user ?
+                        `${this.selectedArea.name} (${this.selectedArea.user})` :
+                        this.selectedArea.name;
+                    document.getElementById('selected-area').textContent = `当前选中: ${selectedInfo}`;
+                } else {
+                    document.getElementById('selected-area').textContent = '当前选中: 无';
+                }
+            }
+        }
+
+        // 初始化
+        let whiteboardManager;
+        document.addEventListener('DOMContentLoaded', () => {
+            whiteboardManager = new WhiteboardManager();
+        });
+    </script>
+</body>
+</html>

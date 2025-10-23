@@ -1,0 +1,480 @@
+﻿@using System;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.js"></script>
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 11px;
+    }
+
+    .layui-table td {
+        font-size: 11px;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+</style>
+<div class="layui-card">
+
+    
+    <div id="tables">
+        @{
+            <blockquote class="layui-elem-quote news_search">
+                <div class="layui-inline">
+                    <form class="layui-form">
+                        @{
+                            <div class="layui-input-inline">
+                                <label class="layui-form-label">直播厅</label>
+                            </div>
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+
+                                    @ViewModelBag.Load(Html, new ModelBasic.EmtSelectFull("tg_user_sn")
+                                    {
+                                        placeholder = "请选择直播厅",
+                                        options = new ServiceFactory.UserInfo.Tg().GetTreeOption(new UserIdentityBag().user_sn),
+                                        defaultValue = ViewBag.tg_user_sn,
+                                        eventJsChange = new EmtFormBase.EventJsChange
+                                        {
+                                            eventJavascript = new EventJavascript
+                                            {
+                                                code = "window.location.href = '/jixiaoday/reportday/datalist?c_date=' + page.c_date.value+'&tg_user_sn='+page.tg_user_sn.value;"
+                                            },
+                                        }
+                                    })
+                                </div>
+                            </div>
+                            string dateRange = ViewBag.c_date + " ~ " + ViewBag.c_date;
+                            <a href="/JixiaoDay/ReportDay/Datas?dateRange=@dateRange&tg_user_sn=@ViewBag.tg_user_sn" class="layui-btn">数据分析</a>
+
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    @ViewModelBag.Load(Html, new ModelBasic.EmtSelect("zb_user_sn")
+                                   {
+                                       placeholder = "查看主播7天数据",
+                                       defaultValue = ViewBag.zb_user_sn,
+                                       options = new ServiceFactory.UserInfo.Tg().TgGetNextZbForKv(ViewBag.tg_user_sn),
+                                       eventJsChange = new EmtFormBase.EventJsChange
+                                       {
+                                           eventJavascript = new EventJavascript
+                                           {
+                                               code = $@"parent.win_pop_iframe('数据', '/JixiaoDay/ReportDay/DataOnDateRangeList?zb_user_sn='+ page.zb_user_sn.value+'&dateRange={DateTime.Today.AddDays(-6).ToString("yyyy-MM-dd") + " ~ " + DateTime.Today.ToString("yyyy-MM-dd")}', 1600, 800, '');"
+                                           },
+                                       }
+                                   })
+                                </div>
+                            </div>
+
+
+                            <div class="layui-input-inline">
+                                <label class="layui-form-label">日期</label>
+                            </div>
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("c_date")
+                                    {
+                                        title = "日期",
+                                        defaultValue = ViewBag.c_date,
+                                        mold = ModelBasic.EmtTimeSelect.Mold.date,
+                                        eventJsChange = new EmtFormBase.EventJsChange
+                                        {
+                                            eventJavascript = new EventJavascript
+                                            {
+                                                code = "window.location.href = '/jixiaoday/reportday/datalist?c_date=' + page.c_date.value+'&tg_user_sn='+page.tg_user_sn.value;"
+                                            },
+                                        }
+                                    })
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <a href="/JixiaoDay/ReportDay/DataList?c_date=@ViewBag.c_date_early&tg_user_sn=@ViewBag.tg_user_sn" class="layui-btn">前一天</a>
+                                    <a href="/JixiaoDay/ReportDay/DataList?c_date=@ViewBag.c_date_late&tg_user_sn=@ViewBag.tg_user_sn" class="layui-btn">后一天</a>
+                                    <a href="/JixiaoDay/ReportDay/DataList?c_date=@ViewBag.c_date&yy_user_sn=@ViewBag.yy_user_sn&tg_user_sn=@ViewBag.tg_user_sn" target="_blank" class="layui-btn">查看大图</a>
+                                    <a href="javascript:parent.win_pop_iframe('未提交名单', '/Jixiao/ReportDay/Index', 800, 800, '');" class="layui-btn">未提交名单</a>
+                                    <a href="/Jixiao/DangBiao/ShowCurrentTable" target="_blank" class="layui-btn">查看档表</a>
+                                </div>
+                            </div>
+
+                        }
+                    </form>
+
+                </div>
+            </blockquote>
+
+
+            /*
+                sum[0]:总拉新
+                sum[1]:总建联
+                sum[2]:总首消
+                sum[3]:总二消个数
+                sum[4]:总二消
+                sum[5]:总老客户
+                sum[6]:总大头
+                sum[7]:总音浪
+                */
+            var sum = DoMySql.FindField<ModelDb.p_jixiao_day>($"sum(new_num),sum(contact_num),sum(amount_1),sum(num_2),sum(amount_2),sum(old_amount),sum(datou_num),sum(amount),sum(hx_num),sum(hx_amount),sum(hdpk_amount)", $"c_date='{ViewBag.c_date}' and tg_user_sn='{ViewBag.tg_user_sn}'");
+            var count = DoMySql.FindField<ModelDb.p_jixiao_day_session>("COUNT(DISTINCT session)", $"c_date='{ViewBag.c_date}' and tg_user_sn='{ViewBag.tg_user_sn}'");
+            var totalNum = DoMySql.FindField<ModelDb.p_jixiao_day_session_total>($"sum(hanhuo_num),sum(xinfu_num)", $"c_date='{ViewBag.c_date}' and tg_user_sn='{ViewBag.tg_user_sn}'");
+
+            <div id="table">
+                <table class="layui-table" style="text-align:center;" id="table1" name="table1">
+                    <colgroup>
+                        <col width="80">
+                        <col width="80">
+                        <col width="80">
+                        <col width="80">
+                        <col width="80">
+                        <col width="80">
+
+                        <col width="80">
+                        <col width="80">
+                        <col width="80">
+                        <col width="80">
+                        <col width="80">
+                        <col width="80">
+                        <col width="80">
+
+                        <col width="80">
+                        <col width="80">
+                        <col width="80">
+                        <col width="80">
+                        <col width="80">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <td colspan="18" style="text-align: center; background-color: #FFF3CA; font-size: 18px; font-weight: 700 ">@(ViewBag.username)@(ViewBag.c_date)拉新时段数据</td>
+                        </tr>
+                        <tr style="background-color: #FCE4D3;font-weight:700;">
+                            <th>时间段</th>
+                            <th>主播</th>
+                            <th>晋升</th>
+                            <th>拉新</th>
+                            <th>首消音浪</th>
+                            <th>二消个数</th>
+                            <th>建联</th>
+                            <th>二消音浪</th>
+                            <th>老用户数</th>
+                            <th>老用户音浪</th>
+                            <th>活动PK</th>
+                            <th>个人总音浪</th>
+                            <th>喊活</th>
+                            <th>新付</th>
+                            <th>总拉新</th>
+                            <th>总建联</th>
+                            <th>总首消</th>
+                            <th>总二消</th>
+                            @*<th>总大头</th>*@
+                        </tr>
+                    </thead>
+
+                    @{
+
+                        string color = "#FADADE";
+                        int? session = 0;
+                        var list = DoMySql.FindList<ModelDb.p_jixiao_day_session>($"c_date='{ViewBag.c_date}' and tg_user_sn='{ViewBag.tg_user_sn}' order by session");
+                        var p_jixiao_day = DoMySql.FindList<ModelDb.p_jixiao_day>($"c_date='{ViewBag.c_date}' and tg_user_sn='{ViewBag.tg_user_sn}'");
+                        foreach (var item in list)
+                        {
+                            var p_jixiao_day_type = DoMySql.FindEntity<ModelDb.p_jixiao_day_type>($"c_date = '{item.c_date}' and session='{item.session}' and tg_user_sn='{ViewBag.tg_user_sn}'", false);
+                            var c_type = new DomainBasic.DictionaryApp().GetKeyFromValue("场次类型", p_jixiao_day_type.c_type.ToString());
+                            if (p_jixiao_day_type.c_type == 1 && !p_jixiao_day_type.type_name.IsNullOrEmpty())
+                            {
+                                c_type = p_jixiao_day_type.type_name;
+                            }
+                            if (list.FindAll(x => x.session == item.session).Count >= 5 && c_type.IsNullOrEmpty())
+                            {
+                                c_type = "游戏pk档";
+                            }
+                            if (!c_type.IsNullOrEmpty())
+                            {
+                                c_type = "(" + c_type + ")";
+                            }
+                            bool firstRow = isFirstRow(item, ref session, ref color);
+                            var zhubo = DoMySql.FindEntity<ModelDb.user_base>($"user_sn='{item.zb_user_sn}'");
+                            var session_count = DoMySql.FindField<ModelDb.p_jixiao_day_session>("sum(new_num),sum(contact_num),sum(amount_1),sum(amount_2),sum(datou_num),count(*)", $" c_date='{ViewBag.c_date}' and tg_user_sn='{ViewBag.tg_user_sn}' and session='{item.session}'");
+                            var p_jixiao_day_session_total = DoMySql.FindEntity<ModelDb.p_jixiao_day_session_total>($"tg_user_sn='{item.tg_user_sn}' and c_date='{item.c_date.ToDate().ToString("yyyy-MM-dd")}' and session='{item.session}'", false);
+                            <tr style="background-color:@color">
+                                @if (firstRow)
+                                {
+                                    <td rowspan="@session_count[5].ToNullableString()">@(new DomainBasic.DictionaryApp().GetKeyFromValue("场次", item.session.ToNullableString())) @c_type</td>
+                                }
+                                <td>@zhubo.username @(item.is_rest==1 ? "(请假)":"")@(zhubo.status==9?"(离职)":"")</td>
+                                <td>@(zhubo.attach2.IsNullOrEmpty()? "主播" : new DomainBasic.DictionaryApp().GetKeyFromValue("职务", zhubo.attach2))</td>
+                                <td>@item.new_num</td>
+                                <td>@item.amount_1</td>
+                                <td>@item.num_2</td>
+                                <td>@item.contact_num</td>
+                                <td>@item.amount_2</td>
+                                <td>@item.hx_num</td>
+                                <td>@item.hx_amount</td>
+                                <td>@item.hdpk_amount</td>
+                                <td>@item.amount @(item.datou_num>0?$"({item.datou_num})":"")</td>
+                                @if (firstRow)
+                                {
+                                    <td rowspan="@session_count[5].ToNullableString()">@(p_jixiao_day_session_total.hanhuo_num)</td>
+                                    <td rowspan="@session_count[5].ToNullableString()">@(p_jixiao_day_session_total.xinfu_num)</td>
+                                    <td rowspan="@session_count[5].ToNullableString()">@(session_count[0])</td>
+                                    <td rowspan="@session_count[5].ToNullableString()">@(session_count[1])</td>
+                                    <td rowspan="@session_count[5].ToNullableString()">@(session_count[2])</td>
+                                    <td rowspan="@session_count[5].ToNullableString()">@(session_count[3])</td>
+                                    @*<td rowspan="@session_count[5].ToNullableString()">@(session_count[4])</td>*@
+                                }
+                            </tr>
+                        }
+                    }
+                    <tr style="background-color: #FCE4D3;font-weight:700">
+                        <td>开档数</td>
+                        <td>总人数</td>
+                        <td>/</td>
+                        <td>拉新数量</td>
+                        <td>首消音浪</td>
+                        <td>二消个数</td>
+                        <td>建联数量</td>
+                        <td>二消音浪</td>
+                        <td>老用户</td>
+                        <td>老用户总音浪</td>
+                        <td>活动总音浪</td>
+                        <td>总音浪</td>
+                        <td>喊活数量</td>
+                        <td>新付数量</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>平均二消</td>
+                    </tr>
+
+                    <tr style="background-color: #FFF3CA;">
+                        <td>@count[0]</td>
+                        <td>@p_jixiao_day.Count</td>
+                        <td>/</td>
+                        <td>@sum[0]</td>
+                        <td>@sum[2]</td>
+                        <td>@sum[3]</td>
+                        <td>@sum[1]</td>
+                        <td>@sum[4]</td>
+                        <td>@sum[8]</td>
+                        <td>@sum[9]</td>
+                        <td>@sum[10]</td>
+                        <td>@sum[7] @(sum[6].ToInt()>0?$"({sum[6]})":"")</td>
+                        <td>@totalNum[0]</td>
+                        <td>@totalNum[1]</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>@((sum[3].IsNullOrEmpty()||sum[3].ToInt()==0) ? "0" : (sum[4].ToDouble()/sum[3].ToInt()).ToString("0"))</td>
+
+                    </tr>
+                </table>
+
+                <table class="layui-table" style="text-align:center;" id="table2" name="table2">
+                    <colgroup>
+                        <col width="50">
+                        <col width="50">
+                        <col width="50">
+                        <col width="50">
+                        <col width="50">
+                        <col width="50">
+                        <col width="50">
+                        <col width="50">
+                        <col width="50">
+                        <col width="50">
+                        <col width="50">
+                        <col width="50">
+                        <col width="50">
+                        <col width="50">
+                        <col width="50">
+                        <col width="50">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <td colspan="16" style="text-align: center; background-color: #FFF3CA; font-size: 18px; font-weight: 700 ">@(ViewBag.username)@(ViewBag.c_date)拉新流水数据</td>
+                        </tr>
+                        <tr style="background-color: #FCE4D3;font-weight:700;">
+                            <th>昵称</th>
+                            <th>兼/全职</th>
+                            <th>拉新数</th>
+                            <th>首消音浪</th>
+                            <th>二消个数</th>
+                            <th>二消率</th>
+                            <th>二消音浪</th>
+                            <th>首消二消音浪占比</th>
+                            <th>老用户数</th>
+                            <th>老用户音浪</th>
+                            <th>老用户音浪占比</th>
+                            <th>建联数</th>
+                            <th>建联率</th>
+                            <th>活动PK</th>
+                            <th>活动音浪占比</th>
+                            <th>总音浪(掉大头)</th>
+                        </tr>
+                    </thead>
+
+                    @{
+
+
+                        foreach (var item in p_jixiao_day)
+                        {
+                            var zhubo = DoMySql.FindEntity<ModelDb.user_base>($"user_sn='{item.zb_user_sn}'");
+                            var standard = DoMySql.FindEntity<ModelDb.p_jixiao_standard_item>($"zb_user_sn = '{item.zb_user_sn}' and st_sn=(select st_sn from p_jixiao_standard where tg_user_sn='{item.tg_user_sn}' and s_date<='{ViewBag.c_date}' and e_date>='{ViewBag.c_date}')", false);
+                            var amount_2_rate = item.new_num == 0 ? 0 : (item.num_2.ToDecimal() * 100 / item.new_num.ToInt());
+
+                            <tr style="background-color: #E1EBF5 ">
+                                <td style="background-color: #E3F2D9;">@(zhubo.username)@(zhubo.status==9?"(离职)":"")</td>
+
+                                <td>@(item.job.IsNullOrEmpty() ? zhubo.attach1:item.job)</td>
+
+                                @{
+                                    if (!standard.IsNullOrEmpty() && (item.new_num < standard.new_num))
+                                    {
+                                        <td style="color: red;">@item.new_num</td>
+                                    }
+                                    else if (standard.IsNullOrEmpty())
+                                    {
+                                        <td>@item.new_num</td>
+                                    }
+                                    else
+                                    {
+                                        <td style="color: blue;">@item.new_num</td>
+                                    }
+                                }
+
+                                <td>@item.amount_1</td>
+                                <td>@item.num_2</td>
+                                <td>@(item.new_num == 0 ? "0" : (item.num_2.ToDouble() * 100 / item.new_num.ToInt()).ToString("0.00"))%</td>
+                                <td>@item.amount_2</td>
+                                <td>@(item.amount == 0 ? "0" : ((item.amount_1.ToDouble() +item.amount_2.ToDouble())*100 / item.amount.ToInt()).ToString("0.00"))%</td>
+                                <td>@item.hx_num</td>
+                                <td>@item.hx_amount</td>
+                                <td>@(item.amount == 0 ? "0" : (item.hx_amount.ToDouble() * 100 / item.amount.ToInt()).ToString("0.00"))%</td>
+                                <td>@item.contact_num</td>
+                                <td>@(item.new_num == 0 ? "0" : (item.contact_num.ToDouble() * 100 / item.new_num.ToInt()).ToString("0.00"))%</td>
+                                <td>@item.hdpk_amount</td>
+                                <td>@(item.amount == 0 ? "0" : (item.hdpk_amount.ToDouble() * 100 / item.amount.ToInt()).ToString("0.00"))%</td>
+
+                                @{
+                                    if (!standard.IsNullOrEmpty() && (item.amount < standard.amount))
+                                    {
+                                        <td style="color: red;">@item.amount @(item.datou_num>0?$"({item.datou_num})":"")</td>
+                                    }
+                                    else
+                                    {
+                                        <td>@item.amount @(item.datou_num>0?$"({item.datou_num})":"")</td>
+                                    }
+                                }
+
+
+                            </tr>
+                        }
+                    }
+
+                    <tr style="background-color: #FCE4D3">
+                        <td colspan="2">合计 @p_jixiao_day.Count 人(在职@(new DomainUserBasic.UserRelationApp().GetNextUsers(ModelEnum.UserRelationTypeEnum.厅管邀主播, ViewBag.tg_user_sn).Count)人/请假@(list.Where(x=>x.is_rest==1).GroupBy(c=>c.zb_user_sn).Count())人)</td>
+                        <td>@sum[0]</td>
+                        <td>@sum[2]</td>
+                        <td>@sum[3]</td>
+                        <td>@(sum[0].ToInt() == 0 ? "0" : (sum[3].ToDouble() * 100 / sum[0].ToInt()).ToString("0.00"))%</td>
+                        <td>@sum[4]</td>
+                        <td>@(sum[7].ToInt() == 0 ? "0" : ((sum[2].ToDouble()+sum[4].ToDouble()) * 100 / sum[7].ToInt()).ToString("0.00"))%</td>
+                        <td>@sum[8]</td>
+                        <td>@sum[9]</td>
+                        <td>@(sum[7].ToInt() == 0 ? "0" : (sum[9].ToDouble() * 100 / sum[7].ToInt()).ToString("0.00"))%</td>
+                        <td>@sum[1]</td>
+                        <td>@(sum[0].ToInt() == 0 ? "0" : (sum[1].ToDouble() * 100 / sum[0].ToInt()).ToString("0.00"))%</td>
+                        <td>@sum[10]</td>
+                        <td>@(sum[7].ToInt() == 0 ? "0" : (sum[10].ToDouble() * 100 / sum[7].ToInt()).ToString("0.00"))%</td>
+                        <td>@sum[7] @(sum[6].ToInt()>0?$"({sum[6]})":"")</td>
+
+
+                    </tr>
+                </table>
+            </div>
+        }
+
+
+    </div>
+
+
+</div>
+
+
+@ViewModelBag.Load(Html, new ModelBasic.AdjScreenshot("screenshot1")
+{
+    elem = "table"
+})
+@*@ViewModelBag.Load(Html, new ModelBasic.AdjScreenshot("screenshot2")
+{
+    elem = "table2"
+})*@
+
+
+<script>
+    layui.use(function () {
+        var form = layui.form;
+        var layer = layui.layer;
+        // select 事件
+        form.on('select(tg)', function (data) {
+            var value = data.value; // 获得被选中的值
+            var c_date = $('#c_date').attr('value');
+            window.location.href = '/jixiao/reportday/list?c_date=' + c_date + '&tg_user_sn=' + value;
+        });
+    });
+</script>
+
+@functions{
+    /// <summary>
+    /// 判断是否为当前档期首行
+    /// </summary>
+    /// <param name="p_jixiao_session"></param>
+    /// <param name="session"></param>
+    /// <param name="color"></param>
+    /// <returns></returns>
+    public bool isFirstRow(ModelDb.p_jixiao_day_session p_jixiao_session, ref int? session, ref string color)
+    {
+        if (p_jixiao_session.session != session)
+        {
+            switch (color)
+            {
+                case "#E3F2D9":
+                    color = "#FADADE";
+                    break;
+                case "#FADADE":
+                    color = "#E3F2D9";
+                    break;
+                default:
+                    break;
+            }
+            session = p_jixiao_session.session;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+
+}

@@ -1,0 +1,64 @@
+﻿@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.js"></script>
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+
+<div class="layui-card">
+    @{ 
+        ModelDbBasic.user_base user_base = new DomainBasic.UserApp().GetInfoByUserSn(ViewBag.tg_user_sn);
+    }
+    <p>请输入抖音平台的账号id</p>
+    @ViewModelBag.Load(Html, new ModelBasic.EmtInput("account_id")
+    {
+        defaultValue= user_base.attach3,
+        placeholder = "请输入id号",
+    })
+    <a id="btn" href="javascript:InfoPost();" class="layui-btn layui-btn-normal">提交</a>
+
+</div>
+
+
+<script>
+    layui.use(function () {
+        var form = layui.form;
+        var layer = layui.layer;
+    });
+
+    function InfoPost() {
+        $.ajax({
+            type: "POST",
+            url: "/Zhenduan/Analyse/InfoPost",
+            data: { data: $('[name="account_id"]').val() },
+            async: false,
+            dataType: 'json',
+            success: function (res) {
+                layer.msg('提交成功', { icon: 1 }, function () {
+                });
+                $('#btn').attr('class','layui-btn layui-btn-disabled');
+                window.location.href = '/Zhenduan/Analyse/@ViewBag.url';
+            }
+        });
+    }
+
+
+    function test() {
+
+        
+    }
+
+    
+
+</script>

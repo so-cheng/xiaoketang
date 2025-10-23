@@ -1,0 +1,139 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>模块</title>
+    <link href="/Assets/layui/css/layui.css" rel="stylesheet" />
+    <link href="/Assets/css/animate.min.css" rel="stylesheet" />
+    <link href="/Assets/css/iconfont.css" rel="stylesheet" />
+    <style>
+        .layui-table {
+            width: 100% !important;
+        }
+
+        .zadmin-blue {
+            color: #1E90FF;
+        }
+    </style>
+</head>
+<body class="animated fadeIn">
+    <div class="page-loading">
+        <div class="rubik-loader"></div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <table class="layui-hide" id="modular-table"></table>
+            </div>
+        </div>
+    </div>
+    <script type="text/html" id="toolbar">
+        <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" lay-event="add">
+            <i class="zadmin-icon zadmin-icon-xinzeng zadmin-oper-area"></i>
+            新增
+        </button>
+    </script>
+    <script type="text/html" id="column-toolbar">
+        <button lay-event="edit" class="layui-btn layui-btn-xs" type="button">
+            <i class="zadmin-icon zadmin-icon-edit-square zadmin-oper-area"></i>
+            编辑
+        </button>
+        <button lay-event="del" class="layui-btn layui-btn-xs layui-btn-danger" type="button">
+            <i class="zadmin-icon zadmin-icon-delete zadmin-oper-area"></i>
+            删除
+        </button>
+    </script>
+    <script src="/Assets/js/jquery.js"></script>
+    <script src="/Assets/layui/layui.js"></script>
+    <script src="~/Assets/js/common.js"></script>
+    <script>
+        layui.config({
+            base: '/Assets/layui/extend/'
+        }).use(['jquery', 'layer', 'table', 'element', 'tablePlug'], function () {
+            var layer = layui.layer;
+            var table = layui.table;
+            var tablePlug = layui.tablePlug;
+
+            tablePlug.smartReload.enable(true);
+
+            table.render({
+                elem: '#modular-table'
+                , url: '/Config/Modular/GetData'
+                , cellMinWidth: 80
+                , toolbar: '#toolbar'
+                , defaultToolbar: []
+                , smartReloadModel: true
+                , cols: [
+                    [
+                        { type: 'numbers', title: '序号', align: 'center', width: "5%" }
+                        , { field: 'id', title: 'ID', align: 'center', hide: true }
+                        , { field: 'name', title: '模块名称', align: 'center', width: "35%" }
+                        , { field: 'tb_prefix', title: '表前缀', align: 'center', width: "35%" }
+                        , { title: '操作', align: 'center', toolbar: '#column-toolbar' }
+                    ]
+                ]
+            });
+
+            table.on('toolbar', function (obj) {
+                var event = obj.event;
+                if (event === 'add') {
+                    add();
+                }
+            });
+
+            table.on('tool', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'edit') {
+                    edit(data.id);
+                } else if (obj.event === 'del') {
+                    del(data.id);
+                }
+            });
+
+            function refresh() {
+                table.reload("modular-table");
+            }
+
+            function del(id) {
+                layer.confirm("你确定删除此模块吗？", { icon: 3, title: '提示' }, function (index) {
+                    $.post('/Config/Modular/Delete?id=' + id, function (data) {
+                        if (data.code == 0) {
+                            layer.msg(data.msg, { icon: 6 });
+                            refresh();
+                        } else {
+                            layer.msg(data.msg, { icon: 5 });
+                        }
+                    }, 'json');
+                }, function (index) {
+                    layer.close(index);
+                });
+            }
+
+            function add() {
+                layer.open({
+                    content: "/Config/Modular/Add",
+                    title: "添加",
+                    area: ['40%', '30%'],
+                    type: 2,
+                    maxmin: true
+                });
+            }
+
+            function edit(id) {
+                layer.open({
+                    content: "/Config/Modular/Edit?id=" + id,
+                    title: "编辑",
+                    area: ['40%', '30%'],
+                    type: 2,
+                    maxmin: true
+                });
+            }
+        });
+    </script>
+</body>
+</html>

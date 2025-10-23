@@ -1,0 +1,265 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <title>待办统计</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 15px;
+            font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+            background: #f3f3f5;
+            color: #222;
+            font-size: 12px; /* 原14px */
+        }
+
+        /* 统计卡片容器 - 适配手机屏幕 */
+        .statistics-container {
+            width: 100%;
+            box-sizing: border-box;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        /* 表格标题栏 */
+        .table-header {
+            padding: 15px 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .table-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .date-info {
+            color: #666;
+            font-size: 10px; 
+            margin-top: 4px;
+        }
+
+        /* 表格样式 - 手机端优化 */
+        .statistics-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+            .statistics-table th {
+                background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f5 100%);
+                color: #495057;
+                font-weight: 600;
+                padding: 12px 10px;
+                text-align: left;
+                border-bottom: 2px solid #e9ecef;
+                font-size: 11px; /* 原13px */
+            }
+
+            .statistics-table td {
+                padding: 12px 10px;
+                border-bottom: 1px solid #f0f0f0;
+                transition: background-color 0.2s ease;
+            }
+
+            .statistics-table tr:last-child td {
+                border-bottom: none;
+            }
+
+            .statistics-table tr:hover td {
+                background-color: #f8fff8;
+            }
+
+        /* 厅管名称样式 */
+        .tg-name {
+            font-weight: 500;
+            color: #212529;
+            display: flex;
+            align-items: center;
+        }
+
+        .tg-avatar {
+            width: 26px; 
+            height: 26px; 
+            border-radius: 50%;
+            background-color: #e9ecef;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-size: 10px; 
+        }
+
+       
+        .stat-cell {
+            width: 35%; /* 平均分配昨天和今天列的宽度 */
+        }
+
+        .stat-value {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .completed {
+            color: #28a745;
+            font-weight: 600;
+            margin-right: 6px;
+        }
+
+        .total {
+            color: #6c757d;
+        }
+   
+        .progress-container {
+            width: 100%;
+            max-width: 200px; /* 限制最大宽度，避免在大屏幕上过长 */
+            height: 7px; 
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: #28a745;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* 空状态样式 */
+        .empty-state {
+            padding: 50px 20px;
+            text-align: center;
+            color: #6c757d;
+        }
+
+        .empty-icon {
+            font-size: 38px;
+            margin-bottom: 12px;
+            opacity: 0.3;
+        }
+
+        .empty-text {
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="statistics-container">
+        <div class="table-header">
+            <h2 class="table-title">待办统计</h2>
+            <div class="date-info">
+                数据更新时间: @DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            </div>
+        </div>
+
+        <table class="statistics-table">
+            <colgroup>
+                <col> 
+                <col> 
+                <col>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>厅管</th>
+                    <th>昨天</th>
+                    <th>今天</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    // 定义今天和昨天的日期变量
+                    string today = DateTime.Now.ToString("yyyy-MM-dd");
+                    string yesterday = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+
+                    // 获取数据列表
+                    var dataList = new ServiceFactory.UserInfo.Yy().YyGetNextTg(new UserIdentityBag().user_sn);
+                    bool isEmpty = dataList == null || dataList.Count == 0;
+                }
+
+                @if (isEmpty)
+                {
+                    <tr>
+                        <td colspan="3" class="empty-state">
+                            <div class="empty-icon">📊</div>
+                            <div class="empty-text">暂无统计数据</div>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in dataList)
+                    {
+                        // 获取昨天的数据
+                        var yesterdayCompleted = DoMySql.FindField<ModelDb.p_work_todo_day>("count(id)", $"c_date = '{yesterday}' AND tg_sn = '{item.user_sn}' AND status = 1")[0];
+                        var yesterdayTotal = DoMySql.FindField<ModelDb.p_work_todo_day>("count(id)", $"c_date = '{yesterday}' AND tg_sn = '{item.user_sn}'")[0];
+                        int yesterdayCompletedInt = int.TryParse(yesterdayCompleted, out int yc) ? yc : 0;
+                        int yesterdayTotalInt = int.TryParse(yesterdayTotal, out int yt) ? yt : 0;
+                        int yesterdayPercent = yesterdayTotalInt > 0 ? (yesterdayCompletedInt * 100) / yesterdayTotalInt : 0;
+
+                        // 获取今天的数据
+                        var todayCompleted = DoMySql.FindField<ModelDb.p_work_todo_day>("count(id)", $"c_date = '{today}' AND tg_sn = '{item.user_sn}' AND status = 1")[0];
+                        var todayTotal = DoMySql.FindField<ModelDb.p_work_todo_day>("count(id)", $"c_date = '{today}' AND tg_sn = '{item.user_sn}'")[0];
+                        int todayCompletedInt = int.TryParse(todayCompleted, out int tc) ? tc : 0;
+                        int todayTotalInt = int.TryParse(todayTotal, out int tt) ? tt : 0;
+                        int todayPercent = todayTotalInt > 0 ? (todayCompletedInt * 100) / todayTotalInt : 0;
+                        <tr>
+                            <!-- 展示厅管名称 -->
+                            <td>
+                                <div class="tg-name">
+                                    <div class="tg-avatar">
+                                        @(item.username.Length > 0 ? item.username.Substring(0, 1) : "T")
+                                    </div>
+                                    @(item.username)
+                                </div>
+                            </td>
+                            <!-- 展示昨天：已完成数量/总数 及进度条 -->
+                            <td class="stat-cell">
+                                <div class="stat-value">
+                                    <span class="completed">@yesterdayCompletedInt</span>
+                                    <span class="total">/@yesterdayTotalInt</span>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-bar" style="width: @yesterdayPercent%;"></div>
+                                </div>
+                            </td>
+                            <!-- 展示今天：已完成数量/总数 及进度条 -->
+                            <td class="stat-cell">
+                                <div class="stat-value">
+                                    <span class="completed">@todayCompletedInt</span>
+                                    <span class="total">/@todayTotalInt</span>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-bar" style="width: @todayPercent%;"></div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

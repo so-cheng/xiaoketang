@@ -1,0 +1,160 @@
+﻿
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+
+
+    DateTime today = DateTime.Today;// 获取当前日期
+    DateTime startDate = new DateTime(today.Year, today.Month, 1); // 当月的第一天
+    DateTime endDate = startDate.AddMonths(1).AddDays(-1); // 当月的最后一天
+    int remainingDays = (endDate - today).Days + 1;// 计算剩余天数
+
+    var user_sn = new UserIdentityBag().user_sn;
+    var organize_id = new UserIdentityBag().cur_organize_id;
+    var organize_wt = new DomainBasic.UserApp().GetInfoByUserSn(user_sn).organize_wt;
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-collapse: collapse;
+        border-style: solid;
+        border-width: 1px;
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    .layui-table td {
+        font-size: 15px;
+        min-width: 50px;
+    }
+
+    /* 表头固定样式 */
+    .layui-table {
+        position: relative;
+    }
+
+        .layui-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: white;
+        }
+
+            .layui-table thead tr:first-child {
+                position: sticky;
+                top: 0;
+                z-index: 11;
+                background-color: #FFF3CA;
+            }
+
+            .layui-table thead tr:nth-child(2) {
+                position: sticky;
+                top: 50px; /* 第一行表头的高度 */
+                z-index: 11;
+                background-color: #FCE4D3;
+            }
+
+            /* 确保表头有足够的背景色 */
+            .layui-table thead th {
+                background-color: inherit;
+            }
+</style>
+<!-- 以下书写自己的页面内容代码 -->
+<form class="layui-form">
+    <div class="layui-row">
+        <div class="layui-card" style="width:95%;top:30px;margin:0 auto">
+            <table class="layui-table">
+                <thead>
+                    <tr>
+                        <td colspan="6" style="font-size: 18px; text-align: center; font-weight: bold">@(today.ToString("yyyy年MM月"))@(DoMySql.FindEntityById<ModelDb.sys_organize>(organize_id).name)目标完成进度</td>
+                    </tr>
+                    <tr style="background-color: #D9E1F4">
+                        <td style="text-align: center;">名字</td>
+                        <td style="text-align: center; min-width: 60px;">数据</td>
+                        <td style="text-align:center">目标</td>
+                        <td style="text-align:center">完成</td>
+                        <td style="text-align:center">剩余天数</td>
+                        <td style="text-align:center">
+                            <div>
+                                平均
+                                <i class="layui-icon layui-icon-tips" title="(目标推出人数-实际推出人数) / 剩余天数"></i>
+                            </div>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody style="background-color: #ffffff;">
+                    @{
+                        string where = "";
+                        switch (organize_wt)
+                        {
+                            // 员工
+                            case 1:
+                                where += $"user_sn = '{user_sn}'";
+                                break;
+                            // 主管
+                            case 2:
+                                where += $"organize_id = {organize_id} or organize_id in (SELECT d1.id FROM sys_organize d1 LEFT JOIN sys_organize d2 ON d1.parent_id = d2.id WHERE d2.id = {organize_id})";
+                                break;
+                        }
+                        var p_liuliang_infos = DoMySql.FindList<ModelDb.p_liuliang_info>($"tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and DATE_FORMAT(c_date, '%Y-%m') = '{today.ToString("yyyy-MM")}' and wx_user_sn in (select user_sn from user_base where {where})");
+                        foreach (var item in DoMySql.FindList<ModelDb.user_base>($"user_type_id = {new DomainBasic.UserTypeApp().GetInfoByCode("wxer").id} and ({where}) and tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and status = {ModelDb.user_base.status_enum.正常.ToSByte()}"))
+                        {
+                            <tr>
+                                <td style="text-align: center" rowspan="2">@item.username</td>
+                                <td style="text-align: center">添加微信</td>
+                                @{
+                                    <td style="text-align:center"></td>
+                                    <td style="text-align:center">@p_liuliang_infos.Where(x => x.wx_user_sn == item.user_sn).Sum(x => x.wechat_num)</td>
+                                    <td style="text-align:center"></td>
+                                    <td style="text-align:center"></td>
+                                }
+                            </tr>
+                            <tr style="background-color: #d2ffe6; ">
+                                <td style="text-align:center">推出人数</td>
+                                @{
+                                    int? num_sum = p_liuliang_infos.Where(x => x.wx_user_sn == item.user_sn).Sum(x => x.num);
+                                    // 目标
+                                    var target = "";
+                                    // 平均 = （目标-合计）/ 剩余天数
+                                    var num_avg = "";
+                                    var p_liuliang_target = DoMySql.FindEntity<ModelDb.p_liuliang_target>($"wx_user_sn = '{item.user_sn}' and yearmonth = '{today.ToString("yyyy-MM")}'", false);
+                                    if (!p_liuliang_target.IsNullOrEmpty())
+                                    {
+                                        target = p_liuliang_target.num.ToString();
+                                        num_avg = ((p_liuliang_target.num - num_sum) / remainingDays).ToString();
+                                    }
+                                    <td style="text-align:center">@target</td>
+                                    <td style="text-align:center">@num_sum</td>
+                                    <td style="text-align:center">@remainingDays</td>
+                                    <td style="text-align:center">@num_avg</td>
+                                }
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        form.render('select'); // 仅渲染 select 元素
+    });
+</script>

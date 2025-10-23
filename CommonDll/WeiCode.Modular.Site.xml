@@ -1,0 +1,1132 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WeiCode.Modular.Site</name>
+    </assembly>
+    <members>
+        <member name="T:WeiCode.Models.ModelSite">
+            <summary>
+            
+            </summary>
+            <summary>
+            
+            </summary>
+            <summary>
+            
+            </summary>
+            <summary>
+            
+            </summary>
+            <summary>
+            
+            </summary>
+            <summary>
+            
+            </summary>
+            <summary>
+            
+            </summary>
+            <summary>
+            项目基础控件级模型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.CtlOnlineService">
+            <summary>
+             在线客服
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelSite.CtlOnlineService.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.CtlOnlineService.mobile">
+            <summary>
+            客服手机号码
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.CtlOnlineService.qq">
+            <summary>
+            qq号码
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.CtlOnlineService.weixin_url">
+            <summary>
+            客服微信图片URL
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.CtlOnlineService.width">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.CtlOnlineService.height">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.EmtPopNotify">
+            <summary>
+            弹窗通知
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelSite.EmtPopNotify.#ctor">
+            <summary>
+            弹窗通知
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPopNotify.msg">
+            <summary>
+            内容
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPopNotify.closable">
+            <summary>
+            是否显示关闭按钮
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPopNotify.duration">
+            <summary>
+            显示时间(毫秒)，默认3000，为 0 时不自动关闭
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPopNotify.type">
+            <summary>
+            位置
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.EmtPopNotify.Type">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelSite.EmtPopNotify.Type.信息">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelSite.EmtPopNotify.Type.警告">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelSite.EmtPopNotify.Type.成功">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelSite.EmtPopNotify.Type.错误">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPopNotify.position">
+            <summary>
+            位置
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.EmtPopNotify.Position">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelSite.EmtPopNotify.Position.左上">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelSite.EmtPopNotify.Position.右上">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelSite.EmtPopNotify.Position.左下">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelSite.EmtPopNotify.Position.右下">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelSite.EmtPopNotify.Position.中下">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelSite.EmtPopNotify.Position.正中">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.EmtPopLayer">
+            <summary>
+            弹窗通知
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelSite.EmtPopLayer.#ctor">
+            <summary>
+            弹窗通知
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPopLayer.url">
+            <summary>
+            内容页面url
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPopLayer.isAlwaysPop">
+            <summary>
+            是否一直弹出
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPopLayer.width">
+            <summary>
+            弹窗宽度
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPopLayer.height">
+            <summary>
+            弹窗高度
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.EmtNavMenu">
+            <summary>
+            导航菜单
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelSite.EmtNavMenu.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.EmtCkplayer">
+            <summary>
+            视频播放器
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelSite.EmtCkplayer.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtCkplayer.width">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtCkplayer.height">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.EmtPageTimer">
+            <summary>
+            轮播图片
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelSite.EmtPageTimer.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPageTimer.waitMode">
+            <summary>
+            等待模式
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.EmtPageTimer.WaitMode">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelSite.EmtPageTimer.WaitMode.倒计时模式">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelSite.EmtPageTimer.WaitMode.重试模式">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPageTimer.listenReturn">
+            <summary>
+            请求监听时回调,返回对象:res
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.EmtPageTimer.ListenReturn">
+            <summary>
+            监听回调
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPageTimer.ListenReturn.jsCode">
+            <summary>
+            执行js代码
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPageTimer.successReturn">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.EmtPageTimer.SuccessReturn">
+            <summary>
+            成功返回
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPageTimer.SuccessReturn.toUrl">
+            <summary>
+            跳转地址
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPageTimer.failReturn">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.EmtPageTimer.FailReturn">
+            <summary>
+            失败返回
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPageTimer.FailReturn.toUrl">
+            <summary>
+            跳转地址
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPageTimer.timeoutReturn">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.EmtPageTimer.TimeoutReturn">
+            <summary>
+            超时返回
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPageTimer.TimeoutReturn.toUrl">
+            <summary>
+            跳转地址
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPageTimer.eventCsAction">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.EmtPageTimer.EventCsAction">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPageTimer.EventCsAction.func">
+            <summary>
+            设置提交处理的回调cs函数
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPageTimer.EventCsAction.paras">
+            <summary>
+            参数
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPageTimer.EventCsAction.waitSecond">
+            <summary>
+            等待几秒后开始第一请请求
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPageTimer.EventCsAction.totalSecond">
+            <summary>
+            请求超时(秒)
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPageTimer.EventCsAction.rateSecond">
+            <summary>
+            请求频率(秒)
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.EmtPageTimer.ReturnInfo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPageTimer.ReturnInfo.message">
+            <summary>
+            返回信息
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtPageTimer.ReturnInfo.returnType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.EmtPageTimer.ReturnInfo.ReturnType">
+            <summary>
+            返回类型
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelSite.EmtPageTimer.ReturnInfo.ReturnType.继续等待">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelSite.EmtPageTimer.ReturnInfo.ReturnType.成功返回">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelSite.EmtPageTimer.ReturnInfo.ReturnType.失败返回">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.EmtSliderImage">
+            <summary>
+            轮播图片
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelSite.EmtSliderImage.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtSliderImage.width">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.EmtSliderImage.height">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.EmtSliderImage.Item">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.CommonTop">
+            <summary>
+            通用公共顶部
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelSite.CommonTop.#ctor">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.CommonTop.ButtonText">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.CommonTop.Hr">
+            <summary>
+            换行
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.CommonTop.Hr.height">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.CommonTop.Item">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.CommonBottom">
+            <summary>
+            通用公共底部
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelSite.CommonBottom.#ctor">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.CommonBottom.ButtonText">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.CommonBottom.Hr">
+            <summary>
+            换行
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.CommonBottom.Hr.height">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.CommonBottom.Item">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.CtlGoodsCardList">
+            <summary>
+            商品卡片列表
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelSite.CtlGoodsCardList.#ctor">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.CtlGoodsCardList.items">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.CtlGoodsCardList.Item">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.CtlGoodsCardList.Item.img_url">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.CtlGoodsCardList.Item.title">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.CtlMenuNav">
+            <summary>
+            门户菜单导航
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelSite.CtlMenuNav.#ctor">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.CtlMenuNav.items">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelSite.CtlMenuNav.Item">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.CtlMenuNav.Item.img_url">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelSite.CtlMenuNav.Item.title">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.Site.Controllers.ComponentActionController">
+            <summary>
+            设置中心
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ComponentActionController.PageTimer(WeiCode.DataBase.JsonRequestAction)">
+            <summary>
+            
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Site.Controllers.ComponentController">
+            <summary>
+            设置中心
+            </summary>
+            <summary>
+            组件异步请求处理
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ComponentController.PageTimer">
+            <summary>
+            动态参数
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ComponentController.SliderImage">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ComponentController.GetHtml(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name">组件名称</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ComponentController.PageContent(System.String,System.String,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="url">组件名称</param>
+            <param name="name">组件名称</param>
+            <param name="height">组件名称</param>
+            <param name="isAlwaysPop">组件名称</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ComponentController.PageClearCookie(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Site.Controllers.ContentController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.Config">
+            <summary>
+            配置信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.ConfigPost(System.SByte[],System.String[],System.String[])">
+            <summary>
+            配置信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Site.Controllers.ContentController.ConfigReq">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Site.Controllers.ContentController.ConfigReq.FormData.content">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.ManageList">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.ManageListData(System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Site.Controllers.ContentController.ManageListDataItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.ManagePost(System.Int32,System.SByte)">
+            <summary>
+            创建内容主题
+            </summary>
+            <param name="id"></param>
+            <param name="c_type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.ManagePost(WeiCode.ModelDbs.ModelDbSite.site_content)">
+            <summary>
+            
+            </summary>
+            <param name="site_content"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.MngNavList">
+            <summary>
+            导航菜单
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.MngNavListData(System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Site.Controllers.ContentController.MngNavListDataItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.MngNavPost(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.MngNavPost(WeiCode.ModelDbs.ModelDbSite.site_config_para)">
+            <summary>
+            
+            </summary>
+            <param name="page"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.MngAdvList(System.Int32)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.MngAdvListData(System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Site.Controllers.ContentController.MngAdvListDataItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.MngAdvPost(System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="content_id"></param>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.MngAdvPost(WeiCode.ModelDbs.ModelDbSite.site_content_adv)">
+            <summary>
+            
+            </summary>
+            <param name="page"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.MngNewsList(WeiCode.Modular.Site.PageFactory.ContentNewsList.DtoReq)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.MngNewsPost(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.MngNewsPost(WeiCode.ModelDbs.ModelDbSite.site_content_nav)">
+            <summary>
+            
+            </summary>
+            <param name="page"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.MngProList">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.MngProListData(System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Site.Controllers.ContentController.MngProListDataItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.MngProPost(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.MngProPost(WeiCode.ModelDbs.ModelDbSite.site_content_nav)">
+            <summary>
+            
+            </summary>
+            <param name="page"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.ParaList">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.ParaListData(System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Site.Controllers.ContentController.ParaListDataItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Site.Controllers.ContentController.ParaListDataItem.tenant_name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Site.Controllers.ContentController.ParaListDataItem.k_type_name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.ParaPost(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.ContentController.ParaPost(WeiCode.ModelDbs.ModelDbSite.site_config_para)">
+            <summary>
+            
+            </summary>
+            <param name="page"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Site.Controllers.PageController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.PageController.Detail(System.Int32)">
+            <summary>
+            单页图文
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.PageController.List">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.PageController.ListData(System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Site.Controllers.PageController.ListDataItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.PageController.Post(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.PageController.Post(WeiCode.ModelDbs.ModelDbSite.site_page)">
+            <summary>
+            
+            </summary>
+            <param name="page"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.PageController.SystemList">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.PageController.SystemListData(System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Site.Controllers.PageController.SystemListDataItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.PageController.Common">
+            <summary>
+            配置信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.PageController.CommonAction(System.Int32)">
+            <summary>
+            配置信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.PageController.MasterList">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.PageController.MasterListData(System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Site.Controllers.PageController.MasterListDataItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.PageController.MasterPost(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.Controllers.PageController.MasterPost(WeiCode.ModelDbs.ModelDbSite.site_master)">
+            <summary>
+            
+            </summary>
+            <param name="page"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Site.Controllers.UserController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.Site.PageFactory">
+            <summary>
+            账号管理(模块)组件模型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.Site.PageFactory.ContentNewsList">
+            <summary>
+            列表页面
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Site.PageFactory.ContentNewsList.Get(WeiCode.Modular.Site.PageFactory.ContentNewsList.DtoReq)">
+            <summary>
+            获取页面数据模型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.PageFactory.ContentNewsList.GetListFilter(WeiCode.Modular.Site.PageFactory.ContentNewsList.DtoReq)">
+            <summary>
+            设置列表筛选表单的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.PageFactory.ContentNewsList.GetButtonGroup(WeiCode.Modular.Site.PageFactory.ContentNewsList.DtoReq)">
+            <summary>
+            设置扩展的按钮组
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Site.PageFactory.ContentNewsList.GetListDisplay(WeiCode.Modular.Site.PageFactory.ContentNewsList.DtoReq)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Site.PageFactory.ContentNewsList.DtoReq">
+            <summary>
+            请求参数对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Site.PageFactory.ContentNewsList.DtoReq.filterForm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.Site.PageFactory.ContentNewsList.DtoReq.FilterForm">
+            <summary>
+            筛选参数（自定义）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Site.PageFactory.ContentNewsList.DtoReq.FilterForm.keyword">
+            <summary>
+            关键词
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Site.PageFactory.ContentNewsList.GetListData(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            data数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Site.PageFactory.ContentNewsList.DtoReqListData">
+            <summary>
+            自定义筛选参数（自定义数据，与属性对应）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Site.PageFactory.ContentNewsList.DtoReqListData.keyword">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.Site.PageFactory.ContentNewsList.DtoResListData">
+            <summary>
+            返回结果对象
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.Site.PageFactory.ContentNewsList.DtoResListData.ItemDataModel">
+            <summary>
+            数据项模型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.Site.PageFactory.ContentNewsPost">
+            <summary>
+            创建/编辑页面
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Site.PageFactory.ContentNewsPost.GetFormDisplay(WeiCode.Models.ModelBasic.PageModel.Post,WeiCode.Modular.Site.PageFactory.ContentNewsPost.DtoReq)">
+            <summary>
+            配置表单元素控件
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Modular.Site.PageFactory.ContentNewsPost.DtoReq.formData">
+            <summary>
+            附加额外参数
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Site.PageFactory.ContentNewsPost.GetCustomerListData(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            data数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Site.PageFactory.ContentNewsPost.DtoReqListData">
+            <summary>
+            自定义筛选参数（自定义数据，与属性对应）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Site.PageFactory.ContentNewsPost.DtoReqListData.keyword">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.Site.PageFactory.ContentNewsPost.DtoResListData">
+            <summary>
+            返回结果对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Site.PageFactory.ContentNewsPost.DtoResListData.itemDataModels">
+            <summary>
+            列表数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.Site.PageFactory.ContentNewsPost.DtoResListData.ItemDataModel">
+            <summary>
+            数据项模型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Site.PageFactory.ContentNewsPost.DtoResListData.ItemDataModel.value">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.Site.ModularSiteCreate">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.Site.ModularSiteCreate.Service`3">
+            <summary>
+            创建用户Function
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Site.ModularSiteCreate.Service`3.Before(`0,`1)">
+            <summary>
+            执行前
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Site.ModularSiteCreate.Service`3.Complete(`0,`1)">
+            <summary>
+            执行后
+            </summary>
+            <param name="req"></param>
+            <param name="res"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Site.ModularSiteCreate.DtoReq">
+            <summary>
+            创建用户（输入）
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.Site.ModularSiteCreate.DtoRes">
+            <summary>
+            下单实体（输出）
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.Site.ModularSiteCreate.DtoLog">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Site.ModularSiteCreate.DtoLog.customer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.Site.ModularInfoBase">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Site.ModularInfoBase.getVersion">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Site.SiteAreaRegistration">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Site.SiteAreaRegistration.AreaName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Site.SiteAreaRegistration.RegisterArea(System.Web.Mvc.AreaRegistrationContext,MvcContrib.PortableAreas.IApplicationBus)">
+            <summary>
+            
+            </summary>
+            <param name="context"></param>
+            <param name="bus"></param>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbModularSite">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:ModelDto.MqDto.UserCreated">
+            <summary>
+            用户创建事件消息
+            </summary>
+        </member>
+        <member name="P:ModelDto.MqDto.UserCreated.user_Base">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>

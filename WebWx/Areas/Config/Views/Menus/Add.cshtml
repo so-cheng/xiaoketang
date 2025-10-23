@@ -1,0 +1,152 @@
+﻿@{
+    Layout = null;
+}
+
+@using DataBase.Core;
+@using DataBase.Project;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>添加子菜单</title>
+    <link href="/Assets/layui/css/layui.css" rel="stylesheet" />
+    <link href="/Assets/css/animate.min.css" rel="stylesheet" />
+    <style>
+        .z-body {
+            margin: 30px;
+        }
+
+        .rightmenu {
+            position: absolute;
+            width: 110px;
+            z-index: 9999;
+            display: none;
+            background-color: #fff;
+            padding: 2px;
+            color: #333;
+            border: 1px solid #eee;
+            border-radius: 2px;
+            cursor: pointer
+        }
+
+            .rightmenu li {
+                text-align: center;
+                display: block;
+                height: 30px;
+                line-height: 30px;
+                margin: 8px 0 8px 0
+            }
+
+                .rightmenu li:hover {
+                    background-color: #f2f2f2;
+                    color: #000
+                }
+    </style>
+</head>
+<body>
+    <div class="z-body animated fadeIn">
+        <form class="layui-form layui-form-pane">
+            <div class="layui-form-item">
+                <label for="modular_id" class="layui-form-label">
+                    所属模块
+                </label>
+                <div class="layui-input-block">
+                    <select id="modular_id" name="modular_id" lay-verify="">
+                        <option value="">请选择</option>
+                        @foreach (var item in ViewBag.sys_modular)
+                        {
+                            <option value="@item.id">@item.name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="name" class="layui-form-label">
+                    菜单名称
+                </label>
+                <div class="layui-input-block">
+                    <input type="text" id="name" name="name" value="" lay-verify="required" lay-vertype="tips" autocomplete="off" placeholder="请输入菜单名称" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="url" class="layui-form-label">
+                    链接地址
+                </label>
+                <div class="layui-input-block">
+                    <input type="text" id="url" value="" name="url" lay-verify="required" lay-vertype="tips" autocomplete="off" class="layui-input" placeholder="请输入需要授权的 URL"><div class="layui-form-autocomplete"><dl class="layui-anim layui-anim-upbit"></dl></div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="icon" class="layui-form-label" style="height:40px!important;">
+                    图标
+                </label>
+                <div class="layui-input-block">
+                    <div>
+                        <input type="text" id="icon" value="" name="icon" lay-vertype="tips" lay-filter="iconPicker" class="layui-input" style="float: left; display: none;">
+                        @*<div class="layui-form-mid layui-word-aux">注：仅对一级菜单生效</div>*@
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">
+                    上级菜单
+                </label>
+                <div class="layui-input-block">
+                    @{
+                        ModelDb.sys_modular_menu sys_modular_menu = DoMySql.FindEntity<ModelDb.sys_modular_menu>($"id = {ViewBag.parentId}");
+                        @Html.Raw($"<div class='layui-form-mid' style='margin-left: 12px;'>{sys_modular_menu.name}</div>");
+                    }
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="sort" class="layui-form-label">
+                    排序
+                </label>
+                <div class="layui-input-block">
+                    <input type="text" id="sort" value="" name="sort" lay-vertype="tips" autocomplete="off" class="layui-input" placeholder="请输入排序"><div class="layui-form-autocomplete"><dl class="layui-anim layui-anim-upbit"></dl></div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" style="margin-left:0;text-align:center;">
+                    <input type="hidden" name="parent_id" value="@ViewBag.parentId" />
+                    <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="add">保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="/Assets/js/jquery.js"></script>
+    <script src="/Assets/layui/layui.js"></script>
+    <script src="~/Assets/js/common.js"></script>
+    <script>
+
+        layui.config({
+            base: '/Assets/layui/extend/'
+        }).use(['form', 'layer', 'IconFonts', 'element'], function () {
+            var $ = layui.jquery,
+                form = layui.form,
+                layer = layui.layer,
+                element = layui.element,
+                IconFonts = layui.IconFonts;
+
+            IconFonts.render({
+                elem: '#icon',
+                type: 'layui_icon',
+                search: true,
+                page: true,
+                limit: 12,
+                click: function (data) {
+                },
+            });
+
+            // 监听提交
+            form.on('submit(add)', function (form) {
+                $.post('/Config/Menus/Add', form.field, function (result) {
+                    layerMsg_P(result.msg, result.code);
+                }, 'json');
+                return false;
+            });
+        });
+    </script>
+</body>
+</html>

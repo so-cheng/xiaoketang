@@ -1,0 +1,484 @@
+﻿@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+@using System;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+<script src="~/Assets/js/layui.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.js"></script>
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    .layui-table td {
+        font-size: 15px;
+    }
+</style>
+
+@{
+    string dateRange = ViewBag.dateRange;
+    string c_date_e = dateRange.Substring(dateRange.IndexOf("~") + 2);
+    string c_date_s = dateRange.Substring(0, dateRange.IndexOf("~") - 1);
+    string yy_user_sn = new ServiceFactory.UserInfo.Tg().GetTgInfoByUsersn(new UserIdentityBag().user_sn).yy_sn;
+    var p_jixiao_day = DoMySql.FindListBySql<ServiceFactory.JixiaoDay.JixiaoTable>($"select yy_user_sn,ting_sn,sum(amount) as amount_sum,sum(new_num) as new_num_sum,sum(contact_num) as contact_num_sum,sum(datou_num) as datou_num_sum,sum(amount_1) as amount_1_sum,sum(num_2) as num_2_sum,sum(amount_2) as amount_2_sum,sum(old_amount) as old_amount_sum,sum(hx_num) as hx_num_sum,sum(hx_amount) as hx_amount_sum,sum(hdpk_amount) as hdpk_amount_sum from p_jixiao_day where c_date>='{c_date_s}' and c_date<='{c_date_e}' and yy_user_sn = '{yy_user_sn}' group by tg_user_sn");
+
+    var sum = DoMySql.FindField<ModelDb.p_jixiao_day>($"sum(new_num),sum(contact_num),sum(amount_1),sum(num_2),sum(amount_2),sum(old_amount),sum(datou_num),sum(amount),sum(hx_num),sum(hx_amount),sum(hdpk_amount)", $"c_date>='{c_date_s}' and c_date<='{c_date_e}' and yy_user_sn = '{yy_user_sn}'");
+
+
+
+}
+
+
+<div class="layui-card" style="width:100%;margin:0 auto">
+    <div class="layui-card" style="width:95%;top:30px;margin:0 auto">
+        <div class="layui-card-header">数据统计</div>
+        <blockquote class="layui-elem-quote news_search">
+            <div class="layui-inline">
+                <form class="layui-form">
+
+                    <div class="layui-input-inline">
+                        <label class="layui-form-label">日期</label>
+                    </div>
+
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("dateRange")
+                            {
+                                title = "日期范围筛选",
+                                defaultValue = ViewBag.dateRange,
+                                mold = ModelBasic.EmtTimeSelect.Mold.date_range,
+                            })
+                        </div>
+                    </div>
+                    <button type="submit" class="layui-btn search_btn">查询</button>
+
+                </form>
+
+            </div>
+        </blockquote>
+
+
+
+        <table class="layui-table" style="text-align: center;" id="table2" name="table2">
+            <colgroup>
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+
+                <col width="100">
+            </colgroup>
+            <thead>
+                <tr>
+                    <td colspan="16" style="text-align: center; background-color: #D9E1F2; font-size: 18px; font-weight: 700; ">@(c_date_s.ToDateString("MM月dd日"))至@(c_date_e.ToDateString("dd日"))团队流水汇总</td>
+                </tr>
+                <tr style="background-color: #B4C6E7; font-weight: 700;">
+                    <th>运营团队</th>
+                    <th>厅名</th>
+                    <th>拉新数</th>
+                    <th>二消个数</th>
+                    <th>建联数</th>
+                    <th>二消率</th>
+                    <th>建联率</th>
+                    <th>首消音浪</th>
+                    <th>二消音浪</th>
+                    <th>老用户音浪</th>
+                    <th>首消音浪占比</th>
+                    <th>二消音浪占比</th>
+                    <th>老用户音浪占比</th>
+                    <th>活动PK音浪</th>
+                    <th>活动音浪占比</th>
+                    <th>总音浪</th>
+                </tr>
+            </thead>
+            @{
+                string color = "#D9E1F2";
+                int sort = 0;
+                foreach (var item in p_jixiao_day)
+                {
+                    sort++;
+                    string yy = DoMySql.FindEntity<ModelDb.user_base>($"user_sn='{item.yy_user_sn}'", false).username;
+
+                    <tr style="background-color: @color">
+                        @if (sort==1) 
+                        { 
+                            <!--运营团队-->
+                        <td rowspan="@p_jixiao_day.Count">@(new ServiceFactory.UserInfo.Yy().GetInfoByUserSn(item.yy_user_sn).username)</td>
+                        }
+                        
+                        <!--厅名-->
+                        <td>@(new ServiceFactory.UserInfo.Ting().GetTingBySn(item.ting_sn).ting_name)</td>
+                        <!--拉新数-->
+                        <td>@item.new_num_sum</td>
+                        <!--二消个数-->
+                        <td>@item.num_2_sum</td>
+                        <!--建联数-->
+                        <td>@item.contact_num_sum</td>
+                        <!--二消率-->
+                        <td>@(item.new_num_sum.ToInt()<=0?"0":(item.num_2_sum.ToDouble()*100/item.new_num_sum.ToInt()).ToString("0.00"))%</td>
+                        <!--建联率-->
+                        <td>@(item.new_num_sum.ToInt()<=0?"0":(item.contact_num_sum.ToDouble()*100/item.new_num_sum.ToInt()).ToString("0.00"))%</td>
+                        <!--首消音浪-->
+                        <td>@item.amount_1_sum</td>
+                        <!--二消音浪-->
+                        <td>@item.amount_2_sum</td>
+                        <!--回消音浪-->
+                        <td>@item.hx_amount_sum</td>
+                        <!--首消音浪占比-->
+                        <td>@(item.amount_sum.ToInt()<=0?"0":((item.amount_1_sum.ToDouble())*100/item.amount_sum.ToInt()).ToString("0.00"))%</td>
+                        <!--二消音浪占比-->
+                        <td>@(item.amount_sum.ToInt()<=0?"0":((item.amount_2_sum.ToDouble())*100/item.amount_sum.ToInt()).ToString("0.00"))%</td>
+                        <!--回消音浪占比-->
+                        <td>@(item.amount_sum.ToInt()<=0?"0":(item.hx_amount_sum.ToDouble()*100/item.amount_sum.ToInt()).ToString("0.00"))%</td>
+                        <!--活动PK-->
+                        <td>@item.hdpk_amount_sum</td>
+                        <!--活动音浪占比-->
+                        <td>@(item.amount_sum.ToInt()<=0?"0":(item.hdpk_amount_sum.ToDouble()*100/item.amount_sum.ToInt()).ToString("0.00"))%</td>
+                        <!--总音浪-->
+                        <td>@item.amount_sum</td>
+                    </tr>
+
+                    if (color == "#D9E1F2")
+                    {
+                        color = "#B4C6E7";
+                    }
+                    else
+                    {
+                        color = "#D9E1F2";
+                    }
+                }
+            }
+
+            <tr style="background-color: @color">
+                <!--合计-->
+                <td>合计</td>
+                <td>@p_jixiao_day.Count 个厅</td>
+                <!--拉新数-->
+                <td>@sum[0]</td>
+                <!--二消个数-->
+                <td>@sum[3]</td>
+                <!--建联数-->
+                <td>@sum[1]</td>
+                <!--二消率-->
+                <td>@(sum[0].ToNullableString()=="0" || sum[0].ToNullableString().IsNullOrEmpty() ? "0":(sum[3].ToDouble()*100/sum[0].ToInt()).ToString("0.00"))%</td>
+                <!--建联率-->
+                <td>@(sum[0].ToNullableString()=="0" || sum[0].ToNullableString().IsNullOrEmpty() ? "0":(sum[1].ToDouble()*100/sum[0].ToInt()).ToString("0.00"))%</td>
+                <!--首消音浪-->
+                <td>@sum[2]</td>
+                <!--二消音浪-->
+                <td>@sum[4]</td>
+                <!--回消音浪-->
+                <td>@sum[9]</td>
+                <!--首消音浪占比-->
+                <td>@(sum[7].ToNullableString() == "0" || sum[7].ToNullableString().IsNullOrEmpty() ? "0" : ((sum[2].ToDouble()) * 100 / sum[7].ToInt()).ToString("0.00"))%</td>
+                <!--二消音浪占比-->
+                <td>@(sum[7].ToNullableString() == "0" || sum[7].ToNullableString().IsNullOrEmpty() ? "0" : ((sum[4].ToDouble()) * 100 / sum[7].ToInt()).ToString("0.00"))%</td>
+                <!--回消音浪占比-->
+                <td>@(sum[7].ToNullableString()=="0" || sum[7].ToNullableString().IsNullOrEmpty() ? "0":(sum[9].ToDouble()*100/sum[7].ToInt()).ToString("0.00"))%</td>
+                <!--活动PK-->
+                <td>@sum[10]</td>
+                <!--活动音浪占比-->
+                <td>@(sum[7].ToNullableString()=="0" || sum[7].ToNullableString().IsNullOrEmpty() ? "0":(sum[10].ToDouble()*100/sum[7].ToInt()).ToString("0.00"))%</td>
+                <!--总音浪-->
+                <td>@sum[7]</td>
+
+            </tr>
+
+        </table>
+    </div>
+
+    @{
+        var Monday = DateTime.Today;
+        while (Monday.DayOfWeek != DayOfWeek.Monday)
+        {
+            Monday = Monday.AddDays(-1);
+        }
+    }
+
+    <div class="layui-card" style="width:95%;margin-top:130px;margin:0 auto">
+        <div class="layui-card-header">每周数据</div>
+        <div class="layui-tab layui-tab-brief" lay-filter="test-hash">
+            <ul class="layui-tab-title">
+                <li class="layui-this" lay-id="11">@Monday.ToString("MM月dd日") 至 @Monday.AddDays(6).ToString("MM月dd日")</li>
+                <li lay-id="22">@Monday.AddDays(-7).ToString("MM月dd日") 至 @Monday.AddDays(-7).AddDays(6).ToString("MM月dd日")</li>
+                <li lay-id="33">@Monday.AddDays(-14).ToString("MM月dd日") 至 @Monday.AddDays(-14).AddDays(6).ToString("MM月dd日")</li>
+                <li lay-id="44">@Monday.AddDays(-21).ToString("MM月dd日") 至 @Monday.AddDays(-21).AddDays(6).ToString("MM月dd日")</li>
+            </ul>
+            <div class="layui-tab-content">
+                @{
+                    for (int i = 0; i < 4; i++)
+                    {
+                        var list = DoMySql.FindListBySql<ServiceFactory.JixiaoDay.JixiaoTable>($"select yy_user_sn,ting_sn,sum(amount) as amount_sum,sum(new_num) as new_num_sum,sum(contact_num) as contact_num_sum,sum(datou_num) as datou_num_sum,sum(amount_1) as amount_1_sum,sum(num_2) as num_2_sum,sum(amount_2) as amount_2_sum,sum(old_amount) as old_amount_sum,sum(hx_num) as hx_num_sum,sum(hx_amount) as hx_amount_sum,sum(hdpk_amount) as hdpk_amount_sum from p_jixiao_day where c_date>='{Monday.ToString("yyyy-MM-dd")}' and c_date<='{Monday.AddDays(6).ToString("yyyy-MM-dd")}' and yy_user_sn = '{yy_user_sn}' group by tg_user_sn");
+                        var list_sum = DoMySql.FindField<ModelDb.p_jixiao_day>($"sum(new_num),sum(contact_num),sum(amount_1),sum(num_2),sum(amount_2),sum(old_amount),sum(datou_num),sum(amount),sum(hx_num),sum(hx_amount),sum(hdpk_amount)", $"c_date>='{Monday.ToString("yyyy-MM-dd")}' and c_date<='{Monday.AddDays(6).ToString("yyyy-MM-dd")}' and yy_user_sn = '{yy_user_sn}'");
+
+                        <div class="layui-tab-item @(i==0 ? "layui-show":"")">
+
+                            <table class="layui-table" style="text-align:center;" id="table2" name="table2">
+                                <colgroup>
+                                    <col width="100">
+                                    <col width="100">
+                                    <col width="100">
+                                    <col width="100">
+                                    <col width="100">
+
+                                    <col width="100">
+                                    <col width="100">
+                                    <col width="100">
+                                    <col width="100">
+                                    <col width="100">
+
+                                    <col width="100">
+                                    <col width="100">
+                                    <col width="100">
+                                    <col width="100">
+                                    <col width="100">
+
+                                    <col width="100">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <td colspan="16" style="text-align: center; background-color: #D9E1F2; font-size: 18px; font-weight: 700 ">@(Monday.ToDateString("MM月dd日"))至@(Monday.AddDays(6).ToDateString("dd日"))团队流水汇总</td>
+                                    </tr>
+                                    <tr style="background-color: #B4C6E7; font-weight: 700;">
+                                        <th>运营团队</th>
+                                        <th>厅名</th>
+                                        <th>拉新数</th>
+                                        <th>二消个数</th>
+                                        <th>建联数</th>
+                                        <th>二消率</th>
+                                        <th>建联率</th>
+                                        <th>首消音浪</th>
+                                        <th>二消音浪</th>
+                                        <th>老用户音浪</th>
+                                        <th>首消音浪占比</th>
+                                        <th>二消音浪占比</th>
+                                        <th>老用户音浪占比</th>
+                                        <th>活动PK音浪</th>
+                                        <th>活动音浪占比</th>
+                                        <th>总音浪</th>
+                                    </tr>
+                                </thead>
+                                @{
+                                    string color_week = "#D9E1F2";
+                                    sort = 0;
+                                    foreach (var item in list)
+                                    {
+                                        sort++;
+                                        //string zhubo = DoMySql.FindEntity<ModelDb.user_base>($"user_sn='{item.zb_user_sn}'").username;
+
+                                        <tr style="background-color: @color_week">
+                                            @if (sort == 1) 
+                                            {
+                                            <!--运营团队-->
+                                            <td rowspan="@list.Count">@(new ServiceFactory.UserInfo.Yy().GetInfoByUserSn(item.yy_user_sn).username)</td> 
+                                            }
+                                            <!--厅名-->
+                                            <td>@(new ServiceFactory.UserInfo.Ting().GetTingBySn(item.ting_sn).ting_name)</td>
+                                            <!--拉新数-->
+                                            <td>@item.new_num_sum</td>
+                                            <!--二消个数-->
+                                            <td>@item.num_2_sum</td>
+                                            <!--建联数-->
+                                            <td>@item.contact_num_sum</td>
+                                            <!--二消率-->
+                                            <td>@(item.new_num_sum.ToInt()<=0?"0":(item.num_2_sum.ToDouble()*100/item.new_num_sum.ToInt()).ToString("0.00"))%</td>
+                                            <!--建联率-->
+                                            <td>@(item.new_num_sum.ToInt()<=0?"0":(item.contact_num_sum.ToDouble()*100/item.new_num_sum.ToInt()).ToString("0.00"))%</td>
+                                            <!--首消音浪-->
+                                            <td>@item.amount_1_sum</td>
+                                            <!--二消音浪-->
+                                            <td>@item.amount_2_sum</td>
+                                            <!--回消音浪-->
+                                            <td>@item.hx_amount_sum</td>
+                                            <!--首消音浪占比-->
+                                            <td>@(item.amount_sum.ToInt()<=0?"0":((item.amount_1_sum.ToDouble())*100/item.amount_sum.ToInt()).ToString("0.00"))%</td>
+                                            <!--二消音浪占比-->
+                                            <td>@(item.amount_sum.ToInt()<=0?"0":((item.amount_2_sum.ToDouble())*100/item.amount_sum.ToInt()).ToString("0.00"))%</td>
+                                            <!--回消音浪占比-->
+                                            <td>@(item.amount_sum.ToInt()<=0?"0":(item.hx_amount_sum.ToDouble()*100/item.amount_sum.ToInt()).ToString("0.00"))%</td>
+                                            <!--活动PK-->
+                                            <td>@item.hdpk_amount_sum</td>
+                                            <!--活动音浪占比-->
+                                            <td>@(item.amount_sum.ToInt()<=0?"0":(item.hdpk_amount_sum.ToDouble()*100/item.amount_sum.ToInt()).ToString("0.00"))%</td>
+                                            <!--总音浪-->
+                                            <td>@item.amount_sum</td>
+                                        </tr>
+
+                                        if (color_week == "#D9E1F2")
+                                        {
+                                            color_week = "#B4C6E7";
+                                        }
+                                        else
+                                        {
+                                            color_week = "#D9E1F2";
+                                        }
+                                    }
+                                }
+                                <tr style="background-color: @color_week">
+                                    <!--合计-->
+                                    <td>合计</td>
+                                    <!--合计-->
+                                    <td>@list.Count 个厅</td>
+                                    <!--拉新数-->
+                                    <td>@list_sum[0]</td>
+                                    <!--二消个数-->
+                                    <td>@list_sum[3]</td>
+                                    <!--建联数-->
+                                    <td>@list_sum[1]</td>
+                                    <!--二消率-->
+                                    <td>@(list_sum[0].ToNullableString()=="0" || list_sum[0].ToNullableString().IsNullOrEmpty() ? "0":(list_sum[3].ToDouble()*100/ list_sum[0].ToInt()).ToString("0.00"))%</td>
+                                    <!--建联率-->
+                                    <td>@(list_sum[0].ToNullableString()=="0" || list_sum[0].ToNullableString().IsNullOrEmpty() ? "0":(list_sum[1].ToDouble()*100/ list_sum[0].ToInt()).ToString("0.00"))%</td>
+                                    <!--首消音浪-->
+                                    <td>@list_sum[2]</td>
+                                    <!--二消音浪-->
+                                    <td>@list_sum[4]</td>
+                                    <!--回消音浪-->
+                                    <td>@list_sum[9]</td>
+                                    <!--首消音浪占比-->
+                                    <td>@(list_sum[7].ToNullableString() == "0" || list_sum[7].ToNullableString().IsNullOrEmpty() ? "0" : ((list_sum[2].ToDouble()) * 100 / list_sum[7].ToInt()).ToString("0.00"))%</td>
+                                    <!--二消音浪占比-->
+                                    <td>@(list_sum[7].ToNullableString() == "0" || list_sum[7].ToNullableString().IsNullOrEmpty() ? "0" : ((list_sum[4].ToDouble()) * 100 / list_sum[7].ToInt()).ToString("0.00"))%</td>
+
+                                    <!--回消音浪占比-->
+                                    <td>@(list_sum[7].ToNullableString()=="0" || list_sum[7].ToNullableString().IsNullOrEmpty() ? "0":(list_sum[9].ToDouble()*100/ list_sum[7].ToInt()).ToString("0.00"))%</td>
+
+
+                                    <!--活动PK-->
+                                    <td>@list_sum[10]</td>
+                                    <!--活动音浪占比-->
+                                    <td>@(list_sum[7].ToNullableString()=="0" || list_sum[7].ToNullableString().IsNullOrEmpty() ? "0":(list_sum[10].ToDouble()*100/ list_sum[7].ToInt()).ToString("0.00"))%</td>
+                                    <!--总音浪-->
+                                    <td>@list_sum[7]</td>
+
+                                </tr>
+
+                            </table>
+
+                        </div>
+                        Monday = Monday.AddDays(-7);
+                    }
+                }
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+</div>
+
+
+@ViewModelBag.Load(Html, new ModelBasic.AdjScreenshot("screenshot")
+{
+    elem = "table0"
+})
+
+<script>
+    //选择厅管后筛选数据
+    layui.use(function () {
+        var form = layui.form;
+        var layer = layui.layer;
+        // select 事件
+        form.on('select(tg)', function (data) {
+            var value = data.value; // 获得被选中的值
+            var dateRange = $('#dateRange').attr('value');
+            window.location.href = '/jixiao/reportday/datas?dateRange=' + dateRange + '&tg_user_sn=' + value;
+        });
+    });
+
+    //设置时间筛选的数据格式
+    layui.use(['form', 'laydate'], function () {
+        var form = layui.form;
+        var laydate = layui.laydate;
+
+        //日期时间段选择
+        laydate.render({
+            elem: '#dateRange'
+            , range: '~'
+        });
+    });
+
+    //卡片面板切换
+    layui.use(function () {
+        var element = layui.element;
+
+        // hash 地址定位
+        var hashName = 'tabid'; // hash 名称
+        var layid = location.hash.replace(new RegExp('^#' + hashName + '='), ''); // 获取 lay-id 值
+
+        // 初始切换
+        element.tabChange('test-hash', layid);
+        // 切换事件
+        element.on('tab(test-hash)', function (obj) {
+            location.hash = hashName + '=' + this.getAttribute('lay-id');
+        });
+    });
+
+
+</script>
+@functions{
+    /// <summary>
+    /// 判断是否为当前档期首行
+    /// </summary>
+    /// <param name="p_jixiao_session"></param>
+    /// <param name="session"></param>
+    /// <param name="color"></param>
+    /// <returns></returns>
+    public bool isFirstRow(ModelDb.p_jixiao_day_session p_jixiao_session, ref int? session, ref string color)
+    {
+        if (p_jixiao_session.session != session)
+        {
+            switch (color)
+            {
+                case "#E3F2D9":
+                    color = "#FADADE";
+                    break;
+                case "#FADADE":
+                    color = "#E3F2D9";
+                    break;
+                default:
+                    break;
+            }
+            session = p_jixiao_session.session;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+}

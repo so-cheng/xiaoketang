@@ -1,0 +1,224 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@model Services.Project.PageFactory.TableVO
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+
+    string month = ViewBag.month;
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+
+    /* 表头固定样式 */
+    .layui-table {
+        position: relative;
+    }
+
+        .layui-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: white;
+        }
+
+            .layui-table thead tr:first-child {
+                position: sticky;
+                top: 0;
+                z-index: 11;
+                background-color: #FFF3CA;
+            }
+
+            .layui-table thead tr:nth-child(2) {
+                position: sticky;
+                top: 50px; /* 第一行表头的高度 */
+                z-index: 11;
+                background-color: #FCE4D3;
+            }
+
+            /* 确保表头有足够的背景色 */
+            .layui-table thead th {
+                background-color: inherit;
+            }
+</style>
+<!-- 以下书写自己的页面内容代码 -->
+<form id="mainForm" class="layui-form" action="DayTarget">
+    <div class="layui-row">
+        <div class="layui-col-md8">
+            <div class="layui-input-inline">
+                <label class="layui-form-label">日期</label>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("month")
+                    {
+                        title = "日期",
+                        defaultValue = month,
+                        mold = ModelBasic.EmtTimeSelect.Mold.month,
+                        eventJsChange = new EmtFormBase.EventJsChange
+                        {
+                            eventJavascript = new EventJavascript
+                            {
+                                code = "window.location.href = '/JoinNew/Statistical/AllocateTotal?month=' + page.month.value;"
+                            },
+                        }
+                    })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <table class="layui-table" style="text-align:center;width:100%;" id="table1" name="table1">
+                <colgroup>
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                </colgroup>
+                <thead>
+                    <tr style="font-weight:500;">
+                        <th style="background-color: #FFE270;">培训老师</th>
+                        <th style="background-color: #FFE270;">期数</th>
+                        <th style="background-color: #FFE270;">拉群人数</th>
+                        <th style="background-color: #FFE270;">考核人数</th>
+                        <th style="background-color: #FFE270;">已考核率</th>
+
+                        <th style="background-color: #FFE270;">已分配</th>
+                        <th style="background-color: #FFE270;">已分配率（拉群）</th>
+                        <th style="background-color: #FFE270;">已分配率（考核）</th>
+
+                        <th style="background-color: #FFE270;">未分配</th>
+                        <th style="background-color: #FFE270;">未分配率（拉群）</th>
+                        <th style="background-color: #FFE270;">未分配率（考核）</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        // 合计
+                        // 拉群人数
+                        int? group_sum = 0;
+                        // 考核人数
+                        int? review_sum = 0;
+                        // 已分配人数
+                        int? allocated_sum = 0;
+                        // 未分配人数
+                        int? unallocate_sum = 0;
+                    }
+                    @foreach (var item in DoMySql.FindList<ModelDb.p_mengxin>($"tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and date >= '{month.ToDate().ToString("yyyy-MM-01").ToDate().AddDays(-3).ToString("yyyy-MM-dd")}' and date < '{month.ToDate().AddMonths(1).ToString("yyyy-MM-01").ToDate().AddDays(-3).ToString("yyyy-MM-dd")}' and user_sn = '{new UserIdentityBag().user_sn}' order by date"))
+                    {
+                        var term = item.term;
+                        // 拉群人数
+                        var group_num = item.group_num;
+                        // 考核人数
+                        var review_num = DoMySql.FindField<ModelDb.p_join_new_info>("count(1)", $"tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and term = '{term}'")[0];
+                        // 已分配人数
+                        var allocated_num = DoMySql.FindField<ModelDb.p_join_new_info>("count(1)", $"tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and term = '{term}' and exists (select 1 from p_join_new_info_log where c_type = {ModelDb.p_join_new_info_log.c_type_enum.拉群.ToSByte()} and user_info_zb_id = p_join_new_info.id)")[0];
+                        // 未分配人数 = 考核人数 - 已分配人数
+                        var unallocate_num = review_num.ToInt() - allocated_num.ToInt();
+
+                        group_sum += group_num;
+                        review_sum += review_num.ToInt();
+                        allocated_sum += allocated_num.ToInt();
+                        unallocate_sum += unallocate_num;
+                        <tr>
+                            <td style="background-color: #FFEEAD;">@(new DomainBasic.UserApp().GetInfoByUserSn(item.user_sn).username)</td>
+                            <td style="background-color: #FFEEAD;">@term</td>
+                            <td style="background-color: #FFEEAD;">@group_num</td>
+                            <td style="background-color: #FFEEAD;"><a href="javascript:win_pop_iframe('考核', 'ReviewStuList?term=@term', 1000, 800, '')" style="color:blue;">@review_num</a></td>
+                            <!-- 已考核率 = 考核人数 / 拉群人数 -->
+                            <td style="background-color: #FFEEAD;">@getRate(review_num.ToDouble(), group_num.ToDouble())</td>
+
+                            <td style="background-color: #C3EAD5;"><a href="javascript:win_pop_iframe('已分配', 'AllocatedStuList?term=@term', 1000, 800, '')" style="color:blue;">@allocated_num</a></td>
+                            <!-- 已分配率（拉群） = 已分配人数 / 拉群人数 -->
+                            <td style="background-color: #C3EAD5;">@getRate(allocated_num.ToDouble(), group_num.ToDouble())</td>
+                            <!-- 已分配率（考核） = 已分配人数 / 考核人数 -->
+                            <td style="background-color: #C3EAD5;">@getRate(allocated_num.ToDouble(), review_num.ToDouble())</td>
+
+                            <td style="background-color: #FFC9C7;"><a href="javascript:win_pop_iframe('未分配', 'UnAllocateStuList?term=@term', 1000, 800, '')" style="color:blue;">@unallocate_num</a></td>
+                            <!-- 未分配率（拉群） = 未分配人数 / 拉群人数 -->
+                            <td style="background-color: #FFC9C7;">@getRate(unallocate_num.ToDouble(), group_num.ToDouble())</td>
+                            <!-- 未分配率（考核） = 未分配人数 / 考核人数 -->
+                            <td style="background-color: #FFC9C7;">@getRate(unallocate_num.ToDouble(), review_num.ToDouble())</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td style="background-color: #FFEEAD;">合计</td>
+                        <td style="background-color: #FFEEAD;">-</td>
+                        <td style="background-color: #FFEEAD;">@group_sum</td>
+                        <td style="background-color: #FFEEAD;">@review_sum</td>
+                        <!-- 已考核率 = 考核人数 / 拉群人数 -->
+                        <td style="background-color: #FFEEAD;">@getRate(review_sum.ToDouble(), group_sum.ToDouble())</td>
+
+                        <td style="background-color: #C3EAD5;">@allocated_sum</td>
+                        <!-- 已分配率（拉群） = 已分配人数 / 拉群人数 -->
+                        <td style="background-color: #C3EAD5;">@getRate(allocated_sum.ToDouble(), group_sum.ToDouble())</td>
+                        <!-- 已分配率（考核） = 已分配人数 / 考核人数 -->
+                        <td style="background-color: #C3EAD5;">@getRate(allocated_sum.ToDouble(), review_sum.ToDouble())</td>
+
+                        <td style="background-color: #FFC9C7;">@unallocate_sum</td>
+                        <!-- 未分配率（拉群） = 未分配人数 / 拉群人数 -->
+                        <td style="background-color: #FFC9C7;">@getRate(unallocate_sum.ToDouble(), group_sum.ToDouble())</td>
+                        <!-- 未分配率（考核） = 未分配人数 / 考核人数 -->
+                        <td style="background-color: #FFC9C7;">@getRate(unallocate_sum.ToDouble(), review_sum.ToDouble())</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        var layer = layui.layer;
+    });
+</script>
+@functions{
+    public string getRate(double? A, double? B)
+    {
+        if (B == null || B == 0)
+        {
+            return 0 + "%";
+        }
+        else
+        {
+            return Math.Round((A * 100 / B).ToDouble(), 0) + "%";
+        }
+    }
+}

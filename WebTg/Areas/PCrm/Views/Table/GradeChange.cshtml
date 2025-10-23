@@ -1,0 +1,159 @@
+﻿
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+        border: 1px solid #000 !important;
+    }
+
+    .layui-table td {
+        font-size: 15px;
+        border: 1px solid #000 !important;
+    }
+
+    .layui-table {
+        border: 1px solid #000 !important;
+        border-collapse: collapse !important;
+    }
+</style>
+<div class="layui-card">
+
+    <div class="layui-card" style="width:95%;top:30px;margin:0 auto">
+        <div class="layui-card-header">数据统计</div>
+
+        <table class="layui-table" style="text-align:center;" id="table" name="table" width="100%">
+            <colgroup>
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+            </colgroup>
+            <thead>
+                @*<tr>
+                <td colspan="14" style="text-align: center; background-color: #EE8331; font-size: 18px; font-weight: 700 ">客户汇总</td>
+            </tr>*@
+                <tr style="background-color: #EE8331; font-weight: 700;">
+                    <th></th>
+                    <th colspan=5>今日用户新增</th>
+                    <th colspan=4>今日升级用户</th>
+                    <th colspan=4>今日降级用户</th>
+                </tr>
+            </thead>
+            @{
+                var grades = DoMySql.FindList<ModelDb.crm_grade>($" 1 = 1  order by sort");
+                <tr style="background-color: #EE8331; font-weight: 700;">
+                    <th>@(ViewBag.username)</th>
+                    @{
+                        foreach (var grade in grades)
+                        {
+                            <th>@(grade.name)</th>
+                        }
+                    }
+                    <th>合计</th>
+                    @{
+                        foreach (var grade in grades.Take(grades.Count() - 1))
+                        {
+                            <th>升到@(grade.name)</th>
+                        }
+                    }
+                    <th>合计</th>
+                    @{
+                        foreach (var grade in grades.Skip(1))
+                        {
+                            <th>降到@(grade.name)</th>
+                        }
+                    }
+                    <th>合计</th>
+                </tr>
+            }
+
+            @{
+                var zbs = new ServiceFactory.UserInfo.Tg().TgGetNextZb(new UserIdentityBag().user_sn);
+                var gradeLogs = DoMySql.FindList<ModelDb.crm_grade_log>($"p_user_sn = '{new UserIdentityBag().user_sn}' and DATE(create_time)='{DateTime.Now.Date}'");
+                foreach (var item in zbs)
+                {
+                    <tr style="background-color: #77BE44">
+                        <td>@(item.username)</td>
+                        @{
+                            foreach (var grade in grades)
+                            {
+                                <td>@(gradeLogs.Where(c=>c.user_sn==item.user_sn &&c.c_type==0&&c.n_grade_id==grade.id).Count())</td>
+                            }
+                        }
+                        <td>@(gradeLogs.Where(c=>c.user_sn == item.user_sn &&c.c_type==0).Count())</td>
+                        @{
+                            foreach (var grade in grades.Take(grades.Count() - 1))
+                            {
+                                <td>@(gradeLogs.Where(c=>c.user_sn == item.user_sn &&c.c_type==1&&c.n_grade_id==grade.id).Count())</td>
+                            }
+                        }
+                        <td>@(gradeLogs.Where(c=>c.user_sn == item.user_sn &&c.c_type==1).Count())</td>
+                        @{
+                            foreach (var grade in grades.Skip(1))
+                            {
+                                <td>@(gradeLogs.Where(c=>c.user_sn == item.user_sn &&c.c_type==2&&c.n_grade_id==grade.id).Count())</td>
+                            }
+                        }
+                        <td>@(gradeLogs.Where(c=>c.user_sn == item.user_sn &&c.c_type==2).Count())</td>
+                    </tr>
+                }
+            }
+            <tr style="background-color: #EE8331">
+                <td>汇总合计 </td>
+                @{
+                    foreach (var grade in grades)
+                    {
+                        <td>@(gradeLogs.Where(c=>c.c_type==0&&c.n_grade_id==grade.id).Count())</td>
+                    }
+                }
+                <td>@(gradeLogs.Where(c=>c.c_type==0).Count())</td>
+                @{
+                    foreach (var grade in grades.Take(grades.Count() - 1))
+                    {
+                        <td>@(gradeLogs.Where(c=>c.c_type==1&&c.n_grade_id==grade.id).Count())</td>
+                    }
+                }
+                <td>@(gradeLogs.Where(c=>c.c_type==1).Count())</td>
+                @{
+                    foreach (var grade in grades.Skip(1))
+                    {
+                        <td>@(gradeLogs.Where(c=>c.c_type==2&&c.n_grade_id==grade.id).Count())</td>
+                    }
+                }
+                <td>@(gradeLogs.Where(c=>c.c_type==2).Count())</td>
+            </tr>
+        </table>
+    </div>
+</div>

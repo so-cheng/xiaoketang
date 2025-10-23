@@ -1,0 +1,548 @@
+﻿
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+    var roles = new DomainBasic.DictionaryApp().GetListForOption("档位角色");
+    var dangs = new DomainBasic.DictionaryApp().GetListForOption("档位时段");
+
+    var zbInfoList = new ServiceFactory.UserInfo.Zhubo().GetBaseInfos(new ServiceFactory.UserInfo.Zhubo.ZbBaseInfoFilter() 
+    {
+        attachUserType=new ServiceFactory.UserInfo.Zhubo.ZbBaseInfoFilter.AttachUserType() 
+        {
+            UserSn = ViewBag.ting_sn,
+            userType = ServiceFactory.UserInfo.Zhubo.ZbBaseInfoFilter.AttachUserType.UserType.厅,
+        }
+    });
+}
+<style>
+    body {
+        justify-content: center;
+        align-items: center;
+        font-family: 'Microsoft YaHei', Arial, sans-serif;
+        width:100%;
+    }
+
+    .table-container {
+        background: white;
+        padding: 10px;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+
+    table {
+        border-collapse: collapse;
+        user-select: none;
+    }
+
+    td {
+        text-align: center;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    td:hover {
+        background-color: #f0f0f0;
+    }
+
+    td.selected {
+        background-color: #2196f3;
+        color: white;
+    }
+
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-collapse: collapse;
+        border-style: solid;
+        border-width: 1px;
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    .layui-table td {
+        font-size: 15px;
+    }
+</style>
+<!-- 以下书写自己的页面内容代码 -->
+<form class="layui-form">
+    <div class="layui-row">
+        <div class="layui-col-md8" style="text-align:right">
+            <div class="layui-inline">
+                <label class="layui-input-inline" style="font-size:18px; font-weight:bold">@Html.Raw(new UserIdentityBag().username)&nbsp;&nbsp;档表</label>
+                <div class="layui-input-inline" style="">
+                    @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("c_date")
+                    {
+                       mold = WeiCode.Models.ModelBasic.EmtTimeSelect.Mold.date_range,
+                       placeholder = "选择日期",
+                    })
+                </div>
+
+                <div class="layui-input-inline" style="width:500px;">
+                    @ViewModelBag.Load(Html, new ModelBasic.EmtInput("note")
+                    {
+                       title = "备注",
+                       placeholder = "备注",
+                    })
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md1" style="text-align:right">
+            <button type="button" class="layui-btn layui-btn-normal btn-submit">保存档表</button>
+        </div>
+
+        <div class="layui-col-md1" style="text-align:right">
+            <a href="/Dangbiao/Dangbiao/AddTableByTemplate" class="layui-btn layui-btn-normal">从模板新建</a>
+        </div>
+    </div>
+
+    <div class="layui-row">
+        <div class="layui-col-md10 table-container">
+            
+            <div class="layui-col-md1" style="text-align:left">
+                @ViewModelBag.Load(Html, new ModelBasic.EmtSelect("ting_sn")
+                {
+                    options=new ServiceFactory.UserInfo.Ting().GetTingsKvByTgsn(new UserIdentityBag().user_sn),
+                    placeholder = "所属厅",
+                    eventJsChange=new EmtFormBase.EventJsChange 
+                    {
+                        eventJavascript=new EventJavascript 
+                        {
+                            code=$"window.location.href='table?ting_sn='+ $('#ting_sn').val();",
+                        },
+                    },
+                    defaultValue=ViewBag.ting_sn
+                })
+            </div>
+            <table class="layui-table" style="width:100%;" id="selectableTable">
+                <tbody>
+                    <tr style="background-color: #FCE4D3">
+                        <td style="width: 75px; text-align: center">档位</td>
+                        <td style="width: 90px; text-align: center">时间</td>
+
+                        @foreach (var items in roles)
+                        {
+                            if (items.Key == "挂1")
+                            {
+                                <td style="text-align:center">
+                                    <select lay-ignore style="border: 0; background-color: #FCE4D3; color: #666666; font-size: 16px; text-align: center; width: 100% " name="dang_wei_role">
+                                        <option value="挂1">挂1</option>
+                                        <option value="陪">陪</option>
+                                    </select>
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="text-align:center">@items.Key</td>
+                            }
+                        }
+                        <td style="width: 150px; text-align: center">备注</td>
+                    </tr>
+                    @{
+                        int i = -1;
+                        foreach (var item in dangs)
+                        {
+                            for (var _i = 1; _i <= 3; _i++) //3小时一个档
+                            {
+                                int zfp_i = 0;
+                                string zfp_class = "";
+                                i++;
+                                <tr style="background-color: white ">
+                                    @if (_i == 1)
+                                    {
+                                        <td rowspan="3" style="text-align: center; background-color: #FCE4D3"> @item.Key</td>
+                                    }
+                                    @{var time_text = i + ":00-" + (i + 1) + ":00";}
+                                    <td style="text-align:center">@time_text</td>
+                                    @foreach (var _item in roles)
+                                    {
+                                        zfp_i++;
+                                        if (zfp_i < 4)
+                                        {
+                                            zfp_class = "zb_zfp";
+                                        }
+                                        else
+                                        {
+                                            zfp_class = "zb_gw";
+                                        }
+                                        <td class="cell">
+                                            <select lay-ignore style="border: 0; color: #666666; font-size: 16px; background-color: white;  text-align:center;width:100%" name="zb_@i" class="zb_@(item.Value)_@(_i)_@(_item.Value) zb_@i @zfp_class" onchange="countZbNum(); changeColor(this)">
+                                                <option value=""></option>
+                                                @foreach (var __item in zbInfoList)
+                                                {
+                                                    <option value="@__item.user_sn" scolor="@__item.color">@__item.name</option>
+                                                }
+                                            </select>
+                                        </td>
+                                    }
+
+                                    @if (_i == 1)
+                                    {
+                                        <td rowspan="3" style="text-align: center; background-color: #FCE4D3">
+                                            <textarea name="memo_item" style="width:100%; height:90px; border:0"></textarea>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="layui-col-md2" style="padding:10px;">
+            <div style="font-size: 16px; padding: 10px;">
+                对选中项进行批量设置&nbsp;&nbsp;<span style="color:red; font-size:10px;">推荐</span>
+            </div>
+            <select id="select_zb_change" lay-filter="select-filter">
+                <option value="">选择主播</option>
+                @foreach (var __item in zbInfoList)
+                {
+                    <option value="@__item.user_sn" scolor="@__item.color">@__item.name</option>
+                }
+            </select>
+            <span style="font-size:11px; color:red">提示:1、按住左键可框选多个单元格 2、按住Ctrl点击左键，可连续选中单元格</span>
+            <hr />
+            <div style="font-size: 16px; padding: 10px;">主副陪角色轮流分配</div>
+            <select id="zfp_dang">
+                @foreach (var __item in dangs)
+                {
+                    <option value="@__item.Value">@__item.Key</option>
+                }
+            </select>
+            <br />
+            <select id="zfp_zb1">
+                <option value="">选择主播</option>
+                @foreach (var __item in zbInfoList)
+                {
+                    <option value="@__item.user_sn" scolor="@__item.color">@__item.name</option>
+                }
+            </select>
+            <br />
+            <select id="zfp_zb2">
+                <option value="">选择主播</option>
+                @foreach (var __item in zbInfoList)
+                {
+                    <option value="@__item.user_sn" scolor="@__item.color">@__item.name</option>
+                }
+            </select>
+            <br />
+            <select id="zfp_zb3">
+                <option value="">选择主播</option>
+                @foreach (var __item in zbInfoList)
+                {
+                    <option value="@__item.user_sn" scolor="@__item.color">@__item.name</option>
+                }
+            </select>
+            <br />
+            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" onclick="setZFP()">批量设置</button>
+            <hr />
+            <div style="font-size: 16px; padding: 10px;">挂位角色批量设置</div>
+            @ViewModelBag.Load(Html, new ModelBasic.EmtExt.XmSelect("gw_dangs")
+            {
+                bindOptions = new DomainBasic.DictionaryApp().GetListForOption(ModelEnum.DictCategory.档位时段)
+            })
+            <br />
+            <select id="gw_role_1">
+                <option value="">选择角色</option>
+                @foreach (var __item in roles)
+                {
+                    if (__item.Value.ToInt() < 4)
+                    {
+                        continue;
+                    }
+                    <option value="@__item.Value">@__item.Key</option>
+                }
+            </select>
+            <br />
+            <select id="gw_zb1">
+                <option value="">选择主播</option>
+                @foreach (var __item in zbInfoList)
+                {
+                    <option value="@__item.user_sn" scolor="@__item.color">@__item.name</option>
+                }
+            </select>
+            <br />
+            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" onclick="setGW()">批量设置</button>
+
+            <table class="layui-table" name="TableZbColour" style="width:100%;">
+                <tr>
+                    <th style="width: 40%">主播</th>
+                    <th style="width: 30%">主副陪(小时)</th>
+                    <th style="width: 30%">挂位(小时)</th>
+                </tr>
+                @{
+                    var zbsr_colorList = new List<PageFactory.DangBiao.ZbsrColor>();
+                }
+                @foreach (var __item in zbInfoList)
+                {
+                    <tr style="background-color: @__item.color ">
+                        <td>
+                            @{
+                                var zbsr_color = new PageFactory.DangBiao.ZbsrColor();
+                                zbsr_color.user_sn = __item.user_sn;
+                                zbsr_color.color = __item.color;
+                                zbsr_colorList.Add(zbsr_color);
+                            }
+
+                            @__item.name
+                        </td>
+                        <td id="zfp_@(__item.user_sn)" class="num">0</td>
+                        <td id="gw_@(__item.user_sn)" class="num">0</td>
+                    </tr>
+                }
+                <input type="hidden" name="zbys" value="@zbsr_colorList.ToJson()">
+            </table>
+            <a href="javascript:win_pop_iframe('设置晋升', '/UserInfo/Account/SetPosition', 800, 550, '')" class="layui-btn layui-btn-primary layui-btn-sm">设置晋升</a>
+
+        </div>
+    </div>
+</form>
+<script>
+    const tbody = document.querySelector('#selectableTable tbody');
+
+    // 记录已选中的单元格
+    let selectedCells = new Set();
+
+    // 批量设置样式函数
+    function setBackgroundColor(color) {
+        document.querySelectorAll('td.selected').forEach(cell => {
+            cell.style.backgroundColor = color;
+        });
+    }
+
+    function setTextColor(color) {
+        document.querySelectorAll('td.selected').forEach(cell => {
+            cell.style.color = color;
+        });
+    }
+
+    function setFontSize(size) {
+        document.querySelectorAll('td.selected').forEach(cell => {
+            cell.style.fontSize = size;
+        });
+    }
+
+    // 拖拽选中功能
+    let isMouseDown = false;
+    let startCell = null;
+    let endCell = null;
+
+    // 构建二维单元格映射，考虑rowspan/colspan
+    function buildCellMatrix() {
+        const matrix = [];
+        const rows = Array.from(tbody.children);
+        for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            let colIndex = 0;
+            if (!matrix[i]) matrix[i] = [];
+            for (let j = 0; j < row.children.length; j++) {
+                // 跳过已被rowspan/colspan占用的格子
+                while (matrix[i][colIndex]) colIndex++;
+                const cell = row.children[j];
+                const rowspan = parseInt(cell.getAttribute('rowspan') || 1);
+                const colspan = parseInt(cell.getAttribute('colspan') || 1);
+                for (let rs = 0; rs < rowspan; rs++) {
+                    for (let cs = 0; cs < colspan; cs++) {
+                        if (!matrix[i + rs]) matrix[i + rs] = [];
+                        matrix[i + rs][colIndex + cs] = cell;
+                    }
+                }
+                colIndex += colspan;
+            }
+        }
+        return matrix;
+    }
+
+    // 获取单元格在表格中的真实位置
+    function getCellPosition(cell, matrix) {
+        for (let i = 0; i < matrix.length; i++) {
+            for (let j = 0; j < matrix[i].length; j++) {
+                if (matrix[i][j] === cell) {
+                    return { row: i, col: j };
+                }
+            }
+        }
+        return null;
+    }
+
+    // 清除所有选中状态
+    function clearSelection() {
+        document.querySelectorAll('td.cell').forEach(cell => {
+            cell.classList.remove('selected');
+        });
+        selectedCells.clear();
+    }
+
+    // 选中范围内的单元格（仅cell类，支持rowspan/colspan）
+    function selectRange(start, end, matrix) {
+        if (!event.ctrlKey) {
+            clearSelection();
+        }
+        const startRow = Math.min(start.row, end.row);
+        const endRow = Math.max(start.row, end.row);
+        const startCol = Math.min(start.col, end.col);
+        const endCol = Math.max(start.col, end.col);
+        for (let i = startRow; i <= endRow; i++) {
+            for (let j = startCol; j <= endCol; j++) {
+                const cell = matrix[i][j];
+                if (cell && cell.classList.contains('cell')) {
+                    cell.classList.add('selected');
+                    selectedCells.add(cell);
+                }
+            }
+        }
+    }
+
+    // 处理单元格点击（仅cell类）
+    function handleCellClick(cell, isCtrlPressed) {
+        if (!cell.classList.contains('cell')) return;
+        if (isCtrlPressed) {
+            if (cell.classList.contains('selected')) {
+                cell.classList.remove('selected');
+                selectedCells.delete(cell);
+            } else {
+                cell.classList.add('selected');
+                selectedCells.add(cell);
+            }
+        } else {
+            clearSelection();
+            cell.classList.add('selected');
+            selectedCells.add(cell);
+        }
+    }
+
+    // 鼠标事件处理（重写，支持rowspan/colspan）
+    let cellMatrix = buildCellMatrix();
+    tbody.addEventListener('mousedown', (e) => {
+        if (e.target.tagName === 'TD' && e.target.classList.contains('cell')) {
+            isMouseDown = true;
+            cellMatrix = buildCellMatrix(); // 每次操作时重建，防止动态表格
+            startCell = e.target;
+            endCell = e.target;
+            if (!e.ctrlKey) {
+                clearSelection();
+            }
+            handleCellClick(e.target, e.ctrlKey);
+        }
+    });
+
+    tbody.addEventListener('mousemove', (e) => {
+        if (isMouseDown && e.target.tagName === 'TD' && e.target.classList.contains('cell')) {
+            endCell = e.target;
+            const startPos = getCellPosition(startCell, cellMatrix);
+            const endPos = getCellPosition(endCell, cellMatrix);
+            if (startPos && endPos) {
+                selectRange(startPos, endPos, cellMatrix);
+            }
+        }
+    });
+
+    document.addEventListener('mouseup', () => {
+        isMouseDown = false;
+    });
+
+    // 防止拖拽时选中文本
+    document.addEventListener('selectstart', (e) => {
+        if (isMouseDown) {
+            e.preventDefault();
+        }
+    });
+
+    layui.use('form', function () {
+        var form = layui.form;
+        form.render('select'); // 仅渲染 select 元素
+
+        form.on('select(select-filter)', function (data) {
+            var elem = data.elem; // 获得 select 原始 DOM 对象
+            var value = data.value; // 获得被选中的值
+            var othis = data.othis; // 获得 select 元素被替换后的 jQuery 对象
+
+            document.querySelectorAll('td.selected').forEach(cell => {
+                $(cell).find('select').val(data.value);
+                cell.style.backgroundColor = $("#select_zb_change").find("option:selected").attr("scolor");
+            });
+            countZbNum();
+        });
+    });
+
+    function setZFP() {
+        $(".zb_" + $("#zfp_dang").val() + "_1_1").val($("#zfp_zb1").val());
+        $(".zb_" + $("#zfp_dang").val() + "_1_1").parent().css("background-color", $("#zfp_zb1").find("option:selected").attr("scolor"));
+        $(".zb_" + $("#zfp_dang").val() + "_1_1").css("background-color", $("#zfp_zb1").find("option:selected").attr("scolor"));
+        $(".zb_" + $("#zfp_dang").val() + "_2_1").val($("#zfp_zb2").val());
+        $(".zb_" + $("#zfp_dang").val() + "_2_1").parent().css("background-color", $("#zfp_zb2").find("option:selected").attr("scolor"));
+        $(".zb_" + $("#zfp_dang").val() + "_2_1").css("background-color", $("#zfp_zb2").find("option:selected").attr("scolor"));
+        $(".zb_" + $("#zfp_dang").val() + "_3_1").val($("#zfp_zb3").val());
+        $(".zb_" + $("#zfp_dang").val() + "_3_1").parent().css("background-color", $("#zfp_zb3").find("option:selected").attr("scolor"));
+        $(".zb_" + $("#zfp_dang").val() + "_3_1").css("background-color", $("#zfp_zb3").find("option:selected").attr("scolor"));
+        $(".zb_" + $("#zfp_dang").val() + "_1_2").val($("#zfp_zb2").val());
+        $(".zb_" + $("#zfp_dang").val() + "_1_2").parent().css("background-color", $("#zfp_zb2").find("option:selected").attr("scolor"));
+        $(".zb_" + $("#zfp_dang").val() + "_1_2").css("background-color", $("#zfp_zb2").find("option:selected").attr("scolor"));
+        $(".zb_" + $("#zfp_dang").val() + "_2_2").val($("#zfp_zb3").val());
+        $(".zb_" + $("#zfp_dang").val() + "_2_2").parent().css("background-color", $("#zfp_zb3").find("option:selected").attr("scolor"));
+        $(".zb_" + $("#zfp_dang").val() + "_2_2").css("background-color", $("#zfp_zb3").find("option:selected").attr("scolor"));
+        $(".zb_" + $("#zfp_dang").val() + "_3_2").val($("#zfp_zb1").val());
+        $(".zb_" + $("#zfp_dang").val() + "_3_2").parent().css("background-color", $("#zfp_zb1").find("option:selected").attr("scolor"));
+        $(".zb_" + $("#zfp_dang").val() + "_3_2").css("background-color", $("#zfp_zb1").find("option:selected").attr("scolor"));
+        $(".zb_" + $("#zfp_dang").val() + "_1_3").val($("#zfp_zb3").val());
+        $(".zb_" + $("#zfp_dang").val() + "_1_3").parent().css("background-color", $("#zfp_zb3").find("option:selected").attr("scolor"));
+        $(".zb_" + $("#zfp_dang").val() + "_1_3").css("background-color", $("#zfp_zb3").find("option:selected").attr("scolor"));
+        $(".zb_" + $("#zfp_dang").val() + "_2_3").val($("#zfp_zb1").val());
+        $(".zb_" + $("#zfp_dang").val() + "_2_3").parent().css("background-color", $("#zfp_zb1").find("option:selected").attr("scolor"));
+        $(".zb_" + $("#zfp_dang").val() + "_2_3").css("background-color", $("#zfp_zb1").find("option:selected").attr("scolor"));
+        $(".zb_" + $("#zfp_dang").val() + "_3_3").val($("#zfp_zb2").val());
+        $(".zb_" + $("#zfp_dang").val() + "_3_3").parent().css("background-color", $("#zfp_zb2").find("option:selected").attr("scolor"));
+        $(".zb_" + $("#zfp_dang").val() + "_3_3").css("background-color", $("#zfp_zb2").find("option:selected").attr("scolor"));
+        countZbNum();
+    }
+
+    function setGW() {
+        $.each(gw_dangs.getValue(), function (i, item) {
+            $(".zb_" + item.value + "_1" + "_" + $("#gw_role_1").val()).val($("#gw_zb1").val());
+            $(".zb_" + item.value + "_1" + "_" + $("#gw_role_1").val()).parent().css("background-color", $("#gw_zb1").find("option:selected").attr("scolor"));
+            $(".zb_" + item.value + "_1" + "_" + $("#gw_role_1").val()).css("background-color", $("#gw_zb1").find("option:selected").attr("scolor"));
+            $(".zb_" + item.value + "_2" + "_" + $("#gw_role_1").val()).val($("#gw_zb1").val());
+            $(".zb_" + item.value + "_2" + "_" + $("#gw_role_1").val()).parent().css("background-color", $("#gw_zb1").find("option:selected").attr("scolor"));
+            $(".zb_" + item.value + "_2" + "_" + $("#gw_role_1").val()).css("background-color", $("#gw_zb1").find("option:selected").attr("scolor"));
+            $(".zb_" + item.value + "_3" + "_" + $("#gw_role_1").val()).val($("#gw_zb1").val());
+            $(".zb_" + item.value + "_3" + "_" + $("#gw_role_1").val()).parent().css("background-color", $("#gw_zb1").find("option:selected").attr("scolor"));
+            $(".zb_" + item.value + "_3" + "_" + $("#gw_role_1").val()).css("background-color", $("#gw_zb1").find("option:selected").attr("scolor"));
+        })
+        countZbNum();
+    }
+
+    function countZbNum() {
+        $(".num").html("0")
+        $.each($(".zb_zfp"), function (i, item) {
+            $("#zfp_" + $(item).val()).html(parseInt($("#zfp_" + $(item).val()).html(), 10) + 1);
+        })
+        $.each($(".zb_gw"), function (i, item) {
+            $("#gw_" + $(item).val()).html(parseInt($("#gw_" + $(item).val()).html(), 10) + 1);
+        })
+    }
+
+    function changeColor(selectElem) {
+        const selectedIndex = selectElem.selectedIndex;
+        const option = selectElem.options[selectedIndex];
+        const color = option.getAttribute('scolor')
+        selectElem.style.backgroundColor = color;
+        selectElem.closest('td').style.backgroundColor = color;
+    }
+
+
+</script>

@@ -1,0 +1,191 @@
+﻿@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+
+    // 查询数据
+    var doudata_month_tings = DoMySql.FindList<ModelDb.p_jixiao_target_month_ting>($"yy_user_sn = '{new UserIdentityBag().user_sn}' and tenant_id='{new DomainBasic.TenantApp().GetInfo().id}' order by tg_user_sn");
+}
+
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-collapse: collapse;
+        border-style: solid;
+        border-width: 1px;
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 10px;
+    }
+
+    .layui-table td {
+        font-size: 10px;
+        text-align: center;
+    }
+
+    .layui-table {
+        background-color: rgba(30, 144, 255, 0.1);
+    }
+
+    /* 表头固定样式 */
+    .layui-table {
+        position: relative;
+    }
+
+        .layui-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: white;
+        }
+
+            .layui-table thead tr:first-child {
+                position: sticky;
+                top: 0;
+                z-index: 11;
+                background-color: #FFF3CA;
+            }
+
+            .layui-table thead tr:nth-child(2) {
+                position: sticky;
+                top: 28px; /* 第一行表头的高度 */
+                z-index: 11;
+                background-color: #FCE4D3;
+            }
+
+
+        /* 鼠标悬停时行的背景色效果 */
+        .layui-table tbody tr:hover td {
+            background-color: #FFE4B5 !important;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        /* 为所有td添加过渡效果，使颜色变化更平滑 */
+        .layui-table tbody tr td {
+            transition: background-color 0.3s ease;
+        }
+</style>
+<div class="layui-card">
+    <div id="tables">
+        <div class="table-container">
+            <table class="layui-table" style="text-align:center;" name="table">
+                <thead>
+                <!-- 第一行表头 -->
+                    <tr>
+                        <td colspan="4" style="text-align: center; background-color: #CAE1FF; font-size: 18px; ">基础信息</td>
+                        @{
+                            for (int i = 1; i <= DateTime.Today.Month; i++)
+                            {
+                                <td colspan="2" style="text-align: center; background-color: #EBEBEB; font-size: 18px; font-weight: 700 ">@i 月</td>
+                            }
+                        }
+                    </tr>
+                <!-- 第二行表头 -->
+                    <tr style="font-weight:700;">
+                    <th style="background-color: #CAE1FF;">序号</th>
+                    <th style="background-color: #CAE1FF;">厅管</th>
+                    <th style="background-color: #CAE1FF;">直播厅</th>
+                    <th style="background-color: #CAE1FF;">抖音号</th>
+                    @{
+                        for (int i = 1; i <= DateTime.Today.Month; i++)
+                        {
+                            <th style="background-color: #FFF3CA;">流水</th>
+                            <th style="background-color: #EEE8AA;">环比增长</th>
+                        }
+                    }
+                </tr>
+                </thead>
+                <tbody>
+                @{
+                    string prevTgUserSn = "";
+                    int index = 1;
+                    foreach (var item in doudata_month_tings)
+                    {
+                        <tr style="font-weight:700;">
+                            <td style="background-color: #CAE1FF;">@index</td>
+                            @if (item.tg_user_sn != prevTgUserSn)
+                            {
+                                int tgCount = doudata_month_tings.Count(x => x.tg_user_sn == item.tg_user_sn);
+                                <td rowspan="@tgCount" class="merge-column">@item.tg_name</td>
+                                prevTgUserSn = item.tg_user_sn;
+                            }
+                            <td style="background-color: #CAE1FF;">@item.ting_name</td>
+                            <td style="background-color: #CAE1FF;">@item.dou_user</td>
+                            @{
+                                for (int i = 1; i <= DateTime.Today.Month; i++)
+                                {
+                                    string yearmonth = new DateTime(DateTime.Today.Year,i,1).ToString("yyyy-MM");
+                                    string old_yearmonth = new DateTime(DateTime.Today.Year, i, 1).AddMonths(-1).ToString("yyyy-MM");
+                                    var totalIncome = doudata_month_tings.Where(u => u.ting_sn == item.ting_sn && u.yearmonth == yearmonth).Sum(u => u.total_income);
+                                    totalIncome = totalIncome.HasValue ? Math.Round((decimal)totalIncome, 0) : 0M;
+                                    //计算环比增长=（本月流水-上月流水）/上月流水*100
+                                    decimal growth_rate = 0M;
+                                    var old_totalIncome = doudata_month_tings.Where(u => u.ting_sn == item.ting_sn && u.yearmonth == old_yearmonth).Sum(u => u.total_income);
+                                    old_totalIncome = old_totalIncome.HasValue ? Math.Round((decimal)old_totalIncome, 0) : 0M;
+                                    if (old_totalIncome > 0)
+                                    {
+                                        growth_rate = ((decimal)totalIncome - (decimal)old_totalIncome) / (decimal)old_totalIncome * 100;
+                                    }
+                                    <td style="background-color: #FFF3CA;">@totalIncome</td>
+                                    if (growth_rate < 100)
+                                    {
+                                        <td style="background-color: #EEE8AA; color: darkred;">@Math.Round(growth_rate,0) %</td>
+                                    }
+                                    else
+                                    {
+                                        <td style="background-color: #EEE8AA;">@Math.Round(growth_rate,0) %</td>
+                                    }
+                                }
+                            }
+                        </tr>
+                    }
+                }
+                <tr style="font-weight:700;">
+                    <td style="background-color: #CAE1FF;">合计</td>
+                    <td style="background-color: #CAE1FF;"></td>
+                    <td style="background-color: #CAE1FF;"></td>
+                    <td style="background-color: #CAE1FF;"></td>
+                    @{
+                        for (int i = 1; i <= DateTime.Today.Month; i++)
+                        {
+                            string yearmonth = new DateTime(DateTime.Today.Year, i, 1).ToString("yyyy-MM");
+                            string old_yearmonth = new DateTime(DateTime.Today.Year, i, 1).AddMonths(-1).ToString("yyyy-MM");
+                            var totalIncome = doudata_month_tings.Where(u => u.yearmonth == yearmonth).Sum(u => u.total_income);
+                            totalIncome = totalIncome.HasValue ? Math.Round((decimal)totalIncome, 0) : 0M;
+                            //计算环比增长=（本月流水-上月流水）/上月流水*100
+                            var old_totalIncome = doudata_month_tings.Where(u => u.yearmonth == old_yearmonth).Sum(u => u.total_income);
+                            old_totalIncome = old_totalIncome.HasValue ? Math.Round((decimal)old_totalIncome, 0) : 0M;
+                            decimal growth_rate = 0M;
+                            if (old_totalIncome > 0)
+                            {
+                                growth_rate = ((decimal)totalIncome - (decimal)old_totalIncome) / (decimal)totalIncome * 100;
+                            }
+                            <td style="background-color: #CAE1FF;">@totalIncome</td>
+                            if (growth_rate < 100)
+                            {
+                                <td style="background-color: #EEE8AA; color: darkred;">@Math.Round(growth_rate,0) %</td>
+                            }
+                            else
+                            {
+                                <td style="background-color: #EEE8AA;">@Math.Round(growth_rate,0) %</td>
+                            }
+                        }
+                    }
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

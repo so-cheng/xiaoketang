@@ -1,0 +1,345 @@
+﻿@using System;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+
+    string date = ViewBag.date;
+    string date_early = date.ToDate().AddMonths(-1).ToString("yyyy-MM");//前一月
+    string date_late = date.ToDate().AddMonths(1).ToString("yyyy-MM");//后一月
+    DateTime c_date = new DateTime(date.ToDateTime().Year, date.ToDateTime().Month, 1);//本月第一天
+    DateTime lastDay = c_date.AddMonths(1).AddDays(-1); // 本月最后一天
+    int days = lastDay.Day;//当月天数
+
+    // 查询数据
+    var doudata_month_tings = DoMySql.FindList<ModelDb.p_jixiao_target_month_ting>($"yy_user_sn = '{new UserIdentityBag().user_sn}' and tenant_id='{new DomainBasic.TenantApp().GetInfo().id}' and yearmonth='{date}' order by tg_user_sn");
+
+    // 目标数据列表（从p_jixiao_target_tg表查询）
+    var targetList = DoMySql.FindList<ModelDb.p_jixiao_target_tg>($"yy_user_sn = '{new UserIdentityBag().user_sn}' and tenant_id='{new DomainBasic.TenantApp().GetInfo().id}' and yearmonth='{date}'");
+
+    var arr_p_jixiao_target_tg = DoMySql.FindField<ModelDb.p_jixiao_target_tg>(
+                   "SUM(amount)月音浪", $"yy_user_sn = '{new UserIdentityBag().user_sn}' and tenant_id='{new DomainBasic.TenantApp().GetInfo().id}' and yearmonth='{date}'");
+
+    decimal amount = arr_p_jixiao_target_tg[0].ToDecimal();//运营目标音浪
+
+    decimal PhaseAmount = amount / 3;
+
+    //运营下所有厅流水合
+    var arr_doudata_month_ting = DoMySql.FindField<ModelDb.p_jixiao_target_month_ting>(
+        "SUM(tenday_income_1)第一阶段所有厅音浪合,SUM(tenday_income_2)第二阶段所有厅音浪合,SUM(tenday_income_3)第三阶段所有厅音浪合,SUM(total_income)所有厅音浪合", $"yy_user_sn = '{new UserIdentityBag().user_sn}' and tenant_id='{new DomainBasic.TenantApp().GetInfo().id}' and yearmonth='{date}'");
+
+    // 初始化合计数据变量
+    decimal phase1Total = 0.0M, phase1Daily = 0.0M, phase1CompleteRate = 0.0M, phase1NeedIncome = 0.0M;
+    decimal phase2Total = 0.0M, phase2Daily = 0.0M, phase2CompleteRate = 0.0M, phase2NeedIncome = 0.0M;
+    decimal phase3Total = 0.0M, phase3Daily = 0.0M, phase3CompleteRate = 0.0M, phase3NeedIncome = 0.0M;
+    decimal totalIncome = 0.0M, totalDaily = 0.0M, totalCompleteRate = 0.0M, totalNeedIncome = 0.0M;
+
+
+    // 第一阶段（1 - 10 天）相关计算
+    phase1Total = arr_doudata_month_ting[0].ToDecimal(); // 第一阶段所有厅音浪合
+    phase1Daily = Math.Round(phase1Total / 10, 1); // 第一阶段日均
+    phase1CompleteRate = PhaseAmount != 0 ? Math.Round((phase1Total / PhaseAmount) * 100, 1) : 0.0M;  // 第一阶段完成占比
+    phase1NeedIncome = Math.Round(PhaseAmount - phase1Total, 1); // 需完成流水
+    if (phase1NeedIncome < 0)
+    {
+        phase1NeedIncome = 0;
+    }
+
+    // 第二阶段（11 - 20 天）相关计算
+    phase2Total = arr_doudata_month_ting[1].ToDecimal();
+    phase2Daily = Math.Round(phase2Total / 10, 1); // 第二阶段日均
+    phase2CompleteRate = PhaseAmount != 0 ? Math.Round((phase2Total / PhaseAmount) * 100, 1) : 0.0M;  // 第二阶段完成占比
+    phase2NeedIncome = Math.Round(PhaseAmount - phase2Total, 1); // 需完成流水
+    if (phase2NeedIncome < 0)
+    {
+        phase2NeedIncome = 0; 
+    }
+
+    // 第三阶段（21 - 月底）相关计算，days 是当月天数
+    phase3Total = arr_doudata_month_ting[2].ToDecimal();
+    phase3Daily = (days - 20) != 0 ? Math.Round(phase3Total / (days - 20), 1) : 0.0M;  // 第三阶段日均
+    phase3CompleteRate = PhaseAmount != 0 ? Math.Round((phase3Total / PhaseAmount) * 100, 1) : 0.0M;  // 第三阶段完成占比
+    phase3NeedIncome = Math.Round(PhaseAmount - phase3Total, 1); // 需完成流水
+    if (phase3NeedIncome < 0)
+    {
+        phase3NeedIncome = 0; 
+    }
+
+    // 合计（整月）相关计算
+    totalIncome = arr_doudata_month_ting[3].ToDecimal();
+    totalDaily = days != 0 ? Math.Round(totalIncome / days, 1) : 0.0M;  // 合计日均（保留1位小数）
+    totalCompleteRate = amount != 0 ? Math.Round((totalIncome / amount) * 100, 1) : 0.0M;  // 合计完成占比（取整）
+    totalNeedIncome = Math.Round(amount - totalIncome, 1); // 需完成流水
+    if (totalNeedIncome < 0)
+    {
+        totalNeedIncome = 0.0M; 
+    }
+
+    var targetDict = targetList.ToDictionary(
+        t => $"{t.tg_user_sn}_{t.ting_sn}",
+        t => t
+    );
+}
+
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-collapse: collapse;
+        border-style: solid;
+        border-width: 1px;
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 10px;
+    }
+
+    .layui-table td {
+        font-size: 10px;
+        text-align: center;
+    }
+
+    .layui-table {
+        background-color: rgba(30, 144, 255, 0.1);
+    }
+
+    /* 表头固定样式 */
+    .layui-table {
+        position: relative;
+    }
+
+        .layui-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: white;
+        }
+
+            .layui-table thead tr:first-child {
+                position: sticky;
+                top: 0;
+                z-index: 11;
+                background-color: #FFF3CA;
+            }
+
+            .layui-table thead tr:nth-child(2) {
+                position: sticky;
+                top: 28px; /* 第一行表头的高度 */
+                z-index: 11;
+                background-color: #FCE4D3;
+            }
+
+    /* 合并列的背景色 */
+    .merge-column {
+        background-color: #EAFAF1 !important;
+    }
+
+    /* 鼠标悬停时行的背景色效果 */
+    .layui-table tbody tr:hover td {
+        background-color: #FFE4B5 !important;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    /* 为所有td添加过渡效果，使颜色变化更平滑 */
+    .layui-table tbody tr td {
+        transition: background-color 0.3s ease;
+    }
+</style>
+
+<div class="layui-card">
+    <blockquote class="layui-elem-quote news_search">
+        <div class="layui-inline">
+            <form class="layui-form">
+                <div class="layui-input-inline">
+                    <label class="layui-form-label">日期</label>
+                </div>
+
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("date")
+                        {
+                            mold = WeiCode.Models.ModelBasic.EmtTimeSelect.Mold.month,
+                            placeholder = "选择日期",
+                            defaultValue = date,
+                            eventJsChange = new EmtFormBase.EventJsChange
+                            {
+                                eventJavascript = new EventJavascript
+                                {
+                                    code = "window.location.href = '/Target/TgTarget/IncomeMonth?date=' + page.date.value;"
+                                },
+                            }
+                        })
+                    </div>
+                </div>
+                <a href="/Target/TgTarget/IncomeMonth?date=@date_early" class="layui-btn">前一月</a>
+                <a href="/Target/TgTarget/IncomeMonth?date=@date_late" class="layui-btn">后一月</a>
+            </form>
+        </div>
+    </blockquote>
+
+    <div id="tables">
+        <div class="table-container">
+            <table class="layui-table" style="text-align:center;" name="table">
+                <colgroup>
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                </colgroup>
+                <thead>
+                    <!-- 第一行表头 -->
+                    <tr>
+                        <td colspan="5" style="text-align: center; background-color: #CAE1FF; font-size: 18px; ">基础信息</td>
+                        <td colspan="4" style="text-align: center; background-color: #EBEBEB; font-size: 18px; font-weight: 700 ">@c_date.ToString("MM-dd") 至 @c_date.AddDays(9).ToString("MM-dd")</td>
+                        <td colspan="4" style="text-align: center; background-color: #EEE8AA; font-size: 18px; font-weight: 700 ">@c_date.AddDays(9).ToString("MM-dd") 至 @c_date.AddDays(19).ToString("MM-dd")</td>
+                        <td colspan="4" style="text-align: center; background-color: #FFF3CA; font-size: 18px; font-weight: 700 ">@c_date.AddDays(19).ToString("MM-dd") 至 @lastDay.ToString("MM-dd")</td>
+                        <td colspan="4" style="text-align: center; background-color: #B4CDCD; font-size: 18px; font-weight: 700 ">合计</td>
+                    </tr>
+                    <!-- 第二行表头 -->
+                    <tr style="font-weight:700;">
+                        <th style="background-color: #CAE1FF; width:60px;">序号</th>
+                        <th class="merge-column">厅管</th>
+                        <th style="background-color: #CAE1FF; width: 160px;">直播厅</th>
+                        <th style="background-color: #CAE1FF;">月目标</th>
+                        <th style="background-color: #CAE1FF; width: 80px;">日均<br />目标</th>
+                        <th style="background-color: #EBEBEB; width: 80px;">总流水</th>
+                        <th style="background-color: #EBEBEB; width: 80px;">日均</th>
+                        <th style="background-color: #EBEBEB; width: 80px;">完成率</th>
+                        <th style="background-color: #EBEBEB; width: 80px;">流水<br />差额</th>
+                        <th style="background-color: #EEE8AA; width: 80px;">总流水</th>
+                        <th style="background-color: #EEE8AA; width: 80px;">日均</th>
+                        <th style="background-color: #EEE8AA; width: 80px;">完成率</th>
+                        <th style="background-color: #EEE8AA; width: 80px;">流水<br />差额</th>
+                        <th style="background-color: #FFF3CA; width: 80px;">总流水</th>
+                        <th style="background-color: #FFF3CA; width: 80px;">日均</th>
+                        <th style="background-color: #FFF3CA; width: 80px;">完成率</th>
+                        <th style="background-color: #FFF3CA; width: 80px;">流水<br />差额</th>
+                        <th style="background-color: #B4CDCD; width: 80px;">总流水</th>
+                        <th style="background-color: #B4CDCD; width: 80px;">日均</th>
+                        <th style="background-color: #B4CDCD; width: 80px;">完成率</th>
+                        <th style="background-color: #B4CDCD; width:80px;">流水<br />差额</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        string prevTgUserSn = "";
+                        int index = 1;
+                        foreach (var item in doudata_month_tings)
+                        {
+                            //var ting = new ServiceFactory.UserInfo.Ting().GetTingBySn(item.ting_sn);
+                            string matchKey = $"{item.tg_user_sn}_{item.ting_sn}";
+                            var currentTarget = targetDict.ContainsKey(matchKey) ? targetDict[matchKey] : null;
+
+
+                            decimal monthTarget = currentTarget?.amount.ToDecimal() ?? 0.0M;
+                            decimal dailyTarget = currentTarget?.amount.ToDecimal() / days ?? 0.0M;
+                            dailyTarget = Math.Round(dailyTarget, 1); 
+
+                            <tr>
+                                <td style="background-color: #CAE1FF;">@index</td>
+                                @if (item.tg_user_sn != prevTgUserSn)
+                                {
+                                    int tgCount = doudata_month_tings.Count(x => x.tg_user_sn == item.tg_user_sn);
+                                    <td rowspan="@tgCount" class="merge-column">@item.tg_name</td>
+                                    prevTgUserSn = item.tg_user_sn;
+                                }
+                                <td style="background-color: #CAE1FF; font-size:14px;">@item.ting_name</td>
+                                <td style="background-color: #CAE1FF;">@Math.Round(monthTarget, 1)</td>
+                                <td style="background-color: #CAE1FF;">@Math.Round(dailyTarget, 1)</td>
+
+                                <!-- 第一阶段总流水 -->
+                                <td style="background-color: #EBEBEB;">@(item.tenday_income_1.HasValue ? Math.Round((decimal)item.tenday_income_1, 1) : 0.0M)</td>
+                                <td style="background-color: #EBEBEB;">@(item.tenday_income_avg_1.HasValue ? Math.Round((decimal)item.tenday_income_avg_1, 1) : 0.0M)</td>
+                                <td style="background-color: #EBEBEB; font-weight: bold; font-size: 15px; ">@(item.tenday_income_proportion_1.HasValue ? Math.Round((item.tenday_income_proportion_1.Value > 100 ? 100 : item.tenday_income_proportion_1.Value), 1) : 0.0M)%</td>
+                                <td style="background-color: #EBEBEB;">@(item.undone_income_1.HasValue ? Math.Round((item.undone_income_1.Value < 0 ? 0 : item.undone_income_1.Value), 1) : 0.0M)</td>
+
+
+                                <!-- 第二阶段总流水-->
+                                <td style="background-color: #EEE8AA;">@(item.tenday_income_2.HasValue ? Math.Round((decimal)item.tenday_income_2, 1) : 0.0M)</td>
+                                <td style="background-color: #EEE8AA;">@(item.tenday_income_avg_2.HasValue ? Math.Round((decimal)item.tenday_income_avg_2, 1) : 0.0M)</td>
+                                <td style="background-color: #EEE8AA; font-weight: bold; font-size: 15px; ">@(item.tenday_income_proportion_2.HasValue ? Math.Round((item.tenday_income_proportion_2.Value > 100 ? 100 : item.tenday_income_proportion_2.Value), 1) : 0.0M)%</td>
+                                <td style="background-color: #EEE8AA;">@(item.undone_income_2.HasValue ? Math.Round((item.undone_income_2.Value < 0 ? 0 : item.undone_income_2.Value), 1) : 0.0M)</td>
+
+
+                                <!-- 第三阶段总流水-->
+                                <td style="background-color: #FFF3CA;">@(item.tenday_income_3.HasValue ? Math.Round((decimal)item.tenday_income_3, 1) : 0.0M)</td>
+                                <td style="background-color: #FFF3CA;">@(item.tenday_income_avg_3.HasValue ? Math.Round((decimal)item.tenday_income_avg_3, 1) : 0.0M)</td>
+                                <td style="background-color: #FFF3CA; font-weight: bold; font-size: 15px; ">@(item.tenday_income_proportion_3.HasValue ? Math.Round((item.tenday_income_proportion_3.Value > 100 ? 100 : item.tenday_income_proportion_3.Value), 1) : 0.0M)%</td>
+                                <td style="background-color: #FFF3CA;">@(item.undone_income_3.HasValue ? Math.Round((item.undone_income_3.Value < 0 ? 0 : item.undone_income_3.Value), 1) : 0.0M)</td>
+
+
+                                <!-- 合计总流水 -->
+                                <td style="background-color: #B4CDCD;">@(item.total_income.HasValue ? Math.Round((decimal)item.total_income, 1) : 0.0M)</td>
+                                <td style="background-color: #B4CDCD;">@(item.total_income_avg.HasValue ? Math.Round((decimal)item.total_income_avg, 1) : 0.0M)</td>
+                                <td style="background-color: #B4CDCD; font-weight: bold;">@(item.tenday_income_proportion.HasValue ? Math.Round((item.tenday_income_proportion.Value > 100 ? 100 : item.tenday_income_proportion.Value), 1) : 0.0M)%</td>
+                                <td style="background-color: #B4CDCD;">@(item.undone_income.HasValue ? Math.Round((item.undone_income.Value < 0 ? 0 : item.undone_income.Value), 1) : 0.0M)</td>
+                            </tr>
+
+                            index++;
+                        }
+                    }
+                    <tr style="font-weight:700;">
+                        <td style="background-color: #CAE1FF;">合计</td>
+                        <td style="background-color: #CAE1FF;"></td>
+                        <td style="background-color: #CAE1FF;"></td>
+                        <td style="background-color: #CAE1FF;">@amount.ToString("F1")</td>
+                        <td style="background-color: #CAE1FF;">@((amount / days).ToString("F1"))</td>
+
+                        <!-- 第一阶段合计总流水 -->
+                        <td style="background-color: #EBEBEB;" data-type="sum">@(Math.Round(phase1Total,1))</td>
+                        <td style="background-color: #EBEBEB;" data-type="sum">@phase1Daily</td>
+                        <td style="background-color: #EBEBEB;" data-type="sum">@phase1CompleteRate%</td>
+                        <td style="background-color: #EBEBEB;" data-type="sum">@phase1NeedIncome</td>
+
+
+                        <!-- 第二阶段合计总流水 -->
+                        <td style="background-color: #EEE8AA;" data-type="sum">@(Math.Round(phase2Total,1))</td>
+                        <td style="background-color: #EEE8AA;" data-type="sum">@phase2Daily</td>
+                        <td style="background-color: #EEE8AA;" data-type="sum">@phase2CompleteRate%</td>
+                        <td style="background-color: #EEE8AA;" data-type="sum">@phase2NeedIncome</td>
+
+
+                        <!-- 第三阶段合计总流水 -->
+                        <td style="background-color: #FFF3CA;">@(Math.Round(phase3Total,1))</td>
+                        <td style="background-color: #FFF3CA;">@phase3Daily</td>
+                        <td style="background-color: #FFF3CA;">@phase3CompleteRate%</td>
+                        <td style="background-color: #FFF3CA;">@phase3NeedIncome</td>
+
+
+                        <!-- 整体合计总流水 -->
+                        <td style="background-color: #B4CDCD;">@(Math.Round(totalIncome,1))</td>
+                        <td style="background-color: #B4CDCD;">@totalDaily</td>
+                        <td style="background-color: #B4CDCD;">@totalCompleteRate%</td>
+                        <td style="background-color: #B4CDCD;">@totalNeedIncome</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

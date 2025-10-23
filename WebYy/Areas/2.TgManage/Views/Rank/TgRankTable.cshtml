@@ -1,0 +1,219 @@
+﻿
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+<script src="~/Assets/js/layui.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.js"></script>
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+@{
+    Layout = null;
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+        border: 1px solid #000 !important;
+    }
+
+    .layui-table td {
+        font-size: 15px;
+        border: 1px solid #000 !important;
+    }
+
+    .layui-table {
+        border: 1px solid #000 !important;
+        border-collapse: collapse !important;
+    }
+</style>
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>厅管平均绩效排名</title>
+</head>
+@{
+    string c_date_e = ViewBag.c_date_e;
+    string c_date_s = ViewBag.c_date_s;
+    string dateRange = c_date_s + " ~ " + c_date_e;
+}
+<body>
+    <div class="layui-card" style="width:95%;margin-top:130px;margin:0 auto">
+        <blockquote class="layui-elem-quote news_search">
+            <div class="layui-inline">
+                <form class="layui-form">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">日期范围</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="dateRange" name="dateRange" value="@dateRange" placeholder="选择日期范围">
+                        </div>
+                    </div>
+                    <button type="submit" class="layui-btn search_btn">查询</button>
+                </form>
+
+            </div>
+        </blockquote>
+        <div class="layui-tab layui-tab-brief" lay-filter="test-hash">
+            <ul class="layui-tab-title">
+                <li class="layui-this" lay-id="11">主播平均拉新排名</li>
+                <li lay-id="22">主播平均二消个数排名</li>
+                <li lay-id="33">主播平均二消音浪排名</li>
+                <li lay-id="44">主播平均建联数排名</li>
+            </ul>
+            <div class="layui-tab-content">
+                @{
+                    var yyModel = DoMySql.FindEntity<ModelDb.user_base>($"user_type_id='{new DomainBasic.UserTypeApp().GetInfoByCode("yyer").id}' and user_sn='{new UserIdentityBag().user_sn}'").ToModel<ServiceFactory.Rank.YyJixiaoRankModel>();
+                    //var zbList = new List<ServiceFactory.UserInfo.Zb.ZbInfo>();
+                    //var list = new ServiceFactory.UserInfo.Yy().YyGetZbInfo(new UserIdentityBag().user_sn);
+                    //foreach (var item in list)
+                    //{
+                    //    item.yy_user_sn = new UserIdentityBag().user_sn;
+                    //}
+                    //zbList.AddRange(list);
+
+                    var tgList = new ServiceFactory.UserInfo.Yy().YyGetNextTg(new UserIdentityBag().user_sn);
+                    
+                    string sqlwhere = tgList.Any() ? $"tg_user_sn IN ({string.Join(",", tgList.Select(c => $"'{c.user_sn}'"))})" : "1=0";
+                    var jixiaoDayList = DoMySql.FindList<ModelDb.p_jixiao_day>($"{sqlwhere} and DATE(c_date) between '{c_date_s}' and '{c_date_e}'");
+
+                    var tgDict = tgList.GroupBy(c => c.yy_sn).ToDictionary(g => g.Key, g => g.ToList());
+                    var jixiaoDict = jixiaoDayList.GroupBy(c => c.tg_user_sn).ToDictionary(g => g.Key, g => g.ToList());
+
+                    for (int i = 0; i < 4; i++)
+                    {
+                        string title = "";
+                        switch (i)
+                        {
+                            case (0):
+                                title = "拉新";
+                                break;
+                            case (1):
+                                title = "二消个数";
+                                break;
+                            case (2):
+                                title = "二消音浪";
+                                break;
+                            case (3):
+                                title = "建联";
+                                break;
+                        }
+                        <div class="layui-tab-item @(i==0 ? "layui-show":"")">
+                            <table class="layui-table" style="text-align:center;" id="table" name="table" width="100%">
+                                <colgroup>
+                                    <col width="100">
+                                    <col width="100">
+                                    <col width="100">
+                                    <col width="100">
+                                    <col width="100">
+                                </colgroup>
+                                <thead>
+                                    <tr style="background-color: #EE8331; font-weight: 700;">
+                                        <th> 运营</th>
+                                        <th> 厅名</th>
+                                        <th> 总@(title)</th>
+                                        <th> 平均@(title)</th>
+                                        <th> 厅排名</th>
+                                    </tr>
+                                    @{
+                                        foreach (var tg in tgList)
+                                        {
+                                            if (jixiaoDict.TryGetValue(tg.user_sn, out var jixiaoDays))
+                                            {
+                                                switch (i)
+                                                {
+                                                    case (0):
+                                                        tg.jixiaoCount = jixiaoDays.Sum(c => c.new_num).ToInt();
+                                                        break;
+                                                    case (1):
+                                                        tg.jixiaoCount = jixiaoDays.Sum(c => c.num_2).ToInt();
+                                                        break;
+                                                    case (2):
+                                                        tg.jixiaoCount = jixiaoDays.Sum(c => c.amount_2).ToInt();
+                                                        break;
+                                                    case (3):
+                                                        tg.jixiaoCount = jixiaoDays.Sum(c => c.contact_num).ToInt();
+                                                        break;
+                                                }
+                                                var zbCount = new ServiceFactory.UserInfo.Tg().TgGetNextZb(tg.user_sn).Count();
+                                                if (zbCount > 0)
+                                                {
+                                                    tg.average = tg.jixiaoCount.ToDouble() / zbCount.ToDouble();
+                                                }
+                                            }
+                                        }
+                                        yyModel.tgJixiaoRanks.AddRange(tgList);
+
+                                        int rank = 1;
+                                        bool isFirstRow = true;
+                                        <tr>
+                                            <th rowspan="@yyModel.tgJixiaoRanks.Count()" style="vertical-align: middle">@yyModel.name</th>
+                                            @foreach (var tg in yyModel.tgJixiaoRanks.OrderByDescending(c => c.jixiaoCount))
+                                            {
+                                                if (!isFirstRow)
+                                                {
+                                                @:</tr><tr>
+                                                }
+                                                <td>@tg.name</td>
+                                                <td>@tg.jixiaoCount</td>
+                                                <td>@tg.average</td>
+                                                <td>@rank</td>
+                                                rank++;
+                                                isFirstRow = false;
+                                            }
+                                        </tr>
+                                    }
+                                </thead>
+                            </table>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    //设置时间筛选的数据格式
+    layui.use(['form', 'laydate'], function () {
+        var form = layui.form;
+        var laydate = layui.laydate;
+
+        //日期时间段选择
+        laydate.render({
+            elem: '#dateRange'
+            , range: '~'
+        });
+    });
+    //卡片面板切换
+    layui.use(function () {
+        var element = layui.element;
+
+        // hash 地址定位
+        var hashName = 'tabid'; // hash 名称
+        var layid = location.hash.replace(new RegExp('^#' + hashName + '='), ''); // 获取 lay-id 值
+
+        // 初始切换
+        element.tabChange('test-hash', layid);
+        // 切换事件
+        element.on('tab(test-hash)', function (obj) {
+            location.hash = hashName + '=' + this.getAttribute('lay-id');
+        });
+    });
+
+
+</script>

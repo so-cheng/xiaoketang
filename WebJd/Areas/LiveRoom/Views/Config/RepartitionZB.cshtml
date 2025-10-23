@@ -1,0 +1,272 @@
+﻿@using System;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>大头号</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .layadmin-caller {
+            background: #fff;
+            padding: 30px;
+        }
+
+            .layadmin-caller em {
+                font-style: normal;
+            }
+
+            .layadmin-caller .caller-fl {
+                float: left;
+            }
+
+            .layadmin-caller .caller-fr {
+                float: right;
+            }
+
+            .layadmin-caller .caller-seach {
+                position: relative;
+                padding-bottom: 40px;
+            }
+
+                .layadmin-caller .caller-seach .caller-icon {
+                    font-size: 18px;
+                    position: absolute;
+                    top: 9px;
+                }
+
+            .layadmin-caller .caller-seach-icon {
+                left: 6px;
+            }
+
+            .layadmin-caller .caller-dump-icon {
+                right: 6px;
+                cursor: pointer;
+            }
+
+            .layadmin-caller .caller-pl32 {
+                padding: 0 32px;
+            }
+
+            .layadmin-caller .caller-tab {
+                margin: 0;
+            }
+
+            .layadmin-caller .caller-contar {
+                padding-bottom: 20px;
+            }
+
+                .layadmin-caller .caller-contar .caller-item {
+                    padding: 25px 0;
+                    overflow: hidden;
+                    border-bottom: 1px solid #e0e0e0;
+                }
+
+                    .layadmin-caller .caller-contar .caller-item .caller-main {
+                        margin-left: 20px;
+                    }
+
+                        .layadmin-caller .caller-contar .caller-item .caller-main p {
+                            line-height: 100%;
+                            padding: 8px 0;
+                        }
+
+                            .layadmin-caller .caller-contar .caller-item .caller-main p:first-child {
+                                padding-top: 0;
+                            }
+
+                        .layadmin-caller .caller-contar .caller-item .caller-main em {
+                            margin-left: 5px;
+                        }
+
+                        .layadmin-caller .caller-contar .caller-item .caller-main .caller-adds i {
+                            padding-right: 5px;
+                            margin: 0;
+                        }
+
+                        .layadmin-caller .caller-contar .caller-item .caller-main .caller-adds {
+                            padding-bottom: 12px;
+                        }
+
+                .layadmin-caller .caller-contar .caller-iconset i {
+                    margin: 0 5px;
+                }
+
+                    .layadmin-caller .caller-contar .caller-iconset i:first-child {
+                        margin-left: 0;
+                    }
+
+                .layadmin-caller .caller-contar button {
+                    margin-top: 22px;
+                }
+
+                .layadmin-caller .caller-contar .caller-img {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 100%;
+                }
+
+        .caller-title {
+            padding: 25px 0;
+        }
+    </style>
+</head>
+<body layadmin-themealias="default">
+    @{
+        int operatorType = ViewBag.operatorType;
+    }
+    <div class="layui-fluid">
+        <div class="layadmin-caller">
+            <div class="caller-contar">
+                <div>
+                    <div class="caller-title caller-fl">
+                        <p class="caller-adds">主播1</p>
+                    </div>
+                    <div class="caller-item">
+
+                        @if (ViewBag.liveRoomName.zb_user_sn1 != "")
+                        {
+                            <div class="caller-main caller-fl">
+                                <p>
+                                    <strong>
+
+                                        @{
+                                            var result = DoMySql.FindEntity<ModelDb.user_base>($"user_sn='{ViewBag.liveRoomName.zb_user_sn1}'");
+                                        }
+
+                                        @result.username
+                                    </strong>
+                                </p>
+                            </div>
+                        }
+                        @if (operatorType == 1)
+                        {
+
+
+                            if (ViewBag.liveRoomName.zb_user_sn1 == "")
+                            {
+                                <div class="caller-main caller-fl">
+                                    <p class="caller-adds">未分配</p>
+                                </div>
+                                <a class="layui-btn layui-btn-sm caller-fr" href="javascript:win_pop_iframe('分配主播1', '/LiveRoom/Config/SetRepartitionZB?id=@ViewBag.liveRoomName.id&type=1&operatorType=1', window.innerWidth * 0.8, window.innerHeight * 0.8);">
+                                    分配
+                                </a>
+                            }
+                            else
+                            {
+
+                                <a class="layui-btn layui-btn-sm layui-btn layui-btn-primary caller-fr" href="javascript:deltg(@ViewBag.liveRoomName.id, 1);">
+                                    解除
+                                </a>
+                            }
+                        }
+                        else if (operatorType == 2)
+                        {
+
+                            if (ViewBag.liveRoomName.zb_user_sn1 != "")
+                            {
+                                //转移
+                                <a class="layui-btn layui-btn-sm caller-fr" href="javascript:win_pop_iframe('分配主播1', '/LiveRoom/Config/SetRepartitionZB?id=@ViewBag.liveRoomName.id&type=1&operatorType=2', window.innerWidth * 0.8, window.innerHeight * 0.8);
+                               ">
+                                    转移
+                                </a>
+                            }
+                        }
+                    </div>
+                </div>
+                <div>
+                    <div class="caller-title caller-fl">
+                        <p class="caller-adds">主播2</p>
+                    </div>
+                    <div class="caller-item">
+                        @if (ViewBag.liveRoomName.zb_user_sn2 != "")
+                        {
+                            <div class="caller-main caller-fl">
+                                <p>
+                                    <strong>
+
+                                        @{
+                                            var result = DoMySql.FindEntity<ModelDb.user_base>($"user_sn='{ViewBag.liveRoomName.zb_user_sn2}'");
+                                        }
+
+                                        @result.username
+                                    </strong>
+                                </p>
+                            </div>
+                        }
+                        @if (operatorType == 1)
+                        {
+
+
+                            if (ViewBag.liveRoomName.zb_user_sn2 == "")
+                            {
+
+
+                                <div class="caller-main caller-fl">
+                                    <p class="caller-adds">未分配</p>
+                                </div>
+                                <a class="layui-btn layui-btn-sm caller-fr" href="javascript:win_pop_iframe('分配主播2', '/LiveRoom/Config/SetRepartitionZB?id=@ViewBag.liveRoomName.id&type=2&operatorType=1', window.innerWidth * 0.8, window.innerHeight * 0.8);">
+                                    分配
+                                </a>
+                            }
+                            else
+                            {
+
+                                <a class="layui-btn layui-btn-sm layui-btn layui-btn-primary caller-fr" href="javascript:deltg(@ViewBag.liveRoomName.id, 2);">
+                                    解除
+                                </a>
+                            }
+                        }
+                        else if (operatorType == 2)
+                        {
+                            if (ViewBag.liveRoomName.zb_user_sn2 != "")
+                            {
+                                //转移
+                                <a class="layui-btn layui-btn-sm caller-fr" href="javascript:win_pop_iframe('分配主播1', '/LiveRoom/Config/SetRepartitionZB?id=@ViewBag.liveRoomName.id&type=2&operatorType=2', window.innerWidth * 0.8, window.innerHeight * 0.8);
+                               ">
+                                    转移
+                                </a>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        form.render('select'); // 仅渲染 select 元素
+    });
+
+    function deltg(id, dou_user_type) {
+        $.ajax({
+            type: "POST",
+            url: "/LiveRoom/Config/DelRepartitionZB",
+            data: { id: id, type: dou_user_type },
+            async: false,
+            dataType: 'json',
+            success: function (e) {
+                alert('成功');
+                window.location.reload();
+            },
+            error: function (e) {
+                alert('操作失败');
+                window.location.reload();
+            }
+        });
+    }
+</script>

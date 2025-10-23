@@ -1,0 +1,325 @@
+﻿
+@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+    var month = ViewBag.month;
+}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+    }
+
+    body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        color: #333;
+        line-height: 1.6;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+        font-size: 2.2rem;
+    }
+
+    .subtitle {
+        color: #7f8c8d;
+        font-size: 1.1rem;
+    }
+
+    .stats-overview {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: bold;
+        margin: 10px 0;
+        color: #e11a1a;
+    }
+
+    .stat-label {
+        color: #2c3e50;
+        margin-bottom: 10px;
+        font-size: 2.2rem;
+    }
+
+    .label-rate {
+        color: #e11a1a;
+    }
+
+    .data-section {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-title {
+        color: #2c3e50;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #ecf0f1;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: center;
+        border-bottom: 1px solid #ecf0f1;
+    }
+
+    th {
+        background-color: #3498db;
+        color: white;
+        font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+
+    tr:hover {
+        background-color: #e8f4fc;
+    }
+
+    .charts-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+        gap: 25px;
+        margin-top: 30px;
+    }
+
+    .chart-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .chart-title {
+        text-align: center;
+        margin-bottom: 15px;
+        color: #2c3e50;
+        font-weight: 600;
+    }
+
+    .highlight {
+        font-weight: bold;
+        color: #e74c3c;
+    }
+
+    .good {
+        color: #2ecc71;
+    }
+
+    .warning {
+        color: #f39c12;
+    }
+
+    @@media (max-width: 768px) {
+        .charts-container {
+            grid-template-columns: 1fr;
+        }
+
+        table {
+            font-size: 0.85rem;
+        }
+
+        th, td {
+            padding: 8px 10px;
+        }
+    }
+</style>
+<div class="container">
+    <blockquote class="layui-elem-quote news_search">
+        <div class="layui-inline">
+            <form class="layui-form">
+                <div class="layui-inline">
+                    @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("month")
+                   {
+                       title = "日期",
+                       defaultValue = month,
+                       mold = ModelBasic.EmtTimeSelect.Mold.month,
+                       eventJsChange = new EmtFormBase.EventJsChange
+                       {
+                           eventJavascript = new EventJavascript
+                           {
+                               code = "window.location.href = '/JoinNew/Statistical/MxRank?month=' + page.month.value;"
+                           },
+                       }
+                   })
+                </div>
+            </form>
+        </div>
+    </blockquote>
+    <header>
+        <h1>萌新@(month)月数据统计</h1>
+        <p class="subtitle">各萌新拉群、推出及流失情况分析</p>
+    </header>
+    @{
+        string mon = Convert.ToString(month);
+        var mx_peixun = new ServiceFactory.JoinNew().GetMxPeiXun(mon);
+        // 拉群人数
+        var zqun = 0;
+        // 推出人数
+        var ztui = 0;
+
+        // 推出率 = 推出人数 / 拉群人数
+        decimal ztui_rate = 0;
+
+        // 流失人数
+        var zquit = 0;
+
+        /// 流失率 = 流失人数 / 拉群人数
+        decimal zquit_rate = 0;
+
+        /// 总未分配
+        var zunallocate = 0;
+
+        // 未分配率 = 总未分配 / 拉群人数
+        decimal zunallocate_rate = 0;
+        if (mx_peixun.Count > 0)
+        {
+            int count = mx_peixun.Count;
+            zqun = mx_peixun.Sum(t => t.qun).ToInt();
+            ztui = mx_peixun.Sum(t => t.tui).ToInt();
+            ztui_rate = getRate(mx_peixun.Sum(t => t.tui).ToDecimal(), mx_peixun.Sum(t => t.qun).ToDecimal());
+            zquit = mx_peixun.Sum(t => t.quit).ToInt();
+            zquit_rate = getRate(mx_peixun.Sum(t => t.quit).ToDecimal(), mx_peixun.Sum(t => t.qun).ToDecimal());
+            zunallocate = mx_peixun.Sum(t => t.unallocate).ToInt();
+            zunallocate_rate = getRate(mx_peixun.Sum(t => t.unallocate).ToDecimal(), mx_peixun.Sum(t => t.qun).ToDecimal());
+        }
+    }
+    <div class="stats-overview">
+        <div class="stat-card">
+            <div class="stat-label">总拉群人数</div>
+            <div class="stat-value">@zqun</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">总推出人数</div>
+            <div class="stat-value">@ztui</div>
+            <div class="stat-label">推出率: <span class="label-rate">@ztui_rate%</span></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">总流失人数</div>
+            <div class="stat-value">@zquit</div>
+            <div class="stat-label">流失率:<span class="label-rate">@zquit_rate%</span> </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">总未分配</div>
+            <div class="stat-value">@zunallocate</div>
+            <div class="stat-label">未分配率:<span class="label-rate">@zunallocate_rate%</span>  </div>
+        </div>
+    </div>
+    <div class="data-section">
+        <h2 class="section-title">萌新排名</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>排名</th>
+                    <th>萌新</th>
+                    <th>拉群人数</th>
+                    <th>推出人数</th>
+                    <th>推出率</th>
+                    <th>流失人数</th>
+                    <th>流失率</th>
+                    <th>未分配</th>
+                    <th>未分配率</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int num = 0;
+                }
+                @foreach (var item in mx_peixun.OrderByDescending(p => p.tui_rate).ToList())
+                {
+                    num++;
+                    <tr>
+                        <td>No.@num</td>
+                        <td>@item.mx_name</td>
+                        <td>@item.qun</td>
+                        <td>@item.tui</td>
+                        <td>@item.tui_rate%</td>
+                        <td>@item.quit</td>
+                        <td>@item.quit_rate%</td>
+                        <td>@item.unallocate</td>
+                        <td>@item.unallocate_rate%</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    layui.use(function () {
+        var laydate = layui.laydate;
+        // 年月选择器
+        laydate.render({
+            elem: '#dateRange',
+            type: 'month'
+        });
+    });
+</script>
+@functions{
+    public decimal getRate(decimal? A, decimal? B)
+    {
+        if (B == null || B == 0)
+        {
+            return 0;
+        }
+        else
+        {
+            return Math.Round((A * 100 / B).ToDecimal(), 2);
+        }
+    }
+}

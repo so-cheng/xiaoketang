@@ -1,0 +1,60 @@
+﻿@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+
+<!-- 页面通用母版 -->
+@{ Layout = ModelBasic.PageModel.GetLayout(); }
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Page</title>
+    <style>
+        .layui-container {
+            width: 80%; /* 宽度占视口的80% */
+            text-align: center; /* 使内容水平居中 */
+        }
+    </style>
+</head>
+<body>
+    @{
+        string link = $"http://{new DomainBasic.TenantDomainApp().GetInfoByTenantId(new DomainBasic.TenantApp().GetInfo().id, "wxer").host_domain}/Xianxiazp/Resume/Post?wx_user_sn=" + new UserIdentityBag().user_sn;
+    }
+    <div class="layui-container">
+        <div>
+            <h1>收集到场简历信息</h1><br />
+        </div>
+        <div class="button-container">
+            <span>发送收集链接给应聘人</span><br />
+            <!-- 分享链接按钮 -->
+            @ViewModelBag.Load(Html, new ModelBasic.EmtCopyText("link")
+            {
+                title = "分享链接",
+                buttonStyle = ModelBasic.buttonStyle.按钮,
+                defaultValue = link,
+            })
+        </div>
+        <div>
+            <br /><br /><br /><br />
+        </div>
+        <div class="img">
+            <span>面试登记表</span>
+            <!-- 分享二维码按钮 -->
+            @ViewModelBag.Load(Html, new ModelBasic.EmtQRCode("qrcode")
+            {
+                title = "分享二维码",
+                type = ModelBasic.EmtQRCode.Type.QrCode,
+                defaultValue = link,
+                width = "200px",
+                height = "200px",
+            })
+        </div>
+    </div>
+</body>
+</html>

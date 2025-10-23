@@ -1,0 +1,256 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+
+@{
+    string jiezou_sn = DoMySql.FindEntity<ModelDb.jiezou_detail_mouth_term>($"1=1 order by id desc").jiezou_sn;
+    if (ViewBag.jiezou_sn != null)
+    {
+        jiezou_sn = ViewBag.jiezou_sn;
+    }
+
+    string is_standard = ViewBag.is_standard;
+}
+@{
+    // 构建基础查询条件
+    string where = $"jiezou_sn = '{jiezou_sn}' AND tenant_id = '{new DomainBasic.TenantApp().GetInfo().id}'";
+
+    // 处理运营用户筛选条件
+    string yy_user_sn = "";
+    if (ViewBag.yy_user_sn != null)
+    {
+        var yy_arr = ViewBag.yy_user_sn.Split(',');
+        foreach (var yy in yy_arr)
+        {
+            yy_user_sn += "'" + yy + "',";
+        }
+        yy_user_sn = yy_user_sn.TrimEnd(',');
+    }
+    else
+    {
+        yy_user_sn = "'" + new UserIdentityBag().user_sn + "'";
+    }
+
+    where += $" AND yy_user_sn IN ({yy_user_sn})";
+
+    if (!string.IsNullOrEmpty(is_standard))
+    {
+        where += $" AND is_standard = {is_standard}";
+    }
+
+    var dataList = DoMySql.FindList<ModelDb.jiezou_detail_mouth>($"{where} order by yy_user_sn");
+
+    int TingCount = dataList.Count;
+    int passCount = DoMySql.FindList<ModelDb.jiezou_detail_mouth>($"{where} AND is_standard = 1").Count;
+    int failCount = TingCount - passCount;
+    decimal PassRate = TingCount > 0 ? (decimal)passCount / TingCount * 100 : 0;
+}
+
+<style>
+    .layui-table td,
+    .layui-table th,
+    .layui-table-col-set,
+    .layui-table-fixed-r,
+    .layui-table-grid-down,
+    .layui-table-header,
+    .layui-table-page,
+    .layui-table-tips-main,
+    .layui-table-tool,
+    .layui-table-total,
+    .layui-table-view,
+    .layui-table[lay-skin=line],
+    .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+    }
+
+    th,
+    td {
+        white-space: nowrap;
+    }
+
+    .not-standard {
+        color: red;
+        font-weight: bold;
+    }
+    /* 表头固定样式 */
+    .layui-table {
+        position: relative;
+    }
+
+        .layui-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: white;
+        }
+
+            .layui-table thead tr:first-child {
+                position: sticky;
+                top: 0;
+                z-index: 11;
+                background-color: #FFF3CA;
+            }
+
+            .layui-table thead tr:nth-child(2) {
+                position: sticky;
+                top: 28px; /* 第一行表头的高度 */
+                z-index: 11;
+                background-color: #FCE4D3;
+            }
+
+            /* 确保表头有足够的背景色 */
+            .layui-table thead th {
+                background-color: inherit;
+            }
+</style>
+<form class="layui-form" method="get">
+    <div class="layui-input-inline">
+        <label class="layui-form-label">期数</label>
+    </div>
+    @{
+        var optionsDict = DoMySql.FindList<ModelDb.jiezou_detail_mouth_term>().OrderByDescending(item => item.jiezou_sn).ToDictionary(
+                item => item.name,
+                item => item.jiezou_sn
+            );
+    }
+
+    <div class="layui-inline">
+        <div class="layui-input-inline">
+            @ViewModelBag.Load(Html, new ModelBasic.EmtSelect("jiezou_sn")
+           {
+               width = "300px",
+               title = "期数",
+               options = optionsDict,
+               defaultValue = jiezou_sn
+           })
+        </div>
+    </div>
+
+    <div class="layui-input-inline">
+        <label class="layui-form-label">运营</label>
+    </div>
+
+    <div class="layui-inline">
+        <div class="layui-input-inline">
+            @ViewModelBag.Load(Html, new ModelBasic.EmtExt.XmSelect("yy_user_sn")
+       {
+           width = "300px",
+           title = "运营",
+           options = new ServiceFactory.UserInfo.Yy().GetAllYyForKv(),
+           defaultValue = ViewBag.yy_user_sn,
+       })
+        </div>
+    </div>
+    <div class="layui-input-inline">
+        <label class="layui-form-label">是否达标</label>
+    </div>
+    <div class="layui-input-inline">
+        @ViewModelBag.Load(Html, new ModelBasic.EmtSelect("is_standard")
+   {
+       width = "300px",
+       title = "是否达标",
+       options = new Dictionary<string, string>
+           {
+               {"是", "1" },
+               {"否", "0" }
+           },
+       defaultValue = is_standard
+   })
+    </div>
+
+    <button type="submit" class="layui-btn">查询</button>
+</form>
+<form id="mainForm" class="layui-form" action="">
+    <div class="layui-row">
+        <div class="layui-col-md12" style=" width:100%">
+            <table class="layui-table" style="text-align:center;width:100%;" id="table1" name="table1">
+                <colgroup>
+                    <col width="60">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="180">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th colspan="6" style="text-align: center; background-color: #FFF3CA; font-size: 18px; font-weight: 700 ">
+                            团队课表
+                            <a style="color:blue;font-size:17px;" href="javascript:win_pop_iframe('阶段规则说明', '/jiezou/JiezouDay/RuleDefinition', 800,800);">阶段规则说明</a>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="background-color:#FFF2CC">序号</th>
+                        <th style="background-color:#FFF2CC">所属运营</th>
+                        <th style="background-color:#FFF2CC">厅管</th>
+                        <th style="background-color:#FFF2CC">厅名</th>
+                        <th style="background-color:#FFF2CC ">是否达标（阶段:@(ViewBag.jdDateFw)）</th>
+                        <th style="background-color:#FFF2CC ">节奏展示</th>
+                    </tr>
+                </thead>
+
+                @{
+                    int index = 1;
+                    foreach (var item in dataList)
+                    {
+                        <tr>
+                            <td style="background-color:#EAFAF1">@index</td>
+                            <td style="background-color:#EAFAF1">@item.yy_name</td>
+                            <td style="background-color:#EAFAF1">@item.tg_name</td>
+                            <td style="background-color:#EAFAF1">@item.ting_name</td>
+                            <td style="background-color:#EAFAF1">
+                                @(item.is_standard.ToInt() == 1 ?
+                                    Html.Raw("是") :
+                                    Html.Raw("<span style='color: red;'>否</span>"))
+                            </td>
+                            <td style="background-color:#EAFAF1">
+                                <div style="text-align:center;">
+                                    <a href="javascript: win_pop_iframe('节奏展示', '/jiezou/JiezouDay/Detail?ting_sn=' + ('@item.ting_sn'), window.innerWidth * 0.8, window.innerHeight * 0.8);" class="layui-btn layui-btn-xs layui-bg-blue">查看历史节奏</a>
+                                </div>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                }
+
+                <tr>
+                    <th colspan="5" style="background-color:#FFE9E8">达标数</th>
+                    <th style="background-color:#FFE9E8 ">@passCount</th>
+                </tr>
+                <tr>
+                    <th colspan="5" style="background-color:#FFE9E8">未达标数</th>
+                    <th style="background-color:#FFE9E8 ">@failCount</th>
+                </tr>
+                <tr>
+                    <th colspan="5" style="background-color:#FFE9E8">总厅数</th>
+                    <th style="background-color:#FFE9E8 ">@TingCount</th>
+                </tr>
+                <tr>
+                    <th colspan="5" style="background-color:#FFE9E8">达标率</th>
+                    <th style="background-color:#FFE9E8 ">@PassRate.ToFixed(2) %</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</form>

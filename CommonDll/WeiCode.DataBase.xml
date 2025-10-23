@@ -1,0 +1,1828 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WeiCode.DataBase</name>
+    </assembly>
+    <members>
+        <member name="T:WeiCode.DataBase.ModelForm">
+            <summary>
+            筛选表单模型基类
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelForm.pager">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.DataBase.ModelForm.Pager">
+            <summary>
+            分页条件
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelForm.Pager.pageSize">
+            <summary>
+            每页记录数
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelForm.Pager.page">
+            <summary>
+            当前页数
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelForm.orderby">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.DataBase.ModelForm.Orderby">
+            <summary>
+            排序条件
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelForm.Orderby.field">
+            <summary>
+            排序字段
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelForm.Orderby.desc">
+            <summary>
+            正序或倒序
+            </summary>
+        </member>
+        <member name="T:WeiCode.DataBase.ModelBase">
+            <summary>
+            组件属性的通用基类，包含：页面，控件，元素
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelBase._name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelBase.name">
+            <summary>
+            组件名
+            </summary>
+        </member>
+        <member name="M:WeiCode.DataBase.ModelBase.getName">
+            <summary>
+            获取组件名
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.ModelBase.setName(System.String)">
+            <summary>
+            重新设置name
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelBase.title">
+            <summary>
+            组件标题
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelBase.width">
+            <summary>
+            组件容器宽度,包含单位px
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelBase.height">
+            <summary>
+            组件容器高度,包含单位px
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelBase.cshtmlPath">
+            <summary>
+            控件模板文件路径，可重写为用自定义模板文件
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelBase.cshtmlMobilePath">
+            <summary>
+            控件模板文件路径，可重写为用自定义模板文件(移动端)
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelBase.className">
+            <summary>
+            同html的class
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelBase.style">
+            <summary>
+            符合css语法规范的代码，例如：color:red; border:1px solid red;
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelBase.disabled">
+            <summary>
+            是否禁用
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelBase.templateHtml">
+            <summary>
+            组件模板HTML，需要组件支持
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelBase.templateHtmlUrl">
+            <summary>
+            模板中自定义数据的请求URL，json格式
+            </summary>
+        </member>
+        <member name="T:WeiCode.DataBase.ModelBase.ComponentTheme">
+            <summary>
+            组件主题
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelBase.ComponentTheme.margin">
+            <summary>
+            外边距
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelBase.ComponentTheme.padding">
+            <summary>
+            内边距
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelBase.parentName">
+            <summary>
+            父级组件名
+            </summary>
+        </member>
+        <member name="T:WeiCode.DataBase.ModelBase.Js">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.DataBase.ModelBase.Js.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelBase.Js.name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelBase.Js.value">
+            <summary>
+            读取组件值
+            </summary>
+        </member>
+        <member name="M:WeiCode.DataBase.ModelBase.Js.set(System.String)">
+            <summary>
+            设置组件值
+            </summary>
+        </member>
+        <member name="M:WeiCode.DataBase.ModelBase.Js.disabled">
+            <summary>
+            设置组件禁用
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.ModelBase.Js.abled">
+            <summary>
+            设置组件禁用
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.ModelBase.Js.setCpt(System.String)">
+            <summary>
+            组件事件调用：设置值
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.ModelBase.Js.getFullName(System.String)">
+            <summary>
+            如果指定了上级元素名称，则把.换成_
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.DataBase.ReqJsonParaBase">
+            <summary>
+            组件异步请求参数包json基类
+            </summary>
+        </member>
+        <member name="M:WeiCode.DataBase.ReqJsonParaBase.GetDtoReqJson``1">
+            <summary>
+            将接收到的json格式参数转换为自定义的模型格式（按名称一致进行匹配）
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.ReqJsonParaBase.GetPara">
+            <summary>
+            获取请求参数
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.ReqJsonParaBase.GetPara(System.String)">
+            <summary>
+            获取请求参数
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.ReqJsonParaBase.GetParaToInt(System.String)">
+            <summary>
+            获取请求参数
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.ReqJsonParaBase.GetPara``1">
+            <summary>
+            获取请求参数
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.ReqJsonParaBase.GetPara``1(System.String)">
+            <summary>
+            获取请求参数
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.DataBase.ReqJsonParaBase.data_json">
+            <summary>
+            动态变量参数json
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ReqJsonParaBase.callBackFunc">
+            <summary>
+            回调函数
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ReqJsonParaBase.synDataSource">
+            <summary>
+            异步数据源 CommonHelper.GetCallBackFunc("方法名")
+            </summary>
+        </member>
+        <member name="T:WeiCode.DataBase.ReqJsonParaBag">
+            <summary>
+            传值json参数包
+            </summary>
+        </member>
+        <member name="M:WeiCode.DataBase.ReqJsonParaBag.Add(System.String,System.Object)">
+            <summary>
+            添加参数
+            </summary>
+            <param name="name"></param>
+            <param name="value"></param>
+        </member>
+        <member name="T:WeiCode.DataBase.EventComponent">
+            <summary>
+            组件方法基础类型(组件交互)
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.EventComponent._name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.EventComponent.name">
+            <summary>
+            目标组件名
+            </summary>
+        </member>
+        <member name="M:WeiCode.DataBase.EventComponent.getName">
+            <summary>
+            获取目标组件名
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.DataBase.EventComponent.code">
+            <summary>
+            js代码
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.EventComponent.jsMethod">
+            <summary>
+            js方法名
+            </summary>
+        </member>
+        <member name="M:WeiCode.DataBase.EventComponent.setTimeout(System.Int32)">
+            <summary>
+            延时执行
+            </summary>
+            <param name="millisec">毫秒</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.DataBase.EventJavascript">
+            <summary>
+            触发自定义的Js
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.EventJavascript.code">
+            <summary>
+            js代码
+            </summary>
+        </member>
+        <member name="T:WeiCode.DataBase.JsonResultAction">
+            <summary>
+            页面请求处理返回统一的JSON对象
+            </summary>
+        </member>
+        <member name="M:WeiCode.DataBase.JsonResultAction.#ctor(WeiCode.Utility.Entity)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.JsonResultAction._entity">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.DataBase.JsonResultList">
+            <summary>
+            页面请求返回JSON对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.JsonResultList.code">
+            <summary>
+            结果类型 0 = 成功；1 = 失败
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.JsonResultList.msg">
+            <summary>
+            结果文本信息
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.JsonResultList.data">
+            <summary>
+            其它数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.DataBase.ModelResult">
+            <summary>
+            基础数据模型（控制器返回结果时使用）
+            </summary>
+        </member>
+        <member name="T:WeiCode.DataBase.ModelResult.HandleInfo">
+            <summary>
+            普通请求处理结果
+            </summary>
+        </member>
+        <member name="T:WeiCode.DataBase.ModelResult.List">
+            <summary>
+            数据列表Json返回信息基类(带分页)
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelResult.List.pager">
+            <summary>
+            分页参数
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelResult.List.count">
+            <summary>
+            记录总条数
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.ModelResult.List.totalRow">
+            <summary>
+            汇总行数据项
+            </summary>
+        </member>
+        <member name="M:WeiCode.DataBase.ModelResult.List.IsNullOrEmpty">
+            <summary>
+            判断列表是否为空
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.DataBase.JsonRequestAction">
+            <summary>
+            回调函数提交参数统一的封装对象
+            </summary>
+        </member>
+        <member name="T:WeiCode.DataBase.DoMySql">
+            <summary>
+            数据库操作类
+            </summary>
+            <summary>
+            数据库操作类
+            </summary>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindObjects``1(WeiCode.DataBase.DoMySql.Filter)">
+            <summary>
+            获取table表符合条件的list对象(单表查询)
+            </summary>
+            <typeparam name="T">实体对象</typeparam>
+            <param name="filter">条件对象</param>
+            <returns>表实体LIST</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindObjects``1(System.String)">
+            <summary>
+            获取table表符合条件的list对象(单表查询)
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="where">where条件</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindObjectsBySql(System.String,WeiCode.DataBase.DoMySql.Pager)">
+            <summary>
+            使用SQL查询并返回List对象
+            </summary>
+            <typeparam name="T">输出的实体</typeparam>
+            <param name="sql">sql语句</param>
+            <param name="pagination">分页参数</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.#cctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindEntityById``1(System.Nullable{System.Int32},System.Boolean,System.String,WeiCode.Utility.UtilityStatic.CodeNotes)">
+            <summary>
+            获取表实体符合条件sql的对象
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="id">id</param>
+            <param name="exist">验证数据是否存在</param>
+            <param name="errInfo">数据不存在时错误提示</param>
+            <param name="codeNotes">代码注释</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindEntity``1(System.String,System.Boolean,System.String,WeiCode.Utility.UtilityStatic.CodeNotes)">
+            <summary>
+            获取表实体符合条件sql的对象
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="where">查询条件</param>
+            <param name="exist">验证数据是否存在</param>
+            <param name="errInfo">数据不存在时错误提示</param>
+            <param name="codeNotes">代码注释</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindEntity``1(System.String,System.String)">
+            <summary>
+            获取table表符合条件sql的对象
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="where">查询条件</param>
+            <param name="errInfo">数据不存在时错误提示</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindEntity``1(System.String,WeiCode.Utility.UtilityStatic.CodeNotes)">
+            <summary>
+            获取table表符合条件sql的对象
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="where">查询条件</param>
+            <param name="codeNotes">代码注释</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindField``1(System.String,System.String)">
+            <summary>
+            获取table表符合条件字段值，支持多个字段
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="field"></param>
+            <param name="where"></param>
+            <returns>DataRow</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindGroupConcat``1(System.String,System.String)">
+            <summary>
+            GROUP_CONCAT
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="field"></param>
+            <param name="where"></param>
+            <returns>字段值1,字段值2</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindKvList``1(System.String,System.String)">
+            <summary>
+            获取Key,Value形式List,fields:如name,id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindListBySql``1(System.String,WeiCode.DataBase.DoMySql.Pager)">
+            <summary>
+            使用SQL查询并返回List实体
+            </summary>
+            <typeparam name="T">输出的实体</typeparam>
+            <param name="sql">sql语句</param>
+            <param name="pagination">分页参数</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindList``1(WeiCode.DataBase.DoMySql.Filter)">
+            <summary>
+            获取table表符合条件的list对象(单表查询)
+            </summary>
+            <typeparam name="T">实体对象</typeparam>
+            <param name="filter">条件对象</param>
+            <returns>表实体LIST</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindList``1(System.String)">
+            <summary>
+            获取table表符合条件的list对象(单表查询)
+            </summary>
+            <typeparam name="T">实体对象</typeparam>
+            <param name="where">查询条件</param>
+            <returns>表实体LIST</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindList``1(WeiCode.DataBase.DoMySql.Filter,WeiCode.DataBase.DoMySql.Pager)">
+            <summary>
+            单表查询
+            </summary>
+            <typeparam name="K"></typeparam>
+            <param name="filter">条件对象</param>
+            <param name="pager">分页对象</param>
+            <returns>表实体list</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindList``1(WeiCode.DataBase.DoMySql.Filter,WeiCode.DataBase.DoMySql.Export)">
+            <summary>
+            单表查询
+            </summary>
+            <typeparam name="K"></typeparam>
+            <param name="filter">条件对象</param>
+            <param name="export">导出对象</param>
+            <returns>表实体list</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindList``2(System.String)">
+            <summary>
+            单表查询，返回新模型
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="where"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindList``2(WeiCode.DataBase.DoMySql.Filter)">
+            <summary>
+            单表查询，返回新模型
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="filter">条件对象</param>
+            <returns>表实体list</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindList``2(WeiCode.DataBase.DoMySql.Filter,WeiCode.DataBase.DoMySql.Pager)">
+            <summary>
+            单表查询，返回新模型
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="filter">条件对象</param>
+            <param name="pager">分页对象</param>
+            <returns>表实体list</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindList``2(WeiCode.DataBase.DoMySql.Filter,WeiCode.DataBase.DoMySql.Export)">
+            <summary>
+            单表查询，返回新模型
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="filter">筛选对象</param>
+            <param name="export">导出对象</param>
+            <returns>表实体list</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindList``3(WeiCode.DataBase.DoMySql.Filter)">
+            <summary>
+            两表联合查询
+            </summary>
+            <typeparam name="K">主表</typeparam>
+            <typeparam name="K1">从表</typeparam>
+            <typeparam name="T">返回Model</typeparam>
+            <param name="filter">条件对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindList``3(WeiCode.DataBase.DoMySql.Filter,WeiCode.DataBase.DoMySql.Pager)">
+            <summary>
+            两表联合查询
+            </summary>
+            <typeparam name="K">主表</typeparam>
+            <typeparam name="K1">从表</typeparam>
+            <typeparam name="T">返回Model</typeparam>
+            <param name="filter">条件对象</param>
+            <param name="pager">分页对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindList``3(WeiCode.DataBase.DoMySql.Filter,WeiCode.DataBase.DoMySql.Export)">
+            <summary>
+            两表联合查询 - 导出
+            </summary>
+            <typeparam name="K">主表</typeparam>
+            <typeparam name="K1">从表</typeparam>
+            <typeparam name="T">返回Model</typeparam>
+            <param name="filter">条件对象</param>
+            <param name="export">导出对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindList``4(WeiCode.DataBase.DoMySql.Filter)">
+            <summary>
+            三表联合查询
+            </summary>
+            <typeparam name="K">主表</typeparam>
+            <typeparam name="K1">从表</typeparam>
+            <typeparam name="K2">从表</typeparam>
+            <typeparam name="T">返回Model</typeparam>
+            <param name="filter">条件对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindList``4(WeiCode.DataBase.DoMySql.Filter,WeiCode.DataBase.DoMySql.Pager)">
+            <summary>
+            三表联合查询
+            </summary>
+            <typeparam name="K">主表</typeparam>
+            <typeparam name="K1">从表</typeparam>
+            <typeparam name="K2">从表</typeparam>
+            <typeparam name="T">返回Model</typeparam>
+            <param name="filter">条件对象</param>
+            <param name="pager">条件对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindList``4(WeiCode.DataBase.DoMySql.Filter,WeiCode.DataBase.DoMySql.Export)">
+            <summary>
+            三表联合查询 - 导出
+            </summary>
+            <typeparam name="K">主表</typeparam>
+            <typeparam name="K1">从表</typeparam>
+            <typeparam name="K2">从表</typeparam>
+            <typeparam name="T">返回Model</typeparam>
+            <param name="filter">条件对象</param>
+            <param name="export">导出对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindList``5(WeiCode.DataBase.DoMySql.Filter)">
+            <summary>
+            四表联合查询
+            </summary>
+            <typeparam name="K">主表</typeparam>
+            <typeparam name="K1">从表</typeparam>
+            <typeparam name="K2">从表</typeparam>
+            <typeparam name="K3">从表</typeparam>
+            <typeparam name="T">返回Model</typeparam>
+            <param name="filter">条件对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindList``5(WeiCode.DataBase.DoMySql.Filter,WeiCode.DataBase.DoMySql.Pager)">
+            <summary>
+            四表联合查询
+            </summary>
+            <typeparam name="K">主表</typeparam>
+            <typeparam name="K1">从表</typeparam>
+            <typeparam name="K2">从表</typeparam>
+            <typeparam name="K3">从表</typeparam>
+            <typeparam name="T">返回Model</typeparam>
+            <param name="filter">条件对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindList``6(WeiCode.DataBase.DoMySql.Filter)">
+            <summary>
+            五表联合查询
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="K1"></typeparam>
+            <typeparam name="K2"></typeparam>
+            <typeparam name="K3"></typeparam>
+            <typeparam name="K4"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindList``6(WeiCode.DataBase.DoMySql.Filter,WeiCode.DataBase.DoMySql.Pager)">
+            <summary>
+            五表联合查询
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="K1"></typeparam>
+            <typeparam name="K2"></typeparam>
+            <typeparam name="K3"></typeparam>
+            <typeparam name="K4"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="filter"></param>
+            <param name="pagination"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.FindPageListCore``1(System.String,WeiCode.DataBase.DoMySql.Filter,WeiCode.DataBase.DoMySql.Pager)">
+            <summary>
+            查询数据，带分页
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="sql"></param>
+            <param name="filter"></param>
+            <param name="pager"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.DataBase.DoMySql.Filter">
+            <summary>
+            筛选参数
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.DoMySql.Filter.fields">
+            <summary>
+            指定返回字段集，默认为*
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.DoMySql.Filter.on">
+            <summary>
+            多表联查时的关联条件，单表查询时忽略
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.DoMySql.Filter.where">
+            <summary>
+            SQL查询条件（不要加and）
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.DoMySql.Filter.groupby">
+            <summary>
+            group by 当此值不为空时，order by 不能写到where参数中
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.DoMySql.Filter.orderby">
+            <summary>
+            order by
+            </summary>
+        </member>
+        <member name="T:WeiCode.DataBase.DoMySql.Pager">
+            <summary>
+            分页参数
+            </summary>
+        </member>
+        <member name="T:WeiCode.DataBase.DoMySql.Export">
+            <summary>
+            导出参数
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.DoMySql.Export.columnInfos">
+            <summary>
+            导出列{"字段名","列名"}
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.DoMySql.Export.fileName">
+            <summary>
+            导出文件名
+            </summary>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.ExecuteSqlTran(System.Collections.Generic.List{System.String})">
+            <summary>
+            执行事务
+            </summary>
+            <param name="SQLStringList"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySql.GetDataTable(System.String)">
+            <summary>
+            执行事务
+            </summary>
+            <param name="sql"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.DataBase.DoMySqlWhere">
+            <summary>
+            特殊场景SQL构造
+            </summary>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlWhere.BirthdayBetween(System.String,System.DateTime,WeiCode.DataBase.DoMySqlWhere.BirthdaySymbol)">
+            <summary>
+            根据生日筛选，输出SQL=CONCAT(YEAR(CURDATE()),DATE_FORMAT(birth_date,'-%m-%d')) {symbol} '{birthdayDate}'
+            </summary>
+            <param name="feild">字段名</param>
+            <param name="birthdayDate"></param>
+            <param name="birthdaySymbol"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.DataBase.DoMySqlWhere.BirthdaySymbol">
+            <summary>
+            比较符号
+            </summary>
+        </member>
+        <member name="F:WeiCode.DataBase.DoMySqlWhere.BirthdaySymbol.小于">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.DataBase.DoMySqlWhere.BirthdaySymbol.大于">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.DataBase.DoMySqlWhere.BirthdaySymbol.等于">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.DataBase.DoMySqlWhere.BirthdaySymbol.大于等于">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.DataBase.DoMySqlWhere.BirthdaySymbol.小于等于">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlWhere.GetStringIn(System.String,System.String,System.String)">
+            <summary>
+            获取字符式In构造，输出SQL= feild In ('abc','def')
+            </summary>
+            <param name="feild"></param>
+            <param name="strs"></param>
+            <param name="split"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlWhere.GetStringLike(System.String,System.String)">
+            <summary>
+            获取字符式Like构造
+            </summary>
+            <param name="feild"></param>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.DataBase.MysqlHelper">
+             <summary>
+            MysqlHelper 的摘要说明
+             </summary>
+        </member>
+        <member name="F:WeiCode.DataBase.MysqlHelper.connectionString">
+            <summary>
+            连接字符串
+            </summary>
+        </member>
+        <member name="M:WeiCode.DataBase.MysqlHelper.Insert(System.String,WeiCode.Utility.UtilityStatic.CodeNotes)">
+            <summary>
+            执行SQL语句,返回插入的记录id
+            </summary>
+            <param name="SQLString">SQL语句</param>
+            <param name="codeNotes">代码注释</param>
+            <returns>插入的记录id</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.MysqlHelper.ExecuteSql(System.String,WeiCode.Utility.UtilityStatic.CodeNotes)">
+            <summary>
+            执行SQL语句，返回影响的记录数
+            </summary>
+            <param name="SQLString">SQL语句</param>
+            <param name="codeNotes">代码注释</param>
+            <returns>影响的记录数</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.MysqlHelper.ExecuteSqlTran(System.Collections.Generic.List{System.String},WeiCode.Utility.UtilityStatic.CodeNotes)">
+            <summary>
+            执行多条SQL语句，实现数据库事务。
+            </summary>
+            <param name="SQLStringList">多条SQL语句</param>
+            <param name="codeNotes">代码注释</param>
+        </member>
+        <member name="M:WeiCode.DataBase.MysqlHelper.GetSingle(System.String,WeiCode.Utility.UtilityStatic.CodeNotes)">
+            <summary>
+            执行一条计算查询结果语句，返回查询结果（object）。
+            </summary>
+            <param name="SQLString">计算查询结果语句</param>
+            <param name="codeNotes"></param>
+            <returns>查询结果（object）</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.MysqlHelper.GetReader(System.String,WeiCode.Utility.UtilityStatic.CodeNotes)">
+            <summary>
+            执行一条计算查询结果语句，返回查询结果（object）。
+            </summary>
+            <param name="SQLString">计算查询结果语句</param>
+            <param name="codeNotes">代码注释</param>
+            <returns>查询结果（object）</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.MysqlHelper.Query(System.String,WeiCode.Utility.UtilityStatic.CodeNotes)">
+            <summary>
+            执行查询语句，返回DataSet
+            </summary>
+            <param name="SQLString">查询语句</param>
+            <param name="codeNotes">代码注释</param>
+            <returns>DataSet</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.MysqlHelper.GetDataTable(System.String,WeiCode.DataBase.Pagination,WeiCode.Utility.UtilityStatic.CodeNotes)">
+            <summary>
+            
+            </summary>
+            <param name="SQLString"></param>
+            <param name="pagination"></param>
+            <param name="codeNotes">代码注释</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.MysqlHelper.GetDataTableToList(System.String,WeiCode.DataBase.Pagination)">
+            <summary>
+            获取DataTable并转换为List
+            </summary>
+            <param name="SQLString">需要执行的sql语句</param>
+            <param name="pagination">分页类</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.DataBase.DoMySqlsHelper">
+            <summary>
+            数据库操作类
+            </summary>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlsHelper.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="Name"></param>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlsHelper.#ctor(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="Name"></param>
+            <param name="mysql_connect"></param>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlsHelper.FindEntity``1(System.String,System.Boolean)">
+            <summary>
+            获取table表符合条件sql的对象
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="where">查询条件</param>
+            <param name="exist">验证数据是否存在</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlsHelper.FindEntityById``1(System.Nullable{System.Int32},System.Boolean)">
+            <summary>
+            获取表实体符合条件sql的对象
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="id">id</param>
+            <param name="exist">验证数据是否存在</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlsHelper.FindField``1(System.String,System.String)">
+            <summary>
+            获取table表符合条件字段值
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="field"></param>
+            <param name="where"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlsHelper.FindKvList``1(System.String,System.String)">
+            <summary>
+            获取Key,Value形式List,如:id,name
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlsHelper.FindObjects``1(WeiCode.DataBase.DoMySqlsHelper.Filter)">
+            <summary>
+            获取table表符合条件的list对象(单表查询)
+            </summary>
+            <typeparam name="T">实体对象</typeparam>
+            <param name="filter">条件对象</param>
+            <returns>表实体LIST</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlsHelper.FindObjects``1(System.String)">
+            <summary>
+            获取table表符合条件的list对象(单表查询)
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="where">where条件</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlsHelper.FindList``1(System.String,WeiCode.DataBase.Pagination)">
+            <summary>
+            获取table表符合条件的list对象(单表，联表查询)
+            当返回类型不为表类型或联表查询时需要单独定义模型
+            </summary>
+            <typeparam name="T">实体对象</typeparam>
+            <param name="where">查询条件</param>
+            <param name="pagination">分页对象</param>
+            <returns>表实体LIST</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlsHelper.FindList``1(WeiCode.DataBase.DoMySqlsHelper.Filter,WeiCode.DataBase.Pagination)">
+            <summary>
+            获取table表符合条件的list对象(单表，联表查询)
+            当返回类型不为表类型或联表查询时需要单独定义模型
+            </summary>
+            <typeparam name="T">实体对象</typeparam>
+            <param name="findListFilter">查询条件</param>
+            <param name="pager">分页对象</param>
+            <returns>表实体LIST</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlsHelper.FindList``1(WeiCode.DataBase.DoMySqlsHelper.Filter)">
+            <summary>
+            获取table表符合条件的list对象(单表，联表查询)
+            当返回类型不为表类型或联表查询时需要单独定义模型
+            </summary>
+            <typeparam name="T">实体对象</typeparam>
+            <param name="findListFilter">条件对象</param>
+            <returns>表实体LIST</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlsHelper.FindList``2(System.String,WeiCode.DataBase.Pagination)">
+            <summary>
+            返回不同类型的对象
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="where"></param>
+            <param name="pagination"></param>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlsHelper.FindList``2(WeiCode.DataBase.DoMySqlsHelper.Filter,WeiCode.DataBase.Pagination)">
+            <summary>
+            获取table表符合条件的list对象(单表，联表查询)
+            当返回类型不为表类型或联表查询时需要单独定义模型
+            </summary>
+            <typeparam name="T">实体对象</typeparam>
+            <param name="findListFilter">查询条件</param>
+            <param name="pager">分页对象</param>
+            <returns>表实体LIST</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlsHelper.FindList``2(System.String,System.String,WeiCode.DataBase.Pagination)">
+            <summary>
+            获取table表符合条件的list对象(单表，联表查询)
+            当返回类型不为表类型或联表查询时需要单独定义模型
+            </summary>
+            <typeparam name="K">输入的实体对象</typeparam>
+            <typeparam name="T">输出的实体对象</typeparam>
+            <param name="fields">查询字段</param>
+            <param name="where">查询条件</param>
+            <param name="pagination">分页对象</param>
+            <returns>表实体LIST</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlsHelper.FindList``2(WeiCode.DataBase.DoMySql.Filter,WeiCode.DataBase.Pagination)">
+            <summary>
+            返回不同类型的对象
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="filter">条件对象</param>
+            <param name="pagination"></param>
+            <returns>表实体LIST</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlsHelper.FindList``3(WeiCode.DataBase.DoMySql.Filter,WeiCode.DataBase.Pagination)">
+            <summary>
+            两表联合查询
+            </summary>
+            <typeparam name="K">主表</typeparam>
+            <typeparam name="K1">从表</typeparam>
+            <typeparam name="T">返回Model</typeparam>
+            <param name="filter">条件对象</param>
+            <param name="pagination">分页对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlsHelper.FindList``4(WeiCode.DataBase.DoMySqlsHelper.Filter)">
+            <summary>
+            三表联合查询
+            </summary>
+            <typeparam name="K">主表</typeparam>
+            <typeparam name="K1">从表</typeparam>
+            <typeparam name="K2">从表</typeparam>
+            <typeparam name="T">返回Model</typeparam>
+            <param name="findListFilter">条件对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlsHelper.FindList``5(WeiCode.DataBase.DoMySqlsHelper.Filter)">
+            <summary>
+            四表联合查询
+            </summary>
+            <typeparam name="K">主表</typeparam>
+            <typeparam name="K1">从表</typeparam>
+            <typeparam name="K2">从表</typeparam>
+            <typeparam name="K3">从表</typeparam>
+            <typeparam name="T">返回Model</typeparam>
+            <param name="findListFilter">条件对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlsHelper.GetDataTable(System.String)">
+            <summary>
+            返回DataTable
+            </summary>
+            <param name="sql"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlsHelper.Insert(System.String)">
+            <summary>
+            执行SQL
+            </summary>
+            <param name="sql"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlsHelper.ExecuteSql(System.String)">
+            <summary>
+            执行SQL
+            </summary>
+            <param name="sql"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqlsHelper.ExecuteSqlTran(System.Collections.Generic.List{System.String})">
+            <summary>
+            执行事务
+            </summary>
+            <param name="SQLStringList"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.DataBase.DoMySqlsHelper.Filter">
+            <summary>
+            筛选条件
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.DoMySqlsHelper.Filter.fields">
+            <summary>
+            返回字段
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.DoMySqlsHelper.Filter.on">
+            <summary>
+            关联条件
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.DoMySqlsHelper.Filter.where">
+            <summary>
+            筛选参数
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.DoMySqlsHelper.Filter.pagination">
+            <summary>
+            分页参数
+            </summary>
+        </member>
+        <member name="T:WeiCode.DataBase.DoMySqls">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.DataBase.DoMySqls.dicDoMysql">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqls.Db(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name">数据库源中的别名</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.DoMySqls.Db(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name">数据库源中的别名</param>
+            <param name="mysql_connect">指定链接字符串</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.DataBase.MysqlsHelper">
+             <summary>
+            MysqlHelper 的摘要说明
+             </summary>
+        </member>
+        <member name="M:WeiCode.DataBase.MysqlsHelper.#ctor(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+            <param name="connection"></param>
+        </member>
+        <member name="M:WeiCode.DataBase.MysqlsHelper.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+        </member>
+        <member name="P:WeiCode.DataBase.MysqlsHelper.connectionString">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.DataBase.MysqlsHelper.Insert(System.String)">
+            <summary>
+            执行SQL语句,返回插入的记录id
+            </summary>
+            <param name="SQLString">SQL语句</param>
+            <returns>插入的记录id</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.MysqlsHelper.ExecuteSql(System.String)">
+            <summary>
+            执行SQL语句，返回影响的记录数
+            </summary>
+            <param name="SQLString">SQL语句</param>
+            <returns>影响的记录数</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.MysqlsHelper.ExecuteSqlTran(System.Collections.Generic.List{System.String})">
+            <summary>
+            执行多条SQL语句，实现数据库事务。
+            </summary>
+            <param name="SQLStringList">多条SQL语句</param>
+        </member>
+        <member name="M:WeiCode.DataBase.MysqlsHelper.GetSingle(System.String)">
+            <summary>
+            执行一条计算查询结果语句，返回查询结果（object）。
+            </summary>
+            <param name="SQLString">计算查询结果语句</param>
+            <returns>查询结果（object）</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.MysqlsHelper.GetReader(System.String)">
+            <summary>
+            执行一条计算查询结果语句，返回查询结果（object）。
+            </summary>
+            <param name="SQLString">计算查询结果语句</param>
+            <returns>查询结果（object）</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.MysqlsHelper.Query(System.String)">
+            <summary>
+            执行查询语句，返回DataSet
+            </summary>
+            <param name="SQLString">查询语句</param>
+            <returns>DataSet</returns>
+        </member>
+        <member name="M:WeiCode.DataBase.MysqlsHelper.GetDataTable(System.String,WeiCode.DataBase.Pagination)">
+            <summary>
+            
+            </summary>
+            <param name="SQLString"></param>
+            <param name="pagination"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.DataBase.MysqlsHelper.GetDataTableToList(System.String,WeiCode.DataBase.Pagination)">
+            <summary>
+            获取DataTable并转换为List
+            </summary>
+            <param name="SQLString">需要执行的sql语句</param>
+            <param name="pagination">分页类</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.DataBase.Pagination">
+            <summary>
+            分页元素
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.Pagination.pageSize">
+            <summary>
+            每页行数
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.Pagination.curPage">
+            <summary>
+            当前页
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.Pagination.sortField">
+            <summary>
+            排序列及类型(如: id DESC)
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.Pagination.totalRecords">
+            <summary>
+            总记录数
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.Pagination.totalPages">
+            <summary>
+            总页数
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.Pagination.summaryReq">
+            <summary>
+            汇总输入
+            </summary>
+        </member>
+        <member name="T:WeiCode.DataBase.Pagination.SummaryReq">
+            <summary>
+            汇总字段
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.Pagination.SummaryReq.fields">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.Pagination.SummaryReq.title">
+            <summary>
+            显示标题
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.Pagination.SummaryReq.summaryType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.Pagination.summaryRes">
+            <summary>
+            汇总输出
+            </summary>
+        </member>
+        <member name="T:WeiCode.DataBase.Pagination.SummaryType">
+            <summary>
+            汇总类型
+            </summary>
+        </member>
+        <member name="F:WeiCode.DataBase.Pagination.SummaryType.SUM">
+            <summary>
+            求和
+            </summary>
+        </member>
+        <member name="F:WeiCode.DataBase.Pagination.SummaryType.AVG">
+            <summary>
+            求平均
+            </summary>
+        </member>
+        <member name="P:WeiCode.DataBase.Pagination.list">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.DataBase.Pagination.GetPaginatorData(System.Int32,System.Nullable{System.Int32},System.Int32,System.String,System.String,System.Int32)">
+            <summary>
+            获取分页数据
+            </summary>
+            <param name="TotalNum"></param>
+            <param name="CurrentPage"></param>
+            <param name="TotalPage"></param>
+            <param name="p_PAGEURL"></param>
+            <param name="p_QueryString"></param>
+            <param name="PageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.CptAttrModelBase">
+            <summary>
+            属性数据类型基类
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.CptAttrModelBase.TempItemHtml">
+            <summary>
+            列表项模板html(固定类型)
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.CptAttrModelBase.TempItemHtml.tempName">
+            <summary>
+            组件模板名称（我的项目>设置>组件模板）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.CptAttrModelBase.TempItemHtml.htmlCode">
+            <summary>
+            html代码
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.CptAttrModelBase.TempItemHtml.eventItemClick">
+            <summary>
+            点击数据项
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.CptAttrModelBase.TempItemHtml.EventItemClick">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.CptAttrModelBase.TempItemHtml.EventItemClick.placeText">
+            <summary>
+            设置占位符名称，作为HTML标签属性，在模板中格式：&lt;#=占位符#>
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.CptAttrModelBase.TempItemHtml.EventItemClick.paras">
+            <summary>
+            事件参数，字段格式：{{ item.name }}
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.CptAttrModelBase.TempItemHtml.EventItemClick.callJs">
+            <summary>
+            回调执行js代码
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ControlModelBase">
+            <summary>
+            页面控件模型基类
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.EmtModelBase">
+            <summary>
+            元素基类
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.EmtModelBase.placeholder">
+            <summary>
+            提示信息
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.EmtModelBase.defaultValue">
+            <summary>
+            初始值(js)
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.EmtModelBase.isDisplay">
+            <summary>
+            是否可见
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.EmtModelBase.displayStatus">
+            <summary>
+            展示状态
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.EmtModelBase.colLength">
+            <summary>
+            列宽:范围值：1-12
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.EmtModelBase.isChangeFormSubmit">
+            <summary>
+            发生change事件时，提交当前所属的表单
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.EmtModelBase.updateVersionWith">
+            <summary>
+            历史版本信息的关联数据;格式:表名.字段名.id值
+            用于数据表记录中,需要与保存事件联用
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.EmtModelBase.index">
+            <summary>
+            索引号，用于排序
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.EmtModelBase.isRequired">
+            <summary>
+            是否必填项
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.EmtModelBase.DisplayStatus">
+            <summary>
+            展示状态
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.EmtModelBase.DisplayStatus.编辑">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.EmtModelBase.DisplayStatus.只读">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.EmtModelBase.DisplayStatus.隐藏">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.EmtModelBase.DisplayStatus.移除">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.EmtFormBase">
+            <summary>
+            表单元素基类
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.EmtFormBase.eventJsChange">
+            <summary>
+            组件click事件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.EmtFormBase.eventJsChanges">
+            <summary>
+            组件click事件
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.EmtFormBase.EventJsChange">
+            <summary>
+            组件click事件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.EmtFormBase.EventJsChange.eventType">
+            <summary>
+            事件类型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.EmtFormBase.EventJsChange.EventType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.EmtFormBase.EventJsChange.EventType.change">
+            <summary>
+            值更改
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.EmtFormBase.EventJsChange.EventType.click">
+            <summary>
+            点击
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.EmtFormBase.EventJsChange.EventType.onmouseove">
+            <summary>
+            鼠标移上
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.EmtFormBase.EventJsChange.eventComponent">
+            <summary>
+            调用目标组件的方法(继承EventComponent类，格式：组件类型.Js方法名，如：new PageList.JsReload)
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.EmtFormBase.EventJsChange.eventJavascript">
+            <summary>
+            调用js方法
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.EmtFormBase.EventJsChange.ReturnPara">
+            <summary>
+            事件参数e
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.EmtFormBase.EventJsChange.ReturnPara.value">
+            <summary>
+            返回选中值
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.EmtFormBase.EventJsChange.eventCsAction">
+            <summary>
+            设置change事件处理的回调函数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.EmtFormBase.EventJsChange.EventCsAction">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.EmtFormBase.EventJsChange.EventCsAction.func">
+            <summary>
+            设置链接提交处理的回调函数
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.EmtFormBase.EventJsChange.EventCsAction.attachPara">
+            <summary>
+            附加请求参数,js变量使用&lt;%=变量名%>
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.EmtFormBase.EventJsChange.EventCsAction.resCallJs">
+            <summary>
+            回调函数返回数据对象:res.data
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.EmtModelTableBase">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.PageModelBase">
+            <summary>
+            页面模型基类
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.PageModelBase.icon_url">
+            <summary>
+            页面icon图标
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.PageModelBase.pageCshtmlPath">
+            <summary>
+            页面模板文件路径
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.PageModelBase.attachCssPath">
+            <summary>
+            在当前页面附加css文件(多个用,隔开),示例:http://www.domain.com/a.css或/a.css,/b.css
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.PageModelBase.attachJsPath">
+            <summary>
+            在当前页面附加js文件(多个用,隔开),示例:http://www.domain.com/a.js或/a.js,/b.js
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.PageModelBase.attachJsCode">
+            <summary>
+            在当前页面附加js代码
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.PageModelBase.returnUrl">
+            <summary>
+            设置页面表单提交处理后跳转的URL地址（待作废）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.PageModelBase.topPartial">
+            <summary>
+            在页面顶部添加组件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.PageModelBase.leftPartial">
+            <summary>
+            在页面左部添加组件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.PageModelBase.leftPartialCols">
+            <summary>
+            页面左部添加组件宽度(1-12)
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.PageModelBase.rightPartial">
+            <summary>
+            在页面右部添加组件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.PageModelBase.rightPartialCols">
+            <summary>
+            页面右部添加组件宽度(1-12)
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.PageModelBase.bottomPartial">
+            <summary>
+            在页面底部添加组件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.PageModelBase.jsFileNames">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.PageModelBase.LoadAttchFiles">
+            <summary>
+            加载资源文件
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.PageModelBase.JsFileName">
+            <summary>
+            js资源文件枚举
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.PageModelBase.JsFileName.通知消息">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.PageModelBase.adjuncts">
+            <summary>
+            辅助组件
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.PageModelBase.AdjunctBase">
+            <summary>
+            辅助组件
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.PageModelBase.AttachJsCode">
+            <summary>
+            附加js代码
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.PageModelBase.AttachJsCode.jscode">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.PageModelBase.AttachJsCode.Add(System.String)">
+            <summary>
+            添加js代码
+            </summary>
+            <param name="code"></param>
+        </member>
+        <member name="M:WeiCode.Models.PageModelBase.AttachJsCode.AddTimeout(System.String,System.Int32)">
+            <summary>
+            添加js代码(延时执行)
+            </summary>
+            <param name="code"></param>
+            <param name="second">延时毫秒数</param>
+        </member>
+        <member name="M:WeiCode.Models.PageModelBase.AttachJsCode.AddEventCsAction(WeiCode.Models.EmtFormBase.EventJsChange.EventCsAction)">
+            <summary>
+            添加js代码(服务端回调函数)
+            </summary>
+            <param name="eventCsAction"></param>
+        </member>
+        <member name="T:WeiCode.Models.PageViewModel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.PageViewModel.title">
+            <summary>
+            页面标题
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.PageViewModel.keyword">
+            <summary>
+            关键词
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.TableBasic">
+            <summary>
+            数据库转实体基类
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.TableBasic.keyValuePairs">
+            <summary>
+            继承表附加字段存储器(用于对继承表自定义字段时的数据操作)
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.TableBasic.id">
+            <summary>
+            当前表唯一id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.TableBasic.create_time">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.TableBasic.modify_time">
+            <summary>
+            修改时间
+            </summary>
+        </member>
+        <member name="M:WeiCode.ModelDbs.TableBasic.ReWrite(WeiCode.ModelDbs.TableBasic)">
+            <summary>
+            重写类实体（当相同的属性时：修改对应值， 当不同的属性时：附加到DataTable字段列表）
+            </summary>
+        </member>
+        <member name="M:WeiCode.ModelDbs.TableBasic.Insert(System.Boolean)">
+            <summary>
+            向表中插入一条记录
+            </summary>
+            <param name="Tran">是否事务</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.ModelDbs.TableBasic.Insert">
+            <summary>
+            向表中插入一条记录（返回插入的id）
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.ModelDbs.TableBasic.InsertTran">
+            <summary>
+            向表中插入一条记录(事务)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.ModelDbs.TableBasic.Update(System.Boolean,System.String)">
+            <summary>
+            修改表中一条或一批记录
+            </summary>
+            <param name="where">查询条件</param>
+            <param name="Tran">是否事务</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.ModelDbs.TableBasic.Update(System.String)">
+            <summary>
+            从表中修改一条记录
+            </summary>
+            <param name="where"> </param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.ModelDbs.TableBasic.UpdateTran(System.String)">
+            <summary>
+            从表中修改一条记录(事务)
+            </summary>
+            <param name="where"> </param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.ModelDbs.TableBasic.Update(System.Int32)">
+            <summary>
+            根据主键id修改一条记录
+            </summary>
+            <param name="id"> </param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.ModelDbs.TableBasic.Delete(System.Boolean,System.String)">
+            <summary>
+            从表中删除一条记录(事务)
+            </summary>
+            <param name="Tran"></param>
+            <param name="where"> </param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.ModelDbs.TableBasic.Delete(System.String)">
+            <summary>
+            从表中删除一条记录
+            </summary>
+            <param name="where"> </param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.ModelDbs.TableBasic.DeleteTran(System.String)">
+            <summary>
+            从表中删除一条记录(事务)
+            </summary>
+            <param name="where"> </param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.ModelDbs.TableBasic.InsertOrUpdate(System.Boolean,System.String)">
+            <summary>
+            根据查询条件新增或修改一条记录（事务）
+            </summary>
+            <param name="where"> </param>
+            <param name="Tran"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.ModelDbs.TableBasic.InsertOrUpdate(System.String)">
+            <summary>
+            根据查询条件新增或修改一条记录
+            </summary>
+            <param name="where"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.ModelDbs.TableBasic.InsertOrUpdateTran(System.String)">
+            <summary>
+            根据查询条件新增或修改一条记录(事务)
+            </summary>
+            <param name="where"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.ModelDbs.TableBasic.IsNullOrEmpty">
+            <summary>
+            判断实体是否为Null
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:ModelDto.MqDto.MqDtoBase">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:ModelDto.MqDto.MqDtoBase.cname">
+            <summary>
+            模块别名
+            </summary>
+        </member>
+        <member name="P:ModelDto.MqDto.MqDtoBase.subscribeUrls">
+            <summary>
+            订阅地址集合
+            </summary>
+        </member>
+    </members>
+</doc>

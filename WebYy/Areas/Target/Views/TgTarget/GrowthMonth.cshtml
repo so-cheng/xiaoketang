@@ -1,0 +1,444 @@
+﻿@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+
+    string date = ViewBag.date;
+    string date_early = date.ToDate().AddMonths(-1).ToString("yyyy-MM");//前一月
+    string date_late = date.ToDate().AddMonths(1).ToString("yyyy-MM");//后一月
+    DateTime c_date = new DateTime(date.ToDateTime().Year, date.ToDateTime().Month, 1);//本月第一天
+    DateTime lastDay = c_date.AddMonths(1).AddDays(-1); // 本月最后一天
+    int days = lastDay.Day;//当月天数
+
+    // 查询数据
+    var doudata_month_tings = DoMySql.FindList<ModelDb.p_jixiao_target_month_ting>($"yy_user_sn = '{new UserIdentityBag().user_sn}' and tenant_id='{new DomainBasic.TenantApp().GetInfo().id}' and yearmonth='{date}' order by tg_user_sn");
+
+    //运营下所有厅流水合
+    var arr_doudata_month_ting = DoMySql.FindField<ModelDb.p_jixiao_target_month_ting>(
+        "SUM(tenday_income_1)第一阶段所有厅音浪合,SUM(tenday_income_2)第二阶段所有厅音浪合,SUM(tenday_income_3)第三阶段所有厅音浪合,SUM(total_income)所有厅音浪合", $"yy_user_sn = '{new UserIdentityBag().user_sn}' and tenant_id='{new DomainBasic.TenantApp().GetInfo().id}' and yearmonth='{date}'");
+
+    //运营下所有厅厅战流水
+    var arr_tingzhan_data = new ServiceFactory.TingZhanFlow().GetTingDataByYysn(new UserIdentityBag().user_sn, date);
+
+    // 初始化合计数据变量
+    decimal phase1Total = 0M, phase1Daily = 0M;
+    decimal phase1Totaltz = 0M, phase1Dailyntz = 0M;
+    decimal phase2Total = 0M, phase2Daily = 0M;
+    decimal phase2Totaltz = 0M, phase2Dailyntz = 0M;
+    decimal phase3Total = 0M, phase3Daily = 0M;
+    decimal phase3Totaltz = 0M, phase3Dailyntz = 0M;
+    decimal phase1Rate = 0M, phase2Rate = 0M;
+    decimal phase1Ratentz = 0M, phase2Ratentz = 0M;
+
+    int phase1 = 0; int phase2 = 0; int phase3 = 0;
+    if (DateTime.Today.Month == Convert.ToDateTime(date).Month)
+    {
+        int day = DateTime.Today.Day;
+        int daysInMonth = DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month);
+        int phase3Length = daysInMonth - 20;
+
+        phase1 = day <= 10 ? day : 10;
+        phase2 = day < 11 ? 0 : (day <= 20 ? day - 10 : 10);
+        phase3 = day < 21 ? 0 : Math.Min(day - 20, phase3Length);
+    }
+    else if (DateTime.Today.Month > Convert.ToDateTime(date).Month)
+    {
+        phase1 = 10;
+        phase2 = 10;
+        phase3 = days - 20;
+    }
+
+    // 第一阶段（1 - 10 天）相关计算
+    phase1Total = Math.Round(arr_doudata_month_ting[0].ToDecimal(), 0); // 第一阶段所有厅音浪合
+    phase1Totaltz = Math.Round(arr_tingzhan_data.Sum(u => u.tenday_income_1), 0);// 第一阶段所有厅厅战音浪合
+    if (phase1 > 0)
+    {
+        phase1Daily = Math.Round(phase1Total / phase1, 0);// 第一阶段日均
+        phase1Dailyntz = Math.Round((phase1Total - phase1Totaltz) / phase1, 0);// 第一阶段日均不含厅战
+    }
+
+    // 第二阶段（11 - 20 天）相关计算
+    phase2Total = Math.Round(arr_doudata_month_ting[1].ToDecimal(), 0);
+    phase2Totaltz = Math.Round(arr_tingzhan_data.Sum(u => u.tenday_income_2), 0);// 第二阶段所有厅厅战音浪合
+    if (phase2 > 0)
+    {
+        phase2Daily = Math.Round(phase2Total / phase2, 0); // 第二阶段日均
+        phase2Dailyntz = Math.Round((phase2Total - phase2Totaltz) / phase2, 0);// 第二阶段日均不含厅战
+    }
+
+    // 第三阶段（21 - 月底）相关计算，days 是当月天数
+    phase3Total = Math.Round(arr_doudata_month_ting[2].ToDecimal(), 0);
+    phase3Totaltz = Math.Round(arr_tingzhan_data.Sum(u => u.tenday_income_3), 0);// 第三阶段所有厅厅战音浪合
+    if (phase3 > 0)
+    {
+        phase3Daily =  Math.Round(phase3Total / phase3, 0);  // 第三阶段日均
+        phase3Dailyntz = Math.Round((phase3Total - phase3Totaltz) / phase3, 0);// 第三阶段日均不含厅战
+    }
+
+    //增长率（含厅战）=（第二阶段日均-第一阶段日均）/第一阶段日均*100  合计
+    if (phase1Daily > 0)
+    {
+        phase1Rate = Math.Round((phase2Daily - phase1Daily) / phase1Daily * 100, 0);
+    }
+
+    //增长率（不含厅战）=（第二阶段日均不含厅战-第一阶段日均不含厅战）/第一阶段日均不含厅战*100  合计
+    if (phase1Dailyntz > 0)
+    {
+        phase1Dailyntz = Math.Round((phase2Dailyntz - phase1Dailyntz) / phase1Dailyntz, 0);
+    }
+
+    //增长率（含厅战）=（第三阶段日均-第二阶段日均）/第二阶段日均*100  合计
+    if (phase2Daily > 0)
+    {
+        phase2Rate = Math.Round((phase3Daily - phase2Daily) / phase2Daily * 100, 0);
+    }
+
+    //增长率（不含厅战）=（第三阶段日均不含厅战-第二阶段日均不含厅战）/第二阶段日均不含厅战*100  合计
+    if (phase2Dailyntz > 0)
+    {
+        phase2Ratentz = Math.Round((phase3Dailyntz - phase2Dailyntz) / phase2Dailyntz, 0);
+    }
+}
+
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-collapse: collapse;
+        border-style: solid;
+        border-width: 1px;
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 10px;
+    }
+
+    .layui-table td {
+        font-size: 10px;
+        text-align: center;
+    }
+
+    .layui-table {
+        background-color: rgba(30, 144, 255, 0.1);
+    }
+
+    /* 表头固定样式 */
+    .layui-table {
+        position: relative;
+    }
+
+        .layui-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: white;
+        }
+
+            .layui-table thead tr:first-child {
+                position: sticky;
+                top: 0;
+                z-index: 11;
+                background-color: #FFF3CA;
+            }
+
+            .layui-table thead tr:nth-child(2) {
+                position: sticky;
+                top: 28px; /* 第一行表头的高度 */
+                z-index: 11;
+                background-color: #FCE4D3;
+            }
+
+
+        /* 鼠标悬停时行的背景色效果 */
+        .layui-table tbody tr:hover td {
+            background-color: #FFE4B5 !important;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        /* 为所有td添加过渡效果，使颜色变化更平滑 */
+        .layui-table tbody tr td {
+            transition: background-color 0.3s ease;
+        }
+</style>
+<div class="layui-card">
+    <blockquote class="layui-elem-quote news_search">
+        <div class="layui-inline">
+            <form class="layui-form">
+                <div class="layui-input-inline">
+                    <label class="layui-form-label">日期</label>
+                </div>
+
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("date")
+                        {
+                            mold = WeiCode.Models.ModelBasic.EmtTimeSelect.Mold.month,
+                            placeholder = "选择日期",
+                            defaultValue = date,
+                            eventJsChange = new EmtFormBase.EventJsChange
+                            {
+                                eventJavascript = new EventJavascript
+                                {
+                                    code = "window.location.href = '/Target/TgTarget/GrowthMonth?date=' + page.date.value;"
+                                },
+                            }
+                        })
+                    </div>
+                </div>
+                <a href="/Target/TgTarget/GrowthMonth?date=@date_early" class="layui-btn">前一月</a>
+                <a href="/Target/TgTarget/GrowthMonth?date=@date_late" class="layui-btn">后一月</a>
+            </form>
+        </div>
+    </blockquote>
+    
+    <div id="tables">
+        <div class="table-container">
+            <table class="layui-table" style="text-align:center;" name="table">
+                <thead>
+                <!-- 第一行表头 -->
+                <tr>
+                    <td colspan="4" style="text-align: center; background-color: #CAE1FF; font-size: 18px; ">基础信息</td>
+                    <td colspan="4" style="text-align: center; background-color: #EBEBEB; font-size: 18px; font-weight: 700 ">@c_date.ToString("MM-dd") 至 @c_date.AddDays(9).ToString("MM-dd")</td>
+                    <td colspan="6" style="text-align: center; background-color: #EEE8AA; font-size: 18px; font-weight: 700 ">@c_date.AddDays(10).ToString("MM-dd") 至 @c_date.AddDays(19).ToString("MM-dd")</td>
+                    <td colspan="6" style="text-align: center; background-color: #FFF3CA; font-size: 18px; font-weight: 700 ">@c_date.AddDays(20).ToString("MM-dd") 至 @lastDay.ToString("MM-dd")</td>
+                </tr>
+                <!-- 第二行表头 -->
+                <tr style="font-weight:700;">
+                    <th style="background-color: #CAE1FF;">序号</th>
+                    <th style="background-color: #CAE1FF;">厅管</th>
+                    <th style="background-color: #CAE1FF;">直播厅</th>
+                    <th style="background-color: #CAE1FF;">抖音号</th>
+                    <th style="background-color: #EBEBEB;">总流水</th>
+                    <th style="background-color: #EBEBEB;">厅战流水</th>
+                    <th style="background-color: #EBEBEB;">日均流水（不含厅战）</th>
+                    <th style="background-color: #EBEBEB;">日均流水（含厅战）</th>
+                    <th style="background-color: #EEE8AA;">总流水</th>
+                    <th style="background-color: #EEE8AA;">厅战流水</th>
+                    <th style="background-color: #EEE8AA;">日均流水（不含厅战）</th>
+                    <th style="background-color: #EEE8AA;">月环比增长率</th>
+                    <th style="background-color: #EEE8AA;">日均流水（含厅战）</th>
+                    <th style="background-color: #EEE8AA;">月环比增长率</th>
+                    <th style="background-color: #FFF3CA;">总流水</th>
+                    <th style="background-color: #FFF3CA;">厅战流水</th>
+                    <th style="background-color: #FFF3CA;">日均流水（不含厅战）</th>
+                    <th style="background-color: #FFF3CA;">月环比增长率</th>
+                    <th style="background-color: #FFF3CA;">日均流水（含厅战）</th>
+                    <th style="background-color: #FFF3CA;">月环比增长率</th>
+                </tr>
+                </thead>
+                <tbody>
+                @{
+                    string prevTgUserSn = "";
+                    int index = 1;
+                    foreach (var item in doudata_month_tings)
+                    {
+                                    <tr>
+                                        <td style="background-color: #CAE1FF;">@index</td>
+                                        @if (item.tg_user_sn != prevTgUserSn)
+                                        {
+                                            int tgCount = doudata_month_tings.Count(x => x.tg_user_sn == item.tg_user_sn);
+                                            <td rowspan="@tgCount" class="merge-column">@item.tg_name</td>
+                                            prevTgUserSn = item.tg_user_sn;
+                                        }
+                                        <td style="background-color: #CAE1FF;">@item.ting_name</td>
+                                        <td style="background-color: #CAE1FF;">@item.dou_user</td>
+
+                                        <!-- 第一阶段总流水 -->
+                                        @{
+                                            //总流水
+                                            var tenday_income_1 = item.tenday_income_1.HasValue ? Math.Round((decimal)item.tenday_income_1, 0) : 0M;
+                                            //厅战流水
+                                            var tenday_income_tz1 = arr_tingzhan_data.Where(u => u.ting_sn == item.ting_sn).FirstOrDefault().tenday_income_1;
+                                            //日均流水-不含厅战
+                                            var tenday_income_avg_ntz1 = 0M;
+                                            if ((tenday_income_1 - tenday_income_tz1) > 0 && phase1 > 0)
+                                            {
+                                                tenday_income_avg_ntz1 = (tenday_income_1 - tenday_income_tz1) / phase1;
+                                            }
+                                        }
+                                        <td style="background-color: #EBEBEB;">@(Math.Round(tenday_income_1, 0M))</td>
+                                        <td style="background-color: #EBEBEB;">@(Math.Round(tenday_income_tz1, 0M))</td>
+                                        <td style="background-color: #EBEBEB;">@(Math.Round(tenday_income_avg_ntz1, 0M))</td>
+                                        <td style="background-color: #EBEBEB;">@(item.tenday_income_avg_1.HasValue ? Math.Round((decimal)item.tenday_income_avg_1, 0) : 0M)</td>
+
+                                        <!-- 第二阶段总流水-->
+                                        @{
+                                            //总流水
+                                            var tenday_income_2 = item.tenday_income_2.HasValue ? Math.Round((decimal)item.tenday_income_2, 0) : 0M;
+                                            //厅战流水
+                                            var tenday_income_tz2 = arr_tingzhan_data.Where(u => u.ting_sn == item.ting_sn).FirstOrDefault().tenday_income_2;
+                                            //日均流水-不含厅战
+                                            var tenday_income_avg_ntz2 = 0M;
+                                            if ((tenday_income_2 - tenday_income_tz2) > 0 && phase2 > 0)
+                                            {
+                                                tenday_income_avg_ntz2 = (tenday_income_2 - tenday_income_tz2) / phase2;
+                                            }
+                                            //增长率（不含厅战）=（第二阶段日均不含厅战-第一阶段日均不含厅战）/第一阶段日均不含厅战*100
+                                            var growth_rate_ntz1 = 0M;
+                                            if (tenday_income_avg_ntz1 > 0)
+                                            {
+                                                growth_rate_ntz1 = (tenday_income_avg_ntz2 - tenday_income_avg_ntz1) / tenday_income_avg_ntz1 * 100;
+                                            }
+                                        }
+                                        <td style="background-color: #EEE8AA;">@(Math.Round(tenday_income_2, 0M))</td>
+                                        <td style="background-color: #EEE8AA;">@(Math.Round(tenday_income_tz2, 0M))</td>
+                                        <td style="background-color: #EEE8AA;">@(Math.Round(tenday_income_avg_ntz2, 0M))</td>
+                                        @{
+                                            if (growth_rate_ntz1 > 0)
+                                            {
+                                                <td style="background-color: #EEE8AA; color: darkgreen;">@growth_rate_ntz1 %</td>
+                                            }
+                                            else
+                                            {
+                                                <td style="background-color: #EEE8AA; color: darkred;">@growth_rate_ntz1 %</td>
+                                            }
+                                        }
+                                        <td style="background-color: #EEE8AA;">@(item.tenday_income_avg_2.HasValue ? Math.Round((decimal)item.tenday_income_avg_2, 0) : 0M)</td>
+                                        @{
+                                            //增长率（含厅战）=（第二阶段日均-第一阶段日均）/第一阶段日均*100
+                                            var growth_rate1 = 0M;
+                                            var tenday_income_avg_1 = item.tenday_income_avg_1.HasValue ? Math.Round((decimal)item.tenday_income_avg_1, 0) : 0M;
+                                            var tenday_income_avg_2 = item.tenday_income_avg_2.HasValue ? Math.Round((decimal)item.tenday_income_avg_2, 0) : 0M;
+                                            if (tenday_income_avg_1 > 0)
+                                            {
+                                                growth_rate1 = (tenday_income_avg_2 - tenday_income_avg_1) / tenday_income_avg_1 * 100;
+                                            }
+                                            if (growth_rate1 >= 0)
+                                            {
+                                                <td style="background-color: #EEE8AA; color: darkgreen;">@growth_rate1 %</td>
+                                            }
+                                            else
+                                            {
+                                                <td style="background-color: #EEE8AA; color: darkred;">@growth_rate1 %</td>
+                                            }
+                                        }
+
+                                        <!-- 第三阶段总流水-->
+                                        @{
+                                            //总流水
+                                            var tenday_income_3 = item.tenday_income_3.HasValue ? Math.Round((decimal)item.tenday_income_3, 0) : 0M;
+                                            //厅战流水
+                                            var tenday_income_tz3 = arr_tingzhan_data.Where(u => u.ting_sn == item.ting_sn).FirstOrDefault().tenday_income_3;
+                                            //日均流水-不含厅战
+                                            var tenday_income_avg_ntz3 = 0M;
+                                            if ((tenday_income_3 - tenday_income_tz3) > 0 && phase3 > 0)
+                                            {
+                                                tenday_income_avg_ntz3 = (tenday_income_3 - tenday_income_tz3) / phase3;
+                                            }
+                                            //增长率（不含厅战）=（第三阶段日均不含厅战-第二阶段日均不含厅战）/第二阶段日均不含厅战*100
+                                            var growth_rate_ntz2 = 0M;
+                                            if (tenday_income_avg_ntz2 > 0)
+                                            {
+                                                growth_rate_ntz2 = (tenday_income_avg_ntz3 - tenday_income_avg_ntz2) / tenday_income_avg_ntz2 * 100;
+                                            }
+                                        }
+                                        <td style="background-color: #FFF3CA;">@(Math.Round(tenday_income_3, 0M))</td>
+                                        <td style="background-color: #FFF3CA;">@(Math.Round(tenday_income_tz3, 0M))</td>
+                                        <td style="background-color: #FFF3CA;">@(Math.Round(tenday_income_avg_ntz3, 0M))</td>
+                                        @{
+                                            if (growth_rate_ntz2 > 0)
+                                            {
+                                                <td style="background-color: #FFF3CA; color: darkgreen;">@growth_rate_ntz2 %</td>
+                                            }
+                                            else
+                                            {
+                                                <td style="background-color: #FFF3CA; color: darkred;">@growth_rate_ntz2 %</td>
+                                            }
+                                        }
+                                        <td style="background-color: #FFF3CA;">@(item.tenday_income_avg_3.HasValue ? Math.Round((decimal)item.tenday_income_avg_3, 0) : 0M)</td>
+                                        @{
+                                            //增长率（含厅战）=（第三阶段日均-第二阶段日均）/第二阶段日均*100
+                                            var growth_rate2 = 0M;
+                                            var tenday_income_avg_3 = item.tenday_income_avg_3.HasValue ? Math.Round((decimal)item.tenday_income_avg_3, 0) : 0M;
+                                            if (tenday_income_avg_2 > 0)
+                                            {
+                                                growth_rate2 = (tenday_income_avg_3 - tenday_income_avg_2) / tenday_income_avg_2 * 100;
+                                            }
+
+                                            if (growth_rate2 >= 0)
+                                            {
+                                                <td style="background-color: #FFF3CA; color:darkgreen;">@growth_rate2 %</td>
+                                            }
+                                            else
+                                            {
+                                                <td style="background-color: #FFF3CA; color: darkred;">@growth_rate2 %</td>
+                                            }
+                                        }
+
+                                    </tr>
+                                    index++;
+                                }
+                }
+                <tr style="font-weight:700;">
+                    <td style="background-color: #CAE1FF;">合计</td>
+                    <td style="background-color: #CAE1FF;"></td>
+                    <td style="background-color: #CAE1FF;"></td>
+                    <td style="background-color: #CAE1FF;"></td>
+                    <td style="background-color: #CAE1FF;">@phase1Total</td>
+                    <td style="background-color: #CAE1FF;">@phase1Totaltz</td>
+                    <td style="background-color: #CAE1FF;">@phase1Dailyntz</td>
+                    <td style="background-color: #CAE1FF;">@phase1Daily</td>
+                    <td style="background-color: #CAE1FF;">@phase2Total</td>
+                    <td style="background-color: #CAE1FF;">@phase2Totaltz</td>
+                    <td style="background-color: #CAE1FF;">@phase2Dailyntz</td>
+                    @{
+                        if (phase1Ratentz > 0)
+                        {
+                            <td style="background-color: #CAE1FF;">@phase1Ratentz %</td>
+                        }
+                        else
+                        {
+                            <td style="background-color: #CAE1FF;">@phase1Ratentz %</td>
+                        }
+                    }
+                    <td style="background-color: #CAE1FF;">@phase2Daily</td>
+                    @{
+                        if (phase1Rate >= 0)
+                        {
+                            <td style="background-color: #CAE1FF; color: darkgreen;">@phase1Rate %</td>
+                        }
+                        else
+                        {
+                            <td style="background-color: #CAE1FF; color: darkred;">@phase1Rate %</td>
+                        }
+                    }
+                    <td style="background-color: #CAE1FF;">@phase3Total</td>
+                    <td style="background-color: #CAE1FF;">@phase3Totaltz</td>
+                    <td style="background-color: #CAE1FF;">@phase3Dailyntz</td>
+                    @{
+                        if (phase2Ratentz > 0)
+                        {
+                            <td style="background-color: #CAE1FF;">@phase2Ratentz %</td>
+                        }
+                        else
+                        {
+                            <td style="background-color: #CAE1FF;">@phase2Ratentz %</td>
+                        }
+                    }
+                    <td style="background-color: #CAE1FF;">@phase3Daily</td>
+                    @{
+                        if (phase2Rate >= 0)
+                        {
+                            <td style="background-color: #CAE1FF; color: darkgreen;">@phase2Rate %</td>
+                        }
+                        else
+                        {
+                            <td style="background-color: #CAE1FF; color: darkred;">@phase2Rate %</td>
+                        }
+                    }
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

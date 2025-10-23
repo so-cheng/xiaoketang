@@ -1,0 +1,615 @@
+﻿@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+@using System.Linq;
+@using System.Collections.Generic;
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>直播间列表</title>
+    <link href="~/Assets/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px 16px;
+        }
+
+        .search-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+            .search-input:focus {
+                outline: none;
+                border-color: #667eea;
+            }
+
+        .filter-btn {
+            padding: 12px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+            .filter-btn:hover {
+                background: #5a6fd8;
+            }
+
+        .area-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+
+        .area-tab {
+            padding: 12px 24px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .area-tab::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+                transition: left 0.5s ease;
+            }
+
+            .area-tab:hover::before {
+                left: 100%;
+            }
+
+            .area-tab.active {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                border-color: #667eea;
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            }
+
+            .area-tab:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            }
+
+        .tables-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .table-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .table-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+                transition: left 0.6s ease;
+            }
+
+            .table-card:hover::before {
+                left: 100%;
+            }
+
+            .table-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .table-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .table-status {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-available {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-occupied {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .status-reserved {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .qr-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .qr-code {
+            width: 120px;
+            height: 120px;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px auto;
+            font-size: 12px;
+            color: #666;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .qr-code::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 80px;
+                height: 80px;
+                background-size: 20px 20px;
+                background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+                opacity: 0.3;
+            }
+
+        .table-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .table-capacity {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background: #5a6fd8;
+                transform: translateY(-1px);
+            }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #e0e0e0;
+        }
+
+            .btn-secondary:hover {
+                background: #e9ecef;
+            }
+
+        .btn-print {
+            background: #ff9800;
+            color: white;
+        }
+
+            .btn-print:hover {
+                background: #f57c00;
+                transform: translateY(-1px);
+            }
+
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .stat-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+                transition: left 0.5s ease;
+            }
+
+            .stat-card:hover::before {
+                left: 100%;
+            }
+
+            .stat-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            }
+
+            .stat-card.active {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            }
+
+                .stat-card.active .stat-number {
+                    color: white;
+                }
+
+                .stat-card.active .stat-label {
+                    color: rgba(255, 255, 255, 0.9);
+                }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+
+        @@media (max-width: 768px) {
+            .tables-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .area-tabs {
+                padding: 0 16px;
+            }
+
+            .container {
+                padding: 16px;
+            }
+        }
+    </style>
+    <style>
+        .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+        .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+        .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+            border-collapse: collapse;
+            border-style: solid;
+            border-width: 1px;
+            border-color: gray;
+        }
+
+        .layui-table th {
+            text-align: center;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .layui-table td {
+            font-size: 13px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .layui-table {
+            background-color: rgba(30, 144, 255, 0.1);
+        }
+
+        /* 表头固定样式 */
+        .layui-table {
+            position: relative;
+        }
+
+            .layui-table thead {
+                position: sticky;
+                top: 0;
+                z-index: 10;
+                background-color: white;
+            }
+
+                .layui-table thead tr:first-child {
+                    position: sticky;
+                    top: 0;
+                    z-index: 11;
+                    background-color: #FFF3CA;
+                }
+
+                .layui-table thead tr:nth-child(2) {
+                    position: sticky;
+                    top: 28px; /* 第一行表头的高度 */
+                    z-index: 11;
+                    background-color: #FCE4D3;
+                }
+
+                /* 确保表头有足够的背景色 */
+                .layui-table thead th {
+                    background-color: inherit;
+                }
+
+        /* 合并列的背景色（与参考逻辑对齐） */
+        .merge-column {
+            background-color: #EAFAF1 !important;
+        }
+    </style>
+</head>
+<body>
+    @{
+        //  查询所有的直播间
+        var roomList = DoMySql.FindList<ModelDb.p_liveroom>($" zt_user_sn='{new UserIdentityBag().user_sn}'");
+        int roomCount = roomList.Count();
+        int zyCount = roomList.Where(t => t.status == 1).Count();
+        double rate = 0.0;
+        if (roomCount == 0)
+        {
+            rate = 0;
+        }
+        else
+        {
+            rate = (double)zyCount / roomCount;
+        }
+    }
+    <div class="container">
+        <div class="stats-cards">
+            <div class="stat-card">
+                <div class="stat-number" id="totalTables">@roomCount</div>
+                <div class="stat-label">总直播间</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="occupiedTables">@rate.ToString("F2")%</div>
+                <div class="stat-label">使用率</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="availableTables">@zyCount</div>
+                <div class="stat-label">已使用</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="occupiedTables">@(roomCount-zyCount)</div>
+                <div class="stat-label">未使用</div>
+            </div>
+        </div>
+    </div>
+    <!--表格-->
+    <div id="tables">
+        <div class="table-container">
+            <table class="layui-table" style="text-align: center;table-layout: fixed;" name="table">
+                <colgroup>
+                    <col width="100"> <!-- 房间名 -->
+                    <col width="100"> <!-- 厅管列 -->
+                    <col width="100"> <!-- 运营列 -->
+                    <col width="100"> <!-- 总人数列 -->
+                    <col width="100">
+                </colgroup>
+                <thead>
+                    @{
+                        var roomusageList = DoMySql.FindList<ModelDb.p_live_room_usage>($" zt_user_sn='{new UserIdentityBag().user_sn}' and  operation_type =1");
+                    }
+                    <!-- 第一行表头：合并列展示标题 -->
+                    <tr>
+                        <td colspan="5" style="text-align: center; background-color: #FFF3CA; font-size: 18px; font-weight: 700 ">直播间使用明细</td>
+                    </tr>
+                    <!-- 第二行表头：对应字段 -->
+                    <tr style="background-color: #FCE4D3;font-weight:700;">
+                        <th>房间名</th>
+                        <th>厅管</th>
+                        <th>所属团队</th>
+                        <th>直播间使用数量</th>
+                        <th>使用主播</th>
+                    </tr>
+                </thead>
+                @{
+                    var roomUsAgeList = new List<PageFactory.LiveRoom.RoomUsAge>();
+                }
+                @foreach (var item in roomList)
+                {
+                    string useName = string.Empty;
+                    var user_sn = string.Empty;
+                    var tg_name = string.Empty;
+                    var yy_name = string.Empty;
+
+                    //主播1  不为空
+                    if (!string.IsNullOrEmpty(item.zb_user_sn1))
+                    {
+                        //根据主播 查询所属厅管,
+                        var zb = new ServiceFactory.UserInfo.Zhubo().GetZhuboInfo(item.zb_user_sn1);
+                        var tg = new ServiceFactory.UserInfo.Ting().GetTingBySn(zb.tg_user_sn);
+                        var yy = new ServiceFactory.UserInfo.Yy().GetInfoByUserSn(zb.yy_user_sn);
+                        //根据主播查询所属运营
+                        var roomUsAge = new PageFactory.LiveRoom.RoomUsAge()
+                        {
+                            roomName = item.name,
+                            tingName = tg.ting_name,
+                            zbName = zb.name,
+                            yyName = yy.name,
+                            useCount = 1
+                        };
+                        roomUsAgeList.Add(roomUsAge);
+                    }
+                    //主播1  不为空
+                    if (!string.IsNullOrEmpty(item.zb_user_sn2))
+                    {
+                        //根据主播 查询所属厅管,
+                        var zb = new ServiceFactory.UserInfo.Zhubo().GetZhuboInfo(item.zb_user_sn2);
+                        var tg = new ServiceFactory.UserInfo.Ting().GetTingBySn(zb.tg_user_sn);
+                        var yy = new ServiceFactory.UserInfo.Yy().GetInfoByUserSn(zb.yy_user_sn);
+                        //根据主播查询所属运营
+
+                        var roomUsAge = new PageFactory.LiveRoom.RoomUsAge()
+                        {
+                            roomName = item.name,
+                            tingName = tg.ting_name,
+                            zbName = zb.name,
+                            yyName = yy.name,
+                            useCount = 1
+                        };
+                        roomUsAgeList.Add(roomUsAge);
+                    }
+                }
+                @{
+
+                    // 按运营名称分组，然后按直播间+厅分组
+                    var groupedData = roomUsAgeList
+                        .GroupBy(x => x.yyName)
+                        .Select(operatorGroup => new
+                        {
+                            yyName = operatorGroup.Key,
+                            TotalUsage = operatorGroup.Sum(x => x.useCount),
+                            Rooms = operatorGroup
+                                .GroupBy(x => new { x.roomName, x.tingName })
+                                .Select(roomGroup => new
+                                {
+                                    roomName = roomGroup.Key.roomName,
+                                    tingName = roomGroup.Key.tingName,
+                                    Anchors = roomGroup.Select(x => x.zbName).ToList()
+                                })
+                                .ToList()
+                        })
+                        .OrderBy(x => x.yyName)
+                        .ToList();
+                }
+                
+                <tbody>
+                    @foreach (var operatorData in groupedData)
+                    {
+                        var operatorRowSpan = operatorData.Rooms.Sum(r => r.Anchors.Count);
+
+                        var room_Count = operatorData.Rooms.Count();
+                        var isFirstRoom = true;
+
+                        foreach (var room in operatorData.Rooms)
+                        {
+                            <tr>
+                                <td class="merged-cell" rowspan="@room.Anchors.Count">@room.roomName</td>
+                                <td class="merged-cell" rowspan="@room.Anchors.Count">@room.tingName</td>
+
+                                @if (isFirstRoom)
+                                {
+                                    <td class="merged-cell" rowspan="@operatorRowSpan">@operatorData.yyName</td>
+                                    <td class="operator-usage-cell" rowspan="@operatorRowSpan">
+                                        <span class="usage-count">@room_Count</span>
+                                    </td>
+                                    isFirstRoom = false;
+                                }
+
+                                <td class="anchor-list">
+                                    <div class="anchor-item">@room.Anchors[0]</div>
+                                </td>
+                            </tr>
+
+                            for (int i = 1; i < room.Anchors.Count; i++)
+                            {
+                                <tr>
+                                    <td class="anchor-list">
+                                        <div class="anchor-item">@room.Anchors[i]</div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,179 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@model Services.Project.PageFactory.TableVO
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+    var date = ((string)ViewBag.date).ToDate();
+
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+</style>
+<!-- 以下书写自己的页面内容代码 -->
+<form id="mainForm" class="layui-form" action="FinishSchedule">
+    <div class="layui-row">
+        <div class="layui-col-md8">
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("date")
+                   {
+                       mold = WeiCode.Models.ModelBasic.EmtTimeSelect.Mold.month,
+                       placeholder = "选择日期",
+                       defaultValue = date.ToString("yyyy-MM"),
+                       eventJsChange = new EmtFormBase.EventJsChange
+                       {
+                           eventJavascript = new EventJavascript
+                           {
+                               code = "window.location.href = '/tgmanage/target/TingFinishSchedule?date=' + page.date.value;"
+                           },
+                       }
+                   })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row" id="table">
+        <div class="layui-col-md12">
+            <table class="layui-table" style="width: 100%; background-color: #E3FEEB" id="table1">
+                <thead>
+                    <tr style="background-color: #D9E1F4">
+                        <td colspan="40" style="font-size: 18px; text-align: center; font-weight: bold">@(date.ToString("yyyy年MM月"))目标完成进度</td>
+                    </tr>
+                    <tr style="background-color: #D9E1F4">
+                        <td style="width: 75px; text-align: center">厅管</td>
+                        <td style="width: 75px; text-align: center">直播厅</td>
+                        <td style="width: 75px; text-align: center">抖音号</td>
+                        <td style="text-align: center">@(date.Month)月目标音浪</td>
+                        <td style="text-align: center">@(date.Month)月日均</td>
+                        @{
+                            for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                            {
+                                <td style="text-align:center">@(date.Month).@(i)</td>
+                                if (i == 10 || i == 20 || i == DateTime.DaysInMonth(date.Year, date.Month))
+                                {
+                                    <td style="text-align: center">十日音浪</td>
+                                    <td style="text-align: center">日均</td>
+                                }
+                            }
+                        }
+                        <td style="text-align: center">总音浪</td>
+                        <td style="text-align: center">日均音浪</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        string tg_user_sn = ViewBag.tg_user_sn;
+                        string where = $"tenant_id = '{new DomainBasic.TenantApp().GetInfo().id}' and yy_user_sn = '{new UserIdentityBag().user_sn}'";
+                        if (!date.IsNullOrEmpty())
+                        {
+                            where += $" and yearmonth = '{date.ToString("yyyy-MM")}'";
+                        }
+                        foreach (var item in DoMySql.FindList<ModelDb.doudata_day_ting_31>(where))
+                        {
+                            <tr>
+                                @{
+                                    <td>@item.tg_name</td>
+                                    <td>@item.ting_name</td>
+                                    <td>@item.dou_user</td>
+                                    <td>@item.target_income</td>
+                                    <td>@item.target_income_avg</td>
+                                    for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                                    {
+                                        <td class="dayTarget">@(item.GetValue($"income_{i}").ToDecimal())</td>
+                                        if (i == 10)
+                                        {
+                                            <td class="dayTarget">@(item.GetValue($"tenday_income_1").ToDecimal())</td>
+                                            <td class="dayTarget">@(item.GetValue($"tenday_income_avg_1").ToDecimal())</td>
+                                        }
+                                        else if (i == 20)
+                                        {
+                                            <td class="dayTarget">@(item.GetValue($"tenday_income_2").ToDecimal())</td>
+                                            <td class="dayTarget">@(item.GetValue($"tenday_income_avg_2").ToDecimal())</td>
+                                        }
+                                    }
+                                    <td class="dayTarget">@(item.GetValue($"tenday_income_3").ToDecimal())</td>
+                                    <td class="dayTarget">@(item.GetValue($"tenday_income_avg_3").ToDecimal())</td>
+                                    <td class="dayTarget">@(item.GetValue($"total_income").ToDecimal())</td>
+                                    <td class="dayTarget">@(item.GetValue($"total_income_avg").ToDecimal())</td>
+                                }
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+</form>
+
+
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        var layer = layui.layer;
+
+
+    });
+
+
+    function setZFP() {
+        $(".zb_" + $("#zfp_dang").val() + "_1_1").val($("#zfp_zb1").val());
+        $(".zb_" + $("#zfp_dang").val() + "_2_1").val($("#zfp_zb2").val());
+        $(".zb_" + $("#zfp_dang").val() + "_3_1").val($("#zfp_zb3").val());
+        $(".zb_" + $("#zfp_dang").val() + "_1_2").val($("#zfp_zb2").val());
+        $(".zb_" + $("#zfp_dang").val() + "_2_2").val($("#zfp_zb3").val());
+        $(".zb_" + $("#zfp_dang").val() + "_3_2").val($("#zfp_zb1").val());
+        $(".zb_" + $("#zfp_dang").val() + "_1_3").val($("#zfp_zb3").val());
+        $(".zb_" + $("#zfp_dang").val() + "_2_3").val($("#zfp_zb1").val());
+        $(".zb_" + $("#zfp_dang").val() + "_3_3").val($("#zfp_zb2").val());
+        countZbNum();
+    }
+
+    function setGW() {
+        $.each(gw_dangs.getValue(), function (i, item) {
+            $(".zb_" + item.value + "_1" + "_" + $("#gw_role_1").val()).val($("#gw_zb1").val());
+            $(".zb_" + item.value + "_2" + "_" + $("#gw_role_1").val()).val($("#gw_zb1").val());
+            $(".zb_" + item.value + "_3" + "_" + $("#gw_role_1").val()).val($("#gw_zb1").val());
+        })
+        countZbNum();
+    }
+
+    function countZbNum() {
+        $(".num").html("0")
+        $.each($(".zb_zfp"), function (i, item) {
+            $("#zfp_" + $(item).val()).html(parseInt($("#zfp_" + $(item).val()).html(), 10) + 1);
+        })
+        $.each($(".zb_gw"), function (i, item) {
+            $("#gw_" + $(item).val()).html(parseInt($("#gw_" + $(item).val()).html(), 10) + 1);
+        })
+    }
+</script>

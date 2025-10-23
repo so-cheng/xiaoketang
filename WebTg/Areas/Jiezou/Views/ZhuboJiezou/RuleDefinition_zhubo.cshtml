@@ -1,0 +1,55 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+</style>
+
+<div style="height:65px"></div>
+<div class="layui-input-inline" style="width:100%;height:100%">
+    @{
+        // 从 ViewBag 获取规则
+        var ruleList = (List<ModelDb.jiezou_zhubo_detail_rule>)ViewBag.ruleList;
+        var rule20 = ruleList?.FirstOrDefault(e => e.key == "2.0");
+        var rule30 = ruleList?.FirstOrDefault(e => e.key == "3.0");
+        var rule40 = ruleList?.FirstOrDefault(e => e.key == "4.0");
+        var rule50 = ruleList?.FirstOrDefault(e => e.key == "5.0");
+    }
+    <label class="layui-form-label" style="width: 100%; height: 100%; text-align: left; font-size: 20px; line-height: 37px">
+        <p style="font-weight:bold">当天节奏标准规则</p>
+        1.0阶段:不满足2.0阶段的主播<br>
+        2.0阶段:平均每档拉新数不低于@(rule20?.new_num_avg_rule ?? 0)个 总建联数不低于@(rule20?.contact_num_rule ?? 0)个<br>
+        3.0阶段:平均每档拉新数不低于@(rule30?.new_num_avg_rule ?? 0)个 总建联数不低于@(rule30?.contact_num_rule ?? 0)个 总二消个数不低于@(rule30?.num_2_rule ?? 0)个 二消音浪值每档不低于@(rule30?.amount_2_avg_rule ?? 0)音浪<br>
+        4.0阶段:平均每档拉新数不低于@(rule40?.new_num_avg_rule ?? 0)个 总建联数不低于@(rule40?.contact_num_rule ?? 0)个 总二消个数不低于@(rule40?.num_2_rule ?? 0)个 二消音浪值每档不低于@(rule40?.amount_2_avg_rule ?? 0)音浪 回消用户流水每档不低于@(rule40?.hx_amount_avg_rule ?? 0)音浪<br>
+        5.0阶段:平均每档拉新数不低于@(rule50?.new_num_avg_rule ?? 0)个 总建联数不低于@(rule50?.contact_num_rule ?? 0)个 总二消个数不低于@(rule50?.num_2_rule ?? 0)个 二消音浪值每档不低于@(rule50?.amount_2_avg_rule ?? 0)音浪 回消用户流水每档不低于@(rule50?.hx_amount_avg_rule ?? 0)音浪 活动PK总流水不低于@(rule50?.hdpk_amount_rule ?? 0)音浪
+    </label>
+</div>

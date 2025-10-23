@@ -1,0 +1,255 @@
+﻿
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+@using System.Reflection;
+
+@model Services.Project.PageFactory.TableVO
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+    var roles = new DomainBasic.DictionaryApp().GetListForOption("档位角色");
+    var dangs = new DomainBasic.DictionaryApp().GetListForOption("档位时段");
+    var p_jixiao_dangbiao_item = DoMySql.FindEntity<ModelDb.p_jixiao_dangbiao_item>($"db_sn='{ViewBag.db_sn}'", false);
+    string[] memos = new string[8];
+    if (!p_jixiao_dangbiao_item.memo.IsNullOrEmpty())
+    {
+        memos = p_jixiao_dangbiao_item.memo.Split('@');
+    }
+    var user_bases = Model.items;
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-collapse: collapse;
+        border-style: solid;
+        border-width: 1px;
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+        color:black;
+    }
+
+    .layui-table td {
+        font-size: 15px;
+        color: black;
+    }
+</style>
+<!-- 以下书写自己的页面内容代码 -->
+<form id="mainForm" class="layui-form" action="table">
+    <div class="layui-row">
+        <div class="layui-col-md8">
+            <div class="layui-inline">
+                <label class="layui-input-inline" style="font-size:18px; font-weight:bold">@Html.Raw(new UserIdentityBag().username)&nbsp;&nbsp;档表</label>
+                <div class="layui-input-inline">
+                    @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("c_date")
+               {
+                   mold = WeiCode.Models.ModelBasic.EmtTimeSelect.Mold.date_range,
+                   placeholder = "选择日期",
+                   defaultValue = Model.c_date,
+               })
+                </div>
+            </div>
+
+            <div class="layui-input-inline" style="width:500px;">
+
+                @ViewModelBag.Load(Html, new ModelBasic.EmtInput("note")
+           {
+               title = "备注",
+               placeholder = "备注",
+               defaultValue = Model.note
+           })
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    @ViewModelBag.Load(Html, new ModelBasic.EmtHidden("table_id")
+               {
+                   placeholder = "table_id",
+                   defaultValue = @Model.table_id.ToString(),
+               })
+                </div>
+            </div>
+            @{
+                if (Model.op_type == 1)//修改
+                {
+                    <div class="layui-col-md1" style="text-align:right">
+                        <button type="button" class="layui-btn layui-btn-normal btn-submit">保存档表</button>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <table class="layui-table" style="width:100%;" id="table1">
+                <tr style="background-color: #FCE4D3">
+                    <td colspan="@(roles.Count + 3)" style="font-size: 18px; text-align: center; font-weight: bold">@Html.Raw(new UserIdentityBag().username)&nbsp;&nbsp;档表(@Model.c_date)</td>
+                </tr>
+                <tr style="background-color: #FCE4D3;">
+                    <td style="width: 75px; text-align: center">档位</td>
+                    <td style="width: 90px; text-align: center">时间</td>
+                    @foreach (var items in roles)
+                    {
+                        if (items.Key == "挂1")
+                        {
+                            <td style="text-align:center">
+                                <select lay-ignore style="border: 0; background-color: #FCE4D3; color: #666666; font-size: 16px; text-align: center; width: 100% " name="dang_wei_role">
+                                    <option value="挂1">挂1</option>
+                                    <option value="陪" @(Model.dang_wei_role == "陪" ? "selected" : "")>陪</option>
+                                </select>
+                            </td>
+                        }
+                        else
+                        {
+                            <td style="text-align:center">@items.Key</td>
+                        }
+                    }
+                    <td style="width: 75px; text-align: center">备注</td>
+                </tr>
+                @{
+                    int i = -1;
+                    string color = "#E3F2D9";
+                    int dangNum=-1;
+                    foreach (var item in dangs)
+                    {
+                        if (color == "#E3F2D9")
+                        {
+                            color = "#E1EBF5";
+                        }
+                        else
+                        {
+                            color = "#E3F2D9";
+                        }
+                        for (var _i = 1; _i <= 3; _i++)
+                        {
+                            int zfp_i = 0;
+                            string zfp_class = "";
+                            i++;
+
+                            //获取表格中每行的值
+                            string[] roles_values = null;
+                            Type type = typeof(PageFactory.TableVO);
+                            PropertyInfo prop = type.GetProperty("zb_" + i);
+                            if (prop != null && prop.CanRead)
+                            {
+                                roles_values = prop.GetValue(Model) as string[];
+                            }
+
+                            <tr style="background-color: @color ">
+                                @if (_i == 1)
+                                {
+                                    <td rowspan="3" style="text-align: center; background-color: #FCE4D3"> @item.Key</td>
+                                }
+                                @{var time_text = i + ":00-" + (i + 1) + ":00";}
+                                <td style="text-align:center">@time_text</td>
+                                @{
+                                    int j = -1;
+                                    foreach (var _item in roles)
+                                    {
+                                        zfp_i++;
+                                        j++;
+                                        if (zfp_i < 4)
+                                        {
+                                            zfp_class = "zb_zfp";
+                                        }
+                                        else
+                                        {
+                                            zfp_class = "zb_gw";
+                                        }
+                                        <td>
+                                            <select lay-ignore style="border: 0; color: #666666; font-size: 16px; background-color: @color;text-align:center;width:100%" name="zb_@i" class="zb_@(item.Value)_@(_i)_@(_item.Value) zb_@i @zfp_class" onchange="countZbNum()">
+                                                <option value=""></option>
+                                                @foreach (var __item in user_bases)
+                                                {
+                                                    <option value="@__item.user_sn" @(roles_values[j] == __item.user_sn ? "selected" : "")>@__item.name</option>
+                                                }
+                                            </select>
+                                        </td>
+                                    }
+                                }
+                                @if (_i == 1)
+                                {
+                                    dangNum++;
+                                    <td rowspan="3" style="text-align: center; background-color: @color">
+                                        @(memos.Length == 8 ? memos[dangNum] : "")
+                                    </td>
+                                }
+
+                            </tr>
+                        }
+                    }
+                }
+            </table>
+        </div>
+
+        
+    </div>
+</form>
+
+@{
+    if (Model.op_type != 1)//查看的时候，增加另存为图片功能
+    {
+        @ViewModelBag.Load(Html, new ModelBasic.AdjScreenshot("screenshot")
+        {
+            elem = "table1"
+        });
+    }
+}
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        form.render('select'); // 仅渲染 select 元素
+    });
+
+    window.onload = function () {
+        var status = @Model.op_type;
+        if (status === 0) { // 查看页面，禁用所有元素
+            document.querySelectorAll('#mainForm input, #mainForm select, #mainForm button')
+                .forEach(function (element) {
+                    element.setAttribute('disabled', 'true');
+                });
+        }
+    };
+    function setZFP() {
+        $(".zb_" + $("#zfp_dang").val() + "_1_1").val($("#zfp_zb1").val());
+        $(".zb_" + $("#zfp_dang").val() + "_2_1").val($("#zfp_zb2").val());
+        $(".zb_" + $("#zfp_dang").val() + "_3_1").val($("#zfp_zb3").val());
+        $(".zb_" + $("#zfp_dang").val() + "_1_2").val($("#zfp_zb2").val());
+        $(".zb_" + $("#zfp_dang").val() + "_2_2").val($("#zfp_zb3").val());
+        $(".zb_" + $("#zfp_dang").val() + "_3_2").val($("#zfp_zb1").val());
+        $(".zb_" + $("#zfp_dang").val() + "_1_3").val($("#zfp_zb3").val());
+        $(".zb_" + $("#zfp_dang").val() + "_2_3").val($("#zfp_zb1").val());
+        $(".zb_" + $("#zfp_dang").val() + "_3_3").val($("#zfp_zb2").val());
+        countZbNum();
+    }
+
+    function setGW() {
+        $.each(gw_dangs.getValue(), function (i, item) {
+            $(".zb_" + item.value + "_1" + "_" + $("#gw_role_1").val()).val($("#gw_zb1").val());
+            $(".zb_" + item.value + "_2" + "_" + $("#gw_role_1").val()).val($("#gw_zb1").val());
+            $(".zb_" + item.value + "_3" + "_" + $("#gw_role_1").val()).val($("#gw_zb1").val());
+        })
+        countZbNum();
+    }
+
+    function countZbNum() {
+        $(".num").html("0")
+        $.each($(".zb_zfp"), function (i, item) {
+            $("#zfp_" + $(item).val()).html(parseInt($("#zfp_" + $(item).val()).html(), 10) + 1);
+        })
+        $.each($(".zb_gw"), function (i, item) {
+            $("#gw_" + $(item).val()).html(parseInt($("#gw_" + $(item).val()).html(), 10) + 1);
+        })
+    }
+</script>

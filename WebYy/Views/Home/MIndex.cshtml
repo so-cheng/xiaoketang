@@ -1,0 +1,45 @@
+﻿
+@{
+    Layout = null;
+}
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>导航菜单</title>
+    <link href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" rel="stylesheet" />
+    <link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/weui_ha/weui.css" />
+    <link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/weui_ha/example.css" />
+</head>
+<body class="animated" style="background-color:#ffffff; overflow-y:hidden">
+    <form id="form1">
+
+        <div class="layui-icon-group">
+            <a href="/TgManage/ApproveApplication/ApproveApplicationList" class="weui-grid js_grid">
+                <div class="weui-grid__icon">
+                    <i class="layui-icon layui-icon-group" style="font-size:28px;"></i>
+                </div>
+                <p class="weui-grid__label" style="margin-top:20px;">
+                    补人审批
+                </p>
+            </a>
+        </div>
+
+        <div class="weui-cells" style="display:none">
+            <a class="weui-cell weui-cell_access btn-quit" href="javascript:;">
+                <div class="weui-cell__bd">
+                    <p>退出</p>
+                </div>
+                <div class="weui-cell__ft">
+                </div>
+            </a>
+        </div>
+    </form>
+</body>
+</html>

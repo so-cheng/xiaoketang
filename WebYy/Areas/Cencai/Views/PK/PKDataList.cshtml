@@ -1,0 +1,149 @@
+﻿@using System;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+@using System.Reflection;
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+    DateTime today = DateTime.Parse(ViewBag.c_date.ToString());
+    //获取pk_item中所有的zber_sn
+    var zber_sns = DomainBasicStatic.DoMySql.FindList<ModelDb.p_cencai_pk_item>($"pk_sn = '{ViewBag.pk_sn}'", new DomainBasic.TenantApp().GetInfo().id).Select(p => p.zber_sn).ToList();
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-collapse: collapse;
+        border-style: solid;
+        border-width: 1px;
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+        color: black;
+    }
+
+    .layui-table td {
+        font-size: 15px;
+        color: black;
+    }
+</style>
+<!-- 以下书写自己的页面内容代码 -->
+<blockquote class="layui-elem-quote news_search">
+
+    <div class="layui-inline">
+        <form class="layui-form">
+            <div class="layui-input-inline">
+                <label class="layui-form-label">所属厅管</label>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    @ViewModelBag.Load(Html, new ModelBasic.EmtSelect("tg_user_sn")
+                    {
+                        placeholder = "请选择直播厅",
+                        options = new ServiceFactory.UserInfo.Tg().GetTreeOptionDic(new UserIdentityBag().user_sn),
+                        defaultValue = @ViewBag.tg_user_sn,
+                        eventJsChange = new EmtFormBase.EventJsChange
+                        {
+                            eventJavascript = new EventJavascript
+                            {
+                                code = $"window.location.href = '/Cencai/pk/PKDataList?pk_sn={ViewBag.pk_sn}&tg_user_sn=' + page.tg_user_sn.value"
+                            },
+                        }
+                    })
+                </div>
+            </div>
+
+            @{
+                <div class="layui-input-inline">
+                    <label class="layui-form-label">日期</label>
+                </div>
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("c_date")
+                        {
+                            title = "日期",
+                            defaultValue = today.ToDateString("yyyy-MM-dd"),
+                            mold = ModelBasic.EmtTimeSelect.Mold.date,
+                            eventJsChange = new EmtFormBase.EventJsChange
+                            {
+                                eventJavascript = new EventJavascript
+                                {
+                                    code = $"window.location.href = '/cencai/pk/PKDataList?pk_sn={ViewBag.pk_sn}&tg_user_sn=' + page.tg_user_sn.value + '&c_date=' + page.c_date.value"
+                                },
+                            }
+                        })
+                    </div>
+                </div>
+            }
+        </form>
+    </div>
+</blockquote>
+<div class="layui-row">
+    <div class="layui-col-md12">
+        <table class="layui-table" style="width:100%;" id="table1">
+            <tr style="background-color: #FCE4D3;">
+                <th rowspan="2" style="text-align: center">主播昵称</th>
+                <th rowspan="2" style="text-align: center">直播厅</th>
+                <th rowspan="2" style="text-align: center">对接师父</th>
+                <th colspan="8" style="font-size: 18px; text-align: center; font-weight: bold">@today.ToDateString("yyyy年MM月dd日")</th>
+            </tr>
+            <tr style="background-color: #FCE4D3;">
+                <th style="text-align: center">拉新(目标个数)</th>
+                <th style="text-align: center">二消(目标个数)</th>
+                <th style="text-align: center">建联(目标个数)</th>
+                <th style="text-align: center">流水</th>
+                <th style="text-align: center">实际直播第几天</th>
+                <th style="text-align: center">时间进度</th>
+                <th style="text-align: center">流水累计</th>
+                <th style="text-align: center">流水进度</th>
+            </tr>
+            @{
+                //计算流水累计
+                int calculate_yl(string user_sn, DateTime start, DateTime end)
+                {
+                    //1.找到主播从start到end所有的音浪
+                    var p_jixiao_days = DoMySql.FindList<ModelDb.p_jixiao_day>($"zb_user_sn='{user_sn}' and c_date between '{start.ToDateString()}' and '{end.ToDateString()}'");
+                    //2.求和
+                    return p_jixiao_days.Sum(p => (int)p.amount);
+                }
+            }
+            @foreach (var item in DoMySql.FindList<ModelDb.p_cencai>($"tger_sn='{ViewBag.tg_user_sn}'"))
+            {
+                if (!zber_sns.Contains(item.zber_sn)) { continue; }//若zb_sn不在pk中，则跳过
+                var days = UtilityStatic.DateHelper.DateDiff(today, item.c_date, UtilityStatic.DateHelper.DiffType.days);
+                days = today > item.c_date ? days : -days;
+                var zb_username = new DomainBasic.UserApp().GetInfoByUserSn(item.zber_sn).username;
+                var tg_username = new DomainBasic.UserApp().GetInfoByUserSn(item.tger_sn).username;
+                var time_progress = item.days == 0 ? 0 : Math.Round(days * 1.0 / (int)item.days * 100, 2);
+                var p_jixiao_day = DoMySql.FindEntity<ModelDb.p_jixiao_day>($"zb_user_sn='{item.zber_sn}' and c_date='{today.ToDateString()}'", false);
+                var sum_yl = calculate_yl(item.zber_sn, (DateTime)item.c_date, today);
+                var yl_progress = item.target_yl == 0 ? 0 : Math.Round(sum_yl * 1.0 / (int)item.target_yl * 100, 2);
+
+                <tr style="text-align: center">
+                    <td>@zb_username</td>
+                    <td>@tg_username</td>
+                    <td>师父</td>
+                    <td>@(p_jixiao_day.new_num ?? 0)(@(item.target_lx??0))</td>
+                    <td>@(p_jixiao_day.num_2 ?? 0)(@(item.target_erx??0))</td>
+                    <td>@(p_jixiao_day.contact_num ?? 0)(@(item.target_jl??0))</td>
+                    <td>@(p_jixiao_day.amount ?? 0)</td>
+                    <td>@days</td>
+                    <td>@time_progress%</td>
+                    <td>@(sum_yl)(@(item.target_yl??0))</td>
+                    <td>@yl_progress%</td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

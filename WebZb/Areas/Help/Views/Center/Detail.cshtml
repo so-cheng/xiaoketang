@@ -1,0 +1,46 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@model Services.Project.PageFactory.TableVO
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+</style>
+
+<div class="layui-input-inline" style="width:100%;height:100%">
+    <div class="layui-text ws-text">
+        <a href="javascript:win_pop_iframe('编辑内容', 'http://@(new DomainBasic.TenantDomainApp().GetInfoByTenantId(new DomainBasic.TenantApp().GetInfo().id, "manager").host_domain)/Help/Center/Post?id=@ViewBag.help.id', 800,800);" style="float: right;margin-right: 100px;margin-top:20px;">管理</a>
+    </div>
+    <label class="layui-form-label" style="width: 100%; height: 100%; text-align: left; font-size: 20px; line-height: 37px">
+        @Html.Raw(ViewBag.help.content)
+    </label>
+</div>

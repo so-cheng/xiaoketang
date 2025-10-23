@@ -1,0 +1,2895 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WeiCode.Modular.UserBasic</name>
+    </assembly>
+    <members>
+        <member name="T:WeiCode.Models.ModelUserBasic">
+            <summary>
+            项目基础控件级模型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelUserBasic.EmtAreaSelectMore">
+            <summary>
+            省市区地址选择(单选)
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelUserBasic.EmtAreaSelectMore.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelUserBasic.EmtAreaSelect">
+            <summary>
+            省市区地址选择(单选)
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelUserBasic.EmtAreaSelect.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelUserBasic.EmtAreaSelect.defaultValue">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelUserBasic.EmtAreaSelect.AddrInfo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelUserBasic.EmtAreaSelect.AddrInfo.province">
+            <summary>
+            省
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelUserBasic.EmtAreaSelect.AddrInfo.city">
+            <summary>
+            市
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelUserBasic.EmtAreaSelect.AddrInfo.county">
+            <summary>
+            区
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelUserBasic.EmtUserTest">
+            <summary>
+            文本域
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelUserBasic.EmtUserTest.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelUserBasic.CenterInfo">
+            <summary>
+            个人中心
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelUserBasic.CenterInfo.#ctor">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Models.ModelUserBasic.CenterInfo.nickName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelUserBasic.CenterInfo.badge">
+            <summary>
+            徽章
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelUserBasic.CenterInfo.title">
+            <summary>
+            标题重写
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelUserBasic.CenterInfo.headUrl">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelUserBasic.CenterInfo.ButtonText">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelUserBasic.CenterInfo.Hr">
+            <summary>
+            换行
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelUserBasic.CenterInfo.Hr.height">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelUserBasic.CenterInfo.Item">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelUserBasic.CtlNavMenu">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory">
+            <summary>
+            
+            </summary>
+            <summary>
+            
+            </summary>
+            <summary>
+            充值订单
+            </summary>
+            <summary>
+            
+            </summary>
+            <summary>
+            
+            </summary>
+            <summary>
+            
+            </summary>
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.AccountMovePost">
+            <summary>
+            账号转移管理
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.AccountMovePost.GetFormDisplay(WeiCode.Models.ModelBasic.PageModel.Post,WeiCode.Models.UserBasic.PageFactory.AccountMovePost.DtoReq)">
+            <summary>
+            配置表单元素控件
+            </summary>
+            <param name="pageModel"></param>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.AccountMovePost.DtoReq">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.AccountMovePost.DtoReq.type_id">
+            <summary>
+            关系类型id
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.AccountMovePost.PostAction(WeiCode.DataBase.JsonRequestAction)">
+            <summary>
+            转移用户
+            </summary>
+            <param name="req">回调函数提交参数统一的封装对象</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.AccountSelect">
+            <summary>
+            选择用户账号
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.AccountSelect.Get(WeiCode.Models.UserBasic.PageFactory.AccountSelect.DtoReq)">
+            <summary>
+            获取页面数据模型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.AccountSelect.GetListFilter(WeiCode.Models.UserBasic.PageFactory.AccountSelect.DtoReq)">
+            <summary>
+            设置列表筛选表单的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.AccountSelect.GetButtonGroup(WeiCode.Models.UserBasic.PageFactory.AccountSelect.DtoReq)">
+            <summary>
+            设置扩展的按钮组
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.AccountSelect.GetListDisplay(WeiCode.Models.UserBasic.PageFactory.AccountSelect.DtoReq)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.AccountSelect.DtoReq">
+            <summary>
+            请求参数对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.AccountSelect.DtoReq.username">
+            <summary>
+            用户名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.AccountSelect.DtoReq.user_sn">
+            <summary>
+            用户sn
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.AccountSelect.DtoReq.type_id">
+            <summary>
+            关系类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.AccountSelect.DtoReq.unrelat">
+            <summary>
+            孤立用户
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.AccountSelect.GetListData(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            用户表data查询
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.AccountSelect.ItemDataModel">
+            <summary>
+            数据项模型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.AccountSelect.ItemDataModel.user_id">
+            <summary>
+            用户id
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.RemoveList">
+            <summary>
+            用户关系解除列表
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.RemoveList.Get(WeiCode.Models.UserBasic.PageFactory.RemoveList.DtoReq)">
+            <summary>
+            获取页面数据模型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.RemoveList.GetListFilter(WeiCode.Models.UserBasic.PageFactory.RemoveList.DtoReq)">
+            <summary>
+            设置列表筛选表单的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.RemoveList.GetListDisplay(WeiCode.Models.UserBasic.PageFactory.RemoveList.DtoReq)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.RemoveList.RemoveAction(WeiCode.DataBase.JsonRequestAction)">
+            <summary>
+            解绑操作
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.RemoveList.ListDataModel">
+            <summary>
+            列表项模型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.RemoveList.ListDataModel.user_relation_id">
+            <summary>
+            用户关系表id
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.RemoveList.ListDataModel.user_id">
+            <summary>
+            用户表id
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.RemoveList.DtoReq">
+            <summary>
+            请求参数对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.RemoveList.DtoReq.type_id">
+            <summary>
+            关系类型id
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.RemoveList.GetListData(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            下属用户list
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.RemoveList.DtoReqListData">
+            <summary>
+            自定义筛选参数（自定义数据，与属性对应）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.RemoveList.DtoReqListData.name">
+            <summary>
+            资产名称
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.RemoveList.ItemDataModel">
+            <summary>
+            数据项模型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BindList">
+            <summary>
+            用户关系绑定列表
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BindList.GetFormDisplay(WeiCode.Models.ModelBasic.PageModel.Post,WeiCode.Models.UserBasic.PageFactory.BindList.DtoReq)">
+            <summary>
+            配置表单元素控件
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BindList.DtoReq.type_id">
+            <summary>
+            类型名称
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BindList.PostAction(WeiCode.DataBase.JsonRequestAction)">
+            <summary>
+            提交绑定用户的表单
+            </summary>
+            <param name="req">回调函数提交参数统一的封装对象</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceLog">
+            <summary>
+            余额日志
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceLog.Get(WeiCode.Models.UserBasic.PageFactory.BalanceLog.DtoReq)">
+            <summary>
+            获取页面数据模型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceLog.GetListFilter(WeiCode.Models.UserBasic.PageFactory.BalanceLog.DtoReq)">
+            <summary>
+            设置列表筛选表单的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceLog.GetButtonGroup(WeiCode.Models.UserBasic.PageFactory.BalanceLog.DtoReq)">
+            <summary>
+            设置扩展的按钮组
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceLog.GetListDisplay(WeiCode.Models.UserBasic.PageFactory.BalanceLog.DtoReq)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceLog.DtoReq">
+            <summary>
+            请求参数对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLog.DtoReq.filterForm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceLog.DtoReq.FilterForm">
+            <summary>
+            筛选参数（自定义）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLog.DtoReq.FilterForm.keyword">
+            <summary>
+            关键词
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceLog.GetListData(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            data数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceLog.DtoReqListData">
+            <summary>
+            自定义筛选参数（自定义数据，与属性对应）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLog.DtoReqListData.keyword">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceLog.DtoResListData">
+            <summary>
+            返回结果对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLog.DtoResListData.itemDataModels">
+            <summary>
+            列表数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceLog.DtoResListData.ItemDataModel">
+            <summary>
+            数据项模型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLog.DtoResListData.ItemDataModel.op_type_txt">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLog.DtoResListData.ItemDataModel.user_info">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceLogM">
+            <summary>
+            资产日志
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceLogM.Get(WeiCode.Models.UserBasic.PageFactory.BalanceLogM.DtoReq,WeiCode.Models.ModelBasic.PageList)">
+            <summary>
+            获取页面数据模型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceLogM.GetListFilter(WeiCode.Models.UserBasic.PageFactory.BalanceLogM.DtoReq)">
+            <summary>
+            设置列表筛选表单的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceLogM.GetButtonGroup(WeiCode.Models.UserBasic.PageFactory.BalanceLogM.DtoReq)">
+            <summary>
+            设置扩展的按钮组
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceLogM.GetListDisplay(WeiCode.Models.UserBasic.PageFactory.BalanceLogM.DtoReq)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceLogM.DtoReq">
+            <summary>
+            请求参数对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogM.DtoReq.filterForm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceLogM.DtoReq.FilterForm">
+            <summary>
+            筛选参数（自定义）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogM.DtoReq.FilterForm.keyword">
+            <summary>
+            关键词
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogM.DtoReq.FilterForm.user_type_id">
+            <summary>
+            用户类型id
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceLogM.GetListData(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            data数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceLogM.DtoReqListData">
+            <summary>
+            自定义筛选参数（自定义数据，与属性对应）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogM.DtoReqListData.s_type">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogM.DtoReqListData.keyword">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogM.DtoReqListData.op_type">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogM.DtoReqListData.op_type_name">
+            <summary>
+            交易类型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceLogM.DtoResListData">
+            <summary>
+            返回结果对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogM.DtoResListData.itemDataModels">
+            <summary>
+            列表数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceLogM.DtoResListData.ItemDataModel">
+            <summary>
+            数据项模型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogM.DtoResListData.ItemDataModel.op_type_txt">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogM.DtoResListData.ItemDataModel.user_info">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceLogN`1">
+            <summary>
+            资产日志
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceLogN`1.GetListFilter(`0)">
+            <summary>
+            设置列表筛选表单的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceLogN`1.GetButtonGroup(`0)">
+            <summary>
+            设置扩展的按钮组
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceLogN`1.GetListDisplay(`0)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceLogNReq">
+            <summary>
+            请求参数对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogNReq.filterForm">
+            <summary>
+            筛选参数（自定义）
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceLogNReq.FilterForm">
+            <summary>
+            筛选参数（自定义）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogNReq.FilterForm.keyword">
+            <summary>
+            关键词
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogNReq.FilterForm.user_type_id">
+            <summary>
+            用户类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogNReq.FilterForm.relation_type_id">
+            <summary>
+            关系类型id
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceLogNReq.GetListData(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            data数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceLogNReq.DtoReqListData">
+            <summary>
+            自定义筛选参数（自定义数据，与属性对应）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogNReq.DtoReqListData.relation_type_id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogNReq.DtoReqListData.t_user_sns">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogNReq.DtoReqListData.s_type">
+            <summary>
+            条件类型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogNReq.DtoReqListData.keyword">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogNReq.DtoReqListData.op_type">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogNReq.DtoReqListData.op_type_name">
+            <summary>
+            交易类型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceLogNReq.DtoResListData">
+            <summary>
+            返回结果对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogNReq.DtoResListData.itemDataModels">
+            <summary>
+            列表数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceLogNReq.DtoResListData.ItemDataModel">
+            <summary>
+            数据项模型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogNReq.DtoResListData.ItemDataModel.op_type_txt">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogNReq.DtoResListData.ItemDataModel.user_info">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceLogNReq.DtoResListData.ItemDataModel.f_user_info">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.CashoutMList">
+            <summary>
+            提现订单
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.CashoutMList.Get(WeiCode.Models.UserBasic.PageFactory.CashoutMList.DtoReq)">
+            <summary>
+            获取页面数据模型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.CashoutMList.GetListFilter(WeiCode.Models.UserBasic.PageFactory.CashoutMList.DtoReq)">
+            <summary>
+            设置列表筛选表单的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.CashoutMList.GetButtonGroup(WeiCode.Models.UserBasic.PageFactory.CashoutMList.DtoReq)">
+            <summary>
+            设置扩展的按钮组
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.CashoutMList.GetListDisplay(WeiCode.Models.UserBasic.PageFactory.CashoutMList.DtoReq)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.CashoutMList.DtoReq">
+            <summary>
+            请求参数对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.CashoutMList.DtoReq.filterForm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.CashoutMList.DtoReq.FilterForm">
+            <summary>
+            筛选参数（自定义）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.CashoutMList.DtoReq.FilterForm.user_type_id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.CashoutMList.DtoReq.FilterForm.keyword">
+            <summary>
+            关键词
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.CashoutMList.GetListData(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            data数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.CashoutMList.DtoReqListData">
+            <summary>
+            自定义筛选参数（自定义数据，与属性对应）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.CashoutMList.DtoReqListData.user_type_id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.CashoutMList.DtoReqListData.keyword">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.CashoutMList.DtoReqListData.status">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.CashoutMList.DtoResListData">
+            <summary>
+            返回结果对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.CashoutMList.DtoResListData.itemDataModels">
+            <summary>
+            列表数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.CashoutMList.DtoResListData.ItemDataModel">
+            <summary>
+            数据项模型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.CashoutHandle">
+            <summary>
+            提现处理
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.CashoutHandle.GetFormDisplay(WeiCode.Models.ModelBasic.PageModel.Post,WeiCode.Models.UserBasic.PageFactory.CashoutHandle.DtoReq)">
+            <summary>
+            
+            </summary>
+            <param name="pageModel"></param>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.CashoutHandle.DtoReq">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.CashoutHandle.DtoReq.formData">
+            <summary>
+            附加额外参数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.CashoutUList">
+            <summary>
+            提现订单
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.CashoutUList.Get(WeiCode.Models.UserBasic.PageFactory.CashoutUList.DtoReq)">
+            <summary>
+            获取页面数据模型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.CashoutUList.GetListFilter(WeiCode.Models.UserBasic.PageFactory.CashoutUList.DtoReq)">
+            <summary>
+            设置列表筛选表单的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.CashoutUList.GetButtonGroup(WeiCode.Models.UserBasic.PageFactory.CashoutUList.DtoReq)">
+            <summary>
+            设置扩展的按钮组
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.CashoutUList.GetListDisplay(WeiCode.Models.UserBasic.PageFactory.CashoutUList.DtoReq)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.CashoutUList.DtoReq">
+            <summary>
+            请求参数对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.CashoutUList.DtoReq.filterForm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.CashoutUList.DtoReq.FilterForm">
+            <summary>
+            筛选参数（自定义）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.CashoutUList.DtoReq.FilterForm.keyword">
+            <summary>
+            关键词
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.CashoutUList.GetListData(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            data数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.CashoutUList.DtoReqListData">
+            <summary>
+            自定义筛选参数（自定义数据，与属性对应）
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.CashoutUList.DtoResListData">
+            <summary>
+            返回结果对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.CashoutUList.DtoResListData.itemDataModels">
+            <summary>
+            列表数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.CashoutUList.DtoResListData.ItemDataModel">
+            <summary>
+            数据项模型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.CashoutUList.DtoResListData.ItemDataModel.name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.CashoutUList.DtoResListData.ItemDataModel.status_txt">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.CashoutListN">
+            <summary>
+            提现订单
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.CashoutListN.Get(WeiCode.Models.UserBasic.PageFactory.CashoutListN.DtoReq)">
+            <summary>
+            获取页面数据模型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.CashoutListN.GetListFilter(WeiCode.Models.UserBasic.PageFactory.CashoutListN.DtoReq)">
+            <summary>
+            设置列表筛选表单的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.CashoutListN.GetButtonGroup(WeiCode.Models.UserBasic.PageFactory.CashoutListN.DtoReq)">
+            <summary>
+            设置扩展的按钮组
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.CashoutListN.GetListDisplay(WeiCode.Models.UserBasic.PageFactory.CashoutListN.DtoReq)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.CashoutListN.DtoReq">
+            <summary>
+            请求参数对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.CashoutListN.DtoReq.filterForm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.CashoutListN.DtoReq.FilterForm">
+            <summary>
+            筛选参数（自定义）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.CashoutListN.DtoReq.FilterForm.user_type_id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.CashoutListN.DtoReq.FilterForm.keyword">
+            <summary>
+            关键词
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.CashoutListN.GetListData(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            data数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.CashoutListN.DtoReqListData">
+            <summary>
+            自定义筛选参数（自定义数据，与属性对应）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.CashoutListN.DtoReqListData.user_type_id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.CashoutListN.DtoReqListData.keyword">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.CashoutListN.DtoResListData">
+            <summary>
+            返回结果对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.CashoutListN.DtoResListData.itemDataModels">
+            <summary>
+            列表数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.CashoutListN.DtoResListData.ItemDataModel">
+            <summary>
+            数据项模型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrder">
+            <summary>
+            资产日志
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceOrder.Get(WeiCode.Models.UserBasic.PageFactory.BalanceOrder.DtoReq)">
+            <summary>
+            获取页面数据模型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceOrder.GetListFilter(WeiCode.Models.UserBasic.PageFactory.BalanceOrder.DtoReq)">
+            <summary>
+            设置列表筛选表单的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceOrder.GetButtonGroup(WeiCode.Models.UserBasic.PageFactory.BalanceOrder.DtoReq)">
+            <summary>
+            设置扩展的按钮组
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceOrder.GetListDisplay(WeiCode.Models.UserBasic.PageFactory.BalanceOrder.DtoReq)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrder.DtoReq">
+            <summary>
+            请求参数对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrder.DtoReq.filterForm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrder.DtoReq.FilterForm">
+            <summary>
+            筛选参数（自定义）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrder.DtoReq.FilterForm.keyword">
+            <summary>
+            关键词
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceOrder.GetListData(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            data数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrder.DtoReqListData">
+            <summary>
+            自定义筛选参数（自定义数据，与属性对应）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrder.DtoReqListData.keyword">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrder.DtoResListData">
+            <summary>
+            返回结果对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrder.DtoResListData.itemDataModels">
+            <summary>
+            列表数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrder.DtoResListData.ItemDataModel">
+            <summary>
+            数据项模型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrder.DtoResListData.ItemDataModel.status_txt">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrder.DtoResListData.ItemDataModel.user_info">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM">
+            <summary>
+            资产日志(待作废)
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.Get(WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.DtoReq)">
+            <summary>
+            获取页面数据模型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.GetListFilter(WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.DtoReq)">
+            <summary>
+            设置列表筛选表单的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.GetButtonGroup(WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.DtoReq)">
+            <summary>
+            设置扩展的按钮组
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.GetListDisplay(WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.DtoReq)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.DtoReq">
+            <summary>
+            请求参数对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.DtoReq.filterForm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.DtoReq.FilterForm">
+            <summary>
+            筛选参数（自定义）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.DtoReq.FilterForm.keyword">
+            <summary>
+            关键词
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.DtoReq.FilterForm.user_type_id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.GetListData(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            data数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.DtoReqListData">
+            <summary>
+            自定义筛选参数（自定义数据，与属性对应）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.DtoReqListData.user_type_id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.DtoReqListData.keyword">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.DtoReqListData.status">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.DtoReqListData.datetime_range">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.DtoResListData">
+            <summary>
+            返回结果对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.DtoResListData.itemDataModels">
+            <summary>
+            列表数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.DtoResListData.ItemDataModel">
+            <summary>
+            数据项模型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.DtoResListData.ItemDataModel.status_txt">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM.DtoResListData.ItemDataModel.user_info">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM`1">
+            <summary>
+            资产日志 继承
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM`1.GetListFilter(`0)">
+            <summary>
+            设置列表筛选表单的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM`1.GetButtonGroup(`0)">
+            <summary>
+            设置扩展的按钮组
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM`1.GetListDisplay(`0)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM`1.DtoReq">
+            <summary>
+            请求参数对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM`1.DtoReq.filterForm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM`1.DtoReq.FilterForm">
+            <summary>
+            筛选参数（自定义）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM`1.DtoReq.FilterForm.keyword">
+            <summary>
+            关键词
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderM`1.DtoReq.FilterForm.user_type_id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrderMReq">
+            <summary>
+            请求参数对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderMReq.filterForm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrderMReq.FilterForm">
+            <summary>
+            筛选参数（自定义）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderMReq.FilterForm.keyword">
+            <summary>
+            关键词
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceOrderMReq.GetListData(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            data数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrderMReq.DtoReqListData">
+            <summary>
+            自定义筛选参数（自定义数据，与属性对应）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderMReq.DtoReqListData.needs_name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderMReq.DtoReqListData.user_type_id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderMReq.DtoReqListData.keyword">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderMReq.DtoReqListData.status">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderMReq.DtoReqListData.datetime_range">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrderMReq.DtoResListData">
+            <summary>
+            返回结果对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderMReq.DtoResListData.itemDataModels">
+            <summary>
+            列表数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrderMReq.DtoResListData.ItemDataModel">
+            <summary>
+            数据项模型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderMReq.DtoResListData.ItemDataModel.status_txt">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderMReq.DtoResListData.ItemDataModel.user_info">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrderN`1">
+            <summary>
+            资产日志
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceOrderN`1.GetListFilter(`0)">
+            <summary>
+            设置列表筛选表单的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceOrderN`1.GetButtonGroup(`0)">
+            <summary>
+            设置扩展的按钮组
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceOrderN`1.GetListDisplay(`0)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrderNReq">
+            <summary>
+            请求参数对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderNReq.filterForm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrderNReq.FilterForm">
+            <summary>
+            筛选参数（自定义）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderNReq.FilterForm.keyword">
+            <summary>
+            关键词
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceOrderNReq.GetListData(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            data数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrderNReq.DtoReqListData">
+            <summary>
+            自定义筛选参数（自定义数据，与属性对应）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderNReq.DtoReqListData.relation_type_id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderNReq.DtoReqListData.t_user_sns">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderNReq.DtoReqListData.keyword">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderNReq.DtoReqListData.status">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderNReq.DtoReqListData.datetime_range">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrderNReq.DtoResListData">
+            <summary>
+            返回结果对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderNReq.DtoResListData.itemDataModels">
+            <summary>
+            列表数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceOrderNReq.DtoResListData.ItemDataModel">
+            <summary>
+            数据项模型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderNReq.DtoResListData.ItemDataModel.status_txt">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderNReq.DtoResListData.ItemDataModel.f_user_info">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceOrderNReq.DtoResListData.ItemDataModel.user_info">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.RechargeMList">
+            <summary>
+            充值订单
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.RechargeMList.Get(WeiCode.Models.UserBasic.PageFactory.RechargeMList.DtoReq)">
+            <summary>
+            获取页面数据模型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.RechargeMList.GetListFilter(WeiCode.Models.UserBasic.PageFactory.RechargeMList.DtoReq)">
+            <summary>
+            设置列表筛选表单的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.RechargeMList.GetButtonGroup(WeiCode.Models.UserBasic.PageFactory.RechargeMList.DtoReq)">
+            <summary>
+            设置扩展的按钮组
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.RechargeMList.GetListDisplay(WeiCode.Models.UserBasic.PageFactory.RechargeMList.DtoReq)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.RechargeMList.DtoReq">
+            <summary>
+            请求参数对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.RechargeMList.DtoReq.filterForm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.RechargeMList.DtoReq.FilterForm">
+            <summary>
+            筛选参数（自定义）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.RechargeMList.DtoReq.FilterForm.keyword">
+            <summary>
+            关键词
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.RechargeMList.GetListData(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            data数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.RechargeMList.DtoReqListData">
+            <summary>
+            自定义筛选参数（自定义数据，与属性对应）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.RechargeMList.DtoReqListData.keyword">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.RechargeMList.DtoResListData">
+            <summary>
+            返回结果对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.RechargeMList.DtoResListData.itemDataModels">
+            <summary>
+            列表数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.RechargeMList.DtoResListData.ItemDataModel">
+            <summary>
+            数据项模型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.PayHand">
+            <summary>
+            手动充值
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.PayHand.GetFormDisplay(WeiCode.Models.ModelBasic.PageModel.Post,WeiCode.Models.UserBasic.PageFactory.PayHand.DtoReq)">
+            <summary>
+            配置表单元素控件
+            </summary>
+            <param name="pageModel"></param>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.PayHand.DtoReq.formData">
+            <summary>
+            附加额外参数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.UserRelationMList">
+            <summary>
+            资产查询
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.UserRelationMList.Get(WeiCode.Models.UserBasic.PageFactory.UserRelationMList.DtoReq)">
+            <summary>
+            获取页面数据模型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.UserRelationMList.GetListFilter(WeiCode.Models.UserBasic.PageFactory.UserRelationMList.DtoReq)">
+            <summary>
+            设置列表筛选表单的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.UserRelationMList.GetButtonGroup(WeiCode.Models.UserBasic.PageFactory.UserRelationMList.DtoReq)">
+            <summary>
+            设置扩展的按钮组
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.UserRelationMList.GetListDisplay(WeiCode.Models.UserBasic.PageFactory.UserRelationMList.DtoReq)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.UserRelationMList.DtoReq">
+            <summary>
+            请求参数对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.UserRelationMList.DtoReq.filterForm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.UserRelationMList.DtoReq.FilterForm">
+            <summary>
+            筛选参数（自定义）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.UserRelationMList.DtoReq.FilterForm.keyword">
+            <summary>
+            关键词
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.UserRelationMList.DtoReq.FilterForm.datetime_range">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.UserRelationMList.DtoReq.FilterForm.user_type_id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.UserRelationMList.GetListData(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            data数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.UserRelationMList.DtoReqListData">
+            <summary>
+            自定义筛选参数（自定义数据，与属性对应）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.UserRelationMList.DtoReqListData.keyword">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.UserRelationMList.DtoReqListData.datetime_range">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.UserRelationMList.DtoResListData">
+            <summary>
+            返回结果对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.UserRelationMList.DtoResListData.itemDataModels">
+            <summary>
+            列表数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.UserRelationMList.DtoResListData.ItemDataModel">
+            <summary>
+            数据项模型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceMList">
+            <summary>
+            资产查询
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceMList.Get(WeiCode.Models.UserBasic.PageFactory.BalanceMList.DtoReq)">
+            <summary>
+            获取页面数据模型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceMList.GetListFilter(WeiCode.Models.UserBasic.PageFactory.BalanceMList.DtoReq)">
+            <summary>
+            设置列表筛选表单的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceMList.GetButtonGroup(WeiCode.Models.UserBasic.PageFactory.BalanceMList.DtoReq)">
+            <summary>
+            设置扩展的按钮组
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceMList.GetListDisplay(WeiCode.Models.UserBasic.PageFactory.BalanceMList.DtoReq)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceMList.DtoReq">
+            <summary>
+            请求参数对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceMList.DtoReq.filterForm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceMList.DtoReq.FilterForm">
+            <summary>
+            筛选参数（自定义）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceMList.DtoReq.FilterForm.keyword">
+            <summary>
+            关键词
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceMList.DtoReq.FilterForm.datetime_range">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceMList.DtoReq.FilterForm.user_type_id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceMList.GetListData(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            data数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceMList.DtoReqListData">
+            <summary>
+            自定义筛选参数（自定义数据，与属性对应）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceMList.DtoReqListData.keyword">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceMList.DtoReqListData.datetime_range">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceMList.DtoResListData">
+            <summary>
+            返回结果对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceMList.DtoResListData.itemDataModels">
+            <summary>
+            列表数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceMList.DtoResListData.ItemDataModel">
+            <summary>
+            数据项模型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceUpdate">
+            <summary>
+            增加余额
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceUpdate.GetFormDisplay(WeiCode.Models.ModelBasic.PageModel.Post,WeiCode.Models.UserBasic.PageFactory.BalanceUpdate.DtoReq)">
+            <summary>
+            配置表单元素控件
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceUpdate.DtoReq.formData">
+            <summary>
+            附加额外参数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceListN`1">
+            <summary>
+            资产查询
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceListN`1.GetListFilter(`0)">
+            <summary>
+            设置列表筛选表单的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceListN`1.GetButtonGroup(`0)">
+            <summary>
+            设置扩展的按钮组
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceListN`1.GetListDisplay(`0)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceListNReq">
+            <summary>
+            请求参数对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceListNReq.filterForm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceListNReq.FilterForm">
+            <summary>
+            筛选参数（自定义）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceListNReq.FilterForm.keyword">
+            <summary>
+            关键词
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceListNReq.FilterForm.datetime_range">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceListNReq.FilterForm.user_type_id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceListNReq.FilterForm.relation_type_id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.UserBasic.PageFactory.BalanceListNReq.GetListData(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            data数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceListNReq.DtoReqListData">
+            <summary>
+            自定义筛选参数（自定义数据，与属性对应）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceListNReq.DtoReqListData.relation_type_id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceListNReq.DtoReqListData.t_user_sns">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceListNReq.DtoReqListData.keyword">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceListNReq.DtoReqListData.datetime_range">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceListNReq.DtoReqListData.user_type_id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceListNReq.DtoResListData">
+            <summary>
+            返回结果对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceListNReq.DtoResListData.itemDataModels">
+            <summary>
+            列表数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.UserBasic.PageFactory.BalanceListNReq.DtoResListData.ItemDataModel">
+            <summary>
+            数据项模型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceListNReq.DtoResListData.ItemDataModel.f_user_sn">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.UserBasic.PageFactory.BalanceListNReq.DtoResListData.ItemDataModel.f_user_info">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.ComponentController">
+            <summary>
+            设置中心
+            </summary>
+            <summary>
+            设置中心
+            </summary>
+            <summary>
+            组件异步请求处理
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.ComponentController.AreaSelectMore(System.String,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+            <param name="title"></param>
+            <param name="defaultValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.ComponentController.AreaSelect(System.String,System.String,WeiCode.Models.ModelUserBasic.EmtAreaSelect.AddrInfo)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+            <param name="title"></param>
+            <param name="defaultValue"></param>
+            <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:WeiCode.Modular.UserBasic.Controllers.ComponentController.GetHtml(System.String)" -->
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.CashoutController">
+            <summary>
+            用户
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.CashoutController.Apply(System.String)">
+            <summary>
+            提现申请
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.CashoutController.ApplyAction(WeiCode.Modular.UserBasic.Controllers.CashoutController.ApplyDtoReq)">
+            <summary>
+            提现申请处理
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.CashoutController.ApplyDtoReq">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBasic.Controllers.CashoutController.ApplyDtoReq.formData">
+            <summary>
+            附加额外参数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.CashoutController.ApplyDtoReq.FormData">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBasic.Controllers.CashoutController.ApplyDtoReq.FormData.receipt_truename">
+            <summary>
+            收款人姓名(提现)
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBasic.Controllers.CashoutController.ApplyDtoReq.FormData.receipt_account">
+            <summary>
+            收款人账号(提现)
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBasic.Controllers.CashoutController.ApplyDtoReq.FormData.amount">
+            <summary>
+            提现金额
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBasic.Controllers.CashoutController.ApplyDtoReq.FormData.memo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.CashoutController.List(WeiCode.Models.UserBasic.PageFactory.CashoutUList.DtoReq)">
+            <summary>
+            提现订单
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.CashoutMController">
+            <summary>
+            管理
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.CashoutMController.List(System.Int32)">
+            <summary>
+            提现订单
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.CashoutMController.Handle(System.String)">
+            <summary>
+            管理操作提现
+            </summary>
+            <param name="trade_sn"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.CashoutMController.HandleAction(System.String,System.Nullable{System.SByte},System.String,System.String,System.String)">
+            <summary>
+            提现处理
+            </summary>
+            <param name="trade_sn"></param>
+            <param name="c_type"></param>
+            <param name="m_memo"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.CashoutNController">
+            <summary>
+            下级
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.CashoutNController.List(System.Int32)">
+            <summary>
+            提现订单
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.BalanceController">
+            <summary>
+            用户  余额相关
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.BalanceController.Log(System.Int32)">
+            <summary>
+            我的收支明细
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.BalanceController.LogItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBasic.Controllers.BalanceController.LogItem.op_type_txt">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.BalanceMController">
+            <summary>
+            管理
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.BalanceMController.List(System.Int32)">
+            <summary>
+            管理用户资产
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.BalanceMController.Update(System.String)">
+            <summary>
+            余额调整
+            </summary>
+            <param name="user_sn"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.BalanceMController.Update(WeiCode.Modular.UserBasic.Controllers.BalanceMController.UpdateDtoReq)">
+            <summary>
+            余额调整
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.BalanceMController.UpdateDtoReq">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.BalanceMController.Log(System.Int32)">
+            <summary>
+            收支明细
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.BalanceNController">
+            <summary>
+            下级
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.BalanceNController.Log(System.Int32)">
+            <summary>
+            下级收支明细
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.BalanceNController.List(System.Int32)">
+            <summary>
+            下级用户余额信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.BalanceDController">
+            <summary>
+            开发
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.CenterInfoController">
+            <summary>
+            用户中心
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.CenterInfoController.Index">
+            <summary>
+            个人中心
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.CenterInfoController.ManagerViewChange">
+            <summary>
+            主管切换查看模式
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.PayController">
+            <summary>
+            用户，支付相关
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.PayController.Order(WeiCode.Models.UserBasic.PageFactory.BalanceOrder.DtoReq)">
+            <summary>
+            summary
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.PayController.Handle(System.String,System.String,System.String,System.String)">
+            <summary>
+            根据支付渠道编码识别跳转
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.PayController.runUpdateOrder(System.String,System.String,System.String)">
+            <summary>
+            充值成功，执行业务处理逻辑
+            </summary>
+            <param name="trade_sn"></param>
+            <param name="channel"></param>
+            <param name="channel_no"></param>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.PayController.Alipay(System.String,System.String,System.String)">
+            <summary>
+            支付宝充值
+            </summary>
+            <param name="order_no"></param>
+            <param name="amount"></param>
+            <param name="returnUrl"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.PayController.alipay_para">
+            <summary>
+            支付参数实体
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBasic.Controllers.PayController.alipay_para.app_id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBasic.Controllers.PayController.alipay_para.private_key">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBasic.Controllers.PayController.alipay_para.alipay_public_key">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBasic.Controllers.PayController.alipay_para.notify_host">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.PayController.AlipayNotifyUrl">
+            <summary>
+            支付成功后支付宝服务器回调此链接（官方支付宝回调）
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.PayController.GetRequestPost">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.PayController.AlipayFee(System.String,System.String,System.String)">
+            <summary>
+            支付宝充值
+            </summary>
+            <param name="order_no"></param>
+            <param name="amount"></param>
+            <param name="returnUrl"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.PayController.alipay_fee_para">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBasic.Controllers.PayController.alipay_fee_para.app_id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBasic.Controllers.PayController.alipay_fee_para.private_key">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBasic.Controllers.PayController.alipay_fee_para.alipay_public_key">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBasic.Controllers.PayController.alipay_fee_para.qr_img">
+            <summary>
+            支付宝二维码
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.PayController.AliPayFeeCheck(System.String,System.String)">
+            <summary>
+            官方支付宝免签(验证)
+            </summary>
+            <param name="trade_no">交易号</param>
+            <param name="returnUrl">返回URL</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.PayController.Weixin(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            微信充值
+            </summary>
+            <param name="order_no"></param>
+            <param name="amount"></param>
+            <param name="user_sn"></param>
+            <param name="returnUrl"></param>
+            <param name="notifyUrl"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.PayController.weixin_para">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBasic.Controllers.PayController.weixin_para.sys_user">
+            <summary>
+            公众号id
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBasic.Controllers.PayController.weixin_para.appkey">
+            <summary>
+            微信支付密钥
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBasic.Controllers.PayController.weixin_para.notify_host">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.PayController.WeixinNotifyUrl(System.String,System.String,System.String)">
+            <summary>
+            支付成功后微信服务器回调此链接
+            </summary>
+            <param name="key">密钥</param>
+            <param name="out_trade_no">项目端传过来的订单号</param>
+            <param name="channel_no">交易号</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.PayController.WeixinNative(System.String,System.Decimal,System.String)">
+            <summary>
+            支付页
+            </summary>
+            <param name="order_no"></param>
+            <param name="amount"></param>
+            <param name="returnUrl"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.PayController.WeixinNativeNotifyUrl(System.String)">
+            <summary>
+            当面付回调（前台验证）
+            </summary>
+            <param name="out_trade_no"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.PayController.Hand(System.String,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="order_no"></param>
+            <param name="amount"></param>
+            <param name="returnUrl"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.PayMController">
+            <summary>
+            管理
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.PayMController.Cfg(System.Int32)">
+            <summary>
+            支付功能配置
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.PayMController.CfgAction(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="page_html"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.PayMController.Order(System.Int32)">
+            <summary>
+            充值订单
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.PayMController.Hand(System.Int32)">
+            <summary>
+            手动充值
+            </summary>
+            <param name="user_type_id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.PayMController.HandAction(System.Int32,System.String,System.Int32,System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.String)">
+            <summary>
+            
+            </summary>
+            <param name="user_type_id"></param>
+            <param name="user_name"></param>
+            <param name="recharge_id"></param>
+            <param name="amount"></param>
+            <param name="actual_amount"></param>
+            <param name="memo"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.PayAController">
+            <summary>
+            API
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.PayAController.DaishouAction(System.String,System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.String,System.String,System.String,System.String,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="user_sn"></param>
+            <param name="recharge_id"></param>
+            <param name="amount">充值金额</param>
+            <param name="actual_amount">到账金额</param>
+            <param name="memo"></param>
+            <param name="channel"></param>
+            <param name="channel_no"></param>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.PayNController">
+            <summary>
+            下级
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.PayNController.Order(System.Int32)">
+            <summary>
+            充值订单
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.PayDController">
+            <summary>
+            开发者
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.PayDController.Config">
+            <summary>
+            支付功能配置
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.PayDController.ConfigData(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="tenant_id"></param>
+            <param name="page"></param>
+            <param name="limit"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.PayDController.PayConfigItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBasic.Controllers.PayDController.PayConfigItem.tenant_id_txt">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.PayDController.ConfigCreate">
+            <summary>
+            支付功能配置
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.RechargeController">
+            <summary>
+            充值相关(用户功能)
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.RechargeController.Pay(System.String)">
+            <summary>
+            充值面:选择充值金额，选择支付方式
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.RechargeController.Success(System.String)">
+            <summary>
+            支付成功
+            </summary>
+            <param name="returnUrl"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.RechargeMController">
+            <summary>
+            管理端
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.RechargeMController.Config">
+            <summary>
+            支付功能配置
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.RechargeMController.ConfigData(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="tenant_id"></param>
+            <param name="page"></param>
+            <param name="limit"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.RechargeMController.PayConfigItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBasic.Controllers.RechargeMController.PayConfigItem.display_txt">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.RechargeMController.ConfigCreate(System.Int32)">
+            <summary>
+            支付功能配置
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.RechargeMController.ConfigCreateAction(System.Int32,System.Decimal,System.Int32,System.Decimal,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <param name="amount"></param>
+            <param name="user_type_id"></param>
+            <param name="actual_amount"></param>
+            <param name="describe"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.RechargeDController">
+            <summary>
+            开发端
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.RechargeDController.Config">
+            <summary>
+            支付功能配置
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.RechargeDController.ConfigData(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="tenant_id"></param>
+            <param name="page"></param>
+            <param name="limit"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.RechargeDController.PayConfigItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBasic.Controllers.RechargeDController.PayConfigItem.display_txt">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.RechargeDController.ConfigCreate(System.Int32)">
+            <summary>
+            支付功能配置
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.RechargeDController.ConfigCreateAction(System.Int32,System.Decimal,System.Int32,System.Decimal,System.String,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <param name="amount"></param>
+            <param name="user_type_id"></param>
+            <param name="actual_amount"></param>
+            <param name="describe"></param>
+            <param name="tenant_id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.DefaultController">
+            <summary>
+            用户中心
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.DefaultController.Create">
+            <summary>
+            个人中心
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.DefaultController.Update">
+            <summary>
+            余额页面
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.DefaultController.Recharge">
+            <summary>
+            余额充值
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.DefaultController.RechargeRecord">
+            <summary>
+            充值记录
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.DefaultController.Withdrawal">
+            <summary>
+            余额提现
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.DefaultController.WithdrawalRecord">
+            <summary>
+            提现记录
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.UserGradeController">
+            <summary>
+            用户等级
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.UserGradeMController">
+            <summary>
+            管理
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.UserGradeNController">
+            <summary>
+            下级
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.UserGradeAController">
+            <summary>
+            API
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.UserRelationController">
+            <summary>
+            用户关系管理
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.UserRelationController.InviteNewUser(System.Nullable{System.Int32},System.String)">
+            <summary>
+            邀请新用户
+            </summary>
+            <param name="relation_type_id">关系类型id</param>
+            <param name="to_url">跳转地址</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.UserRelationMController">
+            <summary>
+            管理
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.UserRelationMController.List(System.Int32)">
+            <summary>
+            管理用户资产（不包含公海）
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.UserRelationMController.Move(System.Int32)">
+            <summary>
+            用户转移
+            </summary>
+            <param name="type_id">关系类型id</param>
+            <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:WeiCode.Modular.UserBasic.Controllers.UserRelationMController.Select(System.String,System.Int32,System.Int32)" -->
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.UserRelationMController.Remove(System.Int32)">
+            <summary>
+            用户关系解绑
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.UserRelationMController.Bind(System.Int32)">
+            <summary>
+            用户关系绑定
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.UserRelationNController">
+            <summary>
+            下级
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.UserRelationNController.Log(WeiCode.Models.UserBasic.PageFactory.BalanceLogM.DtoReq)">
+            <summary>
+            下级收支明细
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.UserRelationNController.List(System.Int32)">
+            <summary>
+            下级用户信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.UserRelationDController">
+            <summary>
+            开发者
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.UserRelationDController.TypeConfig(System.Int32)">
+            <summary>
+            用户关系类型配置
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.UserRelationDController.TypeCreate(System.Int32)">
+            <summary>
+            创建用户关系类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.UserRelationDController.TypeCreateAction(WeiCode.ModelDbs.ModelDbUserBasic.user_relation_type)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.Controllers.UserRelationRController">
+            <summary>
+            API
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.UserRelationRController.Redirect(System.String,System.String)">
+            <summary>
+            中转页面
+            </summary>
+            <param name="to_url"></param>
+            <param name="f_user_sn"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.Controllers.UserRelationRController.RegisterPost(System.String,System.String)">
+            <summary>
+            API:用户注册成功，用户关系的请求处理
+            </summary>
+            <param name="user_sn">目标用户</param>
+            <param name="f_user_sn">推荐人(格式：关系id|用户sn)</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.ModularUserBasicCreate">
+            <summary>
+            用户支付一笔充值
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.ModularUserBasicCreate.Service`3">
+            <summary>
+            创建用户Function
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.ModularUserBasicCreate.Service`3.Before(`0,`1)">
+            <summary>
+            执行前
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.ModularUserBasicCreate.Service`3.getAttachAmount(`0,`1)">
+            <summary>
+            
+            </summary>
+            <param name="req"></param>
+            <param name="res"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.ModularUserBasicCreate.Service`3.Complete(`0,`1)">
+            <summary>
+            执行后
+            </summary>
+            <param name="req"></param>
+            <param name="res"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.ModularUserBasicCreate.DtoReq">
+            <summary>
+            创建用户（输入）
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.ModularUserBasicCreate.DtoRes">
+            <summary>
+            下单实体（输出）
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.ModularUserBasicCreate.DtoLog">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBasic.ModularUserBasicCreate.DtoLog.customer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.UserBasic.UserBasicAreaRegistration">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBasic.UserBasicAreaRegistration.AreaName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBasic.UserBasicAreaRegistration.RegisterArea(System.Web.Mvc.AreaRegistrationContext,MvcContrib.PortableAreas.IApplicationBus)">
+            <summary>
+            
+            </summary>
+            <param name="context"></param>
+            <param name="bus"></param>
+        </member>
+        <member name="T:WeiCode.Modular.ModularUserBasic">
+            <summary>
+            
+            </summary>
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.ModularUserBasic.UserRelationTypeApp">
+            <summary>
+            用户关系类型
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.ModularUserBasic.UserRelationTypeApp.GetManagerTab(WeiCode.Models.ModelBasic.PageList@,System.Int32,System.String)">
+            <summary>
+            列表下级页面 权限Tab
+            </summary>
+            <param name="pageModel"></param>
+            <param name="relation_type_id"></param>
+            <param name="need_names"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.ModularUserBasic.UserRelationTypeApp.GetManagerTab(WeiCode.Models.ModelBasic.PageModel.Post@,System.Int32)">
+            <summary>
+            表单下级页面 权限Tab
+            </summary>
+            <param name="pageModel"></param>
+            <param name="relation_type_id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.ModularUserBasic.UserRelationTypeApp.HaveDataView(System.Int32)">
+            <summary>
+            下级 用户类型权限判断
+            </summary>
+            <param name="relation_type_id">关系类型id</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.ModularUserBasic.UserRelationTypeApp.IsManageView">
+            <summary>
+            是否为主管浏览模式
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.ModularUserBasic.UserRelationApp">
+            <summary>
+            用户关系类型
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.ModularUserBasic.UserRelationApp.GetNextUsers``1(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req,System.Int32,System.String,WeiCode.DataBase.DoMySql.Filter)">
+            <summary>
+            获取当前user_sn所有下级user_base实体集合(带分页,支持返回类型转换)
+            </summary>
+            <param name="reqJson"></param>
+            <param name="id">关系类型id</param>
+            <param name="user_sn">当前user_sn</param>
+            <param name="filter">查询参数</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.ModularUserBasic.UserRelationApp.GetNextUsers``1(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req,System.Enum,System.String,WeiCode.DataBase.DoMySql.Filter)">
+            <summary>
+            获取当前user_sn所有下级user_base实体集合(带分页,支持返回类型转换)
+            </summary>
+            <param name="reqJson"></param>
+            <param name="type_name">关系类型名称</param>
+            <param name="user_sn">当前user_sn</param>
+            <param name="filter">查询参数</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.ModularUserBasic.UserRelationApp.GetNextUsersUnrelat``1(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req,System.Int32,WeiCode.DataBase.DoMySql.Filter)">
+            <summary>
+            获取指定关系类型下孤立的user_base实体集合(带分页,支持返回类型转换)
+            </summary>
+            <param name="reqJson"></param>
+            <param name="id">关系类型id</param>
+            <param name="filter">查询参数</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.ModularUserBasic.UserRelationApp.GetNextUsersUnrelat``1(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req,System.Enum,WeiCode.DataBase.DoMySql.Filter)">
+            <summary>
+            获取指定关系类型下孤立的user_base实体集合(带分页,支持返回类型转换)
+            </summary>
+            <param name="reqJson"></param>
+            <param name="type_name">关系类型名称</param>
+            <param name="filter">查询参数</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.RelationTemplate`1">
+            <summary>
+            模型模板基类：用户关系
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.RelationTemplate`1.Get(`0)">
+            <summary>
+            获取页面数据模型
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.RelationTemplate`1.GetListFilter(`0)">
+            <summary>
+            
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.RelationTemplate`1.GetButtonGroup(`0)">
+            <summary>
+            设置扩展的按钮组
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.RelationTemplate`1.GetListDisplay(`0)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.RelationTemplateReq">
+            <summary>
+            用户关系模板基类
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.RelationTemplateReq.listFilter">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.RelationTemplateReq.buttonGroup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.RelationTemplateReq.listDisplay">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.RelationTemplateReq.relation_type_id">
+            <summary>
+            关系类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.RelationTemplateReq.need_names">
+            <summary>
+            限制显示已安装流程的名称,多个用逗号隔开，为空则表示不限制
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbModularUserBasic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbModularPay">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:ModelDto.MqDto.UserCreated">
+            <summary>
+            用户创建事件消息
+            </summary>
+        </member>
+    </members>
+</doc>

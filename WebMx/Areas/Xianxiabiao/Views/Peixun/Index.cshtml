@@ -1,0 +1,321 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@model Services.Project.PageFactory.TableVO
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+</style>
+<!-- 以下书写自己的页面内容代码 -->
+<form id="mainForm" class="layui-form" action="DayTarget">
+    <div class="layui-row">
+        <div class="layui-col-md8">
+            @{
+                string month = ViewBag.month;
+            }
+
+            <div class="layui-input-inline">
+                <label class="layui-form-label">日期</label>
+            </div>
+
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("month")
+                    {
+                        title = "日期",
+                        defaultValue = ViewBag.month,
+                        mold = ModelBasic.EmtTimeSelect.Mold.month,
+                        eventJsChange = new EmtFormBase.EventJsChange
+                        {
+                            eventJavascript = new EventJavascript
+                            {
+                                code = "window.location.href = '/Join/Peixun/index?month=' + page.month.value;"
+                            },
+                        }
+                    })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <table class="layui-table" style="text-align:center;width:3000px;" id="table1" name="table1">
+                <colgroup>
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <td colspan="32" style="text-align: center; background-color: #FFF3CA; font-size: 18px; font-weight: 700 ">@(ViewBag.username)@(ViewBag.c_date)千广萌新@(month.ToDate().ToString("MM"))月总数据</td>
+                    </tr>
+                    <tr style="font-weight:500;">
+                        <th style="background-color:#FF9C99">拉群期数</th>
+                        <th style="background-color:#FF9C99">培训老师</th>
+                        <th style="background-color:#FF9C99">拉群日期</th>
+                        <th style="background-color:#FF9C99">入会人数</th>
+                        <th style="background-color:#FF9C99">拉群总人数</th>
+                        <th style="background-color:#FF9C99">拉群人数</th>
+                        <th style="background-color:#99DDFF">第一天在群人数</th>
+                        <th style="background-color:#99DDFF">第一天到课人数</th>
+                        <th style="background-color:#99DDFF">第一天回放人数</th>
+                        <th style="background-color:#99DDFF">第一天到课总人数</th>
+                        <th style="background-color:#99DDFF">第一天退群人数</th>
+                        <th style="color: red; background-color: #99DDFF">第一天到课率</th>
+                        <th style="background-color:#98D7B6">第二天课前人数</th>
+                        <th style="background-color:#98D7B6">第二天课后人数</th>
+                        <th style="background-color:#98D7B6">第二天到课人数</th>
+                        <th style="background-color:#98D7B6">二天回放人数</th>
+                        <th style="background-color:#98D7B6">第二天到课总人数</th>
+                        <th style="background-color:#98D7B6">第二天退群人数</th>
+                        <th style="color: red; background-color: #98D7B6">第二天到课率</th>
+                        <th style="background-color:#D58EFF">第三天在群人数</th>
+                        <th style="background-color:#D58EFF">第三天退群人数</th>
+                        <th style="background-color:#D58EFF">首次推出人数</th>
+                        <th style="background-color:#D58EFF">补考人数</th>
+                        <th style="background-color:#D58EFF">总推出人数</th>
+                        <th style="color: red; background-color: #D58EFF">推出率</th>
+                        <th style="background-color:#FFE270">在群不理</th>
+                        <th style="background-color:#FFE270">理了没考</th>
+                        <th style="background-color:#FFE270">三天共退群人数</th>
+                        <th style="background-color:#FFE270">流失人数</th>
+                        <th style="color: red; background-color: #FFE270">流失率</th>
+                        <th style="background-color:#FFBA84">未分配人数</th>
+                        <th style="background-color:#FFBA84">未分配率</th>
+                    </tr>
+                </thead>
+
+                @{
+
+                    var mengxin = DoMySql.FindList<ModelDb.p_mengxin>($"tenant_id='{new DomainBasic.TenantApp().GetInfo().id}' and date>='{month.ToDate().ToString("yyyy-MM-01").ToDate().AddDays(-2).ToString("yyyy-MM-dd")}' and date<'{month.ToDate().AddMonths(1).ToString("yyyy-MM-01").ToDate().AddDays(-2).ToString("yyyy-MM-dd")}' and user_sn='{new UserIdentityBag().user_sn}' order by date");
+                    DateTime? date = new DateTime();
+                    foreach (var item in mengxin)
+                    {
+                        var list = DoMySql.FindList<ModelDb.p_mengxin>($"tenant_id='{new DomainBasic.TenantApp().GetInfo().id}' and date='{item.date}'");
+                        <tr>
+                            <td style="background-color:#FFC9C7">@item.term</td>
+                            <td style="background-color:#FFC9C7">@(new DomainBasic.UserApp().GetInfoByUserSn(item.user_sn).username)</td>
+                            <td style="background-color:#FFC9C7">@(item.date.ToDate().ToString("MM月dd日"))</td>
+                            <td class="EditAble" data-name="join_num" data-id="@item.id" style="background-color:#FFC9C7">@list[0].join_num</td>
+                            <td style="background-color:#FFC9C7">@list.Sum(x => x.group_num)</td>
+                            <td class="EditAble" style="background-color:#FFC9C7" data-name="group_num" data-id="@item.id">@item.group_num</td>
+                            <td class="EditAble" style="background-color:#C7ECFF" data-name="in_group_1" data-id="@item.id">@item.in_group_1</td>
+                            <td class="EditAble" style="background-color:#C7ECFF" data-name="in_class_1" data-id="@item.id">@item.in_class_1</td>
+                            <td class="EditAble" style="background-color:#C7ECFF" data-name="playback_1" data-id="@item.id">@item.playback_1</td>
+                            <td style="background-color:#C7ECFF">@(item.in_class_1+item.playback_1)</td>
+                            <td style="background-color:#C7ECFF">@(item.group_num-item.in_group_1)</td>
+                            <td style="background-color:#C7ECFF">@(getRate((item.in_class_1 + item.playback_1).ToDouble(), item.group_num.ToDouble()))%</td>
+                            <td class="EditAble" style="background-color:#C3EAD5" data-name="in_group_2" data-id="@item.id">@item.in_group_2</td>
+                            <td class="EditAble" style="background-color:#C3EAD5" data-name="before_class_2" data-id="@item.id">@item.before_class_2</td>
+                            <td class="EditAble" style="background-color:#C3EAD5" data-name="in_class_2" data-id="@item.id">@item.in_class_2</td>
+                            <td class="EditAble" style="background-color:#C3EAD5" data-name="playback_2" data-id="@item.id">@item.playback_2</td>
+                            <td style="background-color:#C3EAD5">@(item.in_class_2+item.playback_2)</td>
+                            <td style="background-color:#C3EAD5">@(item.in_group_1 - item.before_class_2)</td>
+                            <td style="background-color:#C3EAD5">@(getRate((item.in_class_2 + item.playback_2).ToDouble(), item.in_group_2.ToDouble()))%</td>
+                            <td class="EditAble" style="background-color:#F2C7FF" data-name="in_group_3" data-id="@item.id">@item.in_group_3</td>
+                            <td style="background-color:#F2C7FF">@(item.before_class_2 - item.in_group_3)</td>
+                            <td class="EditAble" style="background-color:#F2C7FF" data-name="first_employ" data-id="@item.id">@item.first_employ</td>
+                            <td class="EditAble" style="background-color:#F2C7FF" data-name="resit_num" data-id="@item.id">@item.resit_num</td>
+                            <td style="background-color:#F2C7FF">@(item.first_employ+ item.resit_num)</td>
+                            <td style="background-color:#F2C7FF">@(getRate((item.first_employ + item.resit_num).ToDouble(), item.group_num.ToDouble()))%</td>
+                            <td class="EditAble" style="background-color:#FFEEAD" data-name="ignore_num" data-id="@item.id">@item.ignore_num</td>
+                            <td class="EditAble" style="background-color:#FFEEAD" data-name="no_exam_num" data-id="@item.id">@item.no_exam_num</td>
+                            <td style="background-color:#FFEEAD">@(item.group_num-item.in_group_3)</td>
+                            <td style="background-color:#FFEEAD">@(item.ignore_num + item.no_exam_num + item.group_num-item.in_group_3)</td>
+                            <td style="background-color:#FFEEAD">@(getRate((item.ignore_num + item.no_exam_num + item.group_num - item.in_group_3).ToDouble(), item.group_num))%</td>
+                            <td class="EditAble" style="background-color:#FFDCC4" data-name="no_job_num" data-id="@item.id">@(item.no_job_num)</td>
+                            <td style="background-color:#FFDCC4">@(getRate(item.no_job_num.ToDouble(), item.group_num.ToDouble()))%</td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+    </div>
+    @ViewModelBag.Load(Html, new ModelBasic.AdjFloatLayer("floatlayer")
+    {
+        position = ModelBasic.AdjFloatLayer.Position.相对定位,
+        positionRelative = new ModelBasic.AdjFloatLayer.PositionRelative
+        {
+            className = $"EditAble",
+            offset_y = 40
+        },
+        emtModelBase = new ModelBasic.EmtGrid("grid")
+        {
+            items = new List<ModelBasic.EmtGrid.Item>
+            {
+                new ModelBasic.EmtGrid.Item
+                {
+                    colLength=6,
+                    emtModelBase = new ModelBasic.EmtInput($"amount_text")
+                    {
+                        //defaultValue="<%=page.amount_text.value%>",
+                        width = "120"
+                    }
+                },
+                new ModelBasic.EmtGrid.Item
+                {
+                    colLength=3,
+                    emtModelBase = new ModelBasic.EmtButton("button")
+                    {
+                        defaultValue = "提交",
+
+                        eventJsChange = new EmtFormBase.EventJsChange
+                        {
+                            eventCsAction=new EmtFormBase.EventJsChange.EventCsAction
+                            {
+                                attachPara=new Dictionary<string, object>
+                                {
+                                    {"id","<%=page.focus.attr('data-id')%>" },
+                                    {"name","<%=page.focus.attr('data-name')%>" },
+                                    {"value","<%=page.amount_text.value%>" }
+                                },
+                                resCallJs="page.floatlayer.hide();location.reload();",
+                                func=new ServiceFactory.MengxinService().FastEdit
+                            }
+                        }
+                    }
+                },
+                new ModelBasic.EmtGrid.Item
+                {
+                    colLength=3,
+                    emtModelBase = new ModelBasic.EmtButton("cancel")
+                    {
+                        defaultValue = "取消",
+
+                        eventJsChange = new EmtFormBase.EventJsChange
+                        {
+                            eventJavascript=new EventJavascript
+                            {
+                                code="page.floatlayer.hide();page.focus.css('font-weight', 'normal');"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        eventJsAnies = new List<ModelBase.EventJsAny>
+        {
+            new ModelBase.EventJsAny
+            {
+                eventName= ModelBasic.AdjFloatLayer.EventJs.show,
+                eventJavascript= new EventJavascript
+                {
+                    code="page.amount_text.set(page.focus.text())",
+                }
+            },
+            new ModelBase.EventJsAny
+            {
+                eventName=ModelBasic.AdjFloatLayer.EventJs.show,
+                eventJavascript=new EventJavascript
+                {
+                    code="page.focus.css('font-weight', 'bold')"
+                }
+            }
+        },
+        width = "300px",
+        height = "50px",
+
+    })
+
+</form>
+
+
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        var layer = layui.layer;
+
+
+    });
+
+</script>
+
+@functions{
+    /// <summary>
+    /// 判断是否为当前档期首行
+    /// </summary>
+    /// <param name="p_jixiao_session"></param>
+    /// <param name="session"></param>
+    /// <param name="color"></param>
+    /// <returns></returns>
+    public bool isFirstRow()
+    {
+        return false;
+    }
+
+    public double getRate(double? A, double? B)
+    {
+        if (B == null || B == 0)
+        {
+            return 0;
+        }
+        else
+        {
+            return Math.Round((A * 100 / B).ToDouble(), 0);
+        }
+    }
+}

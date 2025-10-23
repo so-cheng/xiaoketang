@@ -1,0 +1,246 @@
+﻿
+@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+@using Newtonsoft.Json;
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+
+@{
+
+    ServiceFactory.ProjectBasic.DataRule dataRule = new ServiceFactory.ProjectBasic.DataRule();
+    var list = dataRule.GetRuleList(ViewBag.type_id, ViewBag.field_key);
+    var data = list[0];
+    int count = 0;
+}
+
+<style>
+    .radio {
+        display: none
+    }
+</style>
+<div class="layui-col-md6">
+    <div style="margin:20px;font-size:18px;">@data.field_name</div>
+</div>
+<div class="layui-col-md6">
+    <div class="layui-btn-container layui-col-xs12" style="float:right">
+        <button class="layui-btn" lay-filter="demo-search" onclick="addRule()">添加规则</button>
+    </div>
+</div>
+<div id="rulelist">
+    @{
+        foreach (var item in list)
+        {
+            count++;
+            <form class="layui-form layui-row layui-col-space16" style="margin:10px" name="rule" id="@count">
+                <input type="hidden" name="id" placeholder="" value="@item.id" class="layui-input">
+                <input type="hidden" name="tenant_id" placeholder="" value="@item.tenant_id" class="layui-input">
+                <input type="hidden" name="type_id" placeholder="" value="@item.type_id" class="layui-input">
+                <input type="hidden" name="field_key" placeholder="" value="@item.field_key" class="layui-input">
+                <input type="hidden" name="field_name" placeholder="" value="@item.field_name" class="layui-input">
+                <input type="hidden" name="create_time" placeholder="" value="@item.create_time" class="layui-input">
+                <input type="hidden" name="modify_time" placeholder="" value="@item.modify_time" class="layui-input">
+                <div class="layui-col-md2">
+                    <div class="layui-form-item" style="margin-bottom: 0;">
+                        <label class="layui-form-label">最小值:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="min_value" placeholder="" value="@item.min_value" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md2">
+                    <div class="layui-form-item" style="margin-bottom: 0;">
+                        <label class="layui-form-label">最大值:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="max_value" placeholder="" value="@item.max_value" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md2">
+                    <div class="layui-form-item" style="margin-bottom: 0;">
+                        <label class="layui-form-label">字体大小:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="font_size" placeholder="" value="@item.font_size" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md3">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">字体颜色:</label>
+                        <div class="layui-input-block">
+                            @{
+                                string red = item.font_color == "red" ? "checked" : "";
+                                string orange = item.font_color == "orange" ? "checked" : "";
+                                string green = item.font_color == "green" ? "checked" : "";
+                            }
+                            <input type="radio" name="font_color" class="radio" value="red" lay-filter="demo-radio-filter" title="红色" @red>
+                            <input type="radio" name="font_color" class="radio" value="orange" lay-filter="demo-radio-filter" title="橙色" @orange>
+                            <input type="radio" name="font_color" class="radio" value="green" lay-filter="demo-radio-filter" title="绿色" @green>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-md2">
+                    <div class="layui-btn-container layui-col-xs12">
+                        <div class="layui-btn" onclick="add(@count)">保存</div>
+                        <div class="layui-btn" onclick="del(@count ,@item.id)">删除</div>
+                    </div>
+                </div>
+            </form>
+        }
+    }
+</div>
+
+<script>
+    var count =  @count;
+    function addRule() {
+        count++;
+        let list = `<form class="layui-form layui-row layui-col-space16" style="margin:10px" name="rule" id="${count}">
+
+                <input type="hidden" name="id" placeholder="" value="" class="layui-input">
+                <input type="hidden" name="tenant_id" placeholder="" value="@data.tenant_id" class="layui-input">
+                <input type="hidden" name="type_id" placeholder="" value="@data.type_id" class="layui-input">
+                <input type="hidden" name="field_key" placeholder="" value="@data.field_key" class="layui-input">
+                <input type="hidden" name="field_name" placeholder="" value="@data.field_name" class="layui-input">
+                <input type="hidden" name="create_time" placeholder="" value="" class="layui-input">
+                <input type="hidden" name="modify_time" placeholder="" value="" class="layui-input">
+<div class="layui-col-md2">
+    <div class="layui-form-item" style="margin-bottom: 0;">
+        <label class="layui-form-label">最小值:</label>
+        <div class="layui-input-block">
+            <input type="text" name="min_value" placeholder="" value="" class="layui-input">
+        </div>
+    </div>
+</div>
+<div class="layui-col-md2">
+    <div class="layui-form-item" style="margin-bottom: 0;">
+        <label class="layui-form-label">最大值:</label>
+        <div class="layui-input-block">
+            <input type="text" name="max_value" placeholder="" value="" class="layui-input">
+        </div>
+    </div>
+</div>
+<div class="layui-col-md2">
+    <div class="layui-form-item" style="margin-bottom: 0;">
+        <label class="layui-form-label">字体大小:</label>
+        <div class="layui-input-block">
+            <input type="text" name="font_size" placeholder="" value="" class="layui-input">
+        </div>
+    </div>
+</div>
+<div class="layui-col-md3">
+    <div class="layui-form-item">
+        <label class="layui-form-label">字体颜色:</label>
+        <div class="layui-input-block">
+            <input type="radio" name="font_color" class="radio" value="red" lay-filter="demo-radio-filter" title="红色">
+            <input type="radio" name="font_color" class="radio" value="orange" lay-filter="demo-radio-filter" title="橙色">
+            <input type="radio" name="font_color" class="radio" value="green" lay-filter="demo-radio-filter" title="绿色">
+        </div>
+    </div>
+</div>
+<div class="layui-col-md2">
+    <div class="layui-btn-container layui-col-xs12">
+        <div class="layui-btn" onclick="add(${count})" >保存</div>
+        <div class="layui-btn" onclick= del(${count},null)>删除</div>
+    </div>
+</div>
+</form>`;
+        document.getElementById('rulelist').innerHTML += list;
+        layui.form.render('radio')
+    }
+    //删除
+    function del(id, item) {
+        //判断是否为空
+        if (item == null) {
+            document.getElementById(id).remove();
+        } else {
+            try {
+                $.ajax({
+                    url: "/ProjectBasic/DataRule/DeleteRule",
+                    method: "POST",
+                    dataType: "json",
+                    data: {
+                        id: item
+                    },
+                    success: function (response) {
+                        if (response.code == 0) {
+                            // 立即更新UI
+                            layer.msg('删除成功!');
+                            document.getElementById(id).remove();
+                        }
+                    }
+                });
+
+            }
+            catch (error) {
+                // 请求失败，回滚数据
+                task.title = originalData.title;
+                task.description = originalData.description;
+                task.category = originalData.category;
+                task.startTime = originalData.startTime;
+                task.dueTime = originalData.dueTime;
+                this.renderTasks();
+                this.showNotification('删除失败，已恢复原数据', 'error');
+            }
+        }
+
+    }
+    //保存
+    function add(id) {
+        let form = document.getElementById(id);
+        let formData = {};
+        for (let i = 0; i < form.elements.length; i++) {
+            let element = form.elements[i];
+            if (element.name) {
+
+                if (element.name == "font_color") {
+                    if (element.checked == true) {
+                        formData[element.name] = element.value;
+                    }
+                } else {
+                    formData[element.name] = element.value;
+                }
+            }
+
+        }
+        try {
+            $.ajax({
+                url: "/ProjectBasic/DataRule/AddOrEditRule",
+                method: "POST",
+                dataType: "json",
+                data: {
+                    rule: formData
+                },
+                success: function (response) {
+                    if (response.code == 0) {
+                        // 立即更新UI
+                        layer.msg('保存成功!')
+                        location.reload();
+                    }
+                }
+            });
+
+        } 
+        catch (error) {
+            // 请求失败，回滚数据
+            task.title = originalData.title;
+            task.description = originalData.description;
+            task.category = originalData.category;
+            task.startTime = originalData.startTime;
+            task.dueTime = originalData.dueTime;
+            this.renderTasks();
+        }
+
+    }
+
+</script>

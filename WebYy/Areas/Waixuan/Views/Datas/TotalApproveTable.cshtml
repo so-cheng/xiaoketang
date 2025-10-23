@@ -1,0 +1,174 @@
+﻿@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.js"></script>
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 14px;
+    }
+
+    .layui-table td {
+        font-size: 14px;
+    }
+</style>
+
+<style>
+    .layuiadmin-big-font {
+        font-weight: bold;
+        font-size: 42px;
+        margin: 10px;
+    }
+</style>
+
+
+<blockquote class="layui-elem-quote news_search">
+
+    <div class="layui-inline">
+        <form class="layui-form">
+
+            <div class="layui-input-inline">
+                <label class="layui-form-label">日期</label>
+            </div>
+
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("dateRange")
+                    {
+                        title = "日期",
+                        defaultValue = ViewBag.dateRange,
+                        mold = ModelBasic.EmtTimeSelect.Mold.date_range,
+                        eventJsChange = new EmtFormBase.EventJsChange
+                        {
+                            eventJavascript = new EventJavascript
+                            {
+                                code = "window.location.href = '/Waixuan/Datas/TotalApproveTable?dateRange=' + page.dateRange.value;"
+                            },
+                        }
+                    })
+                </div>
+            </div>
+
+
+
+        </form>
+    </div>
+</blockquote>
+<body>
+    <div>
+        <table class="layui-table" style="text-align:center;" id="table1" name="table1">
+            <colgroup>
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>运营团队</th>
+                    <th>等待运营审批</th>
+                    <th>等待公会审批</th>
+                    <th>外宣补人中</th>
+                    <th>已完成</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @{
+                    int yy_count = 0;
+                    int yy_approve_count = 0;
+                    int manager_approve_conut = 0;
+                    int waixuan_approve_count = 0;
+                    int finish_count = 0;
+                    string dateRange = ViewBag.dateRange;
+
+                    string yy_user_sn = ViewBag.yy_user_sn;
+
+                    var list = new List<ModelDb.user_base>();
+
+                    string where = "1=1";
+                    if (!dateRange.IsNullOrEmpty())
+                    {
+                        var range = UtilityStatic.CommonHelper.DateRangeFormat(dateRange, 0);
+                        where += $" and create_time >= '{range.date_range_s}' and create_time < '{range.date_range_e.ToDate().AddDays(1).ToString("yyyy-MM-dd")}'";
+                    }
+
+
+
+                    foreach (var item in list)
+                    {
+                        yy_count++;
+
+                        string attachSql = "";
+
+                        var range = UtilityStatic.CommonHelper.DateRangeFormat(dateRange, 0);
+                        if (!dateRange.IsNullOrEmpty())
+                        {
+                            attachSql += $" and create_time >= '{range.date_range_s}' and create_time < '{range.date_range_e.ToDate().AddDays(1).ToString("yyyy-MM-dd")}'";
+                        }
+
+
+
+                        var yy_approve_list = DoMySql.FindList<ModelDb.p_join_need>($"tg_user_sn in {new DomainUserBasic.UserRelationApp().GetNextAllUsersForSql(ModelEnum.UserRelationTypeEnum.运营邀厅管, item.user_sn)} and status='{ModelDb.p_join_need.status_enum.等待运营审批.ToInt()}' {attachSql}");
+                        yy_approve_count += yy_approve_list.Count;
+                        var manager_approve_list = DoMySql.FindList<ModelDb.p_join_need>($"tg_user_sn in {new DomainUserBasic.UserRelationApp().GetNextAllUsersForSql(ModelEnum.UserRelationTypeEnum.运营邀厅管, item.user_sn)} and status='{ModelDb.p_join_need.status_enum.等待公会审批.ToInt()}' {attachSql}");
+                        manager_approve_conut += manager_approve_list.Count;
+                        var waixuan_approve_list = DoMySql.FindList<ModelDb.p_join_need>($"tg_user_sn in {new DomainUserBasic.UserRelationApp().GetNextAllUsersForSql(ModelEnum.UserRelationTypeEnum.运营邀厅管, item.user_sn)} and status='{ModelDb.p_join_need.status_enum.等待外宣补人.ToInt()}' {attachSql}");
+                        waixuan_approve_count += waixuan_approve_list.Count;
+                        var finish_list = DoMySql.FindList<ModelDb.p_join_need>($"tg_user_sn in {new DomainUserBasic.UserRelationApp().GetNextAllUsersForSql(ModelEnum.UserRelationTypeEnum.运营邀厅管, item.user_sn)} and status='{ModelDb.p_join_need.status_enum.已完成.ToInt()}' {attachSql}");
+                        finish_count += finish_list.Count;
+                        <tr>
+                            <td><a href="javascript:applicationlist('@dateRange','@item.user_sn','');">@item.username</a></td>
+                            <td><a href="javascript:applicationlist('@dateRange','@item.user_sn','@ModelDb.p_join_need.status_enum.等待运营审批.ToInt())';">@(yy_approve_list.Count)</a></td>
+                            <td><a href="javascript:applicationlist('@dateRange','@item.user_sn','@ModelDb.p_join_need.status_enum.等待公会审批.ToInt()');">@(manager_approve_list.Count)</a></td>
+                            <td><a href="javascript:applicationlist('@dateRange','@item.user_sn','@ModelDb.p_join_need.status_enum.等待外宣补人.ToInt()');">@(waixuan_approve_list.Count)</a></td>
+                            <td><a href="javascript:applicationlist('@dateRange','@item.user_sn','@ModelDb.p_join_need.status_enum.已完成.ToInt()');">@(finish_list.Count)</a></td>
+                        </tr>
+                    }
+                }
+                <tr>
+                    <td><a href="javascript:applicationlist('@dateRange','','');">合计(@yy_count 人)</a></td>
+                    <td><a href="javascript:applicationlist('@dateRange','','@ModelDb.p_join_need.status_enum.等待运营审批.ToInt()');">@yy_approve_count</a></td>
+                    <td><a href="javascript:applicationlist('@dateRange','','@ModelDb.p_join_need.status_enum.等待公会审批.ToInt()');">@manager_approve_conut</a></td>
+                    <td><a href="javascript:applicationlist('@dateRange','','@ModelDb.p_join_need.status_enum.等待外宣补人.ToInt()');">@waixuan_approve_count</a></td>
+                    <td><a href="javascript:applicationlist('@dateRange','','@ModelDb.p_join_need.status_enum.已完成.ToInt()');">@finish_count</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+<script>
+    layui.use(function () {
+        var form = layui.form;
+        var layer = layui.layer;
+        // select 事件
+
+    });
+
+    function applicationlist(dateRange, yy_user_sn, status) {
+        win_pop_iframe('明细', '/Waixuan/Datas/ApproveApplicationList?dateRange=' + dateRange + '&yy_user_sn=' + yy_user_sn + '&status=' + status, 1600, 800);
+    }
+</script>
+

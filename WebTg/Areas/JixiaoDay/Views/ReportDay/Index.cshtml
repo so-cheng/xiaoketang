@@ -1,0 +1,512 @@
+﻿@{
+    Layout = null;
+}
+
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.ModelDbs;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Web;
+@using System.Web.Mvc;
+@using WeiCode.Services;
+
+@using WeiCode.ModelDbs;
+@using Services.Project;
+@using WeiCode.Domain;
+@using WeiCode.ModelDbs;
+@using WeiCode.Models;
+@using WeiCode.Domain;
+
+@{ 
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+
+<style>
+    .layuiadmin-big-font {
+        font-weight: bold;
+        font-size: 42px;
+        margin: 10px;
+    }
+</style>
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 14px;
+    }
+
+    .layui-table td {
+        font-size: 14px;
+    }
+</style>
+
+@{
+
+    ///今日上报
+    var payable_today = DoMySql.FindField<ModelDb.user_base>("COUNT(id)", $"user_sn in {new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.厅管邀主播, new UserIdentityBag().user_sn)}  and status=0 and user_sn not in(select zb_user_sn from p_jixiao_vacation where c_date='{DateTime.Today.ToDate()}')");
+
+    var real_today = DoMySql.FindField<ModelDb.p_jixiao_day>("COUNT(id)", $"zb_user_sn in {new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.厅管邀主播, new UserIdentityBag().user_sn)} and c_date = '{DateTime.Today}'");
+
+    ///昨日上报
+    var payable_yesterday = DoMySql.FindField<ModelDb.user_base>("COUNT(id)", $"user_sn in {new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.厅管邀主播, new UserIdentityBag().user_sn)} and create_time<'{DateTime.Today}' and status=0 and user_sn not in(select zb_user_sn from p_jixiao_vacation where c_date='{DateTime.Today.AddDays(-1).ToDate()}')");
+
+    var real_yesterday = DoMySql.FindField<ModelDb.p_jixiao_day>("COUNT(id)", $"zb_user_sn in {new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.厅管邀主播, new UserIdentityBag().user_sn)} and c_date = '{DateTime.Today.AddDays(-1)}'");
+
+    var today_unreport = DoMySql.FindListBySql<ModelDb.user_base>($"SELECT * FROM user_base where user_sn not in (select zb_user_sn from p_jixiao_day where tg_user_sn='{new UserIdentityBag().user_sn}' and c_date='{DateTime.Today.ToString("yyyy-MM-dd")}') and user_sn in{new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.厅管邀主播, new UserIdentityBag().user_sn)} and user_sn not in(select zb_user_sn from p_jixiao_vacation where tenant_id='{new DomainBasic.TenantApp().GetInfo().id}' and c_date='{DateTime.Today.ToString("yyyy-MM-dd")}') and status=0");
+    var yesterday_unreport = DoMySql.FindListBySql<ModelDb.user_base>($"SELECT * FROM user_base where user_sn not in (select zb_user_sn from p_jixiao_day where tg_user_sn='{new UserIdentityBag().user_sn}' and c_date='{DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd")}') and user_sn in{new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.厅管邀主播, new UserIdentityBag().user_sn)} and user_sn not in(select zb_user_sn from p_jixiao_vacation where tenant_id='{new DomainBasic.TenantApp().GetInfo().id}' and c_date='{DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd")}') and status=0");
+
+    var real_week = DoMySql.FindField<ModelDb.p_jixiao_day>("COUNT(id)", $"zb_user_sn in {new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.厅管邀主播, new UserIdentityBag().user_sn)} and c_date <= '{DateTime.Today.AddDays(-7)}'");
+
+
+
+
+
+}
+
+
+
+<div class="layui-card">
+    <div class="layui-card-header">核心数据</div>
+
+    <div class="layui-card-body" style="background-color:#F6F6F6">
+        <div class="layui-row layui-col-space15">
+            <form id="mainForm" class="layui-form">
+                <div class="layui-col-sm12 layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">
+                            本厅未提交名单
+                        </div>
+                        <div class="layui-card-body layuiadmin-card-list">
+
+                            <table class="layui-table" style="text-align:center;" id="table2" name="table2">
+                                <colgroup>
+                                    <col width="160">
+                                    <col width="600">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <td colspan="14" style="text-align: center; background-color: #FFF3CA; font-size: 18px; font-weight: 700 ">未提交名单</td>
+                                    </tr>
+                                    <tr style="background-color: #FCE4D3;font-weight:700;">
+                                        <th>日期</th>
+                                        <th>未提交主播(点击主播快速设置请假)</th>
+                                    </tr>
+                                </thead>
+
+                                <tr style="background-color: #E1EBF5 ">
+                                    <td style="background-color: #E3F2D9"><a href="javascript:parent.win_pop_iframe('今日未提交名单', '/Jixiao/ReportDay/UnReport?dateRange=@(DateTime.Today.ToString("yyyy-MM-dd")+" ~ "+DateTime.Today.ToString("yyyy-MM-dd"))', 1200, 730, '')">今日未提交</a></td>
+                                    <td style="background-color: #E3F2D9">
+                                        @{
+                                            foreach (var item in today_unreport)
+                                            {
+                                                <a href="javascript:;" class="zbs" zb_user_sn="@item.user_sn" date="@DateTime.Today.ToString("yyyy-MM-dd")">@item.name</a>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+
+                                <tr style="background-color: #E1EBF5">
+                                    <td style="background-color: #E3F2D9"><a href="javascript:parent.win_pop_iframe('昨日未提交名单', '/Jixiao/ReportDay/UnReport', 1200, 730, '')">昨日未提交</a></td>
+                                    <td style="background-color: #E3F2D9">
+                                        @{
+                                            foreach (var item in yesterday_unreport)
+                                            {
+                                                <a href="javascript:;" class="zbs" zb_user_sn="@item.user_sn" date="@DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd")">@item.name</a>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                @ViewModelBag.Load(Html, new ModelBasic.AdjFloatLayer("floatlayer")
+                {
+                    position = ModelBasic.AdjFloatLayer.Position.相对定位,
+
+                    positionRelative = new ModelBasic.AdjFloatLayer.PositionRelative
+                    {
+                        className = $"zbs",
+                        offset_y = 40,
+                        offset_x = -60
+                    },
+                    emtModelBase = new ModelBasic.EmtGrid("grid")
+                    {
+                        items = new List<ModelBasic.EmtGrid.Item>
+                        {
+                            new ModelBasic.EmtGrid.Item
+                            {
+                                colLength=12,
+                                title="请假主播",
+                                emtModelBase = new ModelBasic.EmtInput($"zb_name")
+                                {
+                                    displayStatus= EmtModelBase.DisplayStatus.只读,
+                                }
+                            },
+                            new ModelBasic.EmtGrid.Item
+                            {
+                                colLength=12,
+                                title="请假原因",
+                                emtModelBase = new ModelBasic.EmtSelect($"cause")
+                                {
+                                    options=new Dictionary<string, string>
+                                    {
+                                        {"请假","请假"},
+                                        {"不接档","不接档"}
+                                    },
+                                }
+                            },
+                            new ModelBasic.EmtGrid.Item
+                            {
+                                colLength=12,
+                                title="替档主播",
+                                emtModelBase = new ModelBasic.EmtSelect($"new_zb_user_sn")
+                                {
+                                    options=new DomainUserBasic.UserRelationApp().GetNextUsersForKv(ModelEnum.UserRelationTypeEnum.厅管邀主播,new UserIdentityBag().user_sn),
+                                }
+                            },
+                            new ModelBasic.EmtGrid.Item
+                            {
+                                colLength=6,
+                                emtModelBase = new ModelBasic.EmtButton("button")
+                                {
+                                    defaultValue = "提交",
+                                    style=$"{Style.margin("","80","","")}",
+                                    eventJsChange = new EmtFormBase.EventJsChange
+                                    {
+                                        eventCsAction=new EmtFormBase.EventJsChange.EventCsAction
+                                        {
+                                            attachPara=new Dictionary<string, object>
+                                            {
+                                                {"zb_user_sn","<%=page.focus.attr('zb_user_sn')%>" },
+                                                {"date","<%=page.focus.attr('date')%>" },
+                                                {"cause","<%=page.cause.value%>" },
+                                                {"new_zb_user_sn","<%=page.new_zb_user_sn.value%>" },
+                                            },
+                                            resCallJs="page.floatlayer.hide();",
+                                            func=new ServiceFactory.VacationService().SetVacation
+                                        }
+                                    }
+                                }
+                            },
+                            new ModelBasic.EmtGrid.Item
+                            {
+                                colLength=6,
+                                emtModelBase = new ModelBasic.EmtButton("cancel")
+                                {
+                                    styleColor= ModelBasic.StyleColor.绿色_空,
+                                    defaultValue = "取消",
+                                    style=$"{Style.margin("","40","","")}",
+                                    eventJsChange = new EmtFormBase.EventJsChange
+                                    {
+                                        eventCsAction=new EmtFormBase.EventJsChange.EventCsAction
+                                        {
+                                            resCallJs="page.floatlayer.hide();",
+                                            func=new ServiceFactory.VacationService().EPT
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    eventJsAnies = new List<ModelBase.EventJsAny>
+                    {
+                        new ModelBase.EventJsAny
+                        {
+                            eventName= ModelBasic.AdjFloatLayer.EventJs.show,
+                            eventJavascript= new EventJavascript
+                            {
+                                code="page.zb_name.set(page.focus.text())",
+                            }
+                        }
+                    },
+                    width = "300px",
+                    height = "200px",
+
+                })
+            </form>
+
+            <!--
+        <div class="layui-col-sm3 layui-col-md3">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                拉新(今日)
+            </div>
+            <div class="layui-card-body layuiadmin-card-list">
+                <a href="javascript:parent.win_pop_iframe('每日上报','/ZbManage/Report/List?c_date_range=@DateTime.Today.ToString("yyyy-MM-dd") ~ @DateTime.Today.ToString("yyyy-MM-dd")', 800, 650)"><p class="layuiadmin-big-font">@ViewBag.today_new_num</p></a>
+                <p style="margin:10px;">
+                    昨日
+                    <a href="javascript:parent.win_pop_iframe('每日上报','/ZbManage/Report/List?c_date_range=@DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd") ~ @DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.yesterday_new_num</span></a>
+                    上周
+                    <a href="javascript:parent.win_pop_iframe('每日上报','/ZbManage/Report/List?c_date_range=@DateTime.Today.AddDays(-7).ToString("yyyy-MM-dd") ~ @DateTime.Today.AddDays(-7).ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.week_new_num</span></a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-col-sm3 layui-col-md3">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                二消(今日)
+            </div>
+            <div class="layui-card-body layuiadmin-card-list">
+                <a href="javascript:parent.win_pop_iframe('每日上报','/ZbManage/Report/List?c_date_range=@DateTime.Today.ToString("yyyy-MM-dd") ~ @DateTime.Today.ToString("yyyy-MM-dd")', 800, 650)"><p class="layuiadmin-big-font">@ViewBag.today_num_2</p></a>
+                <p style="margin:10px;">
+                    昨日
+                    <a href="javascript:parent.win_pop_iframe('每日上报','/ZbManage/Report/List?c_date_range=@DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd") ~ @DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.yesterday_num_2</span></a>
+                    上周
+                    <a href="javascript:parent.win_pop_iframe('每日上报','/ZbManage/Report/List?c_date_range=@DateTime.Today.AddDays(-7).ToString("yyyy-MM-dd") ~ @DateTime.Today.AddDays(-7).ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.week_num_2</span></a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-col-sm3 layui-col-md3">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                建联(今日)
+            </div>
+            <div class="layui-card-body layuiadmin-card-list">
+                <a href="javascript:parent.win_pop_iframe('每日上报','/ZbManage/Report/List?c_date_range=@DateTime.Today.ToString("yyyy-MM-dd") ~ @DateTime.Today.ToString("yyyy-MM-dd")', 800, 650)"><p class="layuiadmin-big-font">@ViewBag.today_contact_num</p></a>
+                <p style="margin:10px;">
+                    昨日
+                    <a href="javascript:parent.win_pop_iframe('每日上报','/ZbManage/Report/List?c_date_range=@DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd") ~ @DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.yesterday_contact_num</span></a>
+                    上周
+                    <a href="javascript:parent.win_pop_iframe('每日上报','/ZbManage/Report/List?c_date_range=@DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd") ~ @DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.week_contact_num</span></a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-col-sm3 layui-col-md3">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                首消音浪(今日)
+            </div>
+            <div class="layui-card-body layuiadmin-card-list">
+                <a href="javascript:parent.win_pop_iframe('每日上报','/ZbManage/Report/List?c_date_range=@DateTime.Today.ToString("yyyy-MM-dd") ~ @DateTime.Today.ToString("yyyy-MM-dd")', 800, 650)"><p class="layuiadmin-big-font">@ViewBag.today_amount_1</p></a>
+                <p style="margin:10px;">
+                    昨日
+                    <a href="javascript:parent.win_pop_iframe('每日上报','/ZbManage/Report/List?c_date_range=@DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd") ~ @DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.yesterday_amount_1</span></a>
+                    上周
+                    <a href="javascript:parent.win_pop_iframe('每日上报','/ZbManage/Report/List?c_date_range=@DateTime.Today.AddDays(-7).ToString("yyyy-MM-dd") ~ @DateTime.Today.AddDays(-7).ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.week_amount_1</span></a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-col-sm3 layui-col-md3">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                二消音浪(今日)
+            </div>
+            <div class="layui-card-body layuiadmin-card-list">
+                <a href="javascript:parent.win_pop_iframe('每日上报','/ZbManage/Report/List?c_date_range=@DateTime.Today.ToString("yyyy-MM-dd") ~ @DateTime.Today.ToString("yyyy-MM-dd")', 800, 650)"><p class="layuiadmin-big-font">@ViewBag.today_amount_2</p></a>
+                <p style="margin:10px;">
+                    昨日
+                    <a href="javascript:parent.win_pop_iframe('每日上报','/ZbManage/Report/List?c_date_range=@DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd") ~ @DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.yesterday_amount_2</span></a>
+                    上周
+                    <a href="javascript:parent.win_pop_iframe('每日上报','/ZbManage/Report/List?c_date_range=@DateTime.Today.AddDays(-7).ToString("yyyy-MM-dd") ~ @DateTime.Today.AddDays(-7).ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.week_amount_2</span></a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="layui-col-sm3 layui-col-md3">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                老用户(今日)
+            </div>
+            <div class="layui-card-body layuiadmin-card-list">
+                <a href="javascript:parent.win_pop_iframe('每日上报','/ZbManage/Report/List?c_date_range=@DateTime.Today.ToString("yyyy-MM-dd") ~ @DateTime.Today.ToString("yyyy-MM-dd")', 800, 650)"><p class="layuiadmin-big-font">@ViewBag.today_old_amount</p></a>
+                <p style="margin:10px;">
+                    昨日
+                    <a href="javascript:parent.win_pop_iframe('每日上报','/ZbManage/Report/List?c_date_range=@DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd") ~ @DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.yesterday_old_amount</span></a>
+                    上周
+                    <a href="javascript:parent.win_pop_iframe('每日上报','/ZbManage/Report/List?c_date_range=@DateTime.Today.AddDays(-7).ToString("yyyy-MM-01") ~ @DateTime.Today.AddDays(-7).ToString("yyyy-MM-01")', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.week_old_amount</span></a>
+                </p>
+            </div>
+        </div>
+    </div>
+    -->
+            <!--
+       <div class="layui-col-sm3 layui-col-md3">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                总音浪(今日)
+            </div>
+            <div class="layui-card-body layuiadmin-card-list">
+                <a href="javascript:parent.win_pop_iframe('每日上报','/ZbManage/Report/List?c_date_range=@DateTime.Today.ToString("yyyy-MM-dd") ~ @DateTime.Today.ToString("yyyy-MM-dd")', 800, 650)"><p class="layuiadmin-big-font">@ViewBag.today_amount</p></a>
+                <p style="margin:10px;">
+                    昨日
+                    <a href="javascript:parent.win_pop_iframe('每日上报','/ZbManage/Report/List?c_date_range=@DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd") ~ @DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.yesterday_amount</span></a>
+                    上周
+                    <a href="javascript:parent.win_pop_iframe('每日上报','/ZbManage/Report/List?c_date_range=@DateTime.Today.AddDays(-7).ToString("yyyy-MM-dd") ~ @DateTime.Today.AddDays(-7).ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.week_amount</span></a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-col-sm3 layui-col-md3">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                开播人数(今日)
+            </div>
+            <div class="layui-card-body layuiadmin-card-list">
+                <p class="layuiadmin-big-font">@real_today[0]</p>
+                <p style="margin:10px;">
+                    昨日
+                    @real_today[0]
+                    上周
+                    @real_week[0]
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-col-sm3 layui-col-md3">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                新入驻主播人数(今日)
+            </div>
+            <div class="layui-card-body layuiadmin-card-list">
+                <p class="layuiadmin-big-font">
+                    @(DoMySql.FindList<ModelDb.user_base>($"user_sn in {new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.厅管邀主播,new UserIdentityBag().user_sn)} and create_time = '{DateTime.Today}'").Count)
+                </p>
+                <p style="margin:10px;">
+                    昨日
+                    @(DoMySql.FindList<ModelDb.user_base>($"user_sn in {new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.厅管邀主播,new UserIdentityBag().user_sn)} and create_time = '{DateTime.Today.AddDays(-1)}'").Count)
+                    上周
+                    @(DoMySql.FindList<ModelDb.user_base>($"user_sn in {new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.厅管邀主播,new UserIdentityBag().user_sn)} and create_time = '{DateTime.Today.AddDays(-7)}'").Count)
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    -->
+
+
+        </div>
+    </div>
+
+    
+    <div class="layui-card-body" style="background-color:#F6F6F6">
+        <div class="layui-row layui-col-space15">
+
+
+            <!--
+
+        <div class="layui-col-sm6 layui-col-md6" style="background-color:#F6F6F6">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-sm6 layui-col-md6">
+                        <div class="layui-card">
+                            <div class="layui-card-header">
+                                应交记录
+                            </div>
+                            <div class="layui-card-body layuiadmin-card-list">
+
+                                <p class="layuiadmin-big-font">@payable_yesterday[0]</p>
+                                <p style="margin:10px;">
+                                    今日
+                                    <span class="layuiadmin-span-color">@payable_today[0]</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-sm6 layui-col-md6">
+                        <div class="layui-card">
+                            <div class="layui-card-header">
+                                实交记录
+                            </div>
+                            <div class="layui-card-body layuiadmin-card-list">
+                                <a href="javascript:parent.win_pop_iframe('昨日未提交名单', '/Jixiao/ReportDay/UnReport', 1200, 730, '');">
+                                    <p class="layuiadmin-big-font">@real_yesterday[0]</p>
+                                </a>
+                                <p style="margin:10px;">
+                                    今日
+                                    <a href="javascript:parent.win_pop_iframe('今日未提交名单', '/Jixiao/ReportDay/UnReport?dateRange=@(DateTime.Today.ToString("yyyy-MM-dd")+" ~ "+DateTime.Today.ToString("yyyy-MM-dd"))', 1200, 730, '');">
+                                        <span class="layuiadmin-span-color">@real_today[0]</span>
+                                    </a>
+                                    @{
+                                        var dateRange = $"{DateTime.Today.ToString("yyyy-MM-01")} ~ {DateTime.Today.ToString("yyyy-MM-dd")}";
+                                    }
+                                    <a href="javascript:parent.win_pop_iframe('未提交名单', '/Jixiao/ReportDay/UnReport', 1200, 730, '');" style="color: dodgerblue">本月未提交</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    @{
+                        var zhuboCount = DoMySql.FindListBySql<ModelDb.user_relation>(new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.厅管邀主播, new UserIdentityBag().user_sn)).Count;
+                        if (DateTime.Today.ToString("dd").ToInt() >= 25 && DoMySql.FindList<ModelDb.p_jixiao_target>($"tg_user_sn='{new UserIdentityBag().user_sn}' and yearmonth='{DateTime.Today.AddMonths(1).ToString("yyyy-MM")}'").Count < zhuboCount)
+                        {
+                            <div class="layui-col-sm6 layui-col-md6">
+                                <div class="layui-card">
+                                    <div class="layui-card-header">
+                                        <p style="color:red">目标设置提醒</p>
+                                    </div>
+                                    <div class="layui-card-body layuiadmin-card-list">
+                                        <p style="font-size: 16px; margin: 12px;">次月主播目标还有@(zhuboCount)人未设置,<a href="/ZbManage/Target/Post" target="_parent" style="color:dodgerblue">前往设置</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+                <div class="layui-col-sm6 layui-col-md6" style="background-color:#F6F6F6">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        活动设置
+                    </div>
+                    <div class="layui-col-sm12 layui-col-md12" style="background-color:#F6F6F6">
+                        <iframe src="/zbmanage/report/settype?is_show=0" style="width:100%;height:400px;border:none"></iframe>
+                    </div>
+                </div>
+            </div>
+    -->
+
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    window.onload = function () {
+        //parent.win_pop_iframe('昨日未提交名单', '/Jixiao/ReportDay/UnReport', 400, 400, '');
+    }
+
+
+    layui.use(['form', 'element'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            element = layui.element;
+            layer = layui.layer;
+        $(function () {
+            form.render();
+            $(".layui-anim>dd")[0].click()
+            form.render('select');
+        });
+    });
+
+
+    
+</script>
+
+

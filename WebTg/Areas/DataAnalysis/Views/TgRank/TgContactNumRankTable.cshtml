@@ -1,0 +1,246 @@
+﻿
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+<script src="~/Assets/js/layui.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.js"></script>
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+@{
+    Layout = null;
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+        border: 1px solid #000 !important;
+    }
+
+    .layui-table td {
+        font-size: 15px;
+        border: 1px solid #000 !important;
+    }
+
+    .layui-table {
+        border: 1px solid #000 !important;
+        border-collapse: collapse !important;
+    }
+
+    .layui-layer-iframe {
+        top: 0 !important;
+    }
+
+    /* 表头固定样式 */
+    .layui-table {
+        position: relative;
+    }
+
+        .layui-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: white;
+        }
+
+            .layui-table thead tr:first-child {
+                position: sticky;
+                top: 0;
+                z-index: 11;
+                background-color: #FFF3CA;
+            }
+
+            .layui-table thead tr:nth-child(2) {
+                position: sticky;
+                top: 50px; /* 第一行表头的高度 */
+                z-index: 11;
+                background-color: #FCE4D3;
+            }
+
+            /* 确保表头有足够的背景色 */
+            .layui-table thead th {
+                background-color: inherit;
+            }
+</style>
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>厅管平均建联排名</title>
+</head>
+@{
+    string c_date_e = ViewBag.c_date_e;
+    string c_date_s = ViewBag.c_date_s;
+    string dateRange = c_date_s + " ~ " + c_date_e;
+}
+<body style="padding: 10px; background-color: #ffffff">
+    <blockquote class="layui-elem-quote news_search">
+        <div class="layui-inline">
+            <form class="layui-form">
+                <div class="layui-inline">
+                    <label class="layui-form-label">日期范围</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="dateRange" name="dateRange" value="@dateRange" placeholder="选择日期范围">
+                    </div>
+                </div>
+                <button type="submit" class="layui-btn search_btn">查询</button>
+            </form>
+        </div>
+        <a style="color:blue;float:right;font-size:17px;" href="javascript:parent.win_pop_iframe('规则说明', '@(new ServiceFactory.HelpService().GetLink("8"))', 800,800);">排名规则说明</a>
+    </blockquote>
+    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+        <ul class="layui-tab-title">
+            <li style="padding: 0 14px;">
+                <a href="/DataAnalysis/tgrank/TgNewNumRankTable?dateRange=@dateRange">单厅主播平均拉新个数</a>
+            </li>
+            <li style="padding: 0 14px;">
+                <a href="/DataAnalysis/tgrank/TgNum2RankTable?dateRange=@dateRange">单厅主播平均二消个数</a>
+            </li>
+            <li style="padding: 0 14px;">
+                <a href="/DataAnalysis/tgrank/TgAmount2RankTable?dateRange=@dateRange">单厅主播平均二消音浪</a>
+            </li>
+            <li class="layui-this" lay-id="11">单厅主播平均建联数</li>
+        </ul>
+    </div>
+    @{
+        // 如果当天主播出现请假、未提报数据者或者拉新、首消音浪、二消个数、建联、二消音浪这些数据同时为0，则不计入有效主播总人数的统计
+        var yy_user_sn = new ServiceFactory.UserInfo.Tg().GetTgInfoByUsersn(new UserIdentityBag().user_sn).yy_sn; // 当前登录厅管的所属运营
+        var jixiaoDayList = DoMySql.FindList<ModelDb.p_jixiao_day>($"yy_user_sn = '{yy_user_sn}' and DATE(c_date) between '{c_date_s}' and '{c_date_e}' and (new_num!=0 or amount_1!=0 or num_2!=0 or amount_2!=0 or contact_num!=0)"); // 筛选周期内厅管团队运营下所有绩效数据
+
+        var newList = new List<ServiceFactory.DataAnalysis.TingJixiaoContactNumRankModel>(); // 构造待排序列表
+
+        // 获取厅管团队运营下所有直播厅
+        foreach (var item in new ServiceFactory.UserInfo.Ting().GetBaseInfos(new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter
+        {
+            attachUserType = new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType()
+            {
+                userType = ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType.UserType.运营,
+                UserSn = yy_user_sn
+            }
+        }))
+        {
+            var tingJixiaoList = jixiaoDayList.Where(x => x.ting_sn == item.ting_sn).ToList(); // 直播厅绩效数据
+            var zbList = tingJixiaoList.GroupBy(c => c.zb_user_sn); // 按主播分组
+
+            var zbCount = zbList.Count(); // 有效主播数
+            var contactSum = tingJixiaoList.Sum(x => x.contact_num); // 总建联
+
+            newList.Add(new ServiceFactory.DataAnalysis.TingJixiaoContactNumRankModel
+            {
+                ting_sn = item.ting_sn,
+                ting_name = item.ting_name, // 厅名
+                contact_sum = contactSum, // 总建联
+                contact_average = zbCount > 0 ? contactSum.ToDecimal() / zbCount.ToDecimal() : 0, // 主播平均建联数 = 总建联 / 有效主播数
+            });
+        }
+        <table class="layui-table" style="text-align:center;" id="table" name="table" width="100%">
+            <colgroup>
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+            </colgroup>
+            <thead>
+                <tr style="background-color: #DAE3F4; font-weight: 700;">
+                    <th>厅名</th>
+                    <th>总建联</th>
+                    <th>主播平均建联数</th>
+                    <th>厅排名</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int rank = 1;
+                    <tr style="background-color: #FBE6D5">
+                        @foreach (var ting in newList.OrderByDescending(c => c.contact_average).Take(50))
+                        {
+                        @:</tr><tr style="background-color: #FBE6D5">
+                            <td>@ting.ting_name</td>
+                            <td>@ting.contact_sum</td>
+                            <td>@ting.contact_average.ToDouble().ToString("0.00")</td>
+                            switch (rank)
+                            {
+                                case 1:
+                                    <td><img src="/Assets/images/rank1.png" width="30" height="30"></td>
+                                    break;
+                                case 2:
+                                    <td><img src="/Assets/images/rank2.png" width="30" height="30"></td>
+                                    break;
+                                case 3:
+                                    <td><img src="/Assets/images/rank3.png" width="30" height="30"></td>
+                                    break;
+                                case 4:
+                                    if (newList.Count > 10)
+                                    {
+                                        <td><img src="/Assets/images/rank4.png" width="30" height="30"></td>
+                                    }
+                                    else
+                                    {
+                                        <td>@rank</td>
+                                    }
+                                    break;
+                                case 5:
+                                    if (newList.Count > 10)
+                                    {
+                                        <td><img src="/Assets/images/rank5.png" width="30" height="30"></td>
+                                    }
+                                    else
+                                    {
+                                        <td>@rank</td>
+                                    }
+                                    break;
+                                default:
+                                    <td>@rank</td>
+                                    break;
+                            }
+                            rank++;
+                            <td>
+                                <div style="text-align:center;">
+                                    <a href="javascript:LineChart('@ting.ting_sn');" class="layui-btn layui-bg-blue">查看图表</a>
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</body>
+</html>
+@*@ViewModelBag.Load(Html, new ModelBasic.AdjScreenshot("screenshot")
+    {
+        elem = "table"
+    })*@
+<script>
+    //设置时间筛选的数据格式
+    layui.use(['form', 'laydate'], function () {
+        var form = layui.form;
+        var laydate = layui.laydate;
+
+        //日期时间段选择
+        laydate.render({
+            elem: '#dateRange'
+            , range: '~'
+        });
+    });
+
+    function LineChart(ting_sn) {
+        win_pop_iframe('查看图表', '/DataAnalysis/TgRank/LineChart?ting_sn=' + ting_sn + '&type=contactNum', window.innerWidth * 0.8, window.innerHeight * 0.8);
+    }
+</script>

@@ -1,0 +1,266 @@
+﻿
+@{
+    Layout = null;
+}
+@using System;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+@model  List<ModelDb.user_info_zhubo>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>直播间信息</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 状态栏 */
+        .status-bar {
+            height: 44px;
+            background-color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-left {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .status-center {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .status-icon {
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border-radius: 2px;
+            display: inline-block;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            height: 44px;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .nav-back {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .nav-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #000;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* 主内容区 */
+        .main-content {
+            height: calc(100vh - 44px - 44px - 83px);
+            background-color: white;
+            overflow-y: auto;
+        }
+
+        .info-list {
+            list-style: none;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e5e5e5;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+            .info-item:active {
+                background-color: #f0f0f0;
+            }
+
+        .info-label {
+            font-size: 16px;
+            color: #000;
+            flex: 1;
+        }
+
+        .info-value {
+            font-size: 16px;
+            color: #999;
+            margin-right: 8px;
+        }
+
+            .info-value.has-value {
+                color: #000;
+            }
+
+        .info-arrow {
+            width: 8px;
+            height: 8px;
+            border-right: 2px solid #c7c7cc;
+            border-bottom: 2px solid #c7c7cc;
+            transform: rotate(-45deg);
+        }
+
+        /* 头像 */
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23e0e0e0"/><circle cx="30" cy="30" r="8" fill="%23999"/><circle cx="70" cy="30" r="8" fill="%23999"/><circle cx="50" cy="70" r="15" fill="%23999"/></svg>');
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* 二维码图标 */
+        .qr-icon {
+            width: 20px;
+            height: 20px;
+            background-color: #999;
+            border-radius: 2px;
+            position: relative;
+        }
+
+            .qr-icon::before {
+                content: '';
+                position: absolute;
+                top: 2px;
+                left: 2px;
+                right: 2px;
+                bottom: 2px;
+                background-image: linear-gradient(90deg, white 1px, transparent 1px), linear-gradient(0deg, white 1px, transparent 1px);
+                background-size: 4px 4px;
+            }
+
+        /* 底部导航 */
+        .bottom-nav {
+            height: 83px;
+            background-color: #f8f8f8;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            background-color: #999;
+            border-radius: 2px;
+        }
+
+        /* 特殊样式 */
+        .phone-masked {
+            color: #000;
+        }
+
+        .signature {
+            color: #000;
+        }
+
+        /* 响应式 */
+        @@media (max-width: 375px) {
+            .info-item {
+                padding: 10px 16px;
+            }
+
+            .info-label {
+                font-size: 15px;
+            }
+
+            .info-value {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <div class="navbar">
+        <div class="nav-title">@ViewBag.RoomName 房间信息</div>
+    </div>
+    <!-- 主内容区 -->
+    <div class="main-content">
+        @foreach (var item in Model)
+        {
+            <div class="info">
+                <h3 style="text-align:center">主播：@item.user_name</h3>
+                <ul class="info-list">
+                    <li class="info-item">
+                        <div class="info-label">抖音ID</div>
+                        <div class="info-value has-value"> @item.dou_username</div>
+                    </li>
+                    <li class="info-item">
+                        <div class="info-label">所属厅</div>
+                        @{
+                            var tg = new ServiceFactory.UserInfo.Tg().GetTgInfoByUsersn(item.tg_user_sn);
+                            <div class="info-value has-value">@tg.name</div>
+                        }
+                    </li>
+                    <li class="info-item">
+                        <div class="info-label">MBTI</div>
+                        <div class="info-value has-value">@item.mbti</div>
+                    </li>
+                    <li class="info-item">
+                        <div class="info-label">所属团队(运营团队)</div>
+                        @{
+                            var yy = new ServiceFactory.UserInfo.Yy().GetInfoByUserSn(item.yy_user_sn);
+                            <div class="info-value has-value">@yy.name</div>
+                        }
+                    </li>
+                </ul>
+            </div>
+        }
+    </div>
+</body>
+</html>

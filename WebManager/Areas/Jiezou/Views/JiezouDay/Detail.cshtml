@@ -1,0 +1,334 @@
+﻿@using System;
+@using System.Data;
+@using System.Collections.Generic;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+@{
+    string ting_sn = ViewBag.ting_sn;
+    string username = string.Empty; 
+
+    // 默认为近半个月
+    string c_date = ViewBag.c_date;
+    if (c_date.IsNullOrEmpty())
+    {
+        c_date = DateTime.Today.AddDays(-16).ToString("yyyy-MM-dd") + " ~ " + DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd");
+    }
+
+    // 解析开始结束时间
+    var date_s = c_date.Split('~');
+    DateTime f_date = date_s[0].Trim().ToDate();
+    DateTime t_date = date_s[1].Trim().ToDate();
+
+    // 补全时间段内日期
+    List<string> dateArray = new List<string>();
+    for (DateTime date = f_date; date <= t_date; date = date.AddDays(1))
+    {
+        dateArray.Add(date.ToString("yyyy-MM-dd"));
+    }
+
+    // 获取展厅名称
+    if (!string.IsNullOrEmpty(ting_sn))
+    {
+        username = new ServiceFactory.UserInfo.Ting().GetTingBySn(ting_sn).ting_name;
+    }
+
+    // 获取时间段内每天的节奏阶段
+    var jiezouDetailList = DoMySql.FindListBySql<ModelDb.jiezou_detail>(
+        $"select data_time,step,zb_num,session_count_avg FROM jiezou_detail t1 where ting_sn = '{ting_sn}' and data_time between '{f_date}' and '{t_date}'");
+
+    List<decimal> stepList = new List<decimal>();
+    List<int> zbNumList = new List<int>();
+    List<int> dangweiList = new List<int>();
+
+    foreach (string date in dateArray)
+    {
+        decimal step = 0M;
+        int zbNum = 0;
+        int dangwei = 0;
+
+        var jiezoudetail = jiezouDetailList.Find(n => n.data_time.ToDateString("yyyy-MM-dd").Equals(date));
+        if (jiezoudetail != null)
+        {
+            // 添加阶段数据
+            step = (decimal)jiezoudetail.step;
+            // 添加主播人数数据
+            zbNum = (int)jiezoudetail.zb_num;
+            // 添加档位数数据
+            dangwei = (int)jiezoudetail.session_count_avg;
+        }
+
+        stepList.Add(step);
+        zbNumList.Add(zbNum);
+        dangweiList.Add(dangwei);
+    }
+}
+
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+
+    .date-filter {
+        margin: 15px 0;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .date-filter .layui-form-label {
+        margin-right: 10px;
+        font-weight: 600;
+    }
+
+    #main_line {
+        width: 100%;
+        height: 450px;
+        margin: 20px 0;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+</style>
+
+<div class="date-filter">
+    <div class="layui-form-label">日期范围</div>
+    <div class="layui-input-inline" style="width: 300px;">
+        @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("c_date", true)
+        {
+            title = "日期",
+            defaultValue = c_date,
+            mold = ModelBasic.EmtTimeSelect.Mold.date_range,
+            eventJsChange = new EmtFormBase.EventJsChange
+            {
+                eventJavascript = new EventJavascript
+                {
+                    code = $"window.location.href = '/jiezou/JiezouDay/Detail?c_date=' + page.c_date.value + '&ting_sn={ViewBag.ting_sn}';"
+                },
+            }
+        })
+    </div>
+</div>
+
+<div id="main_line"></div>
+
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/other/echarts.min.4.3.0.js"></script>
+
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main_line'));
+
+    // 处理数据
+    var dateArray = @Html.Raw(Json.Encode(dateArray));
+    var username = @Html.Raw(Json.Encode(username));
+    var stepList = @Html.Raw(Json.Encode(stepList));//阶段曲线
+    var zbNumList = @Html.Raw(Json.Encode(zbNumList));//主播数曲线
+    var dangweiList = @Html.Raw(Json.Encode(dangweiList));//档位数曲线
+
+    // 图表配置
+    var option = {
+        title: {
+            text: username + ' 数据趋势图',
+            left: 'center',
+            textStyle: {
+                fontSize: 16,
+                fontWeight: 'normal'
+            },
+            padding: [10, 0, 20, 0]
+        },
+        tooltip: {
+            trigger: 'axis',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            borderColor: '#ddd',
+            borderWidth: 1,
+            textStyle: { color: '#333' },
+            formatter: function(params) {
+                var param = params[0];
+                return '<div style="font-weight:bold;margin-bottom:5px;">' + param.name + '</div>' +
+                       params.map(p => {
+                           return '<div><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background-color:' + p.color + ';margin-right:5px;"></span>' +
+                                  p.seriesName + ': ' + p.value + '</div>';
+                       }).join('');
+            }
+        },
+        legend: {
+            data: ['阶段', '主播人数', '档位数'],
+            selected: {
+                '阶段': true,
+                '主播人数': false,
+                '档位数': false
+            },
+            top: 30,
+            left: 'center',
+            textStyle: {
+                fontSize: 12
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'category',
+            data: dateArray,
+            axisLine: {
+                lineStyle: {
+                    color: '#ccc'
+                }
+            },
+            axisTick: {
+                alignWithLabel: true
+            },
+            axisLabel: {
+                interval: 0,
+                rotate: 45,
+                fontSize: 12
+            },
+            splitLine: {
+                show: true,
+                lineStyle: {
+                    color: '#f5f5f5'
+                }
+            }
+        },
+        yAxis: {
+            type: 'value',
+            axisLine: {
+                show: false
+            },
+            axisLabel: {
+                fontSize: 12
+            },
+            splitLine: {
+                lineStyle: {
+                    color: '#f5f5f5'
+                }
+            }
+        },
+        series: [
+            {
+                name: '阶段',
+                type: 'line',
+                data: stepList,
+                symbol: 'circle',
+                symbolSize: 6,
+                smooth: true,
+                lineStyle: {
+                    width: 2,
+                    color: '#5470c6'
+                },
+                itemStyle: {
+                    color: '#5470c6'
+                },
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgba(84, 112, 198, 0.3)' },
+                        { offset: 1, color: 'rgba(84, 112, 198, 0)' }
+                    ])
+                },
+                emphasis: {
+                    scale: true,
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowColor: 'rgba(0, 0, 0, 0.3)'
+                    }
+                }
+            },
+            {
+                name: '主播人数',
+                type: 'line',
+                data: zbNumList,
+                symbol: 'circle',
+                symbolSize: 6,
+                smooth: true,
+                lineStyle: {
+                    width: 2,
+                    color: '#91cc75'
+                },
+                itemStyle: {
+                    color: '#91cc75'
+                },
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgba(145, 204, 117, 0.3)' },
+                        { offset: 1, color: 'rgba(145, 204, 117, 0)' }
+                    ])
+                },
+                emphasis: {
+                    scale: true,
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowColor: 'rgba(0, 0, 0, 0.3)'
+                    }
+                }
+            },
+            {
+                name: '档位数',
+                type: 'line',
+                data: dangweiList,
+                symbol: 'circle',
+                symbolSize: 6,
+                smooth: true,
+                lineStyle: {
+                    width: 2,
+                    color: '#fac858'
+                },
+                itemStyle: {
+                    color: '#fac858'
+                },
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgba(250, 200, 88, 0.3)' },
+                        { offset: 1, color: 'rgba(250, 200, 88, 0)' }
+                    ])
+                },
+                emphasis: {
+                    scale: true,
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowColor: 'rgba(0, 0, 0, 0.3)'
+                    }
+                }
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表
+    myChart.setOption(option);
+
+    // 响应窗口大小变化，重绘图表
+    window.addEventListener('resize', function() {
+        myChart.resize();
+    });
+</script>

@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WeiCode.Domain.Crm</name>
+    </assembly>
+    <members>
+        <member name="T:WeiCode.Domain.TradeBasic.ModularAuthorize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.TradeBasic.ModularAuthorize.getName">
+            <summary>
+            模块名称
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainCrm">
+            <summary>
+            领域函数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.DomainCrm.GradeApp">
+            <summary>
+            用户等级
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainCrm.GradeApp.change(System.Int32)">
+            <summary>
+            用户等级变更
+            </summary>
+            <param name="confirm_node_id">当前步骤id</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.ModelDoCrm">
+            <summary>
+            基础Model
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbCrm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbCrm.crm_base">
+            <summary>
+            实体-系统业务日志 
+            </summary>	
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbCrm.crm_base.tenant_id">
+            <summary>
+            crm_base
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbCrm.crm_base.crm_sn">
+            <summary>
+            客户编号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbCrm.crm_base.type_id">
+            <summary>
+            类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbCrm.crm_base.grade_id">
+            <summary>
+            类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbCrm.crm_base.last_time">
+            <summary>
+            上次联系时间
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbCrm.crm_base.next_time">
+            <summary>
+            下次联系时间
+            </summary>
+        </member>
+    </members>
+</doc>

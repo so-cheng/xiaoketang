@@ -1,0 +1,144 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+    var date = ViewBag.date;
+
+}
+<style>
+    .layui-table td,
+    .layui-table th,
+    .layui-table-col-set,
+    .layui-table-fixed-r,
+    .layui-table-grid-down,
+    .layui-table-header,
+    .layui-table-page,
+    .layui-table-tips-main,
+    .layui-table-tool,
+    .layui-table-total,
+    .layui-table-view,
+    .layui-table[lay-skin=line],
+    .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+    }
+
+    th,
+    td {
+        white-space: nowrap;
+    }
+
+    .not-standard {
+        color: red;
+        font-weight: bold;
+    }
+    /* 表头固定样式 */
+    .layui-table {
+        position: relative;
+    }
+
+        .layui-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: white;
+        }
+
+            .layui-table thead tr:first-child {
+                position: sticky;
+                top: 0;
+                z-index: 11;
+                background-color: #FFF3CA;
+            }
+
+            .layui-table thead tr:nth-child(2) {
+                position: sticky;
+                top: 28px; /* 第一行表头的高度 */
+                z-index: 11;
+                background-color: #FCE4D3;
+            }
+
+            /* 确保表头有足够的背景色 */
+            .layui-table thead th {
+                background-color: inherit;
+            }
+</style>
+<form class="layui-form" method="get" style="margin-left:50px">
+    <div class="layui-inline">
+        <label>邀约面试日期</label>
+        <div class="layui-input-inline" style="width: 300px;">
+            @*   <input type="text" class="layui-input" id="dateRange" name="date" value="@date" placeholder="选择日期范围">*@
+            @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("date", true)
+{
+title = "日期",
+defaultValue = date,
+mold = ModelBasic.EmtTimeSelect.Mold.date,
+})
+        </div>
+    </div>
+    <button type="submit" class="layui-btn">查询</button>
+</form>
+<form id="mainForm" class="layui-form" action="" style="margin-left:50px">
+    <div class="layui-row">
+        <div class="layui-col-md12" style=" width:100%">
+            <table class="layui-table" style="text-align:center;width:100%;" id="table1" name="table1">
+                <colgroup>
+                    <col width="60">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="180">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th colspan="3" style="text-align: center; background-color: #FFF3CA; font-size: 18px; font-weight: 700 ">
+                            @date 邀约面试人数统计
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="background-color:#FFF2CC">面试日期</th>
+                        <th style="background-color:#FFF2CC">范围</th>
+                        <th style="background-color:#FFF2CC">人数</th>
+                    </tr>
+                </thead>
+
+                @foreach (var item in ViewBag.List)
+                {
+                    <tr>
+                        <td style="background-color:#EAFAF1">@date</td>
+                        <td style="background-color:#EAFAF1">@item.range</td>
+                        <td style="background-color:#EAFAF1">@item.count</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</form>
+<script>
+    layui.use(function () {
+        var laydate = layui.laydate;
+        // 年月选择器
+        laydate.render({
+            elem: '#dateRange',
+            type: 'month'
+        });
+    });
+</script>

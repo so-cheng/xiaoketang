@@ -1,0 +1,170 @@
+﻿
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+<style>
+    .layui-fluid {
+        padding: 15px;
+    }
+
+    /* 通讯录面板 */
+    .layadmin-maillist-fluid .layadmin-contact-box {
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #e7eaec;
+        overflow: hidden;
+        min-height: 150px;
+    }
+
+    .layadmin-maillist-fluid .layadmin-text-center {
+        text-align: center;
+    }
+
+        .layadmin-maillist-fluid .layadmin-text-center img {
+            max-width: 80%;
+            border-radius: 50%;
+            margin-top: 5px;
+        }
+
+    .layadmin-maillist-fluid .layadmin-font-blod {
+        font-weight: 600;
+    }
+
+    .layadmin-maillist-fluid .layadmin-maillist-img {
+        margin-top: 5px;
+    }
+
+    .layadmin-maillist-fluid .layadmin-title {
+        margin: 5px 0 10px 0;
+    }
+
+    .layadmin-maillist-fluid .layadmin-textimg {
+        line-height: 25px;
+        margin-bottom: 10px;
+    }
+
+    .layadmin-maillist-fluid .layadmin-address {
+        line-height: 1.5;
+        margin-bottom: 20px;
+    }
+
+    .layadmin-maillist-fluid .layadmin-padding-left20 {
+        padding-left: 20px;
+    }
+
+    .btnWrap {
+        float: right;
+    }
+
+    .layui-text p {
+    }
+
+    .ellipsis {
+        white-space: nowrap; /* 防止文本换行 */
+        overflow: hidden; /* 隐藏溢出的文本 */
+        text-overflow: ellipsis; /* 显示省略号来代表被修剪的文本 */
+    }
+</style>
+<!-- 以下书写自己的页面内容代码 -->
+<div class="layui-fluid layadmin-maillist-fluid">
+    <!-- 筛选目标音浪范围 -->
+    <div class="layui-inline">
+        <form class="layui-form">
+            <div class="layui-inline">
+                <label class="layui-form-label">音浪范围</label>
+                <div class="layui-input-inline" style="width: 80px;">
+                    <input type="text" name="amont_s" lay-verify="number" value="@ViewBag.amont_s" class="layui-input">
+                </div>
+                ~
+                <div class="layui-input-inline" style="width: 80px;">
+                    <input type="text" name="amont_e" lay-verify="number" value="@ViewBag.amont_e" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">直播厅</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="ting_name" value="@ViewBag.ting_name" class="layui-input">
+                </div>
+            </div>
+            <button type="submit" class="layui-btn search_btn">查询</button>
+        </form>
+    </div>
+    <div class="layui-row layui-col-space15">
+        @if (ViewBag.mate_list.Count > 0)
+        {
+            <div class="layui-card-body layui-text" style="padding-top: 20px;">
+                <blockquote class="layui-elem-quote" style="border: none;">
+                    <p style="color: cornflowerblue;">共有@(ViewBag.mate_list.Count)个跨房</p>
+                </blockquote>
+            </div>
+            foreach (var item in ViewBag.mate_list)
+            {
+                var ting = new ServiceFactory.UserInfo.Ting().GetTingBySn(item.ting_sn1);
+                <div class="layui-col-md4 layui-col-sm6">
+                    <div class="layadmin-contact-box">
+                        <div class="layui-col-md4 layui-col-sm6">
+                            <a href="javascript:win_pop_iframe('报名', '/KuaFang/MateApply/Post?id=@item.id', 400,400);">
+                                <div class="layadmin-text-center">
+                                    <img src="https://demo.layuion.com/layuiAdmin/layuiAdmin-v2.6.0/iframe/res/style/imgs/template/portrait.png">
+                                </div>
+                            </a>
+                        </div>
+                        <div class="layui-col-md8 layadmin-padding-left20 layui-col-sm6">
+                            <div class="layadmin-address">
+                                <a href="javascript:win_pop_iframe('报名', '/KuaFang/MateApply/Post?id=@item.id', 400,400);">
+                                    <strong>@ting.ting_name</strong>
+                                    <br>
+                                    <addr title="phone">运营:</addr>
+                                    @(new ServiceFactory.UserInfo.Yy().GetInfoByUserSn(ting.yy_user_sn).name)
+                                    <br>
+                                    <addr title="phone">厅管:</addr>
+                                    @(new ServiceFactory.UserInfo.Tg().GetTgInfoByUsersn(item.tg_user_sn1).name)
+                                    <br>
+                                    <addr title="phone">目标音浪:</addr>
+                                    <strong>@Convert.ToInt32(item.amont)W</strong>
+                                    <br>
+                                    <addr title="phone"></addr>
+                                    <span class="ellipsis" style="display: block;" title="@item.content">@item.content</span>
+                                    @{
+                                        if (item.is_open == ModelDb.p_kuafang_mate.is_open_enum.否.ToSByte())
+                                        {
+                                            <span style="color: crimson;">团队内部战</span>
+                                        }
+                                    }
+                                </a>
+                            </div>
+                        </div>
+                        <div class="btnWrap">
+                            <a class="layui-btn layui-btn-primary" href="javascript:win_pop_iframe('报名', '/KuaFang/MateApply/Post?id=@item.id', 400,400);">报名</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="layui-card-body layui-text">
+                <blockquote class="layui-elem-quote" style="border: none;">
+                    <p style="color: orangered;">无跨房活动</p>
+                </blockquote>
+            </div>
+        }
+    </div>
+</div>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        form.render('select'); // 仅渲染 select 元素
+    });
+</script>

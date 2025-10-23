@@ -1,0 +1,59 @@
+﻿@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>test</title>
+</head>
+<body>
+    @{
+        
+        }
+    <div>
+        <button onclick="testData('测试')">测试</button>
+    </div>
+
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <script>
+        function exportToExcel(data, fileName) {
+            // 创建一个工作簿
+            const wb = XLSX.utils.book_new();
+            // 将数据转换为工作表
+            const ws = XLSX.utils.json_to_sheet(data);
+            // 将工作表添加到工作簿中
+            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+            // 生成Excel文件并触发下载
+            XLSX.writeFile(wb, fileName + ".xlsx");
+        }
+
+
+
+        function testData(excelname) {
+        $.ajax({
+            type: "POST",
+            url: "/Zhenduan/Analyse/testData",
+            async: false,
+            dataType: 'json',
+            success: function (res) {
+                layer.msg('提交成功', { icon: 1 }, function () {
+                });
+                exportToExcel(res.data, excelname);
+            }
+        });
+    }
+    </script>
+</body>
+
+</html>

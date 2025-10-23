@@ -1,0 +1,374 @@
+﻿@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+@using System;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <title>主页</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+            background: #f3f3f5;
+            color: #222;
+        }
+
+        .profile-section {
+            background: linear-gradient(180deg, #fff 80%, #f3f3f5 100%);
+            padding: 32px 0 18px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-bottom: 8px solid #f3f3f5;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .profile-top {
+            display: flex;
+            align-items: center;
+            width: 92%;
+            margin-bottom: 8px;
+        }
+
+        .avatar {
+            width: 84px;
+            height: 84px;
+            border-radius: 20px;
+            background: #eee;
+            object-fit: cover;
+            margin-right: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 2px solid #f3f3f5;
+        }
+
+        .profile-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .nickname {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+        }
+
+        .wechat-id {
+            color: #888;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .qr {
+            margin-left: 10px;
+            font-size: 22px;
+            color: #b2b2b2;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+            .qr svg {
+                width: 22px;
+                height: 22px;
+                display: block;
+            }
+
+        .profile-status {
+            display: flex;
+            align-items: center;
+            width: 92%;
+            margin-bottom: 6px;
+        }
+
+        .status-btn {
+            border: 1.5px solid #e0e0e0;
+            border-radius: 20px;
+            padding: 3px 18px;
+            font-size: 15px;
+            margin-right: 12px;
+            background: linear-gradient(90deg, #fafafa 60%, #f3f3f5 100%);
+            color: #444;
+            transition: box-shadow 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            cursor: pointer;
+        }
+
+            .status-btn:hover {
+                box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+                border-color: #b2e672;
+            }
+
+        .friends {
+            display: flex;
+            align-items: center;
+            border-radius: 20px;
+            background: #fff;
+            border: 1.5px solid #e0e0e0;
+            padding: 2px 12px 2px 4px;
+            font-size: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+            .friends img {
+                width: 26px;
+                height: 26px;
+                border-radius: 50%;
+                margin-right: 2px;
+                border: 1.5px solid #f3f3f5;
+                background: #fafafa;
+            }
+
+            .friends .medal {
+                width: 22px;
+                height: 22px;
+                margin-right: 2px;
+                background: #fff;
+                border-radius: 50%;
+                border: 1px solid #f3f3f5;
+            }
+
+        .friends-count {
+            margin: 0 4px;
+            color: #444;
+        }
+
+        .red-dot {
+            width: 8px;
+            height: 8px;
+            background: #f33;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 2px;
+            box-shadow: 0 0 2px #fff, 0 0 4px #f33;
+        }
+
+        .menu-section {
+            margin-top: 0;
+            padding: 0 16px;
+        }
+
+        .menu-list {
+            background: #fff;
+            margin-bottom: 16px;
+            border-radius: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            padding: 0;
+            overflow: hidden;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 480px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 18px 22px 18px 22px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 19px;
+            cursor: pointer;
+            transition: background 0.18s;
+        }
+
+            .menu-item:last-child {
+                border-bottom: none;
+            }
+
+            .menu-item:hover {
+                background: #f6fef7;
+            }
+
+        .menu-icon {
+            width: 28px;
+            text-align: center;
+            margin-right: 20px;
+            font-size: 22px;
+            opacity: 0.92;
+        }
+
+        .menu-arrow {
+            margin-left: auto;
+            color: #c8c8c8;
+            font-size: 18px;
+            font-family: Arial, sans-serif;
+            transition: color 0.2s;
+        }
+
+        .menu-item:hover .menu-arrow {
+            color: #1aad19;
+        }
+
+        .setting-section {
+            background: #fff;
+            margin-bottom: 90px;
+            border-radius: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            overflow: hidden;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 480px;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            padding: 18px 22px;
+            font-size: 19px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.18s;
+        }
+
+            .setting-item:last-child {
+                border-bottom: none;
+            }
+
+            .setting-item:hover {
+                background: #f6fef7;
+            }
+
+        .setting-icon {
+            width: 28px;
+            text-align: center;
+            margin-right: 20px;
+            font-size: 22px;
+            color: #3b9cff;
+            opacity: 0.92;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 62px;
+            background: #fff;
+            border-top: 1.5px solid #e0e0e0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.04);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 15px;
+            color: #222;
+            width: 60px;
+            position: relative;
+            transition: color 0.2s;
+            padding-top: 2px;
+        }
+
+            .nav-item.active {
+                color: #1aad19;
+                font-weight: bold;
+            }
+
+        .nav-icon {
+            font-size: 27px;
+            margin-bottom: 2px;
+            line-height: 1;
+        }
+
+        .nav-dot {
+            position: absolute;
+            top: 4px;
+            right: 16px;
+            width: 8px;
+            height: 8px;
+            background: #f33;
+            border-radius: 50%;
+            box-shadow: 0 0 2px #fff, 0 0 4px #f33;
+        }
+
+        @@media (max-width: 500px) {
+            .profile-section, .profile-top, .profile-status, .menu-list, .setting-section {
+                width: 100% !important;
+                min-width: 0;
+                box-sizing: border-box;
+            }
+
+            .profile-top, .profile-status {
+                width: 96vw !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    @{
+        string img_url = "/Assets/images/default_head.jpg";
+    }
+    <div class="profile-section">
+        <div class="profile-top">
+            <img class="avatar" src="@img_url" alt="头像">
+            <div class="profile-info">
+                <div class="nickname">@ViewBag.username</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="menu-section">
+        <div class="menu-list">
+            <div class="menu-item" onclick="window.location.href = '/Joinnew/ApproveApplication/ApproveApplicationList';">
+                <span class="menu-icon">👤</span>补人审批<span class="menu-arrow">&#8250;</span>
+            </div>
+            <div class="menu-item" onclick="window.location.href = '/Joinnew/DatasShow/WaitOverview';">
+                <span class="menu-icon">📄</span>所有未分<span class="menu-arrow">&#8250;</span>
+            </div>
+            <div class="menu-item" onclick="window.location.href = '/Joinnew/DatasShow/DayGetview';">
+                <span class="menu-icon">📄</span>当天数据<span class="menu-arrow">&#8250;</span>
+            </div>
+            <div class="menu-item" onclick="window.location.href = '/Joinnew/Statistical/DataView';">
+                <span class="menu-icon">📊</span>盈余紧缺<span class="menu-arrow">&#8250;</span>
+            </div>
+        </div>
+        @*<div class="menu-list">
+            <div class="menu-item" onclick="window.location.href = '/Work/TodoDay/Analysis';"><span class="menu-icon">📄</span>厅管待办统计<span class="menu-arrow">&#8250;</span></div>
+        </div>*@
+        <div class="menu-list">
+            <div class="menu-item" onclick="window.location.href = '/Basic/AuthLogin/Exit';"><span class="menu-icon">📴</span>退出<span class="menu-arrow">&#8250;</span></div>
+        </div>
+        @*<div class="setting-section">
+            <div class="setting-item"><span class="setting-icon">⚙️</span>设置 <span class="menu-arrow">&#8250;</span></div>
+        </div>*@
+    </div>
+
+    @*<div class="bottom-nav">
+            <div class="nav-item">
+                <span class="nav-icon">💬</span>
+                <span>微信</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">👥</span>
+                <span>通讯录</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">🧭</span>
+                <span>发现</span>
+                <span class="nav-dot"></span>
+            </div>
+            <div class="nav-item active">
+                <span class="nav-icon">👤</span>
+                <span>我</span>
+            </div>
+        </div>*@
+</body>
+</html> 

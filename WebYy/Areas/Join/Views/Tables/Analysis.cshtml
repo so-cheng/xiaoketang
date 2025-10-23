@@ -1,0 +1,249 @@
+﻿
+@{
+    Layout = null;
+}
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.ModelDbs;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Web;
+@using System.Web.Mvc;
+@using WeiCode.Services;
+
+@using WeiCode.ModelDbs;
+@using Services.Project;
+@using WeiCode.Domain;
+@using WeiCode.ModelDbs;
+@using WeiCode.Models;
+@using WeiCode.Domain;
+
+
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+
+<style>
+
+    .layui-table {
+        color: black;
+    }
+
+    .layuiadmin-big-font {
+        font-weight: bold;
+        font-size: 42px;
+        margin: 10px;
+    }
+
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 14px;
+    }
+
+    .layui-table td {
+        font-size: 14px;
+    }
+</style>
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+
+<body>
+    <blockquote class="layui-elem-quote news_search">
+
+        @*<div class="layui-inline">
+                <form class="layui-form">
+                    <div class="layui-input-inline">
+                        <label class="layui-form-label">日期</label>
+                    </div>
+
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("c_date")
+                            {
+                                title = "日期",
+                                defaultValue = ViewBag.c_date,
+                                mold = ModelBasic.EmtTimeSelect.Mold.date,
+                                eventJsChange = new EmtFormBase.EventJsChange
+                                {
+                                    eventJavascript = new EventJavascript
+                                    {
+                                        code = "window.location.href = '?c_date=' + page.c_date.value;"
+                                    },
+                                }
+                            })
+                        </div>
+                    </div>
+                    <a href="?c_date=@ViewBag.c_date_early" class="layui-btn">前一天</a>
+                    <a href="?c_date=@ViewBag.c_date_late" class="layui-btn">后一天</a>
+                </form>
+            </div>*@
+    </blockquote>
+    @{
+        List<ServiceFactory.JoinAnalysisService.AnalysisTable> PJoinNeedAnalysis = ViewBag.PJoinNeedAnalysis;
+    }
+    <div>
+        <table class="layui-table" style="text-align:center;" id="table1" name="table1">
+            <colgroup>
+
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+
+                <col width="100">
+
+            </colgroup>
+            <thead>
+                <tr style="background-color: #F9CBAA">
+                    <th rowspan="2">厅名</th>
+                    <th rowspan="2">申请数</th>
+                    <th rowspan="2">未分配</th>
+                    <th rowspan="2">待拉群</th>
+                    <th rowspan="2">已补数</th>
+                    <th rowspan="2">流失数(对接前)</th>
+
+                    <th colspan="5">流失数(对接后)</th>
+                    <th colspan="5">流失率</th>
+                    <th colspan="5">留存率</th>
+                </tr>
+
+                <tr style="background-color: #F9CBAA">
+                    <th>3天内</th>
+                    <th>7天内</th>
+                    <th>15天内</th>
+                    <th>30天内</th>
+                    <th>30天后</th>
+                    <th>3天内</th>
+                    <th>7天内</th>
+                    <th>15天内</th>
+                    <th>30天内</th>
+                    <th>30天后</th>
+                    <th>3天内</th>
+                    <th>7天内</th>
+                    <th>15天内</th>
+                    <th>30天内</th>
+                    <th>30天后</th>
+                </tr>
+
+            </thead>
+            @{ 
+                int leave3Total = PJoinNeedAnalysis.Sum(x => x.LeaveIn3);
+                int leave7Total = PJoinNeedAnalysis.Sum(x => x.LeaveIn7);
+                int leave15Total = PJoinNeedAnalysis.Sum(x => x.LeaveIn15);
+                int leave30Total = PJoinNeedAnalysis.Sum(x => x.LeaveIn30);
+                int leaveOver30Total = PJoinNeedAnalysis.Sum(x => x.LeaveOver30);
+
+                int Keep3Total = PJoinNeedAnalysis.Sum(x => x.KeepIn3);
+                int Keep7Total = PJoinNeedAnalysis.Sum(x => x.KeepIn7);
+                int Keep15Total = PJoinNeedAnalysis.Sum(x => x.KeepIn15);
+                int Keep30Total = PJoinNeedAnalysis.Sum(x => x.KeepIn30);
+                int KeepOver30Total = PJoinNeedAnalysis.Sum(x => x.KeepOver30);
+
+                int zb_count = PJoinNeedAnalysis.Sum(x => x.TotalZbCount.ToInt());
+            }
+            <tbody>
+                <tr style="background-color: #75BD42">
+                    <td>汇总(@PJoinNeedAnalysis.Count 个厅)</td>
+
+                    <td>@PJoinNeedAnalysis.Sum(x => x.TotalZbCount)</td>
+                    <td>@PJoinNeedAnalysis.Sum(x => x.TotalNoSupplement)</td>
+                    <td>@PJoinNeedAnalysis.Sum(x => x.TotalNoQun)</td>
+                    <td>@PJoinNeedAnalysis.Sum(x => x.TotalInQun)</td>
+                    <td>@PJoinNeedAnalysis.Sum(x => x.TotalLeave)</td>
+
+                    <td>@leave3Total</td>
+                    <td>@leave7Total</td>
+                    <td>@leave15Total</td>
+                    <td>@leave30Total</td>
+                    <td>@leaveOver30Total</td>
+
+                    <td>@(leave3Total + zb_count == 0 ? "0" :(leave3Total.ToDecimal() / (leave3Total + zb_count)).ToString("0.00"))%</td>
+                    <td>@(leave7Total + zb_count == 0 ? "0" : (leave7Total.ToDecimal() / (leave7Total + zb_count)).ToString("0.00"))%</td>
+                    <td>@(leave15Total + zb_count == 0 ? "0" : (leave15Total.ToDecimal() / (leave15Total + zb_count)).ToString("0.00"))%</td>
+                    <td>@(leave30Total + zb_count == 0 ? "0" : (leave30Total.ToDecimal() / (leave30Total + zb_count)).ToString("0.00"))%</td>
+                    <td>@(leaveOver30Total + zb_count == 0 ? "0" : (leaveOver30Total.ToDecimal() / (leaveOver30Total + zb_count)).ToString("0.00"))%</td>
+
+                    <td>@(zb_count == 0 ? "0" : (Keep3Total.ToDecimal() / zb_count).ToString("0.00"))%</td>
+                    <td>@(zb_count == 0 ? "0" : (Keep7Total.ToDecimal() / zb_count).ToString("0.00"))%</td>
+                    <td>@(zb_count == 0 ? "0" : (Keep15Total.ToDecimal() / zb_count).ToString("0.00"))%</td>
+                    <td>@(zb_count == 0 ? "0" : (Keep30Total.ToDecimal() / zb_count).ToString("0.00"))%</td>
+                    <td>@(zb_count == 0 ? "0" : (KeepOver30Total.ToDecimal() / zb_count).ToString("0.00"))%</td>
+                </tr>
+
+                @foreach (var AnalysisItem in PJoinNeedAnalysis)
+                {
+                    <tr style="background-color: #91AADF">
+                        <td><a href="javascript:win_pop_iframe('厅管申请','ApproveApplicationList?tg_user_sn=@AnalysisItem.user_sn','1300','800','');">@(new ServiceFactory.UserInfo.Tg().GetTgInfoByUsersn(AnalysisItem.user_sn).username)</a></td>
+
+                        <td><a href="javascript:win_pop_iframe('厅管申请','ApproveApplicationList?tg_user_sn=@AnalysisItem.user_sn','1300','800','');">@AnalysisItem.TotalZbCount</a></td>
+                        <td><a href="javascript:win_pop_iframe('厅管申请','ApproveApplicationList?tg_user_sn=@AnalysisItem.user_sn','1300','800','');">@AnalysisItem.TotalNoSupplement</a></td>
+                        <td><a href="javascript:win_pop_iframe('厅管申请','ApproveApplicationList?tg_user_sn=@AnalysisItem.user_sn','1300','800','');">@AnalysisItem.TotalNoQun</a></td>
+                        <td><a href="javascript:win_pop_iframe('厅管申请','ApproveApplicationList?tg_user_sn=@AnalysisItem.user_sn','1300','800','');">@AnalysisItem.TotalInQun</a></td>
+                        <td><a href="javascript:win_pop_iframe('厅管申请','ApproveApplicationList?tg_user_sn=@AnalysisItem.user_sn','1300','800','');">@AnalysisItem.TotalLeave</a></td>
+
+                        <!--3天内,7天内,15天内,30天内,30天后流失数-->
+                        <td><a href="javascript:win_pop_iframe('厅管申请','QuitZbList?tg_user_sn=@AnalysisItem.user_sn&days=3','1300','800','');">@AnalysisItem.LeaveIn3</a></td>
+                        <td><a href="javascript:win_pop_iframe('厅管申请','QuitZbList?tg_user_sn=@AnalysisItem.user_sn&days=7','1300','800','');">@AnalysisItem.LeaveIn7</a></td>
+                        <td><a href="javascript:win_pop_iframe('厅管申请','QuitZbList?tg_user_sn=@AnalysisItem.user_sn&days=15','1300','800','');">@AnalysisItem.LeaveIn15</a></td>
+                        <td><a href="javascript:win_pop_iframe('厅管申请','QuitZbList?tg_user_sn=@AnalysisItem.user_sn&days=30','1300','800','');">@AnalysisItem.LeaveIn30</a></td>
+                        <td><a href="javascript:win_pop_iframe('厅管申请','QuitZbList?tg_user_sn=@AnalysisItem.user_sn','1300','800','');">@AnalysisItem.LeaveOver30</a></td>
+                        
+                        <!--3天内,7天内,15天内,30天内,30天后流失率-->
+                        <td><a href="">@((AnalysisItem.LeaveIn3.ToDecimal() / (AnalysisItem.LeaveIn3 + zb_count)).ToString("0.00"))%</a></td>
+                        <td><a href="">@((AnalysisItem.LeaveIn7.ToDecimal() / (AnalysisItem.LeaveIn7 + zb_count)).ToString("0.00"))%</a></td>
+                        <td><a href="">@((AnalysisItem.LeaveIn15.ToDecimal() / (AnalysisItem.LeaveIn15 + zb_count)).ToString("0.00"))%</a></td>
+                        <td><a href="">@((AnalysisItem.LeaveIn30.ToDecimal() / (AnalysisItem.LeaveIn30 + zb_count)).ToString("0.00"))%</a></td>
+                        <td><a href="">@((AnalysisItem.LeaveOver30.ToDecimal() / (AnalysisItem.LeaveOver30 + zb_count)).ToString("0.00"))%</a></td>
+                        
+                        <!--3天内,7天内,15天内,30天内,30天后留存率-->
+                        <td><a href="">@((AnalysisItem.KeepIn3.ToDecimal() / (AnalysisItem.KeepIn3 + zb_count)).ToString("0.00"))%</a></td>
+                        <td><a href="">@((AnalysisItem.KeepIn7.ToDecimal() / (AnalysisItem.KeepIn7 + zb_count)).ToString("0.00"))%</a></td>
+                        <td><a href="">@((AnalysisItem.KeepIn15.ToDecimal() / (AnalysisItem.KeepIn15 + zb_count)).ToString("0.00"))%</a></td>
+                        <td><a href="">@((AnalysisItem.KeepIn30.ToDecimal() / (AnalysisItem.KeepIn30 + zb_count)).ToString("0.00"))%</a></td>
+                        <td><a href="">@((AnalysisItem.KeepOver30.ToDecimal() / (AnalysisItem.KeepOver30 + zb_count)).ToString("0.00"))%</a></td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.2.5.6.js"></script>
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+

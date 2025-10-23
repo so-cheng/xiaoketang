@@ -1,0 +1,86 @@
+﻿@{
+    Layout = null;
+}
+
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.ModelDbs;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Web;
+@using System.Web.Mvc;
+@using WeiCode.Services;
+
+@using WeiCode.ModelDbs;
+@using Services.Project;
+@using WeiCode.Domain;
+@using WeiCode.ModelDbs;
+@using WeiCode.Models;
+@using WeiCode.Domain;
+
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+
+
+
+<style>
+    .layuiadmin-big-font {
+        font-weight: bold;
+        font-size: 42px;
+        margin: 10px;
+    }
+</style>
+
+<div class="layui-card">
+    <div class="layui-card-header">用户跟进</div>
+    <div class="layui-card-body" style="background-color:#F6F6F6">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-sm3 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        变更A级用户(今日)
+                    </div>
+                    <div class="layui-card-body layuiadmin-card-list">
+                        <a href="javascript:parent.win_pop_iframe('用户等级','/Default/GradeLog/List?n_grade_id=3', 800, 650)"><span class="layuiadmin-span-color"><p class="layuiadmin-big-font">@ViewBag.A_level</p></span></a>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm3 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        变更其他级别用户(今日)
+                    </div>
+                    <div class="layui-card-body layuiadmin-card-list">
+                        <a href="javascript:parent.win_pop_iframe('用户等级','/Default/GradeLog/NonList?n_grade_id=3, 800, 650)"><span class="layuiadmin-span-color"><p class="layuiadmin-big-font">@ViewBag.else_level</p></span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.2.5.6.js"></script>
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+
+
+<script>
+    layui.use(['form', 'element'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            element = layui.element;
+
+        $(function () {
+            form.render();
+            $(".layui-anim>dd")[0].click()
+            form.render('select');
+        });
+    });
+</script>
+
+
+
+
+
+
+

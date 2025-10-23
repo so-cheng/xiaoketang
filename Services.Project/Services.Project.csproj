@@ -1,0 +1,275 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DB70A22C-A6A1-4153-855E-12F45D1E21AC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Services.Project</RootNamespace>
+    <AssemblyName>Services.Project</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WeiCode.DataBase, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CommonDll\WeiCode.DataBase.dll</HintPath>
+    </Reference>
+    <Reference Include="WeiCode.Domain.Basic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CommonDll\WeiCode.Domain.Basic.dll</HintPath>
+    </Reference>
+    <Reference Include="WeiCode.Domain.Crm">
+      <HintPath>..\CommonDll\WeiCode.Domain.Crm.dll</HintPath>
+    </Reference>
+    <Reference Include="WeiCode.Domain.Site">
+      <HintPath>..\CommonDll\WeiCode.Domain.Site.dll</HintPath>
+    </Reference>
+    <Reference Include="WeiCode.Domain.UserBasic">
+      <HintPath>..\CommonDll\WeiCode.Domain.UserBasic.dll</HintPath>
+    </Reference>
+    <Reference Include="WeiCode.Modular.Basic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CommonDll\WeiCode.Modular.Basic.dll</HintPath>
+    </Reference>
+    <Reference Include="WeiCode.Modular.Crm">
+      <HintPath>..\CommonDll\WeiCode.Modular.Crm.dll</HintPath>
+    </Reference>
+    <Reference Include="WeiCode.Modular.Site">
+      <HintPath>..\CommonDll\WeiCode.Modular.Site.dll</HintPath>
+    </Reference>
+    <Reference Include="WeiCode.Modular.UserBasic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CommonDll\WeiCode.Modular.UserBasic.dll</HintPath>
+    </Reference>
+    <Reference Include="WeiCode.Services, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CommonDll\WeiCode.Services.dll</HintPath>
+    </Reference>
+    <Reference Include="WeiCode.Utility, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CommonDll\WeiCode.Utility.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="2.ServiceFactory\Cencai\Cencai.cs" />
+    <Compile Include="2.ServiceFactory\DangBiao\DangBiao.cs" />
+    <Compile Include="2.ServiceFactory\DataAnalysis\Rank.cs" />
+    <Compile Include="2.ServiceFactory\DataAnalysis\TingDay.cs" />
+    <Compile Include="2.ServiceFactory\Help\Help.cs" />
+    <Compile Include="2.ServiceFactory\Home\Notice.cs" />
+    <Compile Include="2.ServiceFactory\JixiaoDay\JixiaoDay.cs" />
+    <Compile Include="2.ServiceFactory\JixiaoDay\QingJia.cs" />
+    <Compile Include="2.ServiceFactory\Jixiao\Rank.cs" />
+    <Compile Include="2.ServiceFactory\JoinNew\分配过程.cs" />
+    <Compile Include="2.ServiceFactory\JoinNew\数据统计.cs" />
+    <Compile Include="2.ServiceFactory\JoinNew\申请单.cs" />
+    <Compile Include="2.ServiceFactory\JoinNew\置顶.cs" />
+    <Compile Include="2.ServiceFactory\Join\Join.cs" />
+    <Compile Include="2.ServiceFactory\Join\JoinAnalysis.cs" />
+    <Compile Include="2.ServiceFactory\Join\JoinChange.cs" />
+    <Compile Include="2.ServiceFactory\Join\JoinPush.cs" />
+    <Compile Include="2.ServiceFactory\KuaFang\Common.cs" />
+    <Compile Include="2.ServiceFactory\LiveRoom\LiveRoomLog.cs" />
+    <Compile Include="2.ServiceFactory\PCrm\Customer.cs" />
+    <Compile Include="2.ServiceFactory\ProjectBasic\DataRule.cs" />
+    <Compile Include="2.ServiceFactory\Sdk\Weixin.cs" />
+    <Compile Include="2.ServiceFactory\TgManager\Rank.cs" />
+    <Compile Include="2.ServiceFactory\TingZhan\Flow.cs" />
+    <Compile Include="2.ServiceFactory\TingZhan\MateRank.cs" />
+    <Compile Include="2.ServiceFactory\TingZhan\TingZhan.cs" />
+    <Compile Include="2.ServiceFactory\UserInfo\1.基地基础信息.cs" />
+    <Compile Include="2.ServiceFactory\UserInfo\2.运营基础信息.cs" />
+    <Compile Include="2.ServiceFactory\UserInfo\3.厅管.cs" />
+    <Compile Include="2.ServiceFactory\UserInfo\4.直播厅基础信息.cs" />
+    <Compile Include="2.ServiceFactory\UserInfo\All.cs" />
+    <Compile Include="2.ServiceFactory\UserInfo\Relation.cs" />
+    <Compile Include="2.ServiceFactory\UserInfo\User.cs" />
+    <Compile Include="2.ServiceFactory\UserInfo\5.中台基础信息.cs" />
+    <Compile Include="2.ServiceFactory\UserInfo\主播\主播信息.cs" />
+    <Compile Include="2.ServiceFactory\UserInfo\主播\主播晋升.cs" />
+    <Compile Include="2.ServiceFactory\UserInfo\主播\主播账号Zb.cs" />
+    <Compile Include="2.ServiceFactory\UserInfo\主播\新的主播.cs" />
+    <Compile Include="2.ServiceFactory\UserTable\Grade.cs" />
+    <Compile Include="2.ServiceFactory\UserTable\TgInfoRank.cs" />
+    <Compile Include="2.ServiceFactory\User\RelationService.cs" />
+    <Compile Include="2.ServiceFactory\User\User.cs" />
+    <Compile Include="2.ServiceFactory\User\TgService.cs" />
+    <Compile Include="2.ServiceFactory\User\ZbService.cs" />
+    <Compile Include="2.ServiceFactory\User\YyService.cs" />
+    <Compile Include="2.ServiceFactory\User\UserInfo.cs" />
+    <Compile Include="2.ServiceFactory\Jixiao\Jixiao.cs" />
+    <Compile Include="2.ServiceFactory\Jiezou\Jiezou.cs" />
+    <Compile Include="2.ServiceFactory\Join\MengxinSort.cs" />
+    <Compile Include="2.ServiceFactory\Join\MengxinZb.cs" />
+    <Compile Include="2.ServiceFactory\Vacation\Vacation.cs" />
+    <Compile Include="2.ServiceFactory\XianxiaBiao\Mengxin.cs" />
+    <Compile Include="2.ServiceFactory\Xianxiazp\简历.cs" />
+    <Compile Include="2.ServiceFactory\Xuexi\Base.cs" />
+    <Compile Include="2.ServiceFactory\Zhenduan\ApiData.cs" />
+    <Compile Include="3.PageFactory\1.Crm\Follow.cs" />
+    <Compile Include="3.PageFactory\1.Crm\Grade.cs" />
+    <Compile Include="3.PageFactory\Asset\1.Data.cs" />
+    <Compile Include="3.PageFactory\Asset\2.Op.cs" />
+    <Compile Include="3.PageFactory\Asset\3.In.cs" />
+    <Compile Include="3.PageFactory\Asset\4.Out.cs" />
+    <Compile Include="3.PageFactory\Asset\5.Stock.cs" />
+    <Compile Include="3.PageFactory\Cencai\Cencai.cs" />
+    <Compile Include="3.PageFactory\Config\yyteam.cs" />
+    <Compile Include="3.PageFactory\DangBiao\SessionTable.cs" />
+    <Compile Include="3.PageFactory\DouData\Guild.cs" />
+    <Compile Include="3.PageFactory\DouData\直播厅.cs" />
+    <Compile Include="3.PageFactory\Help\Help.cs" />
+    <Compile Include="3.PageFactory\Home\ListHtmlModel.cs" />
+    <Compile Include="3.PageFactory\Jiezou\Zhubo.cs" />
+    <Compile Include="3.PageFactory\Jiezou\Jiezou.cs" />
+    <Compile Include="3.PageFactory\Jiezou\Zhubojiezou.cs" />
+    <Compile Include="3.PageFactory\JixiaoDay\QingJia.cs" />
+    <Compile Include="3.PageFactory\JixiaoDay\Shangjiao.cs" />
+    <Compile Include="3.PageFactory\JixiaoDay\Vacation.cs" />
+    <Compile Include="3.PageFactory\JixiaoDay\提报日志.cs" />
+    <Compile Include="3.PageFactory\JixiaoDay\每日提报.cs" />
+    <Compile Include="3.PageFactory\Jixiao\Jiezou.cs" />
+    <Compile Include="3.PageFactory\Jixiao\PK.cs" />
+    <Compile Include="3.PageFactory\Jixiao\ReportDay.cs" />
+    <Compile Include="3.PageFactory\Jixiao\SessionTable.cs" />
+    <Compile Include="3.PageFactory\Jixiao\Vacation.cs" />
+    <Compile Include="3.PageFactory\Jixiao\Zhenduan.cs" />
+    <Compile Include="3.PageFactory\JoinNew\中台地区.cs" />
+    <Compile Include="3.PageFactory\JoinNew\内推.cs" />
+    <Compile Include="3.PageFactory\JoinNew\分配过程.cs" />
+    <Compile Include="3.PageFactory\JoinNew\学员资料.cs" />
+    <Compile Include="3.PageFactory\JoinNew\待开账号.cs" />
+    <Compile Include="3.PageFactory\JoinNew\数据统计.cs" />
+    <Compile Include="3.PageFactory\JoinNew\权重.cs" />
+    <Compile Include="3.PageFactory\JoinNew\申请单.cs" />
+    <Compile Include="3.PageFactory\JoinNew\置顶.cs" />
+    <Compile Include="3.PageFactory\JoinNew\辅助功能.cs" />
+    <Compile Include="3.PageFactory\JoinNew\运营地区.cs" />
+    <Compile Include="3.PageFactory\Join\JoinChange.cs" />
+    <Compile Include="3.PageFactory\Join\JoinPush.cs" />
+    <Compile Include="3.PageFactory\KuaFang\KuaFang.cs" />
+    <Compile Include="3.PageFactory\KuaFang\KuaFangMate.cs" />
+    <Compile Include="3.PageFactory\KuaFang\KuaFangMateApply.cs" />
+    <Compile Include="3.PageFactory\LiuLiang\提成.cs" />
+    <Compile Include="3.PageFactory\LiuLiang\提成规则.cs" />
+    <Compile Include="3.PageFactory\LiuLiang\流量记录.cs" />
+    <Compile Include="3.PageFactory\LiuLiang\目标.cs" />
+    <Compile Include="3.PageFactory\LiveRoom\LiveRoomCateList.cs" />
+    <Compile Include="3.PageFactory\LiveRoom\LiveRoomListManage.cs" />
+    <Compile Include="3.PageFactory\PBasic\System.cs" />
+    <Compile Include="3.PageFactory\PCrm\CrmModel.cs" />
+    <Compile Include="3.PageFactory\ProjectBasic\DataRule.cs" />
+    <Compile Include="3.PageFactory\QianYue\Roster%281%29.cs" />
+    <Compile Include="3.PageFactory\QianYue\提成.cs" />
+    <Compile Include="3.PageFactory\QianYue\提成规则.cs" />
+    <Compile Include="3.PageFactory\QianYue\签约记录.cs" />
+    <Compile Include="3.PageFactory\Service\主播反馈.cs" />
+    <Compile Include="3.PageFactory\Task\扫脸.cs" />
+    <Compile Include="3.PageFactory\TingZhan\1.厅战流水\Flow.cs" />
+    <Compile Include="3.PageFactory\TingZhan\2.活动管理\Paipu.cs" />
+    <Compile Include="3.PageFactory\TingZhan\3.提报阶段\3.上传日均数据.cs" />
+    <Compile Include="3.PageFactory\TingZhan\3.提报阶段\2.本期名单.cs" />
+    <Compile Include="3.PageFactory\TingZhan\3.提报阶段\1.目标提报.cs" />
+    <Compile Include="3.PageFactory\TingZhan\4.对战准备\2.生成战表.cs" />
+    <Compile Include="3.PageFactory\TingZhan\4.对战准备\1.设置规则.cs" />
+    <Compile Include="3.PageFactory\TingZhan\4.对战准备\3.对方信息.cs" />
+    <Compile Include="3.PageFactory\TingZhan\5.对战结束\NameList.cs" />
+    <Compile Include="3.PageFactory\TingZhan\5.对战结束\Punishment.cs" />
+    <Compile Include="3.PageFactory\TingZhan\5.对战结束\Score.cs" />
+    <Compile Include="3.PageFactory\UserGuanxi\主播转移.cs" />
+    <Compile Include="3.PageFactory\UserGuanxi\厅管转移.cs" />
+    <Compile Include="3.PageFactory\UserGuanxi\厅转移.cs" />
+    <Compile Include="3.PageFactory\UserGuanxi\基地组织.cs" />
+    <Compile Include="3.PageFactory\UserGuanxi\运营转移.cs" />
+    <Compile Include="3.PageFactory\UserInfo\主播\主播晋升.cs" />
+    <Compile Include="3.PageFactory\UserInfo\主播\信息维护%287%29.cs" />
+    <Compile Include="3.PageFactory\UserInfo\主播\新人判定.cs" />
+    <Compile Include="3.PageFactory\UserInfo\主播\新的主播.cs" />
+    <Compile Include="3.PageFactory\UserInfo\主播\日志.cs" />
+    <Compile Include="3.PageFactory\UserInfo\主播\账号维护%282%29.cs" />
+    <Compile Include="3.PageFactory\UserInfo\厅管\厅管升运营.cs" />
+    <Compile Include="3.PageFactory\UserInfo\厅管\账号.cs" />
+    <Compile Include="3.PageFactory\UserInfo\直播厅\信息维护.cs" />
+    <Compile Include="3.PageFactory\UserInfo\直播厅\开厅审批.cs" />
+    <Compile Include="3.PageFactory\UserInfo\直播厅\日志.cs" />
+    <Compile Include="3.PageFactory\UserInfo\运营\关联账号.cs" />
+    <Compile Include="3.PageFactory\UserInfo\运营\账号.cs" />
+    <Compile Include="3.PageFactory\UserInfo\通用.cs" />
+    <Compile Include="3.PageFactory\UserTable\TgInfoRank.cs" />
+    <Compile Include="3.PageFactory\User\Info.cs" />
+    <Compile Include="3.PageFactory\User\Manage.cs" />
+    <Compile Include="3.PageFactory\Work\p_work_todo.cs" />
+    <Compile Include="3.PageFactory\Work\TodoDay.cs" />
+    <Compile Include="3.PageFactory\Work\TodoRule.cs" />
+    <Compile Include="3.PageFactory\Xianxiabiao\Peixun.cs" />
+    <Compile Include="3.PageFactory\PBasic\AccountManage.cs" />
+    <Compile Include="3.PageFactory\PCrm\Customer.cs" />
+    <Compile Include="3.PageFactory\PCrm\FollowUp.cs" />
+    <Compile Include="3.PageFactory\PCrm\Type.cs" />
+    <Compile Include="3.PageFactory\PUserBasic\Kuafang.cs" />
+    <Compile Include="3.PageFactory\PUserBasic\TingZhan.cs" />
+    <Compile Include="3.PageFactory\Relation\UpdateSuperiorUser.cs" />
+    <Compile Include="3.PageFactory\Relation\YY.cs" />
+    <Compile Include="3.PageFactory\Join\PJoin.cs" />
+    <Compile Include="3.PageFactory\Xianxiazp\简历.cs" />
+    <Compile Include="3.PageFactory\Xianxiazp\邀约.cs" />
+    <Compile Include="3.PageFactory\Xianxia\Xianxia.cs" />
+    <Compile Include="3.PageFactory\Xuexi\Xuexi.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataBase.Project\DataBase.Project.csproj">
+      <Project>{58f33d56-6a64-46c6-a85d-99ddde28c9d1}</Project>
+      <Name>DataBase.Project</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="1.ModularService\" />
+    <Folder Include="2.ServiceFactory\Approve\" />
+    <Folder Include="2.ServiceFactory\DouData\" />
+    <Folder Include="3.PageFactory\Account\" />
+    <Folder Include="3.PageFactory\DataAnalysis\" />
+    <Folder Include="3.PageFactory\TingZhan\6.统计报表\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="3.PageFactory\TingZhan\README.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

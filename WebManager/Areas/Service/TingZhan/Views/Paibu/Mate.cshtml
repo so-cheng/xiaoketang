@@ -1,0 +1,270 @@
+﻿
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+    var p_tingzhan = new PageFactory.PaibuService().getNewTingzhan();
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-collapse: collapse;
+        border-style: solid;
+        border-width: 1px;
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    .layui-table td {
+        font-size: 15px;
+    }
+</style>
+<!-- 以下书写自己的页面内容代码 -->
+<form class="layui-form">
+    <div class="layui-row">
+        <div class="layui-row">
+            <input type="hidden" name="tingzhan_id" id="tingzhan_id" value="@p_tingzhan.id" />
+            <div class="layui-col-md10">
+                <div class="layui-col-md8" style="text-align:right">
+                    <div class="layui-inline">
+                        <label class="layui-input-inline" style="font-size:18px; font-weight:bold">期数：@p_tingzhan.c_date.ToDate().ToString("yyyy-MM-dd")</label>
+                    </div>
+                </div>
+                <div class="layui-col-md8" style="text-align:right">
+                    @if (ViewBag.mates1.Count > 0 || ViewBag.mates2.Count > 0)
+                    {
+                        <button type="button" class="layui-btn layui-btn-danger" id="delBtn">删除对战表</button>
+                        <button type="button" class="layui-btn" id="submitBtn">调换位置</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="layui-btn layui-btn-normal btn-submit">生成对战表</button>
+                    }
+                </div>
+            </div>
+        </div>
+        @if (ViewBag.mates1.Count > 0 || ViewBag.mates2.Count > 0)
+        {
+            <div class="layui-row">
+                <div class="layui-card" style="width:95%;top:30px;margin:0 auto">
+                    <table class="layui-table" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th colspan="7" style="text-align: center; background-color: #FFF3CA; font-size: 18px; font-weight: 700 ">第一梯队</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align: center; width: 40%;">队伍A</td>
+                                <td style="text-align: center; width: 40%;">队伍B</td>
+                                <td style="text-align: center; width: 30%; ">目标音浪</td>
+                            </tr>
+                            @foreach (var item in ViewBag.mates1)
+                            {
+                                var tg_user_sn1 = DoMySql.FindEntity<ModelDb.user_base>($"user_sn = '{item.tg_user_sn1}'", false);
+                                var tg_user_sn2 = DoMySql.FindEntity<ModelDb.user_base>($"user_sn = '{item.tg_user_sn2}'", false);
+                                var tingzhan_target1 = DoMySql.FindEntity<ModelDb.p_tingzhan_target>($"tingzhan_id = {item.tingzhan_id} and tg_user_sn = '{item.tg_user_sn1}'", false);
+                                var tingzhan_target2 = DoMySql.FindEntity<ModelDb.p_tingzhan_target>($"tingzhan_id = {item.tingzhan_id} and tg_user_sn = '{item.tg_user_sn2}'", false);
+                                <tr>
+                                    <td style="text-align: center; width: 40%;"><input type="checkbox" lay-skin="primary" value="l_@item.id" name="ting_replace">@tg_user_sn1.name（@Convert.ToInt32(tingzhan_target1.day_amount)）</td>
+                                    <td style="text-align: center; width: 40%;"><input type="checkbox" lay-skin="primary" value="r_@item.id" name="ting_replace">@tg_user_sn2.name（@Convert.ToInt32(tingzhan_target2.day_amount)）</td>
+                                    <td class="EditAble" data-id="@item.id" data-amont="@(Convert.ToInt32(item.amont))" style="text-align: center; width: 30%; ">@(Convert.ToInt32(item.amont))W</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <table class="layui-table" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th colspan="3" style="text-align: center; background-color: #FFF3CA; font-size: 18px; font-weight: 700 ">第二梯队</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align: center; width: 40%;">队伍A</td>
+                                <td style="text-align: center; width: 40%;">队伍B</td>
+                                <td style="text-align: center; width: 30%; ">目标音浪</td>
+                            </tr>
+                            @foreach (var item in ViewBag.mates2)
+                            {
+                                var tg_user_sn1 = DoMySql.FindEntity<ModelDb.user_base>($"user_sn = '{item.tg_user_sn1}'", false);
+                                var tg_user_sn2 = DoMySql.FindEntity<ModelDb.user_base>($"user_sn = '{item.tg_user_sn2}'", false);
+                                var tingzhan_target1 = DoMySql.FindEntity<ModelDb.p_tingzhan_target>($"tingzhan_id = {item.tingzhan_id} and tg_user_sn = '{item.tg_user_sn1}'", false);
+                                var tingzhan_target2 = DoMySql.FindEntity<ModelDb.p_tingzhan_target>($"tingzhan_id = {item.tingzhan_id} and tg_user_sn = '{item.tg_user_sn2}'", false);
+                                <tr>
+                                    <td style="text-align: center; width: 40%;"><input type="checkbox" lay-skin="primary" value="l_@item.id" name="ting_replace">@tg_user_sn1.name（@Convert.ToInt32(tingzhan_target1.day_amount)）</td>
+                                    <td style="text-align: center; width: 40%;"><input type="checkbox" lay-skin="primary" value="r_@item.id" name="ting_replace">@tg_user_sn2.name（@Convert.ToInt32(tingzhan_target2.day_amount)）</td>
+                                    <td class="EditAble" data-id="@item.id" data-amont="@(Convert.ToInt32(item.amont))" style="text-align: center; width: 30%; ">@(Convert.ToInt32(item.amont))W</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            @ViewModelBag.Load(Html, new ModelBasic.AdjFloatLayer("floatlayer")
+       {
+           position = ModelBasic.AdjFloatLayer.Position.相对定位,
+           positionRelative = new ModelBasic.AdjFloatLayer.PositionRelative
+           {
+               className = $"EditAble",
+               offset_y = 40
+           },
+           emtModelBase = new ModelBasic.EmtGrid("grid")
+           {
+               items = new List<ModelBasic.EmtGrid.Item>
+            {
+                   new ModelBasic.EmtGrid.Item
+               {
+                   title = "目标音浪",
+                   colLength = 12,
+                   emtModelBase = new ModelBasic.EmtInput($"amont")
+                   {
+
+                   },
+               },
+                new ModelBasic.EmtGrid.Item
+                {
+                    colLength=6,
+                    emtModelBase = new ModelBasic.EmtButton("button")
+                    {
+                        defaultValue = "提交",
+
+                        eventJsChange = new EmtFormBase.EventJsChange
+                        {
+                            eventCsAction=new EmtFormBase.EventJsChange.EventCsAction
+                            {
+                                attachPara=new Dictionary<string, object>
+                                    {
+                                        {"amont","<%=page.amont.value%>"},
+                                        {"id","<%=page.focus.attr('data-id')%>" },
+                                    },
+                                resCallJs="page.floatlayer.hide();location.reload();",
+                                func=new PageFactory.PaibuService().EditMate
+                            }
+                        }
+                    }
+           },
+                new ModelBasic.EmtGrid.Item
+                {
+                    colLength=6,
+                    emtModelBase = new ModelBasic.EmtButton("cancel")
+                    {
+                       defaultValue = "取消",
+
+                       eventJsChange = new EmtFormBase.EventJsChange
+                       {
+                           eventJavascript=new EventJavascript
+                           {
+                               code="page.floatlayer.hide();page.focus.css('font-weight', 'normal');"
+                           }
+                       }
+                   }
+                 }
+            }
+           },
+           eventJsAnies = new List<ModelBase.EventJsAny>
+            {
+                new ModelBase.EventJsAny
+                {
+                    eventName= ModelBasic.AdjFloatLayer.EventJs.show,
+                    eventJavascript= new EventJavascript
+                    {
+                        code="page.amont.set(page.focus.attr('data-amont'));",
+                    }
+                },
+                new ModelBase.EventJsAny
+                {
+                    eventName=ModelBasic.AdjFloatLayer.EventJs.show,
+                    eventJavascript=new EventJavascript
+                    {
+                        code="page.focus.css('font-weight', 'bold')"
+                    }
+                }
+            },
+           width = "250px",
+           height = "100px",
+       })
+        }
+    </div>
+</form>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        form.render('select'); // 仅渲染 select 元素
+    });
+
+    $('#submitBtn').on('click', function () {
+        var checkboxes = document.querySelectorAll('input[type=checkbox][name="ting_replace"]:checked'); // 获取所有选中的复选框
+        var selectedValues = Array.from(checkboxes).map(function (checkbox) { return checkbox.value; }); // 转换为数组并获取值
+        $.ajax({
+            type: "POST",
+            url: "/TingZhan/Paibu/MateReplace",
+            data: { tg_ids: selectedValues },
+            async: false,
+            dataType: 'json',
+            success: function (e) {
+                if (e.code == 0) {
+                    layer.msg(e.msg, {
+                        icon: 6
+                        , shade: 0
+                    });
+                    location.href = '/TingZhan/Paibu/Mate';
+                } else {
+                    layer.msg(e.msg, {
+                        icon: 5
+                        , shade: 0
+                    });
+                }
+            },
+            error: function () {
+                alert('操作失败');
+            }
+        });
+    });
+
+    $('#delBtn').on('click', function () {
+        layer.confirm('是否确认删除?', { icon: 3, title: '提示' }, function (index) {
+            $.ajax({
+                type: "POST",
+                url: "/TingZhan/Paibu/DelMate",
+                data: { tingzhan_id: $("#tingzhan_id").val() },
+                async: false,
+                dataType: 'json',
+                success: function (e) {
+                    if (e.code == 0) {
+                        layer.msg(e.msg, {
+                            icon: 6
+                            , shade: 0
+                        });
+                        location.href = '/TingZhan/Paibu/Mate';
+                    } else {
+                        layer.msg(e.msg, {
+                            icon: 5
+                            , shade: 0
+                        });
+                    }
+                },
+                error: function () {
+                    alert('操作失败');
+                }
+            });
+
+            layer.close(index);
+        });
+    });
+</script>

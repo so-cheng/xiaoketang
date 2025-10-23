@@ -1,0 +1,1858 @@
+﻿@using System;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+@using Newtonsoft.Json;
+@using WebProject.Areas.DataAnalysis.Data;
+
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+@{
+    string c_date = ViewBag.c_date;
+    string yy_user_sn = ViewBag.yy_user_sn;
+
+    string c_date_early = DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd") + " ~ " + DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd");//前一天
+
+    string c_date_7 = DateTime.Today.AddDays(-7).ToString("yyyy-MM-dd") + " ~ " + DateTime.Today.ToString("yyyy-MM-dd");//7天前
+
+    var date_s = c_date.Split('~');
+
+    string s_date = date_s[0].Trim();
+    string e_date = date_s[1].Trim();
+}
+
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-collapse: collapse;
+        border-style: solid;
+        border-width: 1px;
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    .layui-table {
+        background-color: rgba(30, 144, 255, 0.1);
+    }
+
+    /* 表头固定样式 */
+    .layui-table {
+        position: relative;
+    }
+
+        .layui-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: white;
+        }
+
+            .layui-table thead tr:first-child {
+                position: sticky;
+                top: 0;
+                z-index: 11;
+                background-color: #FFF3CA;
+            }
+
+            .layui-table thead tr:nth-child(2) {
+                position: sticky;
+                top: 28px; /* 第一行表头的高度 */
+                z-index: 11;
+                background-color: #FCE4D3;
+            }
+
+            /* 确保表头有足够的背景色 */
+            .layui-table thead th {
+                background-color: inherit;
+            }
+
+    /* 合并列的背景色（与参考逻辑对齐） */
+    .merge-column {
+        background-color: #EAFAF1 !important;
+    }
+</style>
+
+<div class="layui-card">
+    <blockquote class="layui-elem-quote news_search">
+        <div class="layui-inline">
+            <form class="layui-form">
+                <div class="layui-input-inline">
+                    <label class="layui-form-label">运营</label>
+                </div>
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        @ViewModelBag.Load(Html, new ModelBasic.EmtSelect("yy_user_sn")
+                        {
+                            options = new ServiceFactory.UserInfo.Yy().GetAllYyForKv(),
+                            defaultValue = ViewBag.yy_user_sn,
+                            eventJsChange = new EmtFormBase.EventJsChange
+                            {
+                                eventJavascript = new EventJavascript
+                                {
+                                    code = "window.location.href = '/DataAnalysis/TingCoreData/Item?c_date=' + page.c_date.value + '&yy_user_sn=' + page.yy_user_sn.value + '&r_date='+page.r_date.value;"
+                                },
+                            }
+                        })
+                    </div>
+                </div>
+
+                <div class="layui-input-inline">
+                    <label class="layui-form-label">日期</label>
+                </div>
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("c_date")
+                        {
+                            title = "日期",
+                            defaultValue = c_date,
+                            mold = ModelBasic.EmtTimeSelect.Mold.date_range,
+                            eventJsChange = new EmtFormBase.EventJsChange
+                            {
+                                eventJavascript = new EventJavascript
+                                {
+                                    code = "window.location.href = '/DataAnalysis/TingCoreData/Item?c_date=' + page.c_date.value + '&yy_user_sn=' + page.yy_user_sn.value"
+                                },
+                            }
+                        })
+                    </div>
+                </div>
+                <a href="/DataAnalysis/TingCoreData/Item?c_date=@c_date_early&yy_user_sn=@yy_user_sn" class="layui-btn">前一天</a>
+                <a href="/DataAnalysis/TingCoreData/Item?c_date=@c_date_7&yy_user_sn=@yy_user_sn" class="layui-btn">近七天</a>
+            </form>
+        </div>
+    </blockquote>
+
+    <div id="tables">
+        <div class="table-container">
+            <table class="layui-table" style="text-align: center;table-layout: fixed;" name="table">
+                <colgroup>
+                    <col width="100"> <!-- 运营列 -->
+                    <col width="100"> <!-- 厅管列 -->
+                    <col width="100"> <!-- 直播厅列 -->
+                    <col width="100"> <!-- 总人数列 -->
+                    <col width="100"> <!-- 档位数量列 -->
+                    <col width="100"> <!-- 开播时长列 -->
+                    <col width="100"> <!-- 访客数列 -->
+                    <col width="100"> <!-- 每小时访客数列 -->
+                    <col width="100"> <!-- 直播推荐占比列 -->
+                    <col width="100"> <!-- 进入率列 -->
+                    <col width="100"> <!-- 互动人数列 -->
+                    <col width="100"> <!-- 付费用户总数列 -->
+                    <col width="100"> <!-- 新付费用户数列 -->
+                    <col width="100"> <!-- 平均二消列 -->
+                    <col width="100"> <!-- A类用户数列 -->
+                    <col width="100"> <!-- B类用户数列 -->
+                    <col width="100"> <!-- C类用户数列 -->
+                    <col width="100"> <!-- 近5天A类用户数列 -->
+                    <col width="100"> <!-- 近10天A类用户数列 -->
+                    <col width="100"> <!-- 近15天A类用户数列 -->
+                    <col width="100"> <!-- 3天内老用户数列 -->
+                    <col width="100"> <!-- 5天内老用户数列 -->
+                    <col width="100"> <!-- 7天内老用户数列 -->
+                    <col width="100"> <!-- 15天内老用户数列 -->
+                    <col width="100"> <!-- 5天内升A类用户数列 -->
+                    <col width="100"> <!-- 总音浪值列 -->
+                    <col width="100"> <!-- 总计 -->
+                </colgroup>
+                <thead>
+                    <!-- 第一行表头：合并列展示标题 -->
+                    <tr>
+                        <td colspan="27" style="text-align: center; background-color: #FFF3CA; font-size: 18px; font-weight: 700 ">@(c_date)核心数据指标</td>
+                    </tr>
+                    <!-- 第二行表头：对应字段 -->
+                    <tr style="background-color: #FCE4D3;font-weight:700;">
+                        <th>运营</th>
+                        <th>厅管</th>
+                        <th>直播厅</th>
+                        <th>总人数</th>
+                        <th>档位数量</th>
+                        <th>开播时长</th>
+                        <th>访客数</th>
+                        <th>每小时访客数</th>
+                        <th>直播推荐占比</th>
+                        <th>进入率</th>
+                        <th>互动人数</th>
+                        <th>付费用户总数</th>
+                        <th>新付费用户数</th>
+                        <th>平均二消</th>
+                        <th>A类用户数</th>
+                        <th>B类用户数</th>
+                        <th>C类用户数</th>
+                        <th>近5天A类用户数</th>
+                        <th>近10天A类用户数</th>
+                        <th>近15天A类用户数</th>
+                        <th>3天内老用户数</th>
+                        <th>5天内老用户数</th>
+                        <th>7天内老用户数</th>
+                        <th>15天内老用户数</th>
+                        <th>5天内升A类的用户数</th>
+                        <th>总音浪值</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        // 1. 记录上一行的运营ID和厅管ID（用于判断是否需要合并）
+                        string prevYyUserSn = "";
+                        string prevTgUserSn = "";
+
+                        string sqlwhere = $"yy_user_sn = '{yy_user_sn}'  and tenant_id = {new DomainBasic.TenantApp().GetInfo().id} ";
+                        sqlwhere += $" and c_date >= '{s_date}' and c_date <= '{e_date}' ";
+                        sqlwhere += $" order by yy_user_sn, tg_user_sn";
+                        var dataanalysis_coredata_tings = DoMySql.FindList<ModelDb.dataanalysis_coredata_ting>(sqlwhere);
+                        foreach (var item in dataanalysis_coredata_tings)
+                        {
+                            <tr>
+                                <!-- 运营列合并 -->
+                                @if (item.yy_user_sn != prevYyUserSn)
+                                {
+                                    // 统计当前运营下的总记录数（用于 rowspan 合并行数）
+                                    int yyCount = dataanalysis_coredata_tings.Count(x => x.yy_user_sn == item.yy_user_sn);
+                                    <td rowspan="@yyCount" class="merge-column">@(new ServiceFactory.UserInfo.Yy().GetInfoByUserSn(item.yy_user_sn).username)</td>
+
+                                    prevYyUserSn = item.yy_user_sn;
+                                }
+
+                                <!-- 厅管列合并-->
+                                @if (item.tg_user_sn != prevTgUserSn)
+                                {
+
+                                    int tgCount = dataanalysis_coredata_tings.Count(x => x.yy_user_sn == item.yy_user_sn && x.tg_user_sn == item.tg_user_sn);
+                                    <td rowspan="@tgCount" class="merge-column">@(new ServiceFactory.UserInfo.Tg().GetTgInfoByUsersn(item.tg_user_sn).name)</td>
+
+                                    prevTgUserSn = item.tg_user_sn;
+                                }
+                                <!-- 查询规则-->
+
+                                @{
+                                    List<Rule> rules = new List<Rule>();
+                                    foreach (var data in JsonConvert.DeserializeObject<List<Rule>>(ViewBag.c_rule))
+                                    {
+                                        Rule rule = new Rule()
+                                        {
+                                            zd = data.zd,
+                                            fw = data.fw,
+                                            value = data.value,
+                                            color = data.color
+                                        };
+                                        rules.Add(rule);
+
+                                    }
+
+                                }
+                                <td>@(new ServiceFactory.UserInfo.Ting().GetTingBySn(item.ting_sn).ting_name)</td>
+
+
+                                @{
+                                    Rule r = rules.SingleOrDefault(a => a.zd == "总人数");
+                                    if (r != null)
+                                    {
+                                        switch (r.fw)
+                                        {
+                                            case ">":
+                                                if (item.zb_count > Convert.ToInt32(r.value))
+                                                {
+                                                    <td style="color:@r.color">@item.zb_count</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.zb_count</td>
+                                                }
+                                                break;
+                                            case "<":
+                                                if (item.zb_count < Convert.ToInt32(r.value))
+                                                {
+                                                    <td style="color:@r.color">@item.zb_count</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.zb_count</td>
+                                                }
+                                                break;
+                                            case "=":
+                                                if (item.zb_count == Convert.ToInt32(r.value))
+                                                {
+                                                    <td style="color:@r.color">@item.zb_count</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.zb_count</td>
+                                                }
+                                                break;
+                                            case ">=":
+                                                if (item.zb_count >= Convert.ToInt32(r.value))
+                                                {
+                                                    <td style="color:@r.color">@item.zb_count</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.zb_count</td>
+                                                }
+                                                break;
+                                            case "<=":
+                                                if (item.zb_count <= Convert.ToInt32(r.value))
+                                                {
+                                                    <td style="color:@r.color">@item.zb_count</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.zb_count</td>
+                                                }
+                                                break;
+                                            default:
+                                                <td>@item.zb_count</td>
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.zb_count</td>
+                                    }
+
+                                }
+                                @{
+                                    Rule gear = rules.SingleOrDefault(a => a.zd == "档位数量");
+                                    if (gear != null)
+                                    {
+                                        switch (gear.fw)
+                                        {
+                                            case ">":
+                                                if (item.gear > Convert.ToInt32(gear.value))
+                                                {
+                                                    <td style="color:@gear.color">@item.gear</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.gear</td>
+                                                }
+                                                break;
+                                            case "<":
+                                                if (item.gear < Convert.ToInt32(gear.value))
+                                                {
+                                                    <td style="color:@gear.color">@item.gear</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.gear</td>
+                                                }
+                                                break;
+                                            case "=":
+                                                if (item.gear == Convert.ToInt32(gear.value))
+                                                {
+                                                    <td style="color:@gear.color">@item.gear</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.gear</td>
+                                                }
+                                                break;
+                                            case ">=":
+                                                if (item.gear >= Convert.ToInt32(gear.value))
+                                                {
+                                                    <td style="color:@gear.color">@item.gear</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.gear</td>
+                                                }
+                                                break;
+                                            case "<=":
+                                                if (item.gear <= Convert.ToInt32(gear.value))
+                                                {
+                                                    <td style="color:@gear.color">@item.gear</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.gear</td>
+                                                }
+                                                break;
+                                            default:
+                                                <td>@item.gear</td>
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.gear</td>
+                                    }
+
+                                }
+                                @{
+                                    Rule liveHour = rules.SingleOrDefault(a => a.zd == "开播时长");
+                                    if (liveHour != null)
+                                    {
+                                        switch (liveHour.fw)
+                                        {
+                                            case ">":
+                                                if (item.liveHour > Convert.ToInt32(liveHour.value))
+                                                {
+                                                    <td style="color:@liveHour.color">@item.liveHour</td>
+                                                }
+                                                else
+                                                {
+
+                                                    <td>@item.liveHour</td>
+                                                }
+                                                break;
+                                            case "<":
+                                                if (item.liveHour < Convert.ToInt32(liveHour.value))
+                                                {
+                                                    <td style="color:@liveHour.color">@item.liveHour</td>
+                                                }
+                                                else
+                                                {
+
+                                                    <td>@item.liveHour</td>
+                                                }
+                                                break;
+                                            case "=":
+                                                if (item.liveHour == Convert.ToInt32(liveHour.value))
+                                                {
+                                                    <td style="color:@liveHour.color">@item.liveHour</td>
+                                                }
+                                                else
+                                                {
+
+                                                    <td>@item.liveHour</td>
+                                                }
+                                                break;
+                                            case ">=":
+                                                if (item.liveHour >= Convert.ToInt32(liveHour.value))
+                                                {
+                                                    <td style="color:@liveHour.color">@item.liveHour</td>
+                                                }
+                                                else
+                                                {
+
+                                                    <td>@item.liveHour</td>
+                                                }
+                                                break;
+                                            case "<=":
+                                                if (item.liveHour <= Convert.ToInt32(liveHour.value))
+                                                {
+                                                    <td style="color:@liveHour.color">@item.liveHour</td>
+                                                }
+                                                else
+                                                {
+
+                                                    <td>@item.liveHour</td>
+                                                }
+                                                break;
+                                            default:
+                                                <td>@item.liveHour</td>
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.liveHour</td>
+                                    }
+
+                                }
+                                @{
+                                    Rule visitor = rules.SingleOrDefault(a => a.zd == "访客数");
+                                    if (visitor != null)
+                                    {
+                                        switch (visitor.fw)
+                                        {
+                                            case ">":
+                                                if (item.visitor > Convert.ToInt32(visitor.value))
+                                                {
+                                                    <td style="color:@visitor.color">@item.visitor</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.visitor</td>
+                                                }
+                                                break;
+                                            case "<":
+                                                if (item.visitor < Convert.ToInt32(visitor.value))
+                                                {
+                                                    <td style="color:@visitor.color">@item.visitor</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.visitor</td>
+                                                }
+                                                break;
+                                            case "=":
+                                                if (item.visitor == Convert.ToInt32(visitor.value))
+                                                {
+                                                    <td style="color:@visitor.color">@item.visitor</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.visitor</td>
+                                                }
+                                                break;
+                                            case ">=":
+                                                if (item.visitor >= Convert.ToInt32(visitor.value))
+                                                {
+                                                    <td style="color:@visitor.color">@item.visitor</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.visitor</td>
+                                                }
+                                                break;
+                                            case "<=":
+                                                if (item.visitor <= Convert.ToInt32(visitor.value))
+                                                {
+                                                    <td style="color:@visitor.color">@item.visitor</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.visitor</td>
+                                                }
+                                                break;
+                                            default:
+                                                <td>@item.visitor</td>
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.visitor</td>
+                                    }
+
+                                }
+                                @{
+                                    Rule hourly_visitors = rules.SingleOrDefault(a => a.zd == "每小时访客数");
+                                    if (hourly_visitors != null)
+                                    {
+                                        switch (hourly_visitors.fw)
+                                        {
+                                            case ">":
+                                                if (item.hourly_visitors > Convert.ToInt32(hourly_visitors.value))
+                                                {
+                                                    <td style="color:@hourly_visitors.color">@item.hourly_visitors</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.hourly_visitors</td>
+                                                }
+                                                break;
+                                            case "<":
+                                                if (item.hourly_visitors < Convert.ToInt32(hourly_visitors.value))
+                                                {
+                                                    <td style="color:@hourly_visitors.color">@item.hourly_visitors</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.hourly_visitors</td>
+                                                }
+                                                break;
+                                            case "=":
+                                                if (item.hourly_visitors == Convert.ToInt32(hourly_visitors.value))
+                                                {
+                                                    <td style="color:@hourly_visitors.color">@item.hourly_visitors</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.hourly_visitors</td>
+                                                }
+                                                break;
+                                            case ">=":
+                                                if (item.hourly_visitors >= Convert.ToInt32(hourly_visitors.value))
+                                                {
+                                                    <td style="color:@hourly_visitors.color">@item.hourly_visitors</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.hourly_visitors</td>
+                                                }
+                                                break;
+                                            case "<=":
+                                                if (item.hourly_visitors <= Convert.ToInt32(hourly_visitors.value))
+                                                {
+                                                    <td style="color:@hourly_visitors.color">@item.hourly_visitors</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.hourly_visitors</td>
+                                                }
+                                                break;
+                                            default:
+                                                <td>@item.hourly_visitors</td>
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.hourly_visitors</td>
+                                    }
+
+                                }
+                                @{
+                                    Rule live_rate = rules.SingleOrDefault(a => a.zd == "直播推荐占比");
+                                    if (live_rate != null)
+                                    {
+                                        switch (live_rate.fw)
+                                        {
+                                            case ">":
+                                                if (item.live_rate > Convert.ToInt32(live_rate.value))
+                                                {
+                                                    <td style="color:@live_rate.color">@item.live_rate%</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.live_rate%</td>
+                                                }
+                                                break;
+                                            case "<":
+                                                if (item.live_rate < Convert.ToInt32(live_rate.value))
+                                                {
+                                                    <td style="color:@live_rate.color">@item.live_rate%</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.live_rate%</td>
+                                                }
+                                                break;
+                                            case "=":
+                                                if (item.live_rate == Convert.ToInt32(live_rate.value))
+                                                {
+                                                    <td style="color:@live_rate.color">@item.live_rate%</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.live_rate%</td>
+                                                }
+                                                break;
+                                            case ">=":
+                                                if (item.live_rate >= Convert.ToInt32(live_rate.value))
+                                                {
+                                                    <td style="color:@live_rate.color">@item.live_rate%</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.live_rate%</td>
+                                                }
+                                                break;
+                                            case "<=":
+                                                if (item.live_rate <= Convert.ToInt32(live_rate.value))
+                                                {
+                                                    <td style="color:@live_rate.color">@item.live_rate%</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.live_rate%</td>
+                                                }
+                                                break;
+                                            default:
+                                                <td>@item.live_rate%</td>
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.live_rate%</td>
+                                    }
+
+                                }
+                                @{
+                                    Rule entry_rate = rules.SingleOrDefault(a => a.zd == "进入率");
+                                    if (entry_rate != null)
+                                    {
+                                        switch (entry_rate.fw)
+                                        {
+                                            case ">":
+                                                if (item.entry_rate > Convert.ToInt32(entry_rate.value))
+                                                {
+                                                    <td style="color:@entry_rate.color">@item.entry_rate%</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.entry_rate%</td>
+                                                }
+                                                break;
+                                            case "<":
+                                                if (item.entry_rate < Convert.ToInt32(entry_rate.value))
+                                                {
+                                                    <td style="color:@entry_rate.color">@item.entry_rate%</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.entry_rate</td>
+                                                }
+                                                break;
+                                            case "=":
+                                                if (item.entry_rate == Convert.ToInt32(entry_rate.value))
+                                                {
+                                                    <td style="color:@entry_rate.color">@item.entry_rate%</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.entry_rate</td>
+                                                }
+                                                break;
+                                            case ">=":
+                                                if (item.entry_rate >= Convert.ToInt32(entry_rate.value))
+                                                {
+                                                    <td style="color:@entry_rate.color">@item.entry_rate%</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.entry_rate</td>
+                                                }
+                                                break;
+                                            case "<=":
+                                                if (item.entry_rate <= Convert.ToInt32(entry_rate.value))
+                                                {
+                                                    <td style="color:@entry_rate.color">@item.entry_rate%</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.entry_rate%</td>
+                                                }
+                                                break;
+                                            default:
+                                                <td>@item.entry_rate%</td>
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.entry_rate%</td>
+                                    }
+
+                                }
+                                @{
+                                    Rule interactive_user_count = rules.SingleOrDefault(a => a.zd == "互动人数");
+                                    if (interactive_user_count != null)
+                                    {
+                                        switch (interactive_user_count.fw)
+                                        {
+                                            case ">":
+                                                if (item.interactive_user_count > Convert.ToInt32(interactive_user_count.value))
+                                                {
+                                                    <td style="color:@interactive_user_count.color">@item.interactive_user_count</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.interactive_user_count</td>
+                                                }
+                                                break;
+                                            case "<":
+                                                if (item.interactive_user_count < Convert.ToInt32(interactive_user_count.value))
+                                                {
+                                                    <td style="color:@interactive_user_count.color">@item.interactive_user_count</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.interactive_user_count</td>
+                                                }
+                                                break;
+                                            case "=":
+                                                if (item.interactive_user_count == Convert.ToInt32(interactive_user_count.value))
+                                                {
+                                                    <td style="color:@interactive_user_count.color">@item.interactive_user_count</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.interactive_user_count</td>
+                                                }
+                                                break;
+                                            case ">=":
+                                                if (item.interactive_user_count >= Convert.ToInt32(interactive_user_count.value))
+                                                {
+                                                    <td style="color:@interactive_user_count.color">@item.interactive_user_count</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.interactive_user_count</td>
+                                                }
+                                                break;
+                                            case "<=":
+                                                if (item.interactive_user_count <= Convert.ToInt32(interactive_user_count.value))
+                                                {
+                                                    <td style="color:@interactive_user_count.color">@item.interactive_user_count</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.interactive_user_count</td>
+                                                }
+                                                break;
+                                            default:
+                                                <td>@item.interactive_user_count</td>
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.interactive_user_count</td>
+                                    }
+
+                                }
+                                @{
+                                    Rule paying_user_total = rules.SingleOrDefault(a => a.zd == "付费用户总数");
+                                    if (paying_user_total != null)
+                                    {
+                                        switch (paying_user_total.fw)
+                                        {
+                                            case ">":
+                                                if (item.paying_user_total > Convert.ToInt32(paying_user_total.value))
+                                                {
+                                                    <td style="color:@paying_user_total.color">@item.paying_user_total</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.paying_user_total</td>
+                                                }
+                                                break;
+                                            case "<":
+                                                if (item.paying_user_total < Convert.ToInt32(paying_user_total.value))
+                                                {
+                                                    <td style="color:@paying_user_total.color">@item.paying_user_total</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.paying_user_total</td>
+                                                }
+                                                break;
+                                            case "=":
+                                                if (item.paying_user_total == Convert.ToInt32(paying_user_total.value))
+                                                {
+                                                    <td style="color:@paying_user_total.color">@item.paying_user_total</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.paying_user_total</td>
+                                                }
+                                                break;
+                                            case ">=":
+                                                if (item.paying_user_total >= Convert.ToInt32(paying_user_total.value))
+                                                {
+                                                    <td style="color:@paying_user_total.color">@item.paying_user_total</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.paying_user_total</td>
+                                                }
+                                                break;
+                                            case "<=":
+                                                if (item.paying_user_total <= Convert.ToInt32(paying_user_total.value))
+                                                {
+                                                    <td style="color:@paying_user_total.color">@item.paying_user_total</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.paying_user_total</td>
+                                                }
+                                                break;
+                                            default:
+                                                <td>@item.paying_user_total</td>
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.paying_user_total</td>
+                                    }
+
+                                }
+                                @{
+                                    Rule new_paying_user_count = rules.SingleOrDefault(a => a.zd == "新付费用户数");
+                                    if (new_paying_user_count != null)
+                                    {
+                                        switch (new_paying_user_count.fw)
+                                        {
+                                            case ">":
+                                                if (item.new_paying_user_count > Convert.ToInt32(new_paying_user_count.value))
+                                                {
+                                                    <td style="color:@new_paying_user_count.color">@item.new_paying_user_count</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.new_paying_user_count</td>
+                                                }
+                                                break;
+                                            case "<":
+                                                if (item.new_paying_user_count < Convert.ToInt32(new_paying_user_count.value))
+                                                {
+                                                    <td style="color:@new_paying_user_count.color">@item.new_paying_user_count</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.new_paying_user_count</td>
+                                                }
+                                                break;
+                                            case "=":
+                                                if (item.new_paying_user_count == Convert.ToInt32(new_paying_user_count.value))
+                                                {
+                                                    <td style="color:@new_paying_user_count.color">@item.new_paying_user_count</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.new_paying_user_count</td>
+                                                }
+                                                break;
+                                            case ">=":
+                                                if (item.new_paying_user_count >= Convert.ToInt32(new_paying_user_count.value))
+                                                {
+                                                    <td style="color:@new_paying_user_count.color">@item.new_paying_user_count</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.new_paying_user_count</td>
+                                                }
+                                                break;
+                                            case "<=":
+                                                if (item.new_paying_user_count <= Convert.ToInt32(new_paying_user_count.value))
+                                                {
+                                                    <td style="color:@new_paying_user_count.color">@item.new_paying_user_count</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.new_paying_user_count</td>
+                                                }
+                                                break;
+                                            default:
+                                                <td>@item.new_paying_user_count</td>
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.new_paying_user_count</td>
+                                    }
+
+                                }
+                                @{
+                                    Rule avg_second_consumption = rules.SingleOrDefault(a => a.zd == "平均二消");
+                                    if (avg_second_consumption != null)
+                                    {
+                                        switch (avg_second_consumption.fw)
+                                        {
+                                            case ">":
+                                                if (item.avg_second_consumption > Convert.ToInt32(avg_second_consumption.value))
+                                                {
+                                                    <td style="color:@avg_second_consumption.color">@item.avg_second_consumption</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.avg_second_consumption</td>
+                                                }
+                                                break;
+                                            case "<":
+                                                if (item.avg_second_consumption < Convert.ToInt32(avg_second_consumption.value))
+                                                {
+                                                    <td style="color:@avg_second_consumption.color">@item.avg_second_consumption</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.avg_second_consumption</td>
+                                                }
+                                                break;
+                                            case "=":
+                                                if (item.avg_second_consumption == Convert.ToInt32(avg_second_consumption.value))
+                                                {
+                                                    <td style="color:@avg_second_consumption.color">@item.avg_second_consumption</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.avg_second_consumption</td>
+                                                }
+                                                break;
+                                            case ">=":
+                                                if (item.avg_second_consumption >= Convert.ToInt32(avg_second_consumption.value))
+                                                {
+                                                    <td style="color:@avg_second_consumption.color">@item.avg_second_consumption</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.avg_second_consumption</td>
+                                                }
+                                                break;
+                                            case "<=":
+                                                if (item.avg_second_consumption <= Convert.ToInt32(avg_second_consumption.value))
+                                                {
+                                                    <td style="color:@avg_second_consumption.color">@item.avg_second_consumption</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.avg_second_consumption</td>
+                                                }
+                                                break;
+                                            default:
+                                                <td>@item.avg_second_consumption</td>
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.avg_second_consumption</td>
+                                    }
+
+                                }
+                                @{
+                                    Rule user_count_type_a = rules.SingleOrDefault(a => a.zd == "A类用户数");
+                                    if (user_count_type_a != null)
+                                    {
+                                        switch (user_count_type_a.fw)
+                                        {
+                                            case ">":
+                                                if (item.user_count_type_a > Convert.ToInt32(user_count_type_a.value))
+                                                {
+                                                    <td style="color:@user_count_type_a.color">@item.user_count_type_a</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_a</td>
+                                                }
+                                                break;
+                                            case "<":
+                                                if (item.user_count_type_a < Convert.ToInt32(user_count_type_a.value))
+                                                {
+                                                    <td style="color:@user_count_type_a.color">@item.user_count_type_a</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_a</td>
+                                                }
+                                                break;
+                                            case "=":
+                                                if (item.user_count_type_a == Convert.ToInt32(user_count_type_a.value))
+                                                {
+                                                    <td style="color:@user_count_type_a.color">@item.user_count_type_a</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_a</td>
+                                                }
+                                                break;
+                                            case ">=":
+                                                if (item.user_count_type_a >= Convert.ToInt32(user_count_type_a.value))
+                                                {
+                                                    <td style="color:@user_count_type_a.color">@item.user_count_type_a</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_a</td>
+                                                }
+                                                break;
+                                            case "<=":
+                                                if (item.user_count_type_a <= Convert.ToInt32(user_count_type_a.value))
+                                                {
+                                                    <td style="color:@user_count_type_a.color">@item.user_count_type_a</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_a</td>
+                                                }
+                                                break;
+                                            default:
+                                                <td>@item.user_count_type_a</td>
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.user_count_type_a</td>
+                                    }
+
+                                }
+                                @{
+                                    Rule user_count_type_b = rules.SingleOrDefault(a => a.zd == "B类用户数");
+                                    if (user_count_type_b != null)
+                                    {
+                                        switch (user_count_type_b.fw)
+                                        {
+                                            case ">":
+                                                if (item.user_count_type_b > Convert.ToInt32(user_count_type_b.value))
+                                                {
+                                                    <td style="color:@user_count_type_b.color">@item.user_count_type_b</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_b</td>
+                                                }
+                                                break;
+                                            case "<":
+                                                if (item.user_count_type_b < Convert.ToInt32(user_count_type_b.value))
+                                                {
+                                                    <td style="color:@user_count_type_b.color">@item.user_count_type_b</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_b</td>
+                                                }
+                                                break;
+                                            case "=":
+                                                if (item.user_count_type_b == Convert.ToInt32(user_count_type_b.value))
+                                                {
+                                                    <td style="color:@user_count_type_b.color">@item.user_count_type_b</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_b</td>
+                                                }
+                                                break;
+                                            case ">=":
+                                                if (item.user_count_type_b >= Convert.ToInt32(user_count_type_b.value))
+                                                {
+                                                    <td style="color:@user_count_type_b.color">@item.user_count_type_b</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_b</td>
+                                                }
+                                                break;
+                                            case "<=":
+                                                if (item.user_count_type_b <= Convert.ToInt32(user_count_type_b.value))
+                                                {
+                                                    <td style="color:@user_count_type_b.color">@item.user_count_type_b</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_b</td>
+                                                }
+                                                break;
+                                            default:
+                                                <td>@item.user_count_type_b</td>
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.user_count_type_b</td>
+                                    }
+
+                                }
+                                @{
+                                    Rule user_count_type_c = rules.SingleOrDefault(a => a.zd == "C类用户数");
+                                    if (user_count_type_c != null)
+                                    {
+                                        switch (user_count_type_c.fw)
+                                        {
+                                            case ">":
+                                                if (item.user_count_type_c > Convert.ToInt32(user_count_type_c.value))
+                                                {
+                                                    <td style="color:@user_count_type_c.color">@item.user_count_type_c</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_c</td>
+                                                }
+                                                break;
+                                            case "<":
+                                                if (item.user_count_type_c < Convert.ToInt32(user_count_type_c.value))
+                                                {
+                                                    <td style="color:@user_count_type_c.color">@item.user_count_type_c</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_c</td>
+                                                }
+                                                break;
+                                            case "=":
+                                                if (item.user_count_type_c == Convert.ToInt32(user_count_type_c.value))
+                                                {
+                                                    <td style="color:@user_count_type_c.color">@item.user_count_type_c</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_c</td>
+                                                }
+                                                break;
+                                            case ">=":
+                                                if (item.user_count_type_c >= Convert.ToInt32(user_count_type_c.value))
+                                                {
+                                                    <td style="color:@user_count_type_c.color">@item.user_count_type_c</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_c</td>
+                                                }
+                                                break;
+                                            case "<=":
+                                                if (item.user_count_type_c <= Convert.ToInt32(user_count_type_c.value))
+                                                {
+                                                    <td style="color:@user_count_type_c.color">@item.user_count_type_c</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_c</td>
+                                                }
+                                                break;
+                                            default:
+                                                <td>@item.user_count_type_c</td>
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.user_count_type_c</td>
+                                    }
+
+                                }
+                                @{
+                                    Rule user_count_type_a_last_5d = rules.SingleOrDefault(a => a.zd == "近5天A类用户数");
+                                    if (user_count_type_a_last_5d != null)
+                                    {
+                                        switch (user_count_type_a_last_5d.fw)
+                                        {
+                                            case ">":
+                                                if (item.user_count_type_a_last_5d > Convert.ToInt32(user_count_type_a_last_5d.value))
+                                                {
+                                                    <td style="color:@user_count_type_a_last_5d.color">@item.user_count_type_a_last_5d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_a_last_5d</td>
+                                                }
+                                                break;
+                                            case "<":
+                                                if (item.user_count_type_a_last_5d < Convert.ToInt32(user_count_type_a_last_5d.value))
+                                                {
+                                                    <td style="color:@user_count_type_a_last_5d.color">@item.user_count_type_a_last_5d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_a_last_5d</td>
+                                                }
+                                                break;
+                                            case "=":
+                                                if (item.user_count_type_a_last_5d == Convert.ToInt32(user_count_type_a_last_5d.value))
+                                                {
+                                                    <td style="color:@user_count_type_a_last_5d.color">@item.user_count_type_a_last_5d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_a_last_5d</td>
+                                                }
+                                                break;
+                                            case ">=":
+                                                if (item.user_count_type_a_last_5d >= Convert.ToInt32(user_count_type_a_last_5d.value))
+                                                {
+                                                    <td style="color:@user_count_type_a_last_5d.color">@item.user_count_type_a_last_5d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_a_last_5d</td>
+                                                }
+                                                break;
+                                            case "<=":
+                                                if (item.user_count_type_a_last_5d <= Convert.ToInt32(user_count_type_a_last_5d.value))
+                                                {
+                                                    <td style="color:@user_count_type_a_last_5d.color">@item.user_count_type_a_last_5d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_a_last_5d</td>
+                                                }
+                                                break;
+                                            default:
+                                                <td>@item.user_count_type_a_last_5d</td>
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.user_count_type_a_last_5d</td>
+                                    }
+
+                                }
+                                @{
+                                    Rule user_count_type_a_last_10d = rules.SingleOrDefault(a => a.zd == "近10天A类用户数");
+                                    if (user_count_type_a_last_10d != null)
+                                    {
+                                        switch (user_count_type_a_last_10d.fw)
+                                        {
+                                            case ">":
+                                                if (item.user_count_type_a_last_10d > Convert.ToInt32(user_count_type_a_last_10d.value))
+                                                {
+                                                    <td style="color:@user_count_type_a_last_10d.color">@item.user_count_type_a_last_10d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_a_last_10d</td>
+                                                }
+                                                break;
+                                            case "<":
+                                                if (item.user_count_type_a_last_10d < Convert.ToInt32(user_count_type_a_last_10d.value))
+                                                {
+                                                    <td style="color:@user_count_type_a_last_10d.color">@item.user_count_type_a_last_10d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_a_last_10d</td>
+                                                }
+                                                break;
+                                            case "=":
+                                                if (item.user_count_type_a_last_10d == Convert.ToInt32(user_count_type_a_last_10d.value))
+                                                {
+                                                    <td style="color:@user_count_type_a_last_10d.color">@item.user_count_type_a_last_10d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_a_last_10d</td>
+                                                }
+                                                break;
+                                            case ">=":
+                                                if (item.user_count_type_a_last_10d >= Convert.ToInt32(user_count_type_a_last_10d.value))
+                                                {
+                                                    <td style="color:@user_count_type_a_last_10d.color">@item.user_count_type_a_last_10d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_a_last_10d</td>
+                                                }
+                                                break;
+                                            case "<=":
+                                                if (item.user_count_type_a_last_10d <= Convert.ToInt32(user_count_type_a_last_10d.value))
+                                                {
+                                                    <td style="color:@user_count_type_a_last_10d.color">@item.user_count_type_a_last_10d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_a_last_10d</td>
+                                                }
+                                                break;
+                                            default:
+                                                <td>@item.user_count_type_a_last_10d</td>
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.user_count_type_a_last_10d</td>
+                                    }
+
+                                }
+                                @{
+                                    Rule user_count_type_a_last_15d = rules.SingleOrDefault(a => a.zd == "近15天A类用户数");
+                                    if (user_count_type_a_last_15d != null)
+                                    {
+                                        switch (user_count_type_a_last_10d.fw)
+                                        {
+                                            case ">":
+                                                if (item.user_count_type_a_last_10d > Convert.ToInt32(user_count_type_a_last_15d.value))
+                                                {
+                                                    <td style="color:@user_count_type_a_last_15d.color">@item.user_count_type_a_last_15d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_a_last_15d</td>
+                                                }
+                                                break;
+                                            case "<":
+                                                if (item.user_count_type_a_last_10d < Convert.ToInt32(user_count_type_a_last_15d.value))
+                                                {
+                                                    <td style="color:@user_count_type_a_last_15d.color">@item.user_count_type_a_last_15d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_a_last_15d</td>
+                                                }
+                                                break;
+                                            case "=":
+                                                if (item.user_count_type_a_last_10d == Convert.ToInt32(user_count_type_a_last_15d.value))
+                                                {
+                                                    <td style="color:@user_count_type_a_last_15d.color">@item.user_count_type_a_last_15d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_a_last_15d</td>
+                                                }
+                                                break;
+                                            case ">=":
+                                                if (item.user_count_type_a_last_10d >= Convert.ToInt32(user_count_type_a_last_15d.value))
+                                                {
+                                                    <td style="color:@user_count_type_a_last_15d.color">@item.user_count_type_a_last_15d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_a_last_15d</td>
+                                                }
+                                                break;
+                                            case "<=":
+                                                if (item.user_count_type_a_last_10d <= Convert.ToInt32(user_count_type_a_last_10d.value))
+                                                {
+                                                    <td style="color:@user_count_type_a_last_15d.color">@item.user_count_type_a_last_15d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.user_count_type_a_last_15d</td>
+                                                }
+                                                break;
+                                            default:
+                                                <td>@item.user_count_type_a_last_10d</td>
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.user_count_type_a_last_15d</td>
+                                    }
+
+                                }
+                                @{
+                                    Rule old_user_count_last_3d = rules.SingleOrDefault(a => a.zd == "3天内老用户数");
+                                    if (old_user_count_last_3d != null)
+                                    {
+                                        switch (old_user_count_last_3d.fw)
+                                        {
+                                            case ">":
+                                                if (item.old_user_count_last_3d > Convert.ToInt32(old_user_count_last_3d.value))
+                                                {
+                                                    <td style="color:@old_user_count_last_3d.color">@item.old_user_count_last_3d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.old_user_count_last_3d</td>
+                                                }
+                                                break;
+                                            case "<":
+                                                if (item.old_user_count_last_3d < Convert.ToInt32(old_user_count_last_3d.value))
+                                                {
+                                                    <td style="color:@old_user_count_last_3d.color">@item.old_user_count_last_3d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.old_user_count_last_3d</td>
+                                                }
+                                                break;
+                                            case "=":
+                                                if (item.old_user_count_last_3d == Convert.ToInt32(old_user_count_last_3d.value))
+                                                {
+                                                    <td style="color:@old_user_count_last_3d.color">@item.old_user_count_last_3d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.old_user_count_last_3d</td>
+                                                }
+                                                break;
+                                            case ">=":
+                                                if (item.old_user_count_last_3d >= Convert.ToInt32(old_user_count_last_3d.value))
+                                                {
+                                                    <td style="color:@old_user_count_last_3d.color">@item.old_user_count_last_3d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.old_user_count_last_3d</td>
+                                                }
+                                                break;
+                                            case "<=":
+                                                if (item.old_user_count_last_3d <= Convert.ToInt32(old_user_count_last_3d.value))
+                                                {
+                                                    <td style="color:@old_user_count_last_3d.color">@item.old_user_count_last_3d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.old_user_count_last_3d</td>
+                                                }
+                                                break;
+                                            default:
+                                                <td>@item.old_user_count_last_3d</td>
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.old_user_count_last_3d</td>
+                                    }
+
+                                }
+                                @{
+                                    Rule old_user_count_last_5d = rules.SingleOrDefault(a => a.zd == "5天内老用户数");
+                                    if (old_user_count_last_5d != null)
+                                    {
+                                        switch (old_user_count_last_5d.fw)
+                                        {
+                                            case ">":
+                                                if (item.old_user_count_last_5d > Convert.ToInt32(old_user_count_last_5d.value))
+                                                {
+                                                    <td style="color:@old_user_count_last_5d.color">@item.old_user_count_last_5d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.old_user_count_last_5d</td>
+                                                }
+                                                break;
+                                            case "<":
+                                                if (item.old_user_count_last_5d < Convert.ToInt32(old_user_count_last_5d.value))
+                                                {
+                                                    <td style="color:@old_user_count_last_5d.color">@item.old_user_count_last_5d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.old_user_count_last_5d</td>
+                                                }
+                                                break;
+                                            case "=":
+                                                if (item.old_user_count_last_5d == Convert.ToInt32(old_user_count_last_5d.value))
+                                                {
+                                                    <td style="color:@old_user_count_last_5d.color">@item.old_user_count_last_5d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.old_user_count_last_5d</td>
+                                                }
+                                                break;
+                                            case ">=":
+                                                if (item.old_user_count_last_5d >= Convert.ToInt32(old_user_count_last_5d.value))
+                                                {
+                                                    <td style="color:@old_user_count_last_5d.color">@item.old_user_count_last_5d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.old_user_count_last_5d</td>
+                                                }
+                                                break;
+                                            case "<=":
+                                                if (item.old_user_count_last_5d <= Convert.ToInt32(old_user_count_last_5d.value))
+                                                {
+                                                    <td style="color:@old_user_count_last_5d.color">@item.old_user_count_last_5d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.old_user_count_last_5d</td>
+                                                }
+                                                break;
+                                            default:
+                                                <td>@item.old_user_count_last_5d</td>
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.old_user_count_last_5d</td>
+                                    }
+
+                                }
+                                @{
+                                    Rule old_user_count_last_7d = rules.SingleOrDefault(a => a.zd == "7天内老用户数");
+                                    if (old_user_count_last_7d != null)
+                                    {
+                                        switch (old_user_count_last_7d.fw)
+                                        {
+                                            case ">":
+                                                if (item.old_user_count_last_7d > Convert.ToInt32(old_user_count_last_7d.value))
+                                                {
+                                                    <td style="color:@old_user_count_last_7d.color">@item.old_user_count_last_7d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.old_user_count_last_7d</td>
+                                                }
+                                                break;
+                                            case "<":
+                                                if (item.old_user_count_last_7d < Convert.ToInt32(old_user_count_last_7d.value))
+                                                {
+                                                    <td style="color:@old_user_count_last_7d.color">@item.old_user_count_last_7d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.old_user_count_last_7d</td>
+                                                }
+                                                break;
+                                            case "=":
+                                                if (item.old_user_count_last_7d == Convert.ToInt32(old_user_count_last_7d.value))
+                                                {
+                                                    <td style="color:@old_user_count_last_7d.color">@item.old_user_count_last_7d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.old_user_count_last_7d</td>
+                                                }
+                                                break;
+                                            case ">=":
+                                                if (item.old_user_count_last_7d >= Convert.ToInt32(old_user_count_last_7d.value))
+                                                {
+                                                    <td style="color:@old_user_count_last_7d.color">@item.old_user_count_last_7d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.old_user_count_last_7d</td>
+                                                }
+                                                break;
+                                            case "<=":
+                                                if (item.old_user_count_last_7d <= Convert.ToInt32(old_user_count_last_7d.value))
+                                                {
+                                                    <td style="color:@old_user_count_last_7d.color">@item.old_user_count_last_7d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.old_user_count_last_7d</td>
+                                                }
+                                                break;
+                                            default:
+                                                <td>@item.old_user_count_last_7d</td>
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.old_user_count_last_7d</td>
+                                    }
+
+                                }
+                                @{
+                                    Rule old_user_count_last_15d = rules.SingleOrDefault(a => a.zd == "15天内老用户数");
+                                    if (old_user_count_last_15d != null)
+                                    {
+                                        switch (old_user_count_last_15d.fw)
+                                        {
+                                            case ">":
+                                                if (item.old_user_count_last_15d > Convert.ToInt32(old_user_count_last_15d.value))
+                                                {
+                                                    <td style="color:@old_user_count_last_15d.color">@item.old_user_count_last_15d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.old_user_count_last_15d</td>
+                                                }
+                                                break;
+                                            case "<":
+                                                if (item.old_user_count_last_15d < Convert.ToInt32(old_user_count_last_15d.value))
+                                                {
+                                                    <td style="color:@old_user_count_last_15d.color">@item.old_user_count_last_15d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.old_user_count_last_15d</td>
+                                                }
+                                                break;
+                                            case "=":
+                                                if (item.old_user_count_last_15d == Convert.ToInt32(old_user_count_last_15d.value))
+                                                {
+                                                    <td style="color:@old_user_count_last_15d.color">@item.old_user_count_last_15d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.old_user_count_last_15d</td>
+                                                }
+                                                break;
+                                            case ">=":
+                                                if (item.old_user_count_last_15d >= Convert.ToInt32(old_user_count_last_15d.value))
+                                                {
+                                                    <td style="color:@old_user_count_last_15d.color">@item.old_user_count_last_15d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.old_user_count_last_15d</td>
+                                                }
+                                                break;
+                                            case "<=":
+                                                if (item.old_user_count_last_15d <= Convert.ToInt32(old_user_count_last_15d.value))
+                                                {
+                                                    <td style="color:@old_user_count_last_15d.color">@item.old_user_count_last_15d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.old_user_count_last_15d</td>
+                                                }
+                                                break;
+                                            default:
+                                                <td>@item.old_user_count_last_15d</td>
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.old_user_count_last_15d</td>
+                                    }
+
+                                }
+                                @{
+                                    Rule upgraded_to_a_count_last_5d = rules.SingleOrDefault(a => a.zd == "5天内升A类的用户数");
+                                    if (upgraded_to_a_count_last_5d != null)
+                                    {
+                                        switch (upgraded_to_a_count_last_5d.fw)
+                                        {
+                                            case ">":
+                                                if (item.upgraded_to_a_count_last_5d > Convert.ToInt32(upgraded_to_a_count_last_5d.value))
+                                                {
+                                                    <td style="color:@upgraded_to_a_count_last_5d.color">@item.upgraded_to_a_count_last_5d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.upgraded_to_a_count_last_5d</td>
+                                                }
+                                                break;
+                                            case "<":
+                                                if (item.upgraded_to_a_count_last_5d < Convert.ToInt32(upgraded_to_a_count_last_5d.value))
+                                                {
+                                                    <td style="color:@upgraded_to_a_count_last_5d.color">@item.upgraded_to_a_count_last_5d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.upgraded_to_a_count_last_5d</td>
+                                                }
+                                                break;
+                                            case "=":
+                                                if (item.upgraded_to_a_count_last_5d == Convert.ToInt32(upgraded_to_a_count_last_5d.value))
+                                                {
+                                                    <td style="color:@upgraded_to_a_count_last_5d.color">@item.upgraded_to_a_count_last_5d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.upgraded_to_a_count_last_5d</td>
+                                                }
+                                                break;
+                                            case ">=":
+                                                if (item.upgraded_to_a_count_last_5d >= Convert.ToInt32(upgraded_to_a_count_last_5d.value))
+                                                {
+                                                    <td style="color:@upgraded_to_a_count_last_5d.color">@item.upgraded_to_a_count_last_5d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.upgraded_to_a_count_last_5d</td>
+                                                }
+                                                break;
+                                            case "<=":
+                                                if (item.upgraded_to_a_count_last_5d <= Convert.ToInt32(upgraded_to_a_count_last_5d.value))
+                                                {
+                                                    <td style="color:@upgraded_to_a_count_last_5d.color">@item.upgraded_to_a_count_last_5d</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.upgraded_to_a_count_last_5d</td>
+                                                }
+                                                break;
+                                            default:
+                                                <td>@item.upgraded_to_a_count_last_5d</td>
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.upgraded_to_a_count_last_5d</td>
+                                    }
+
+                                }
+                                @{
+                                    Rule totalFanTickets = rules.SingleOrDefault(a => a.zd == "总音浪值");
+                                    if (totalFanTickets != null)
+                                    {
+                                        switch (totalFanTickets.fw)
+                                        {
+                                            case ">":
+                                                if (item.totalFanTickets > Convert.ToInt32(totalFanTickets.value))
+                                                {
+                                                    <td style="color:@totalFanTickets.color">@item.totalFanTickets</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.totalFanTickets</td>
+                                                }
+                                                break;
+                                            case "<":
+                                                if (item.totalFanTickets < Convert.ToInt32(totalFanTickets.value))
+                                                {
+                                                    <td style="color:@totalFanTickets.color">@item.totalFanTickets</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.totalFanTickets</td>
+                                                }
+                                                break;
+                                            case "=":
+                                                if (item.totalFanTickets == Convert.ToInt32(totalFanTickets.value))
+                                                {
+                                                    <td style="color:@totalFanTickets.color">@item.totalFanTickets</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.totalFanTickets</td>
+                                                }
+                                                break;
+                                            case ">=":
+                                                if (item.totalFanTickets >= Convert.ToInt32(totalFanTickets.value))
+                                                {
+                                                    <td style="color:@totalFanTickets.color">@item.totalFanTickets</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.totalFanTickets</td>
+                                                }
+                                                break;
+                                            case "<=":
+                                                if (item.totalFanTickets <= Convert.ToInt32(totalFanTickets.value))
+                                                {
+                                                    <td style="color:@totalFanTickets.color">@item.totalFanTickets</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.totalFanTickets</td>
+                                                }
+                                                break;
+                                            default:
+                                                <td>@item.totalFanTickets</td>
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.totalFanTickets</td>
+                                    }
+
+                                }
+                                <td>
+                                    <div style="text-align:center;">
+                                        <a href="javascript:LineChart('@item.tg_user_sn');" class="layui-btn layui-bg-blue">查看图表</a>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        }
+                    }
+                    <tr>
+                        <td>合计</td>
+                        <td></td>
+                        <td></td>
+                        <td>@dataanalysis_coredata_tings.Sum(a => a.zb_count)</td>
+                        <td>@dataanalysis_coredata_tings.Sum(a => a.gear)</td>
+                        <td>@dataanalysis_coredata_tings.Sum(a => a.liveHour)</td>
+                        <td>@dataanalysis_coredata_tings.Sum(a => a.visitor)</td>
+                        <td>@dataanalysis_coredata_tings.Sum(a => a.hourly_visitors)</td>
+                        <td></td>
+                        <td></td>
+                        <td>@dataanalysis_coredata_tings.Sum(a => a.interactive_user_count)</td>
+                        <td>@dataanalysis_coredata_tings.Sum(a => a.paying_user_total)</td>
+                        <td>@dataanalysis_coredata_tings.Sum(a => a.new_paying_user_count)</td>
+                        <td>@dataanalysis_coredata_tings.Sum(a => a.avg_second_consumption)</td>
+                        <td>@dataanalysis_coredata_tings.Sum(a => a.user_count_type_a)</td>
+                        <td>@dataanalysis_coredata_tings.Sum(a => a.user_count_type_b)</td>
+                        <td>@dataanalysis_coredata_tings.Sum(a => a.user_count_type_c)</td>
+                        <td>@dataanalysis_coredata_tings.Sum(a => a.user_count_type_a_last_5d)</td>
+                        <td>@dataanalysis_coredata_tings.Sum(a => a.user_count_type_a_last_10d)</td>
+                        <td>@dataanalysis_coredata_tings.Sum(a => a.user_count_type_a_last_15d)</td>
+                        <td>@dataanalysis_coredata_tings.Sum(a => a.old_user_count_last_3d)</td>
+                        <td>@dataanalysis_coredata_tings.Sum(a => a.old_user_count_last_5d)</td>
+                        <td>@dataanalysis_coredata_tings.Sum(a => a.old_user_count_last_7d)</td>
+                        <td>@dataanalysis_coredata_tings.Sum(a => a.old_user_count_last_15d)</td>
+                        <td>@dataanalysis_coredata_tings.Sum(a => a.upgraded_to_a_count_last_5d)</td>
+                        <td>@dataanalysis_coredata_tings.Sum(a => a.totalFanTickets)</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function LineChart(tg_user_sn) {
+        win_pop_iframe('查看图表', '/DataAnalysis/TingCoreData/LineChart?tg_user_sn=' + tg_user_sn + '&type=num2', window.innerWidth * 0.8, window.innerHeight * 0.8);
+    }
+</script>

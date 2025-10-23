@@ -1,0 +1,112 @@
+﻿
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+<!-- 以下书写自己的页面内容代码 -->
+<div class="layui-fluid layadmin-maillist-fluid">
+    <!-- 筛选目标音浪范围 -->
+    <div class="layui-inline">
+        <form class="layui-form">
+            <div class="layui-inline layui-col-xs12" style="padding-top: 20px;">
+                <div class="layui-input-inline">
+                    <label class="layui-form-label">厅名</label>
+                </div>
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <div>@(new ServiceFactory.UserInfo.Ting().GetTingBySn(ViewBag.p_kuafang_mate.ting_sn1).ting_name)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-inline layui-col-xs12" style="padding-top: 20px;">
+                <div class="layui-input-inline">
+                    <label class="layui-form-label">目标音浪</label>
+                </div>
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <div>@Convert.ToInt32(ViewBag.p_kuafang_mate.amont)W</div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-inline layui-col-xs12" style="padding-top: 20px;">
+                <div class="layui-input-inline">
+                    <label class="layui-form-label">直播厅</label>
+                </div>
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        @{
+                            var option = new Dictionary<string, string>();
+                            foreach (var item in new ServiceFactory.UserInfo.Ting().GetBaseInfosForKv(new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter
+                            {
+                                attachUserType = new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType()
+                                {
+                                    userType = ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType.UserType.厅管,
+                                    UserSn = new UserIdentityBag().user_sn
+                                }
+                            }))
+                            {
+                                option.Add(item.Key, item.Value);
+                            }
+                        }
+                        @ViewModelBag.Load(Html, new ModelBasic.EmtSelect("ting_sn")
+                        {
+                            placeholder = "请选择直播厅",
+                            options = option
+                        })
+                    </div>
+                </div>
+            </div>
+            <div class="layui-footer" style="position: relative; top: 50px; text-align: right; display: inline-block; float: right; z-index: 100 ">
+                <a class="layui-btn layui-btn-normal" href="javascript:apply(@ViewBag.p_kuafang_mate.id);">报名</a>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        form.render('select'); // 仅渲染 select 元素
+    });
+
+    function apply(id) {
+        $.ajax({
+            type: "POST",
+            url: "/KuaFang/MateApply/Commit",
+            data: { mate_id: id, ting_sn: $("#ting_sn").val() },
+            async: false,
+            dataType: 'json',
+            success: function (e) {
+                if (e.code == 0) {
+                    layer.msg(e.msg, {
+                        icon: 6
+                        , shade: 0
+                    });
+                    parent.location.href = '/KuaFang/Mate/List';
+                } else {
+                    layer.msg(e.msg, {
+                        icon: 5
+                        , shade: 0
+                    });
+                }
+            },
+            error: function (e) {
+                //alert('操作失败');
+                layer.msg("报名成功", {
+                    icon: 6
+                    , shade: 0
+                });
+                parent.location.href = '/KuaFang/Mate/List';
+            }
+        });
+    }
+</script>

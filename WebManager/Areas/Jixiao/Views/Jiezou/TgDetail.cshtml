@@ -1,0 +1,100 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@model Services.Project.PageFactory.TableVO
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+</style>
+<!-- 以下书写自己的页面内容代码 -->
+<form id="mainForm" class="layui-form" action="DayTarget">
+    <div class="layui-row">
+        <div class="layui-col-md8">
+
+        </div>
+    </div>
+    <div class="layui-row">
+
+        <div class="layui-col-md12" style="display:flex;justify-content:center;">
+
+            <table class="layui-table" style="text-align:center;width:90%;" id="table1" name="table1">
+                <colgroup>
+                    <col width="100">
+                </colgroup>
+                <thead>
+                    <tr>
+                        @{ 
+                            string step = ""+ViewBag.step;
+                            if (step == "0")
+                            {
+                                step = "未开始";
+                            }
+                            if (step=="5")
+                            {
+                                step = "已结束";
+                            }
+                        }
+                        <th style="font-size:22px;">@(DoMySql.FindEntity<ModelDb.user_base>($"user_sn='{ViewBag.yy_user_sn}'",false).username) @(step)阶段 厅管</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        string jiezou_sn = ViewBag.jiezou_sn;
+
+                        var list = DoMySql.FindList<ModelDb.jiezou_item>($"jiezou_sn='{ViewBag.jiezou_sn}' and tg_user_sn in {new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.运营邀厅管, ViewBag.yy_user_sn)} and step='{ViewBag.step}' and status = 0");
+
+                        foreach (var item in list)
+                        {
+                            <tr>
+                                <td>@(DoMySql.FindEntity<ModelDb.user_base>($"user_sn='{item.tg_user_sn}'",false).username)</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</form>
+
+
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        var layer = layui.layer;
+    });
+
+</script>
+

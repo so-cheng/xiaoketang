@@ -1,0 +1,66 @@
+﻿@{
+    Layout = null;
+}
+
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+
+<table class="layui-table">
+    <colgroup>
+        <col width="150">
+        <col width="150">
+        <col>
+    </colgroup>
+    <thead>
+        <tr>
+            <th>主播</th>
+            <th>拉新</th>
+            <th>音浪</th>
+            <th>时间段</th>
+        </tr>
+    </thead>
+    @{
+        var list = DoMySql.FindList<ModelDb.p_jixiao_day_session>($"c_date='' and tg_user_sn='{new UserIdentityBag().user_sn}' order by session");
+        foreach (var item in list)
+        {
+            <tr>
+                <td>@(DoMySql.FindEntity<ModelDb.user_base>($"user_sn='{item.zb_user_sn}'").username)</td>
+                <td>@item.new_num</td>
+                <td>@item.amount</td>
+                <td>@(new DomainBasic.DictionaryApp().GetKeyFromValue("场次",item.session.ToNullableString()))</td>
+            </tr>
+        }
+    }
+    <tbody>
+    </tbody>
+</table>
+
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.2.6.10.js"></script>
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+<script>
+    layui.config({
+        base: '@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/extend/'
+    }).use(['form', 'dtree', 'element'], function () {
+    var $ = layui.jquery,
+        form = layui.form,
+        dtree = layui.dtree,
+        element = layui.element;
+    });
+
+</script>
+
+<script>
+    window.global = {
+        pageType: 'demo'
+        , preview: function () {
+            var preview = document.getElementById('LAY_preview');
+            return preview ? preview.innerHTML : '';
+        }()
+    };
+</script>

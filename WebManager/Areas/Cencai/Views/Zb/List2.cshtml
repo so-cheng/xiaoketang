@@ -1,0 +1,477 @@
+﻿@using System;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+@using System.Reflection;
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+    DateTime today = DateTime.Parse(ViewBag.c_date.ToString());
+}
+
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/other/jquery.tablesort.js"></script>
+
+<style type="text/css">
+    /* 用于高亮显示的css类 */
+    .highlight {
+        background-color: yellow;
+        font-weight: bold;
+    }
+
+    .MainPage {
+        display: flex;
+        flex-direction: column;
+    }
+    .content {
+        order: 2;
+    }
+    .navigation {
+        order: 1;
+    }
+</style>
+
+
+<script type="text/javascript">
+
+    $(function () {
+        $('table').tablesort().data('tablesort');
+    })
+</script>
+
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-collapse: collapse;
+        border-style: solid;
+        border-width: 1px;
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+        color: black;
+    }
+
+    .layui-table td {
+        font-size: 15px;
+        color: black;
+    }
+</style>
+<!-- 以下书写自己的页面内容代码 -->
+<div class="MainPage">
+    <div class="forms">
+        <blockquote class="layui-elem-quote news_search">
+
+            <div class="layui-inline">
+                <form class="layui-form">
+                    <div class="layui-col-xs12 Line1">
+                        <div class="layui-input-inline">
+                            <label class="layui-form-label">所属运营</label>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                @ViewModelBag.Load(Html, new ModelBasic.EmtSelect("yy_user_sn")
+                                {
+                                    placeholder = "请选择运营",
+                                    options = DomainBasicStatic.DoMySql.FindKvList<ModelDb.user_base>($"user_type_id='{new DomainBasic.UserTypeApp().GetInfoByCode("yyer").id}' and tenant_id='{new DomainBasic.TenantApp().GetInfo().id}' and status!=9", "username,user_sn"),
+                                    defaultValue = ViewBag.yy_user_sn,
+                                    eventJsChange = new EmtFormBase.EventJsChange
+                                    {
+                                        eventJavascript = new EventJavascript
+                                        {
+                                            code = "window.location.href = '/Cencai/zb/list?yy_user_sn=' + page.yy_user_sn.value + '&tg_user_sn=' + page.tg_user_sn.value + '&c_date=' + page.c_date.value"
+                                        },
+                                    }
+                                })
+                            </div>
+                        </div>
+
+                        <div class="layui-input-inline">
+                            <label class="layui-form-label">所属厅管</label>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                @ViewModelBag.Load(Html, new ModelBasic.EmtSelect("tg_user_sn")
+                                {
+                                    placeholder = "请选择厅管",
+                                    options = new ServiceFactory.UserInfo.Tg().GetTreeOptionDic(ViewBag.yy_user_sn),
+                                    defaultValue = ViewBag.tg_user_sn,
+                                    eventJsChange = new EmtFormBase.EventJsChange
+                                    {
+                                        eventJavascript = new EventJavascript
+                                        {
+                                            code = "window.location.href = '/Cencai/zb/list?yy_user_sn=' + page.yy_user_sn.value + '&tg_user_sn=' + page.tg_user_sn.value + '&c_date=' + page.c_date.value"
+                                        },
+                                    }
+                                })
+                            </div>
+                        </div>
+
+                        <div class="layui-input-inline">
+                            <label class="layui-form-label">日期</label>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("c_date")
+                                {
+                                    title = "日期",
+                                    defaultValue = today.ToDate().ToDateString(ConvertExt.DateFormate.yyyy_MM_dd),
+                                    mold = ModelBasic.EmtTimeSelect.Mold.date,
+                                    eventJsChange = new EmtFormBase.EventJsChange
+                                    {
+                                        eventJavascript = new EventJavascript
+                                        {
+                                            code = "window.location.href = '/cencai/zb/list?yy_user_sn=' + page.yy_user_sn.value + '&c_date=' + page.c_date.value + '&c_date=' + page.c_date.value"
+                                        },
+                                    }
+                                })
+                            </div>
+                        </div>
+
+
+
+                        <a href="?c_date=@ViewBag.c_date_early&yy_user_sn=@ViewBag.yy_user_sn&tg_user_sn=@ViewBag.tg_user_sn" class="layui-btn">前一天</a>
+                        <a href="?c_date=@ViewBag.c_date_late&yy_user_sn=@ViewBag.yy_user_sn&tg_user_sn=@ViewBag.tg_user_sn" class="layui-btn">后一天</a>
+                        <div class="layui-input-inline">
+                            <a href="javascript:win_pop_iframe('添加主播', '/cencai/zb/post', 600, 550, '')" class="layui-btn">添加主播</a>
+                        </div>
+                        <div class="layui-input-inline"><input type="text" id="searchInput" class="layui-input" placeholder="输入搜索文本..." /></div>
+                        <div class="layui-input-inline"><a href="javascript:highlightText()" class="layui-btn">查找</a></div>
+                    </div>
+
+                    <script>
+                        function highlightText() {
+                            const searchInput = document.getElementById('searchInput');
+                            const searchValue = searchInput.value.trim();
+                            const contentElement = document.querySelector('.content');
+                            const content = contentElement.innerHTML;
+
+                            if (searchValue !== '') {
+                                //先清除原有的高亮，即将用于高亮的<span>标签删除但保留原有内容
+                                let highlightedContent = content.replace(
+                                    new RegExp('<span class="highlight">(.*)</span>', 'gi'),
+                                    '$1'
+                                );
+                                //高亮，即将需要高亮的内容用类名为包含高亮格式的css类span标签包裹起来
+                                highlightedContent = highlightedContent.replace(
+                                    new RegExp(searchValue, 'gi'),
+                                    '<span class="highlight">$&</span>'
+                                );
+                                contentElement.innerHTML = highlightedContent;
+                            } else {
+                                //清除高亮
+                                let highlightedContent = content.replace(
+                                    new RegExp('<span class="highlight">(.*)</span>', 'gi'),
+                                    '$1'
+                                );
+                            }
+                        }
+
+                    </script>
+                </form>
+            </div>
+        </blockquote>
+    </div>
+    <div class="content">
+        @{ 
+            int cencai_num_1 = 0;
+            int cencai_num_2 = 0;
+            int cencai_num_3 = 0;
+            int cencai_num_4 = 0;
+            int cencai_num_5 = 0;
+
+            int cencai_dabiao_1 = 0;
+            int cencai_dabiao_2 = 0;
+            int cencai_dabiao_3 = 0;
+            int cencai_dabiao_4 = 0;
+            int cencai_dabiao_5 = 0;
+        }
+        @foreach(ModelDbBasic.user_base tg in new ServiceFactory.YyService().YyGetNextTg(ViewBag.yy_user_sn))
+        {
+            string tg_user_sn = ViewBag.tg_user_sn;
+            string yy_user_sn = ViewBag.yy_user_sn;
+
+            if (!tg_user_sn.IsNullOrEmpty()&&tg_user_sn!=tg.user_sn)
+            {
+                continue;
+            }
+            <div class="layui-row">
+                <div class="layui-col-md12">
+                    <table class="layui-table table" style="width:100%;" id="table1">
+                        <colgroup>
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+
+                            <col width="100">
+                            <col width="100">
+                            <col width="300">
+                        </colgroup>
+                        <thead>
+                            <tr style="background-color: #d9d9d9;">
+                                <th colspan="23" style="font-size: 18px; text-align: center; font-weight: bold">@tg.username</th>
+                            </tr>
+                            <tr style="background-color: #d9d9d9;">
+                                <th rowspan="2">序号</th>
+                                <th colspan="9">主播基础信息</th>
+                                <th colspan="6">直播指标进度</th>
+                                <th colspan="7">直播流水进度</th>
+                            </tr>
+                            <tr style="background-color: #d9d9d9">
+                                <th style="text-align: center; font-size: 10px;">
+                                    师父
+                                </th>
+                                <th style="text-align: center; font-size: 10px; ">
+                                    主播
+                                </th>
+                                <th style="text-align: center; font-size: 10px;">
+                                    角色
+                                </th>
+                                <th style="text-align: center; font-size: 10px;">
+                                    年龄
+                                </th>
+                                <th style="text-align: center; font-size: 10px;">
+                                    考核阶段
+                                </th>
+                                <th style="text-align: center; font-size: 10px;">
+                                    考核天数
+                                </th>
+                                <th style="text-align: center; font-size: 10px;">
+                                    总直播天数
+                                </th>
+                                <th style="text-align: center; font-size: 10px;">
+                                    请假天数
+                                </th>
+                                <th style="text-align: center; font-size: 10px;">
+                                    实际直播天数
+                                </th>
+                                <th style="text-align: center; font-size: 10px;">
+                                    拉新
+                                </th>
+                                <th style="text-align: center; font-size: 10px;">
+                                    二消
+                                </th>
+                                <th style="text-align: center; font-size: 10px;">
+                                    建联
+                                </th>
+                                <th style="text-align: center; font-size: 10px;">
+                                    平均拉新数
+                                </th>
+                                <th style="text-align: center; font-size: 10px;">
+                                    二消率
+                                </th>
+                                <th style="text-align: center; font-size: 10px;">
+                                    建联率
+                                </th>
+                                <th style="text-align: center; font-size: 10px;">
+                                    时间进度
+                                </th>
+                                <th style="text-align: center; font-size: 10px;">
+                                    拉新二消流水
+                                </th>
+                                <th style="text-align: center; font-size: 10px;">
+                                    老用户流水
+                                </th>
+                                <th style="text-align: center; font-size: 10px;">
+                                    活动流水
+                                </th>
+                                <th style="text-align: center; font-size: 10px;">
+                                    流水累计
+                                </th>
+                                <th style="text-align: center; font-size: 10px;">
+                                    流水进度
+                                </th>
+
+                                <th style="text-align: center; font-size: 10px;">操作</th>
+                            </tr>
+                        </thead>
+
+                        @{
+                            //合计人数
+                            int zb_total = 0;
+                            double num_1 = 0;
+                            double num_2 = 0;
+                            double num_3 = 0;
+                            double num_4 = 0;
+                            double num_5 = 0;
+                            double num_6 = 0;
+                            double num_7 = 0;
+                            double num_8 = 0;
+                            double num_9 = 0;
+                            double num_10 = 0;
+                            double num_11 = 0;
+                            double num_12 = 0;
+                            double num_13 = 0;
+                            double num_14 = 0;
+                            double num_15 = 0;
+                            double num_16 = 0;
+
+                            string where = $"tger_sn = '{tg.user_sn}'";
+                            
+                            if (!yy_user_sn.IsNullOrEmpty())
+                            {
+                                where += $" and tger_sn in {new DomainUserBasic.UserRelationApp().GetNextAllUsersForSql(ModelEnum.UserRelationTypeEnum.运营邀厅管, ViewBag.yy_user_sn)}";
+                            }
+                            if (!tg_user_sn.IsNullOrEmpty())
+                            {
+                                where += $" and tger_sn = '{tg_user_sn}'";
+                            }
+                        }
+                        @foreach (var item in DoMySql.FindList<ModelDb.p_cencai>($"{where} order by zber_sn,round"))
+                        {
+                            //未到考核时间、已结束的不显示
+                            if (today < item.c_date || item.is_finished == (int)ModelDb.p_cencai.is_finished_enum.已结束) { continue; }
+
+                            //合计人数
+                            zb_total++;
+                            //获取zb请假天数
+                            var vacation_days = new ServiceFactory.ZbInfoService().GetZbVacation(item.zber_sn, (DateTime)item.c_date, today);
+
+                            //第几天
+                            var live_days = UtilityStatic.DateHelper.DateDiff(today, item.c_date, UtilityStatic.DateHelper.DiffType.days) + 1;
+                            //实际直播天数
+                            var real_live_days = live_days - vacation_days;
+
+                            //主播昵称、直播厅
+                            var zb_username = new DomainBasic.UserApp().GetInfoByUserSn(item.zber_sn).username;
+                            var tg_username = new DomainBasic.UserApp().GetInfoByUserSn(item.tger_sn).username;
+
+                            //时间进度
+                            var time_progress = item.days == 0 ? 0 : Math.Round(real_live_days * 1.0 / (int)item.days * 100, 2);
+                            var p_jixiao_day = DoMySql.FindEntity<ModelDb.p_jixiao_day>($"zb_user_sn='{item.zber_sn}' and c_date='{today.ToDate().ToDateString(ConvertExt.DateFormate.yyyy_MM_dd)}'", false);
+
+                            //找到主播从start到end所有的jixiao_day
+                            var p_jixiao_days = DoMySql.FindList<ModelDb.p_jixiao_day>($"zb_user_sn='{item.zber_sn}' and c_date between '{item.c_date.ToDate().ToDateString(ConvertExt.DateFormate.yyyy_MM_dd)}' and '{today.ToDate().ToDateString(ConvertExt.DateFormate.yyyy_MM_dd)}'");
+
+                            //累计流水
+                            var sum_yl = p_jixiao_days.Sum(p => (int)p.amount);
+                            var yl_progress = item.target_yl == 0 ? 0 : Math.Round(sum_yl * 1.0 / (int)item.target_yl * 100, 2);
+
+                            //目标进度
+                            var target_progress = item.target_yl * 1.0 / item.days * live_days;
+
+                            //获取未填写天数
+                            var unsubmit_days = live_days - p_jixiao_days.Count - vacation_days;
+
+                            //拉新累计
+                            var newSum = p_jixiao_days.Sum(p => (int)p.new_num);
+                            var user_info_zb = DoMySql.FindEntity<ModelDb.user_info_zb>($"user_sn='{item.zber_sn}'", false);
+                            <tr style="text-align: center; background-color: #FFF3CA">
+                                <!--排序--><td>@zb_total</td>
+                                <!--师父--><td>@item.teacher</td>
+                                <!--主播--><td>@zb_username</td>
+                                <!--角色--><td></td>
+                                <!--年龄--><td>@(user_info_zb.age)</td>
+                                <!--考核阶段--><td>@(item.round)</td>
+                                <!--考核天数-->
+                                <td>
+                                    @live_days
+                                    <div class="layui-input-inline" style="@((item.is_finished == (int)ModelDb.p_cencai.is_finished_enum.未结束 && today > item.c_date.ToDateTime().AddDays(item.days.ToInt() - 1)) ? "" : "display:none")">
+                                        <a href="javascript:win_pop_iframe('下一轮', '/cencai/zb/NewEdit?round=@(item.round+1)&id=@item.id', 600, 550, '')" class="layui-btn layui-btn-xs">下一轮</a>
+                                    </div>
+                                </td>
+                                <!--总直播天数--><td>@(live_days)</td>
+                                <!--请假天数--><td>@vacation_days</td>
+                                <!--实际直播天数--><td>@real_live_days</td>
+
+                                <!--拉新累计--><td>@(newSum)</td>
+                                <!--二消累计--><td>@(p_jixiao_days.Sum(p => (int)p.num_2).ToDecimal().ToFixed(2))</td>
+                                <!--建联累计--><td>@(p_jixiao_days.Sum(p => (int)p.contact_num))</td>
+                                <!--日均拉新--><td title="日均拉新">@((newSum * 1.0 / real_live_days).ToDecimal().ToFixed(2))</td>
+                                <!--二消率--><td title="二消率">@((newSum == 0 ? 0 : p_jixiao_days.Sum(p => (int)p.num_2) * 1.0 / newSum * 100).ToDecimal().ToFixed(2))%</td>                                
+                                <!--建联率--><td title="建联率">@((newSum == 0 ? 0 : p_jixiao_days.Sum(p => (int)p.contact_num) * 1.0 / newSum * 100).ToDecimal().ToFixed(2))%</td>
+                                
+                                <!--时间进度--><td>@time_progress%</td>
+                                <!--拉新二消流水--><td>@(p_jixiao_days.Sum(p => (int)p.amount_2+(int)p.new_num))</td>
+                                <!--老用户流水--><td>@(p_jixiao_days.Sum(p => (int)p.old_amount))</td>
+                                <!--活动流水--><td>@(p_jixiao_days.Sum(p => (int)p.amount_2))</td>
+                                <!--流水累计<br />(30天目标)--><td>@(sum_yl)(@(item.target_yl ?? 0))</td>
+                                <!--流水进度--><td style="@(sum_yl >= target_progress ? "background-color:#66ff8c;" : "background-color:#ff0000;")">@yl_progress%</td>
+                                <!--编辑-->
+                                <td>
+                                    <a href="javascript:win_pop_iframe('编辑主播', '/cencai/zb/Edit?id=@item.id', 600, 550, '')" class="layui-btn layui-btn-xs">编辑</a>
+                                    <a href="javascript:layDel('ReMove?id=@item.id', '', '确定移除');" id-value="@item.id" class="layui-btn layui-btn-xs">移除</a>
+                                </td>
+                            </tr>
+                            num_1 += p_jixiao_day.new_num ?? 0;
+                            num_2 += newSum;
+                            num_3 += real_live_days;
+                            num_4 += p_jixiao_day.num_2 ?? 0;
+                            num_5 += p_jixiao_days.Sum(p => (int)p.num_2).ToDouble().ToFixed(2);
+                            num_6 += (newSum == 0 ? 0 : p_jixiao_days.Sum(p => (int)p.num_2) * 1.0 / newSum * 100).ToDouble().ToFixed(2);
+                            num_7 += p_jixiao_day.contact_num ?? 0;
+                            num_8 += p_jixiao_days.Sum(p => (int)p.contact_num);
+                            num_9 += item.target_erx ?? 0;
+                            num_10 += p_jixiao_day.amount ?? 0;
+                            num_11 += live_days;
+                            num_12 += item.days ?? 0;
+                            num_13 += sum_yl;
+                            num_14 += item.target_yl ?? 0;
+                            num_15 += unsubmit_days;
+                            num_16 += vacation_days;
+                        }
+                        <tr style="background-color: #FADADE">
+                            <td colspan="10">合计(@zb_total)人</td>
+                            <td>@num_2</td>
+                            <td>@num_5</td>
+                            <td>@num_8</td>
+                            <td>@num_6</td>
+                            <td>@(num_2 == 0 ? 0:(num_5 / num_2 * 100).ToDouble().ToFixed(2))%</td>
+                            <td>@(num_2 == 0 ? 0:(num_8 / num_2 * 100).ToDouble().ToFixed(2))%</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+        }
+    </div>
+    <!--
+    <div class="navigation">
+        <div class="layui-col-xs12">
+            <a href="#round1" class="layui-btn">第1轮(人数:@cencai_num_1,达标:@cencai_dabiao_1)</a>
+            <a href="#round2" class="layui-btn">第2轮(人数:@cencai_num_2,达标:@cencai_dabiao_2)</a>
+            <a href="#round3" class="layui-btn">第3轮(人数:@cencai_num_3,达标:@cencai_dabiao_3)</a>
+            <a href="#round4" class="layui-btn">第4轮(人数:@cencai_num_4,达标:@cencai_dabiao_4)</a>
+            <a href="#round5" class="layui-btn">第5轮(人数:@cencai_num_5,达标:@cencai_dabiao_5)</a>
+        </div>
+    </div>    
+    -->
+</div>
+

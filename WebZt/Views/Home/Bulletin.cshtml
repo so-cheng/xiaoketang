@@ -1,0 +1,627 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@model Services.Project.PageFactory.TableVO
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+}
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人事管理系统 - 首页看板</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .header-left p {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .user-details h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .user-details p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .stat-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, #667eea, #764ba2);
+            }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .stat-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .icon-blue {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .icon-green {
+            background: linear-gradient(135deg, #4ECDC4, #44A08D);
+        }
+
+        .icon-orange {
+            background: linear-gradient(135deg, #FFB347, #FF8C42);
+        }
+
+        .icon-red {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .stat-change {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .change-up {
+            color: #4CAF50;
+        }
+
+        .change-down {
+            color: #F44336;
+        }
+
+        .change-neutral {
+            color: #9E9E9E;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .chart-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .chart-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-container {
+            height: 300px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 16px;
+        }
+
+        .quick-actions {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .action-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .action-item {
+            display: flex;
+            align-items: center;
+            padding: 18px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+            .action-item:hover {
+                transform: translateY(-2px);
+                border-color: #667eea;
+                box-shadow: 0 6px 20px rgba(102, 126, 234, 0.2);
+            }
+
+        .action-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            margin-right: 15px;
+        }
+
+        .action-content h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .action-content p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .bottom-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .data-table {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .table-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        td {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: #e8f5e8;
+            color: #4CAF50;
+        }
+
+        .status-pending {
+            background: #fff3e0;
+            color: #FF9800;
+        }
+
+        .status-inactive {
+            background: #ffebee;
+            color: #F44336;
+        }
+
+        .progress-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .progress-item {
+            margin-bottom: 20px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .progress-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .progress-percentage {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-blue {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .progress-green {
+            background: linear-gradient(90deg, #4ECDC4, #44A08D);
+        }
+
+        .progress-orange {
+            background: linear-gradient(90deg, #FFB347, #FF8C42);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 页面头部 -->
+        <div class="header">
+            <div class="header-left">
+                <h1>👥 人事管理系统</h1>
+                <p>欢迎回来，这里是您的业务数据概览</p>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <div class="avatar">张</div>
+                    <div class="user-details">
+                        <h3>张经理</h3>
+                        <p>人事部经理</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- 统计卡片 -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">在职员工</div>
+                    <div class="stat-icon icon-blue">👥</div>
+                </div>
+                <div class="stat-number">1,247</div>
+                <div class="stat-change">
+                    <span class="change-up">↗ +12</span>
+                    <span>较上月</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">本月招聘</div>
+                    <div class="stat-icon icon-green">📋</div>
+                </div>
+                <div class="stat-number">89</div>
+                <div class="stat-change">
+                    <span class="change-up">↗ +8</span>
+                    <span>较上月</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">考勤率</div>
+                    <div class="stat-icon icon-orange">⏰</div>
+                </div>
+                <div class="stat-number">96.8%</div>
+                <div class="stat-change">
+                    <span class="change-up">↗ +1.2%</span>
+                    <span>较上月</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">离职率</div>
+                    <div class="stat-icon icon-red">📤</div>
+                </div>
+                <div class="stat-number">2.1%</div>
+                <div class="stat-change">
+                    <span class="change-down">↘ -0.3%</span>
+                    <span>较上月</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-section">
+            <!-- 招聘进度表 -->
+            <div class="data-table">
+                <div class="table-title">
+                    🎯 各运营团队人员统计
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>运营团队</th>
+                                <th>厅管数</th>
+                                <th>线上主播</th>
+                                <th>线下主播</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @{
+                                // 获取下级运营列表
+                                var yyList = new ServiceFactory.UserInfo.Zt().ZtGetNextYy(new UserIdentityBag().user_sn);                              
+                                foreach (var yy in yyList)
+                                {                                  
+                                    <tr>
+                                        <td>@yy.username</td>
+                                        <td>@(new ServiceFactory.UserInfo.Yy().YyGetNextTg(yy.user_sn).Count)</td>
+                                        <td>@(DoMySql.FindList<ModelDb.user_info_zhubo>($"tenant_id='{new DomainBasic.TenantApp().GetInfo().id}' and  yy_user_sn='{yy.user_sn}' and o_type='{ModelDb.user_info_zhubo.o_type_enum.线下.ToSByte() }'").Count)</td>
+                                        <td>@(DoMySql.FindList<ModelDb.user_info_zhubo>($"tenant_id='{new DomainBasic.TenantApp().GetInfo().id}' and  yy_user_sn='{yy.user_sn}' and o_type='{ModelDb.user_info_zhubo.o_type_enum.线上.ToSByte() }'").Count)</td>
+                                    </tr>
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <!-- 部门人员分布 -->
+            <div class="progress-section">
+                <div class="table-title">
+                    🏢 部门人员分布
+                </div>
+                <div class="progress-item">
+                    <div class="progress-header">
+                        <span class="progress-title">技术部</span>
+                        <span class="progress-percentage">35%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill progress-blue" style="width: 35%"></div>
+                    </div>
+                </div>
+
+                <div class="progress-item">
+                    <div class="progress-header">
+                        <span class="progress-title">销售部</span>
+                        <span class="progress-percentage">28%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill progress-green" style="width: 28%"></div>
+                    </div>
+                </div>
+
+                <div class="progress-item">
+                    <div class="progress-header">
+                        <span class="progress-title">运营部</span>
+                        <span class="progress-percentage">22%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill progress-orange" style="width: 22%"></div>
+                    </div>
+                </div>
+
+                <div class="progress-item">
+                    <div class="progress-header">
+                        <span class="progress-title">其他部门</span>
+                        <span class="progress-percentage">15%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill progress-blue" style="width: 15%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // 添加一些交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为统计卡片添加悬停效果
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.transition = 'transform 0.3s ease';
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // 为快捷操作添加点击效果
+            const actionItems = document.querySelectorAll('.action-item');
+            actionItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                });
+            });
+
+            // 模拟数据更新
+            setInterval(() => {
+                const statNumbers = document.querySelectorAll('.stat-number');
+                statNumbers.forEach(number => {
+                    number.style.animation = 'pulse 0.5s ease-in-out';
+                });
+            }, 10000);
+        });
+
+        // 添加CSS动画
+        const style = document.createElement('style');
+        @*style.textContent = `
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+                100% { transform: scale(1); }
+            }
+        `;*@
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

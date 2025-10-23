@@ -1,0 +1,597 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>添加待办</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+            background: #f3f3f5;
+            color: #222;
+        }
+
+        .header {
+            background: #fff;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .back-btn {
+            font-size: 24px;
+            color: #666;
+            margin-right: 16px;
+            cursor: pointer;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #222;
+        }
+
+        .form-container {
+            padding: 20px;
+        }
+
+        .form-group {
+            background: #fff;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .form-label {
+            display: block;
+            font-size: 16px;
+            font-weight: 500;
+            color: #222;
+            margin-bottom: 12px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #222;
+            background: #fff;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+            .form-input:focus {
+                outline: none;
+                border-color: #1aad19;
+                box-shadow: 0 0 0 3px rgba(26, 173, 25, 0.1);
+            }
+
+        .form-textarea {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #222;
+            background: #fff;
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+            .form-textarea:focus {
+                outline: none;
+                border-color: #1aad19;
+                box-shadow: 0 0 0 3px rgba(26, 173, 25, 0.1);
+            }
+
+        .icon-selector {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .icon-option {
+            width: 48px;
+            height: 48px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #fff;
+        }
+
+            .icon-option:hover {
+                border-color: #1aad19;
+                transform: scale(1.05);
+            }
+
+            .icon-option.selected {
+                border-color: #1aad19;
+                background: #e8f5e8;
+            }
+
+        .priority-selector {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .priority-option {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #fff;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+            .priority-option:hover {
+                border-color: #1aad19;
+            }
+
+            .priority-option.selected {
+                border-color: #1aad19;
+                background: #e8f5e8;
+                color: #1aad19;
+            }
+
+        .priority-low {
+            border-color: #52c41a;
+        }
+
+            .priority-low.selected {
+                background: #f6ffed;
+                color: #52c41a;
+            }
+
+        .priority-medium {
+            border-color: #faad14;
+        }
+
+            .priority-medium.selected {
+                background: #fffbe6;
+                color: #faad14;
+            }
+
+        .priority-high {
+            border-color: #ff4d4f;
+        }
+
+            .priority-high.selected {
+                background: #fff2f0;
+                color: #ff4d4f;
+            }
+
+        .date-picker {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #222;
+            background: #fff;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+            /* 关键样式：强制时间选择器从右侧弹出 */
+            position: relative;
+        }
+
+            .date-picker::-webkit-calendar-picker-indicator {
+                position: absolute;
+                right: 16px;
+                top: 50%;
+                transform: translateY(-50%);
+                cursor: pointer;
+            }
+
+            .date-picker:focus {
+                outline: none;
+                border-color: #1aad19;
+                box-shadow: 0 0 0 3px rgba(26, 173, 25, 0.1);
+            }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: #1aad19;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 20px;
+        }
+
+            .submit-btn:hover {
+                background: #18a017;
+                transform: translateY(-1px);
+            }
+
+            .submit-btn:active {
+                transform: translateY(0);
+            }
+
+            .submit-btn:disabled {
+                background: #ccc;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+        .error-message {
+            color: #ff4d4f;
+            font-size: 14px;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .success-message {
+            color: #52c41a;
+            font-size: 14px;
+            margin-top: 8px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="back-btn" onclick="history.back()">←</div>
+        <div class="title" id="pageTitle">添加待办</div>
+    </div>
+
+    <div class="form-container">
+        <form id="todoForm">
+            <!-- 隐藏字段存储待办ID -->
+            <input type="hidden" id="todoId" value="0">
+
+            <div class="form-group">
+                <label class="form-label">待办事项</label>
+                <input type="text" class="form-input" id="todoContent" placeholder="请输入待办事项内容" required>
+                <div class="error-message" id="contentError">请输入待办事项内容</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">详细描述</label>
+                <textarea class="form-textarea" id="todoDescription" placeholder="请输入详细描述（可选）"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">选择图标</label>
+                <div class="icon-selector" id="iconSelector">
+                    <div class="icon-option" data-icon="📝">📝</div>
+                    <div class="icon-option" data-icon="📋">📋</div>
+                    <div class="icon-option" data-icon="👥">👥</div>
+                    <div class="icon-option" data-icon="📧">📧</div>
+                    <div class="icon-option" data-icon="🎯">🎯</div>
+                    <div class="icon-option" data-icon="💼">💼</div>
+                    <div class="icon-option" data-icon="📞">📞</div>
+                    <div class="icon-option" data-icon="🏃">🏃</div>
+                    <div class="icon-option" data-icon="📚">📚</div>
+                    <div class="icon-option" data-icon="🛒">🛒</div>
+                    <div class="icon-option" data-icon="🏠">🏠</div>
+                    <div class="icon-option" data-icon="💡">💡</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">优先级</label>
+                <div class="priority-selector" id="prioritySelector">
+                    <div class="priority-option priority-low" data-priority="low">低</div>
+                    <div class="priority-option priority-medium" data-priority="medium">中</div>
+                    <div class="priority-option priority-high" data-priority="high">高</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">开始日期</label>
+                <input type="date" class="date-picker" id="startDate" required>
+                <div class="error-message" id="dateError">请选择开始日期</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">截止时间</label>
+                <input type="datetime-local" class="date-picker" id="endDateTime" required>
+                <div class="error-message" id="timeError">请选择截止时间</div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">添加待办</button>
+            <div class="success-message" id="successMessage">操作成功！</div>
+        </form>
+    </div>
+
+    <script>
+        let selectedIcon = '📝';
+        let selectedPriority = 'low';
+        let isEditMode = false;
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const editId = urlParams.get('id');
+            console.log('当前ID参数:', editId); // 调试：查看ID是否正确获取
+
+            if (editId && !isNaN(editId) && parseInt(editId) > 0) {
+                // 编辑模式
+                isEditMode = true;
+                document.getElementById('todoId').value = editId;
+                document.getElementById('pageTitle').textContent = '编辑待办';
+                document.getElementById('submitBtn').textContent = '保存修改';
+                document.getElementById('successMessage').textContent = '修改成功！';
+
+                // 加载列表页传递的完整数据
+                loadEditData();
+            } else {
+                // 新增模式
+                setDefaultFormValues();
+            }
+        });
+
+        // 加载编辑数据（修复数据为空问题）
+        function loadEditData() {
+            try {
+                // 从localStorage获取列表页存储的完整数据
+                const editDataStr = localStorage.getItem('editTodoData');
+                console.log('从localStorage获取的原始数据:', editDataStr); // 调试：查看原始存储数据
+
+                if (!editDataStr) {
+                    console.error('localStorage中未找到editTodoData数据');
+                    setDefaultFormValues();
+                    return;
+                }
+
+                const editData = JSON.parse(editDataStr);
+                console.log('解析后的编辑数据:', editData); // 调试：查看解析后的数据结构
+
+                if (Object.keys(editData).length === 0) {
+                    console.error('解析后的数据为空对象');
+                    setDefaultFormValues();
+                    return;
+                }
+
+                // 1. 待办内容（对应data-content）
+                const content = editData.content || '';
+                document.getElementById('todoContent').value = content;
+                console.log('填充内容:', content);
+
+                // 2. 详细描述（如果有）
+                const description = editData.description || '';
+                document.getElementById('todoDescription').value = description;
+                console.log('填充描述:', description);
+
+                // 3. 开始日期（对应data-c_date）
+                const cDate = editData.c_date || '';
+                document.getElementById('startDate').value = cDate;
+                console.log('填充开始日期:', cDate);
+
+                // 4. 截止时间（对应data-e_date_time，转换为datetime-local格式）
+                if (editData.e_date_time) {
+                    try {
+                        const date = new Date(editData.e_date_time);
+                        if (isNaN(date.getTime())) {
+                            throw new Error('无效的日期格式');
+                        }
+                        // 处理时区问题，确保时间格式正确
+                        const formattedDateTime = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+                            .toISOString().slice(0, 16);
+                        document.getElementById('endDateTime').value = formattedDateTime;
+                        console.log('填充截止时间:', formattedDateTime);
+                    } catch (e) {
+                        console.error('处理截止时间失败:', e.message);
+                    }
+                }
+
+                // 5. 图标（对应data-icon）
+                selectedIcon = editData.icon || '📝';
+                document.querySelectorAll('.icon-option').forEach(option => {
+                    const isSelected = option.dataset.icon === selectedIcon;
+                    option.classList.toggle('selected', isSelected);
+                });
+                console.log('选中图标:', selectedIcon);
+
+                // 6. 优先级（对应data-level）
+                selectedPriority = editData.level || 'low';
+                document.querySelectorAll('.priority-option').forEach(option => {
+                    const isSelected = option.dataset.priority === selectedPriority;
+                    option.classList.toggle('selected', isSelected);
+                });
+                console.log('选中优先级:', selectedPriority);
+
+                // 清除临时存储的数据
+                localStorage.removeItem('editTodoData');
+            } catch (e) {
+                console.error('加载编辑数据失败:', e.message);
+                setDefaultFormValues();
+            }
+        }
+
+        // 设置表单默认值（新增模式）
+        function setDefaultFormValues() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('startDate').value = today;
+            console.log('新增模式默认开始日期:', today);
+
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(18, 0, 0, 0);
+            const tomorrowString = tomorrow.toISOString().slice(0, 16);
+            document.getElementById('endDateTime').value = tomorrowString;
+            console.log('新增模式默认截止时间:', tomorrowString);
+
+            // 确保默认选中状态正确
+            const defaultIcon = document.querySelectorAll('.icon-option')[0];
+            defaultIcon.classList.add('selected');
+            selectedIcon = defaultIcon.dataset.icon;
+
+            const defaultPriority = document.querySelectorAll('.priority-option')[0];
+            defaultPriority.classList.add('selected');
+            selectedPriority = defaultPriority.dataset.priority;
+        }
+
+        // 图标选择逻辑（确保选中值正确）
+        document.getElementById('iconSelector').addEventListener('click', function (e) {
+            if (e.target.classList.contains('icon-option')) {
+                document.querySelectorAll('.icon-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                e.target.classList.add('selected');
+                selectedIcon = e.target.dataset.icon;
+                console.log('切换图标为:', selectedIcon); // 调试：确认选中的图标
+            }
+        });
+
+        // 优先级选择逻辑（确保选中值正确）
+        document.getElementById('prioritySelector').addEventListener('click', function (e) {
+            if (e.target.classList.contains('priority-option')) {
+                document.querySelectorAll('.priority-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                e.target.classList.add('selected');
+                selectedPriority = e.target.dataset.priority;
+                console.log('切换优先级为:', selectedPriority); // 调试：确认选中的优先级
+            }
+        });
+
+        // 表单提交处理（修复数据获取为空问题）
+        document.getElementById('todoForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            let isValid = true;
+
+            // 逐个获取表单值并调试
+            const id = parseInt(document.getElementById('todoId').value);
+            console.log('获取ID:', id);
+
+            const content = document.getElementById('todoContent').value.trim();
+            console.log('获取待办内容:', content || '空值');
+
+            const description = document.getElementById('todoDescription').value.trim();
+            console.log('获取描述:', description || '空值');
+
+            const startDate = document.getElementById('startDate').value;
+            console.log('获取开始日期:', startDate || '空值');
+
+            const endDateTime = document.getElementById('endDateTime').value;
+            console.log('获取截止时间:', endDateTime || '空值');
+
+            // 表单验证增强
+            if (!content) {
+                showError('contentError', '请输入待办事项内容');
+                isValid = false;
+            }
+            if (!startDate) {
+                showError('dateError', '请选择开始日期');
+                isValid = false;
+            }
+            if (!endDateTime) {
+                showError('timeError', '请选择截止时间');
+                isValid = false;
+            }
+
+            if (!isValid) return;
+
+            // 构建提交数据对象（确保所有字段都有值）
+            const formData = {
+                id: id,                           // 对应data-id
+                content: content,                  // 对应data-content
+                description: description,
+                c_date: startDate,                 // 对应data-c_date
+                e_date_time: endDateTime,          // 对应data-e_date_time
+                icon: selectedIcon,                // 对应data-icon
+                level: selectedPriority            // 对应data-level
+            };
+            console.log('最终提交数据:', formData); // 调试：确认提交的数据结构
+
+            submitToServer(formData);
+        });
+
+        // 提交数据到服务器
+        function submitToServer(data) {
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '提交中...';
+
+            fetch('/Work/TodoDay/Add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    console.log('服务器响应状态:', response.status);
+                    return response.json();
+                })
+                .then(result => {
+                    console.log('服务器返回结果:', result);
+                    if (result.code === 0 || result.success) {
+                        showSuccess();
+                        setTimeout(() => {
+                            window.location.href = '/Work/TodoDay/List'; // 恢复跳转，确保数据刷新
+                        }, 1500);
+                    } else {
+                        showError('contentError', result.msg || '操作失败，请重试');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = isEditMode ? '保存修改' : '添加待办';
+                    }
+                })
+                .catch(error => {
+                    console.error('请求错误详情:', error);
+                    showError('contentError', '网络错误，请重试');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = isEditMode ? '保存修改' : '添加待办';
+                });
+        }
+
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 3000);
+        }
+
+        function showSuccess() {
+            const successElement = document.getElementById('successMessage');
+            successElement.style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>

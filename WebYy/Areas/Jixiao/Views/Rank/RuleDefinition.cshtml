@@ -1,0 +1,52 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@model Services.Project.PageFactory.TableVO
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+</style>
+
+<div style="height:65px"></div>
+<div class="layui-input-inline" style="width:100%;height:100%">
+    <label class="layui-form-label" style="width: 100%; height: 100%; text-align: left; font-size: 20px; line-height: 37px">
+        <p style="font-weight:bold">主播排名:</p>
+        <p style="font-weight:bold">平均数计算公式</p>
+        1.主播平均拉新个数：该时段内主播拉新总数/该时段内天数<br>
+        2.主播平均二消个数：该时段内主播二消个数总数/该时段内天数<br>
+        3.主播平均二消音浪：该时段内主播二消音浪总值/该时段内天数<br>
+        4.主播平均二消音浪（用户）：该时段内主播二消音浪总值/该时段内主播二消个数总数<br>
+        5.主播平均建联数：该时段内主播建联总数/该时段内天数
+        <p style="font-weight:bold">排名细则</p>
+        主播排名细则说明：如果当天主播出现请假、未提报数据或者拉新、首消音浪、二消个数、建联、二消音浪这些数据同时为0，则不计入统计天数。
+    </label>
+</div>

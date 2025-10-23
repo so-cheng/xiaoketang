@@ -1,0 +1,277 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@model Services.Project.PageFactory.TableVO
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+
+    var c_date = ((string)ViewBag.c_date).ToDate();
+    DateTime startDate = new DateTime(c_date.Year, c_date.Month, 1); // 某月的第一天
+    DateTime endDate = startDate.AddMonths(1).AddDays(-1); // 某月的最后一天
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+
+    /* 表头固定样式 */
+    .layui-table {
+        position: relative;
+    }
+
+        .layui-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: white;
+        }
+
+            .layui-table thead tr:first-child {
+                position: sticky;
+                top: 0;
+                z-index: 11;
+                background-color: #FFF3CA;
+            }
+
+            .layui-table thead tr:nth-child(2) {
+                position: sticky;
+                top: 50px; /* 第一行表头的高度 */
+                z-index: 11;
+                background-color: #FCE4D3;
+            }
+
+            /* 确保表头有足够的背景色 */
+            .layui-table thead th {
+                background-color: inherit;
+            }
+
+    .score {
+        font-weight: bold;
+    }
+
+    .excellent {
+        color: #4CAF50;
+    }
+
+    /* 合计 */
+    .sum-row {
+        background-color: #e8f5e8 !important;
+        font-weight: bold;
+        color: #2e7d32;
+    }
+
+        .sum-row:hover {
+            background-color: #c8e6c9 !important;
+        }
+
+    .sum-cell {
+        font-weight: bold;
+        color: #2e7d32;
+    }
+</style>
+<!-- 以下书写自己的页面内容代码 -->
+<form id="mainForm" class="layui-form" action="DayTarget">
+    <div class="layui-row">
+        <div class="layui-col-md8">
+            <div class="layui-input-inline">
+                <label class="layui-form-label">日期</label>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("c_date")
+                   {
+                       title = "日期",
+                       defaultValue = c_date.ToString("yyyy-MM"),
+                       mold = ModelBasic.EmtTimeSelect.Mold.month,
+                       eventJsChange = new EmtFormBase.EventJsChange
+                       {
+                           eventJavascript = new EventJavascript
+                           {
+                               code = "window.location.href = '/JoinNew/Statistical/TingJoinData?c_date=' + page.c_date.value;"
+                           },
+                       }
+                   })
+                </div>
+            </div>
+            <button type="button" class="layui-btn layui-btn-normal" id="exportBtn">导出数据</button>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <table class="layui-table" style="text-align:center;width:100%;" id="table1" name="table1">
+                <thead>
+                    <tr style="background-color: #B4C6E7;">
+                        <th>运营</th>
+                        <th>厅管</th>
+                        <th>模式</th>
+                        <th>厅名</th>
+                        @for (DateTime date = startDate; date <= endDate; date = date.AddDays(1))
+                        {
+                            <th style="text-align:center">@date.ToString("M.dd")</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ting in new ServiceFactory.UserInfo.Ting().GetBaseFullInfos(new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter()))
+                    {
+                        <tr>
+                            <th>@ting.yy_name</th>
+                            <th>@ting.tg_name</th>
+                            <th>@ting.tg_sex</th>
+                            <th>@ting.ting_name</th>
+                            @for (DateTime date = startDate; date <= endDate; date = date.AddDays(1))
+                            {
+                                <td class="score excellent">@(GetZbCount(ting.ting_sn, date.ToString("yyyy-MM-dd")))</td>
+                            }
+                        </tr>
+                    }
+                    <tr class="sum-row">
+                        <td><strong>合计</strong></td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        @for (DateTime date = startDate; date <= endDate; date = date.AddDays(1))
+                        {
+                            <td data-type="sum" class="sum-cell">-</td>
+                        }
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        var layer = layui.layer;
+    });
+
+    document.getElementById('exportBtn').addEventListener('click', function () {
+        exportTableToExcel('table1', '补人数据');
+    });
+
+    function exportTableToExcel(tableID, filename = 'export') {
+        const table = document.getElementById(tableID);
+        if (!table) {
+            console.error('未找到表格元素');
+            return;
+        }
+
+        let html = `
+    <html xmlns:o="urn:schemas-microsoft-com:office:office"
+          xmlns:x="urn:schemas-microsoft-com:office:excel"
+          xmlns="http://www.w3.org/TR/REC-html40">
+    <head>
+        <!--[if gte mso 9]>
+        <xml>
+            <x:ExcelWorkbook>
+                <x:ExcelWorksheets>
+                    <x:ExcelWorksheet>
+                        <x:Name>${filename}</x:Name>
+                        <x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>
+                    </x:ExcelWorksheet>
+                </x:ExcelWorksheets>
+            </x:ExcelWorkbook>
+        </xml>
+        <![endif]-->
+        <meta charset="UTF-8">
+    </head>
+    <body>${table.outerHTML}</body>
+    </html>`;
+
+        const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${filename}.xls`;
+        document.body.appendChild(link);
+        link.click();
+
+        setTimeout(() => {
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }, 100);
+    }
+</script>
+
+<script>
+    // 页面加载完成后自动计算求和
+    document.addEventListener('DOMContentLoaded', function () {
+        calculateSums();
+    });
+
+    // 计算求和行的函数
+    function calculateSums() {
+        const table = document.querySelector('table');
+        const dataRows = table.querySelectorAll('tbody tr:not(.sum-row)');
+        const sumCells = table.querySelectorAll('[data-type="sum"]');
+
+        // 遍历每个需要求和的单元格
+        sumCells.forEach((sumCell, columnIndex) => {
+            let total = 0;
+            let validCount = 0;
+
+            // 遍历数据行，计算该列的总和
+            dataRows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length > columnIndex) {
+                    const cellValue = parseFloat(cells[columnIndex].textContent);
+                    if (!isNaN(cellValue)) {
+                        total += cellValue;
+                        validCount++;
+                    }
+                }
+            });
+
+            // 显示求和结果
+            if (validCount > 0) {
+                sumCell.textContent = total.toFixed(1);
+            } else {
+                sumCell.textContent = '-';
+            }
+        });
+    }
+
+    // 手动重新计算求和的函数（可以在需要时调用）
+    function recalculateSums() {
+        calculateSums();
+    }
+
+            // 示例：如果需要动态添加新行后重新计算
+            // function addNewRow() {
+            //     // 添加新行的代码...
+            //     // 然后调用：
+            //     calculateSums();
+            // }
+</script>
+@functions{
+    public int GetZbCount(string ting_sn, string date)
+    {
+        return DoMySql.FindList<ModelDb.p_join_new_info_log>($"c_type = {ModelDb.p_join_new_info_log.c_type_enum.入库.ToSByte()} and DATE_FORMAT(create_time, '%Y-%m-%d') = '{date}' and exists (select 1 from p_join_new_info where p_join_new_info_log.user_info_zb_id = id and ting_sn = '{ting_sn}' and status != {ModelDb.p_join_new_info.status_enum.逻辑删除.ToSByte()})").Count;
+    }
+}

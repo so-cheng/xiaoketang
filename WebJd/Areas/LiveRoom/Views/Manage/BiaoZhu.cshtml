@@ -1,0 +1,1372 @@
+﻿@{
+    Layout = null;
+}
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.ModelDbs;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Web;
+@using System.Web.Mvc;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+@using WeiCode.Domain;
+@using WeiCode.ModelDbs;
+@using WeiCode.Models;
+@using WeiCode.Domain;
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>平面图区域标注工具</title>
+    <link href="//unpkg.com/layui@2.12.1/dist/css/layui.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background-color: #f5f5f5;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 300px;
+            background-color: #fff;
+            border-right: 1px solid #ddd;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .main-content {
+            flex: 1;
+            position: relative;
+            overflow: auto;
+            background-color: #fff;
+        }
+
+        .toolbar {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+            .toolbar button {
+                margin: 0 5px;
+                padding: 8px 15px;
+                border: 1px solid #ddd;
+                background: #fff;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 14px;
+            }
+
+                .toolbar button:hover {
+                    background: #f0f0f0;
+                }
+
+                .toolbar button.active {
+                    background: #007bff;
+                    color: white;
+                    border-color: #007bff;
+                }
+
+        .background-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+            .background-controls button {
+                margin: 0 5px;
+                padding: 8px 15px;
+                border: 1px solid #ddd;
+                background: #fff;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 14px;
+            }
+
+                .background-controls button:hover {
+                    background: #f0f0f0;
+                }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            margin: 0 5px;
+        }
+
+            .file-input-wrapper input[type=file] {
+                position: absolute;
+                left: -9999px;
+            }
+
+            .file-input-wrapper label {
+                display: inline-block;
+                padding: 8px 15px;
+                border: 1px solid #ddd;
+                background: #fff;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 14px;
+                transition: all 0.2s;
+            }
+
+                .file-input-wrapper label:hover {
+                    background: #f0f0f0;
+                }
+
+        .background-info {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #666;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .upload-progress {
+            position: absolute;
+            bottom: 60px;
+            left: 10px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            min-width: 200px;
+            display: none;
+        }
+
+            .upload-progress.show {
+                display: block;
+            }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 5px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .upload-status {
+            font-size: 11px;
+            color: #666;
+            margin-top: 3px;
+        }
+
+        .upload-success {
+            color: #28a745;
+        }
+
+        .upload-error {
+            color: #dc3545;
+        }
+
+        .upload-retry-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+            .upload-retry-btn:hover {
+                background: #0056b3;
+            }
+
+        .save-status {
+            position: absolute;
+            bottom: 120px;
+            left: 10px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            min-width: 200px;
+            display: none;
+            font-size: 12px;
+        }
+
+            .save-status.show {
+                display: block;
+            }
+
+            .save-status.success {
+                background: rgba(40, 167, 69, 0.1);
+                border-left: 4px solid #28a745;
+                color: #155724;
+            }
+
+            .save-status.error {
+                background: rgba(220, 53, 69, 0.1);
+                border-left: 4px solid #dc3545;
+                color: #721c24;
+            }
+
+            .save-status.loading {
+                background: rgba(0, 123, 255, 0.1);
+                border-left: 4px solid #007bff;
+                color: #004085;
+            }
+
+        .whiteboard-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-height: 800px;
+            background: #fff;
+            cursor: crosshair;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: #f8f9fa;
+        }
+
+            .whiteboard-container.selecting {
+                cursor: crosshair;
+            }
+
+            .whiteboard-container.moving {
+                cursor: move;
+            }
+
+            .whiteboard-container.has-background {
+                background-color: #fff;
+            }
+
+        .selection-rect {
+            position: absolute;
+            border: 2px dashed #007bff;
+            background: rgba(0, 123, 255, 0.1);
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .area-box {
+            position: absolute;
+            border: 2px solid #28a745;
+            background: rgba(40, 167, 69, 0.1);
+            cursor: move;
+            z-index: 200;
+            min-width: 50px;
+            min-height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .area-box:hover {
+                background: rgba(40, 167, 69, 0.2);
+                border-color: #1e7e34;
+            }
+
+            .area-box.selected {
+                border-color: #dc3545;
+                background: rgba(220, 53, 69, 0.2);
+            }
+
+        .area-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            padding: 2px 4px;
+            word-break: break-all;
+            max-width: 100%;
+        }
+
+        .sidebar h3 {
+            margin-bottom: 15px;
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+
+        .area-list {
+            margin-bottom: 20px;
+        }
+
+        .area-item {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+            .area-item:hover {
+                background: #e9ecef;
+                border-color: #adb5bd;
+            }
+
+            .area-item.selected {
+                background: #d4edda;
+                border-color: #28a745;
+            }
+
+            .area-item .area-name {
+                font-weight: bold;
+                margin-bottom: 4px;
+            }
+
+            .area-item .area-coords {
+                font-size: 12px;
+                color: #6c757d;
+            }
+
+        .area-actions {
+            margin-top: 8px;
+        }
+
+            .area-actions button {
+                padding: 4px 8px;
+                margin-right: 5px;
+                font-size: 12px;
+                border: 1px solid #ddd;
+                background: #fff;
+                border-radius: 3px;
+                cursor: pointer;
+            }
+
+                .area-actions button:hover {
+                    background: #f0f0f0;
+                }
+
+                .area-actions button.delete {
+                    color: #dc3545;
+                    border-color: #dc3545;
+                }
+
+                    .area-actions button.delete:hover {
+                        background: #f8d7da;
+                    }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 5px;
+            width: 500px;
+            max-width: 90%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+            .modal-header h4 {
+                margin: 0;
+                color: #333;
+            }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+            .close:hover {
+                color: #000;
+            }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: bold;
+                color: #333;
+            }
+
+            .form-group input {
+                width: 100%;
+                padding: 8px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                font-size: 14px;
+            }
+
+                .form-group input:focus {
+                    outline: none;
+                    border-color: #007bff;
+                    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+                }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+            .modal-footer button {
+                padding: 8px 20px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 14px;
+            }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+            .btn-primary:hover {
+                background: #0056b3;
+                border-color: #0056b3;
+            }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            border-color: #6c757d;
+        }
+
+            .btn-secondary:hover {
+                background: #545b62;
+                border-color: #545b62;
+            }
+
+        .instructions {
+            background: #e7f3ff;
+            border: 1px solid #b8daff;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #004085;
+        }
+
+            .instructions h4 {
+                margin-bottom: 5px;
+                color: #004085;
+            }
+
+            .instructions ul {
+                margin: 5px 0 0 20px;
+            }
+
+            .instructions li {
+                margin-bottom: 3px;
+            }
+
+        .stats {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+
+            .stats h4 {
+                margin-bottom: 8px;
+                color: #495057;
+            }
+
+            .stats div {
+                font-size: 13px;
+                color: #6c757d;
+                margin-bottom: 3px;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>区域管理</h3>
+
+            <div class="instructions">
+                <h4>使用说明：</h4>
+                <ul>
+                    <li>点击"上传背景"设置背景图</li>
+                    <li>点击"选择区域"按钮</li>
+                    <li>在白板上拖拽选择区域</li>
+                    <li>输入区域名称并保存</li>
+                    <li>点击"保存"按钮保存到服务器</li>
+                    <li>点击区域名称可编辑</li>
+                    <li>拖拽区域可调整位置和大小</li>
+                </ul>
+            </div>
+
+            <div class="stats">
+                <h4>统计信息</h4>
+                <div id="total-areas">总区域数: 0</div>
+                <div id="selected-area">当前选中: 无</div>
+            </div>
+
+            <div class="area-list">
+                <h4>已创建区域</h4>
+                <div id="area-list-container">
+                    <div style="text-align: center; color: #6c757d; font-size: 13px; padding: 20px;">
+                        暂无区域，请先在白板上选择区域
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="toolbar">
+                <button id="select-btn" class="active">选择区域</button>
+                <button id="move-btn">移动模式</button>
+                <button id="save-btn">保存</button>
+                <button id="clear-btn">清除所有</button>
+            </div>
+
+            <div class="background-controls">
+                <div class="file-input-wrapper">
+                    <input type="file" id="background-upload" accept="image/*">
+                    <label for="background-upload">上传背景</label>
+                </div>
+                <button id="remove-background">移除背景</button>
+                <button id="fit-background">适应屏幕</button>
+            </div>
+
+            <div class="background-info" id="background-info">
+                无背景图
+            </div>
+
+            <div class="upload-progress" id="upload-progress">
+                <div>正在上传背景图...</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="upload-status" id="upload-status">准备上传...</div>
+                <button class="upload-retry-btn" id="retry-btn" style="display: none;">重试</button>
+            </div>
+
+            <div class="save-status" id="save-status">
+                <div id="save-message">正在保存...</div>
+            </div>
+
+            <div class="whiteboard-container" id="whiteboard-container">
+                <!-- 白板内容区域 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 区域命名模态框 -->
+    <div id="name-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>区域命名</h4>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form class="layui-form" action="">
+
+
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">区域</label>
+                            <div class="layui-input-inline">
+                                <select id="area_name" name="area_name" lay-verify="required" lay-search>
+                                    @{
+                                        var result = DoMySql.FindList<ModelDb.p_liveroom_area>($" 1=1 and zt_user_sn='{new UserIdentityBag().user_sn}'");
+                                        foreach (var item in result)
+                                        {
+                                            <option onclick="slelectRoom('@item.id')" value="@item.id">@item.name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">房间名</label>
+                            <div class="layui-input-inline">
+                                <select id="room_name" name="room_name" lay-verify="required" lay-search>
+                                    @{
+                                        var room = DoMySql.FindList<ModelDb.p_liveroom>($" 1=1 and zt_user_sn='{new UserIdentityBag().user_sn}'");
+                                        foreach (var item in room)
+                                        {
+                                            <option value="@item.id">@item.name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*<div class="layui-form-item">
+                            <label class="layui-form-label">房间名</label>
+                            <div class="layui-input-inline layui-input-wrap">
+                                <input type="text" id="area-name" class="layui-input" placeholder="请输入区域名称">
+                            </div>
+                        </div>*@
+
+
+
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">区域类型</label>
+                            <div class="layui-input-inline">
+                                <select id="area_type" name="area_type" lay-verify="required" lay-search>
+                                    @{
+                                        var type = new DomainBasic.DictionaryApp().GetList(ModelEnum.DictCategory.直播间类型);
+
+                                        foreach (var item in type)
+                                        {
+                                            <option value="@item.d_value">@item.d_key</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">区域颜色</label>
+                        <div class="layui-input-inline" style="width: 120px;">
+                            <input type="text" name="color" value="" placeholder="请背景颜色" class="layui-input" id="room_color">
+                        </div>
+                        <div class="layui-inline" style="left: -11px;">
+                            <div id="ID-colorpicker-demo-form"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>区域坐标:</label>
+                        <div id="area-coords" style="font-size: 12px; color: #666; background: #f8f9fa; padding: 5px; border-radius: 3px;"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeModal()">取消</button>
+                <button type="button" class="btn-primary" onclick="saveArea()">保存</button>
+            </div>
+        </div>
+    </div>
+    <script src="//unpkg.com/layui@2.12.1/dist/layui.js"></script>
+    <script>
+        layui.use(function () {
+            var colorpicker = layui.colorpicker;
+            var $ = layui.$;
+            // 渲染
+            colorpicker.render({
+                elem: '#ID-colorpicker-demo-form',
+                color: '#1c97f5',
+                done: function (color) {
+                    $('#room_color').val(color);
+                }
+            });
+        });
+    </script>
+    <script>
+        class WhiteboardManager {
+            constructor() {
+                this.areas = [];
+                this.currentAreaId = 0;
+                this.isSelecting = false;
+                this.isMoving = false;
+                this.startX = 0;
+                this.startY = 0;
+                this.selectionRect = null;
+                this.selectedArea = null;
+                this.isDragging = false;
+                this.dragStartPos = { x: 0, y: 0 };
+                this.dragStartSize = { width: 0, height: 0 };
+                this.backgroundImage = null;
+                this.backgroundFit = 'contain';
+                this.currentUploadFile = null;
+
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.updateStats();
+            }
+
+
+            bindEvents() {
+                const container = document.getElementById('whiteboard-container');
+                const selectBtn = document.getElementById('select-btn');
+                const moveBtn = document.getElementById('move-btn');
+                const saveBtn = document.getElementById('save-btn');
+                const clearBtn = document.getElementById('clear-btn');
+                const backgroundUpload = document.getElementById('background-upload');
+                const removeBackgroundBtn = document.getElementById('remove-background');
+                const fitBackgroundBtn = document.getElementById('fit-background');
+                const retryBtn = document.getElementById('retry-btn');
+
+                // 工具栏按钮事件
+                selectBtn.addEventListener('click', () => this.setMode('select'));
+                moveBtn.addEventListener('click', () => this.setMode('move'));
+                saveBtn.addEventListener('click', () => this.saveToServer());
+                clearBtn.addEventListener('click', () => this.clearAllAreas());
+
+                // 背景控制事件
+                backgroundUpload.addEventListener('change', (e) => this.handleBackgroundUpload(e));
+                removeBackgroundBtn.addEventListener('click', () => this.removeBackground());
+                fitBackgroundBtn.addEventListener('click', () => this.toggleBackgroundFit());
+                retryBtn.addEventListener('click', () => this.retryUpload());
+
+                // 鼠标事件
+                container.addEventListener('mousedown', (e) => this.handleMouseDown(e));
+                container.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+                container.addEventListener('mouseup', (e) => this.handleMouseUp(e));
+
+                // 阻止默认行为
+                container.addEventListener('contextmenu', (e) => e.preventDefault());
+            }
+
+            setMode(mode) {
+                const container = document.getElementById('whiteboard-container');
+                const selectBtn = document.getElementById('select-btn');
+                const moveBtn = document.getElementById('move-btn');
+
+                // 重置状态
+                this.isSelecting = false;
+                this.isMoving = false;
+                this.removeSelectionRect();
+
+                // 设置模式
+                if (mode === 'select') {
+                    this.isSelecting = true;
+                    container.classList.add('selecting');
+                    container.classList.remove('moving');
+                    selectBtn.classList.add('active');
+                    moveBtn.classList.remove('active');
+                } else if (mode === 'move') {
+                    this.isMoving = true;
+                    container.classList.add('moving');
+                    container.classList.remove('selecting');
+                    moveBtn.classList.add('active');
+                    selectBtn.classList.remove('active');
+                }
+            }
+
+            handleBackgroundUpload(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                if (!file.type.startsWith('image/')) {
+                    alert('请选择图片文件');
+                    return;
+                }
+
+                // 检查文件大小 (限制为10MB)
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('图片文件大小不能超过10MB');
+                    return;
+                }
+
+                this.currentUploadFile = file;
+
+                // 先显示图片预览
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    this.setBackground(event.target.result);
+                };
+                reader.readAsDataURL(file);
+
+                // 同时上传到服务器
+                this.uploadToServer(file);
+            }
+
+            setBackground(imageData) {
+                const container = document.getElementById('whiteboard-container');
+                this.backgroundImage = imageData;
+                container.style.backgroundImage = `url(${imageData})`;
+                container.style.backgroundSize = this.backgroundFit;
+                container.classList.add('has-background');
+                this.updateBackgroundInfo('上传的图片');
+            }
+
+            removeBackground() {
+                const container = document.getElementById('whiteboard-container');
+                this.backgroundImage = null;
+                container.style.backgroundImage = '';
+                container.classList.remove('has-background');
+                this.updateBackgroundInfo();
+
+                // 清空文件输入
+                document.getElementById('background-upload').value = '';
+            }
+
+            toggleBackgroundFit() {
+                if (!this.backgroundImage) return;
+
+                const container = document.getElementById('whiteboard-container');
+                const fitBackgroundBtn = document.getElementById('fit-background');
+
+                this.backgroundFit = this.backgroundFit === 'contain' ? 'cover' : 'contain';
+                container.style.backgroundSize = this.backgroundFit;
+                fitBackgroundBtn.textContent = this.backgroundFit === 'contain' ? '适应屏幕' : '填充屏幕';
+            }
+
+            updateBackgroundInfo(filename) {
+                const info = document.getElementById('background-info');
+                if (filename) {
+                    info.textContent = `背景图: ${filename}`;
+                } else {
+                    info.textContent = '无背景图';
+                }
+            }
+
+            uploadToServer(file) {
+                this.showUploadProgress();
+                this.updateUploadStatus('正在上传...', 0);
+
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('type', 'background');
+
+                const xhr = new XMLHttpRequest();
+
+                // 上传进度监听
+                xhr.upload.addEventListener('progress', (e) => {
+                    if (e.lengthComputable) {
+                        const percentComplete = Math.round((e.loaded / e.total) * 100);
+                        this.updateUploadStatus(`上传中... ${percentComplete}%`, percentComplete);
+                    }
+                });
+
+                // 上传完成监听
+                xhr.addEventListener('load', () => {
+                    if (xhr.status === 200) {
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if (response.success) {
+                                this.updateUploadStatus('上传成功！', 100, 'success');
+                                this.updateBackgroundInfo(`${file.name} (已保存到服务器)`);
+                                setTimeout(() => {
+                                    this.hideUploadProgress();
+                                }, 2000);
+                            } else {
+                                this.handleUploadError(response.message || '上传失败');
+                            }
+                        } catch (e) {
+                            this.handleUploadError('服务器响应格式错误');
+                        }
+                    } else {
+                        this.handleUploadError(`上传失败 (HTTP ${xhr.status})`);
+                    }
+                });
+
+                // 上传错误监听
+                xhr.addEventListener('error', () => {
+                    this.handleUploadError('网络连接错误');
+                });
+
+                // 上传超时监听
+                xhr.addEventListener('timeout', () => {
+                    this.handleUploadError('上传超时');
+                });
+
+                // 设置超时时间 (30秒)
+                xhr.timeout = 30000;
+
+                // 发起请求
+                xhr.open('POST', '/upload', true);
+                xhr.send(formData);
+            }
+
+            showUploadProgress() {
+                const progress = document.getElementById('upload-progress');
+                progress.classList.add('show');
+            }
+
+            hideUploadProgress() {
+                const progress = document.getElementById('upload-progress');
+                progress.classList.remove('show');
+
+                // 重置进度条
+                setTimeout(() => {
+                    this.updateUploadStatus('准备上传...', 0);
+                    document.getElementById('retry-btn').style.display = 'none';
+                }, 500);
+            }
+
+            updateUploadStatus(text, progress, type = 'normal') {
+                const status = document.getElementById('upload-status');
+                const progressFill = document.getElementById('progress-fill');
+
+                status.textContent = text;
+                status.className = 'upload-status';
+
+                if (type === 'success') {
+                    status.classList.add('upload-success');
+                } else if (type === 'error') {
+                    status.classList.add('upload-error');
+                }
+
+                progressFill.style.width = progress + '%';
+            }
+
+            handleUploadError(message) {
+                this.updateUploadStatus(`上传失败: ${message}`, 0, 'error');
+                document.getElementById('retry-btn').style.display = 'inline-block';
+            }
+
+            retryUpload() {
+                if (this.currentUploadFile) {
+                    document.getElementById('retry-btn').style.display = 'none';
+                    this.uploadToServer(this.currentUploadFile);
+                }
+            }
+            //数据保存到服务器
+            saveToServer() {
+                // 准备保存的数据
+                const saveData = {
+                    areas: this.areas
+                };
+                $.ajax({
+                    type: "POST",
+                    url: "/LiveRoom/Manage/BiaoZhuPost",
+                    data: saveData,
+                    async: false,
+                    dataType: 'json',
+                    success: function (e) {
+                        alert('成功');
+                    },
+                    error: function (e) {
+                        alert('操作失败');
+                    }
+                });
+            }
+
+            showSaveStatus(message, type = 'loading') {
+                const status = document.getElementById('save-status');
+                const messageEl = document.getElementById('save-message');
+
+                messageEl.textContent = message;
+                status.className = `save-status show ${type}`;
+
+                // 成功或错误状态显示3秒后自动隐藏
+                if (type === 'success' || type === 'error') {
+                    setTimeout(() => {
+                        status.classList.remove('show');
+                        setTimeout(() => {
+                            status.className = 'save-status';
+                        }, 300);
+                    }, 3000);
+                }
+            }
+
+            hideSaveStatus() {
+                const status = document.getElementById('save-status');
+                status.classList.remove('show');
+                setTimeout(() => {
+                    status.className = 'save-status';
+                }, 300);
+            }
+
+            handleMouseDown(e) {
+                if (e.button !== 0) return; // 只处理左键
+
+                const rect = document.getElementById('whiteboard-container').getBoundingClientRect();
+                this.startX = e.clientX - rect.left;
+                this.startY = e.clientY - rect.top;
+
+                if (this.isSelecting) {
+                    this.startSelection();
+                } else if (this.isMoving) {
+                    this.startMoving();
+                }
+            }
+
+            startSelection() {
+                this.removeSelectionRect();
+                this.selectionRect = document.createElement('div');
+                this.selectionRect.className = 'selection-rect';
+                this.selectionRect.style.left = this.startX + 'px';
+                this.selectionRect.style.top = this.startY + 'px';
+                this.selectionRect.style.width = '0px';
+                this.selectionRect.style.height = '0px';
+
+                document.getElementById('whiteboard-container').appendChild(this.selectionRect);
+            }
+
+            startMoving() {
+                // 检查是否点击在现有区域上
+                const clickedArea = this.getAreaAtPosition(this.startX, this.startY);
+                if (clickedArea) {
+                    this.selectArea(clickedArea.id);
+                    this.isDragging = true;
+                    this.dragStartPos = { x: this.startX, y: this.startY };
+                    const areaElement = document.getElementById(`area-${clickedArea.id}`);
+                    const rect = areaElement.getBoundingClientRect();
+                    const containerRect = document.getElementById('floor-plan-container').getBoundingClientRect();
+                    this.dragStartSize = {
+                        width: rect.width,
+                        height: rect.height,
+                        offsetX: this.startX - (rect.left - containerRect.left),
+                        offsetY: this.startY - (rect.top - containerRect.top)
+                    };
+                }
+            }
+
+            handleMouseMove(e) {
+                const rect = document.getElementById('whiteboard-container').getBoundingClientRect();
+                const currentX = e.clientX - rect.left;
+                const currentY = e.clientY - rect.top;
+
+                if (this.isSelecting && this.selectionRect) {
+                    this.updateSelection(currentX, currentY);
+                } else if (this.isMoving && this.isDragging && this.selectedArea) {
+                    this.updateAreaPosition(currentX, currentY);
+                }
+            }
+
+            updateSelection(currentX, currentY) {
+                if (!this.selectionRect) return;
+
+                const width = Math.abs(currentX - this.startX);
+                const height = Math.abs(currentY - this.startY);
+                const left = Math.min(this.startX, currentX);
+                const top = Math.min(this.startY, currentY);
+
+                this.selectionRect.style.left = left + 'px';
+                this.selectionRect.style.top = top + 'px';
+                this.selectionRect.style.width = width + 'px';
+                this.selectionRect.style.height = height + 'px';
+            }
+
+            updateAreaPosition(currentX, currentY) {
+                if (!this.selectedArea || !this.isDragging) return;
+
+                const deltaX = currentX - this.dragStartPos.x;
+                const deltaY = currentY - this.dragStartPos.y;
+
+                const newX = this.selectedArea.x + deltaX;
+                const newY = this.selectedArea.y + deltaY;
+
+                // 边界检查
+                const container = document.getElementById('whiteboard-container');
+                const maxX = container.clientWidth - this.selectedArea.width;
+                const maxY = container.clientHeight - this.selectedArea.height;
+
+                const clampedX = Math.max(0, Math.min(newX, maxX));
+                const clampedY = Math.max(0, Math.min(newY, maxY));
+
+                this.selectedArea.x = clampedX;
+                this.selectedArea.y = clampedY;
+
+                this.updateAreaElement(this.selectedArea);
+                this.updateAreaList();
+            }
+
+            handleMouseUp(e) {
+                if (this.isSelecting && this.selectionRect) {
+                    this.finishSelection();
+                } else if (this.isMoving && this.isDragging) {
+                    this.isDragging = false;
+                }
+            }
+
+            finishSelection() {
+                if (!this.selectionRect) return;
+
+                const width = parseInt(this.selectionRect.style.width);
+                const height = parseInt(this.selectionRect.style.height);
+
+                // 最小尺寸检查
+                if (width < 20 || height < 20) {
+                    this.removeSelectionRect();
+                    return;
+                }
+
+                const left = parseInt(this.selectionRect.style.left);
+                const top = parseInt(this.selectionRect.style.top);
+
+                this.removeSelectionRect();
+                this.showNameModal(left, top, width, height);
+            }
+
+            showNameModal(x, y, width, height) {
+                document.getElementById('area-coords').textContent =
+                    `位置: (${x}, ${y}) 大小: ${width}×${height}`;
+                //document.getElementById('area-name').value = '';
+                //document.getElementById('area-name').focus();
+                document.getElementById('name-modal').style.display = 'block';
+
+                // 存储临时区域信息
+                this.tempArea = { x, y, width, height };
+            }
+            saveArea() {
+
+                //区域id
+                const area_id = $("#area_name option:selected").val();
+                const area_name = $("#area_name option:selected").text();
+                const backColor = $("#room_color").val();
+
+                const area_type_id = $("#area_type option:selected").val();
+                const area_type_name = $("#area_type option:selected").text();
+
+                const roomName_id = $("#room_name option:selected").val();
+
+                const roomName = $("#room_name option:selected").text();
+
+                if (!this.tempArea) return;
+                const area = {
+                    id: ++this.currentAreaId,
+                    name: roomName,
+                    x: this.tempArea.x,
+                    y: this.tempArea.y,
+                    width: this.tempArea.width,
+                    height: this.tempArea.height,
+                    area_id: area_id,
+                    areaname: area_name,
+                    backgroundColor: backColor,
+                    area_type_id: area_type_id,
+                    area_type_name: area_type_name,
+                    roomName_id: roomName_id
+                };
+                console.log(area)
+                this.areas.push(area);
+                this.createAreaElement(area);
+                this.updateAreaList();
+                this.updateStats();
+                this.closeModal();
+            }
+            createAreaElement(area) {
+                const container = document.getElementById('whiteboard-container');
+                const areaElement = document.createElement('div');
+                areaElement.className = 'area-box';
+                areaElement.id = `area-${area.id}`;
+                areaElement.style.left = area.x + 'px';
+                areaElement.style.top = area.y + 'px';
+                areaElement.style.width = area.width + 'px';
+                areaElement.style.height = area.height + 'px';
+
+                const label = document.createElement('div');
+                label.className = 'area-label';
+                label.textContent = area.name;
+                areaElement.appendChild(label);
+
+                areaElement.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.selectArea(area.id);
+                });
+
+                container.appendChild(areaElement);
+            }
+
+            updateAreaElement(area) {
+                const element = document.getElementById(`area-${area.id}`);
+                if (element) {
+                    element.style.left = area.x + 'px';
+                    element.style.top = area.y + 'px';
+                    element.style.width = area.width + 'px';
+                    element.style.height = area.height + 'px';
+                }
+            }
+
+            selectArea(areaId) {
+                // 清除之前的选择
+                document.querySelectorAll('.area-box').forEach(el => el.classList.remove('selected'));
+                document.querySelectorAll('.area-item').forEach(el => el.classList.remove('selected'));
+
+                // 选择新区域
+                const area = this.areas.find(a => a.id === areaId);
+                if (area) {
+                    this.selectedArea = area;
+                    const areaElement = document.getElementById(`area-${areaId}`);
+                    const listItem = document.querySelector(`[data-area-id="${areaId}"]`);
+
+                    if (areaElement) areaElement.classList.add('selected');
+                    if (listItem) listItem.classList.add('selected');
+
+                    this.updateStats();
+                }
+            }
+
+            getAreaAtPosition(x, y) {
+                return this.areas.find(area =>
+                    x >= area.x && x <= area.x + area.width &&
+                    y >= area.y && y <= area.y + area.height
+                );
+            }
+
+            removeSelectionRect() {
+                if (this.selectionRect) {
+                    this.selectionRect.remove();
+                    this.selectionRect = null;
+                }
+            }
+
+            updateAreaList() {
+                const container = document.getElementById('area-list-container');
+
+                if (this.areas.length === 0) {
+                    container.innerHTML = `
+                                                                                                                                                                            <div style="text-align: center; color: #6c757d; font-size: 13px; padding: 20px;">
+                                                                                                                                                                                暂无区域，请先在白板上选择区域
+                                                                                                                                                                            </div>
+                                                                                                                                                                        `;
+                    return;
+                }
+
+                container.innerHTML = this.areas.map(area => `
+                                                                                                                                                                        <div class="area-item" data-area-id="${area.id}" onclick="whiteboardManager.selectArea(${area.id})">
+                                                                                                                                                                            <div class="area-name">${area.name}</div>
+                                                                                                                                                                            <div class="area-coords">位置: (${area.x}, ${area.y}) 大小: ${area.width}×${area.height}</div>
+                                                                                                                                                                            <div class="area-coords">区域: ${area.areaname}</div>
+                                                                                                                                                                             <div class="area-coords">房间类型: ${area.area_type_name}</div>
+                                                                                                                                                                             <div class="area-coords">背景色: ${area.backgroundColor}</div>
+                                                                                                                                                                            <div class="area-actions">
+                                                                                                                                                                                <button onclick="event.stopPropagation(); whiteboardManager.editArea(${area.id})">编辑</button>
+                                                                                                                                                                                <button class="delete" onclick="event.stopPropagation(); whiteboardManager.deleteArea(${area.id})">删除</button>
+                                                                                                                                                                            </div>
+                                                                                                                                                                        </div>
+                                                                                                                                                                    `).join('');
+            }
+
+            editArea(areaId) {
+                const area = this.areas.find(a => a.id === areaId);
+                if (!area) return;
+
+                const newName = prompt('请输入新的区域名称:', area.name);
+                if (newName && newName.trim() && newName.trim() !== area.name) {
+                    area.name = newName.trim();
+                    const label = document.querySelector(`#area-${areaId} .area-label`);
+                    if (label) label.textContent = area.name;
+                    this.updateAreaList();
+                }
+            }
+
+            deleteArea(areaId) {
+                if (!confirm('确定要删除这个区域吗？')) return;
+
+                const areaIndex = this.areas.findIndex(a => a.id === areaId);
+                if (areaIndex !== -1) {
+                    this.areas.splice(areaIndex, 1);
+                    const areaElement = document.getElementById(`area-${areaId}`);
+                    if (areaElement) areaElement.remove();
+
+                    if (this.selectedArea && this.selectedArea.id === areaId) {
+                        this.selectedArea = null;
+                    }
+
+                    this.updateAreaList();
+                    this.updateStats();
+                }
+            }
+
+            clearAllAreas() {
+                if (this.areas.length === 0) {
+                    alert('没有区域需要清除');
+                    return;
+                }
+
+                if (!confirm('确定要清除所有区域吗？此操作不可恢复！')) return;
+
+                this.areas = [];
+                this.selectedArea = null;
+                document.querySelectorAll('.area-box').forEach(el => el.remove());
+                this.updateAreaList();
+                this.updateStats();
+            }
+
+            updateStats() {
+                document.getElementById('total-areas').textContent = `总区域数: ${this.areas.length}`;
+                document.getElementById('selected-area').textContent =
+                    this.selectedArea ? `当前选中: ${this.selectedArea.name}` : '当前选中: 无';
+            }
+
+            closeModal() {
+                document.getElementById('name-modal').style.display = 'none';
+                this.tempArea = null;
+            }
+        }
+
+        // 全局函数
+        function closeModal() {
+            whiteboardManager.closeModal();
+        }
+        function slelectRoom() {
+            alert("hello world")
+        }
+        function saveArea() {
+            whiteboardManager.saveArea();
+        }
+
+        // 初始化
+        let whiteboardManager;
+        document.addEventListener('DOMContentLoaded', () => {
+            whiteboardManager = new WhiteboardManager();
+        });
+
+        // 点击模态框外部关闭
+        window.addEventListener('click', (e) => {
+            const modal = document.getElementById('name-modal');
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // ESC键关闭模态框
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

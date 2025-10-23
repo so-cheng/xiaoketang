@@ -1,0 +1,119 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@model Services.Project.PageFactory.TableVO
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+</style>
+
+<div class="layui-input-inline">
+    <label class="layui-form-label">日期</label>
+</div>
+<div class="layui-inline">
+    <div class="layui-input-inline">
+        @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("c_date", true)
+        {
+            title = "日期",
+            defaultValue = ViewBag.c_date,
+            mold = ModelBasic.EmtTimeSelect.Mold.date_range,
+            eventJsChange = new EmtFormBase.EventJsChange
+            {
+                eventJavascript = new EventJavascript
+                {
+                  code = $"window.location.href = 'JieduanShowList?c_date=' + page.c_date.value + '&ting_sn={ViewBag.ting_sn}'+'&jiezou_sn={ViewBag.jiezou_sn}';"
+                },
+            }
+        })
+    </div>
+</div>
+
+<div id="main_line" style="width: 100%;height:400px;"></div>
+
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/other/echarts.min.4.3.0.js"></script>
+
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main_line'));
+
+    // 指定图表的配置项和数据
+    // 指定图表的配置项和数据
+    var dateArray = @Html.Raw(Json.Encode(ViewBag.dateArray));
+    var username = @Html.Raw(Json.Encode(ViewBag.username));
+    var stepList = @Html.Raw(Json.Encode(ViewBag.stepList));//阶段曲线
+    var zbNumList = @Html.Raw(Json.Encode(ViewBag.zbNumList));//主播数曲线
+    var dangweiList = @Html.Raw(Json.Encode(ViewBag.dangweiList));//档位数曲线
+
+    // 指定图表的配置项和数据
+    var option = {
+        title: {
+            text: username,
+            left: '30%',    // 基于容器的50%位置
+            textAlign: 'center'
+        },
+        tooltip: {},
+        legend: {
+            data: ['阶段','主播人数','档位数'],
+            selected: {
+                '阶段': true,
+                '主播人数': false,
+                '档位数': false
+            }
+        },
+        xAxis: {
+            data: dateArray
+        },
+        yAxis: {
+        },
+        series: [
+            {
+                name: '阶段',
+                type: 'line',
+                data: stepList
+            },
+            {
+                name: '主播人数',
+                type: 'line',
+                data: zbNumList
+            },
+            {
+                name: '档位数',
+                type: 'line',
+                data: dangweiList
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>

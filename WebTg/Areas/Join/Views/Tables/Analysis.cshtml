@@ -1,0 +1,203 @@
+﻿
+@{
+    Layout = null;
+}
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.ModelDbs;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Web;
+@using System.Web.Mvc;
+@using WeiCode.Services;
+
+@using WeiCode.ModelDbs;
+@using Services.Project;
+@using WeiCode.Domain;
+@using WeiCode.ModelDbs;
+@using WeiCode.Models;
+@using WeiCode.Domain;
+
+
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+
+<style>
+
+    .layui-table{
+        color:black;
+    }
+
+    .layuiadmin-big-font {
+        font-weight: bold;
+        font-size: 42px;
+        margin: 10px;
+    }
+
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 16px;
+    }
+
+    .layui-table td {
+        font-size: 16px;
+    }
+</style>
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+
+<body>
+    <blockquote class="layui-elem-quote news_search">
+
+        @*<div class="layui-inline">
+            <form class="layui-form">
+                <div class="layui-input-inline">
+                    <label class="layui-form-label">日期</label>
+                </div>
+
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("c_date")
+                        {
+                            title = "日期",
+                            defaultValue = ViewBag.c_date,
+                            mold = ModelBasic.EmtTimeSelect.Mold.date,
+                            eventJsChange = new EmtFormBase.EventJsChange
+                            {
+                                eventJavascript = new EventJavascript
+                                {
+                                    code = "window.location.href = '?c_date=' + page.c_date.value;"
+                                },
+                            }
+                        })
+                    </div>
+                </div>
+                <a href="?c_date=@ViewBag.c_date_early" class="layui-btn">前一天</a>
+                <a href="?c_date=@ViewBag.c_date_late" class="layui-btn">后一天</a>
+            </form>
+        </div>*@
+    </blockquote>
+
+    @{ 
+        string tg_user_sn = ViewBag.tg_user_sn;
+        ServiceFactory.JoinAnalysisService.AnalysisTable AnalysisTable = ViewBag.PJoinNeedAnalysis;
+    }
+
+    <div>
+        <table class="layui-table" style="text-align:center;" id="table1" name="table1">
+            <colgroup>
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+            </colgroup>
+            <thead>
+                <tr style="background-color: #F9CBAA">
+                    <th>@(new ServiceFactory.UserInfo.Tg().GetTgInfoByUsersn(tg_user_sn).username) </th>
+                    <th>申请数</th>
+                    <th>未分配</th>
+                    <th>待拉群</th>
+                    <th>已补数</th>
+                    <th>流失数(对接前)</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr style="background-color: #75BD42">
+                    <td>汇总</td>
+                    <td>@AnalysisTable.TotalZbCount</td>
+                    <td>@AnalysisTable.TotalNoSupplement</td>
+                    <td>@AnalysisTable.TotalNoQun</td>
+                    <td>@AnalysisTable.TotalInQun</td>
+                    <td>@AnalysisTable.TotalLeave</td>
+                </tr>
+
+                <tr style="background-color: #F9CBAA">
+                    <td></td>
+                    <td colspan="5">流失数(对接后)</td>
+                </tr>
+                <tr style="background-color: #F9CBAA">
+                    <td></td>
+                    <td>3天内</td>
+                    <td>7天内</td>
+                    <td>15天内</td>
+                    <td>30天内</td>
+                    <td>30天后</td>
+                </tr>
+                <tr style="background-color: #75BD42">
+                    <td></td>
+                    <td>@AnalysisTable.LeaveIn3</td>
+                    <td>@AnalysisTable.LeaveIn7</td>
+                    <td>@AnalysisTable.LeaveIn15</td>
+                    <td>@AnalysisTable.LeaveIn30</td>
+                    <td>@AnalysisTable.LeaveOver30</td>
+                </tr>
+
+                <tr style="background-color: #F9CBAA">
+                    <td></td>
+                    <td colspan="5">流失率</td>
+                </tr>
+                <tr style="background-color: #F9CBAA">
+                    <td></td>
+                    <td>3天内</td>
+                    <td>7天内</td>
+                    <td>15天内</td>
+                    <td>30天内</td>
+                    <td>30天后</td>
+                </tr>
+                <tr style="background-color: #75BD42">
+                    <td></td>
+                    <td>@((AnalysisTable.LeaveIn3.ToDecimal() / (AnalysisTable.LeaveIn3 + AnalysisTable.TotalZbCount)).ToString("0.00"))%</td>
+                    <td>@((AnalysisTable.LeaveIn7.ToDecimal() / (AnalysisTable.LeaveIn7 + AnalysisTable.TotalZbCount)).ToString("0.00"))%</td>
+                    <td>@((AnalysisTable.LeaveIn15.ToDecimal() / (AnalysisTable.LeaveIn15 + AnalysisTable.TotalZbCount)).ToString("0.00"))%</td>
+                    <td>@((AnalysisTable.LeaveIn30.ToDecimal() / (AnalysisTable.LeaveIn30 + AnalysisTable.TotalZbCount)).ToString("0.00"))%</td>
+                    <td>@((AnalysisTable.LeaveOver30.ToDecimal() / (AnalysisTable.LeaveOver30 + AnalysisTable.TotalZbCount)).ToString("0.00"))%</td>
+                </tr>
+
+                <tr style="background-color: #F9CBAA">
+                    <td></td>
+                    <td colspan="5">留存率</td>
+                </tr>
+                <tr style="background-color: #F9CBAA">
+                    <td></td>
+                    <td>3天内</td>
+                    <td>7天内</td>
+                    <td>15天内</td>
+                    <td>30天内</td>
+                    <td>30天后</td>
+                </tr>
+                <tr style="background-color: #75BD42">
+                    <td></td>
+                    <td>@((AnalysisTable.KeepIn3.ToDecimal() / AnalysisTable.TotalZbCount).ToString("0.00"))%</td>
+                    <td>@((AnalysisTable.KeepIn7.ToDecimal() / AnalysisTable.TotalZbCount).ToString("0.00"))%</td>
+                    <td>@((AnalysisTable.KeepIn15.ToDecimal() / AnalysisTable.TotalZbCount).ToString("0.00"))%</td>
+                    <td>@((AnalysisTable.KeepIn30.ToDecimal() / AnalysisTable.TotalZbCount).ToString("0.00"))%</td>
+                    <td>@((AnalysisTable.KeepOver30.ToDecimal() / AnalysisTable.TotalZbCount).ToString("0.00"))%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.2.5.6.js"></script>
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+

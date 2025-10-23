@@ -1,0 +1,5568 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WeiCode.Modular.Basic</name>
+    </assembly>
+    <members>
+        <member name="T:WeiCode.Services.BaseLoginController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Services.BaseLoginController.OnActionExecuting(System.Web.Mvc.ActionExecutingContext)">
+            <summary>
+            
+            </summary>
+            <param name="filterContext"></param>
+        </member>
+        <member name="M:WeiCode.Services.BaseLoginController.OnActionExecuted(System.Web.Mvc.ActionExecutedContext)">
+            <summary>
+            Aciton执行完毕后 执行
+            </summary>
+            <param name="filterContext"></param>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.CtlLayer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.CtlLayer.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlLayer.itemColLength">
+            <summary>
+            列宽:范围值：1-12
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlLayer.itemPartials">
+            <summary>
+            窗口内元素
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.CtlListTmpl">
+            <summary>
+            控件列表模板
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.CtlListTmpl.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListTmpl.itemColLength">
+            <summary>
+            列宽:范围值：1-12
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListTmpl.items">
+            <summary>
+            列表数据
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListTmpl.itemHtml">
+            <summary>
+            列表项模板html
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListTmpl.eventJsClick">
+            <summary>
+            组件click事件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListTmpl.eventJsClicks">
+            <summary>
+            组件click事件
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.CtlListTmpl.EventJsClick">
+            <summary>
+            组件click事件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListTmpl.EventJsClick.eventComponent">
+            <summary>
+            调用目标组件的方法(EventComponent类型，格式：组件类型.Page("组件名").方法名(输入参数)
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListTmpl.EventJsClick.eventJavascript">
+            <summary>
+            调用js方法
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.CtlListTmpl.EventJsClick.ReturnPara">
+            <summary>
+            事件参数e
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListTmpl.EventJsClick.ReturnPara.id">
+            <summary>
+            返回选中值
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListTmpl.EventJsClick.ReturnPara.text">
+            <summary>
+            返回选中文本{{js变量或语句}}
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtHidden">
+            <summary>
+            隐藏域
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtHidden.#ctor(System.String)">
+            <summary>
+            时间选择
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtHiddenArray">
+            <summary>
+            隐藏域
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtHiddenArray.#ctor(System.String)">
+            <summary>
+            时间选择
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtInputNumber">
+            <summary>
+            数字输入
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtInputNumber.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.AdjScreenshot">
+            <summary>
+            页面截屏
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.AdjScreenshot.#ctor(System.String)">
+            <summary>
+            内容转图片
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.AdjScreenshot.defaultValue">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.AdjScreenshot.elem">
+            <summary>
+            设置图片区域元素id
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtButton">
+            <summary>
+            Button按钮
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtButton.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtTableDataEdit">
+            <summary>
+            数据批量加载可编辑
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtTableDataEdit.#ctor(System.String)">
+            <summary>
+            数据选择
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtTableDataEdit.colItems">
+            <summary>
+            数据列
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtTableDataEdit.ColItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtTableDataEdit.ColItem.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="field"></param>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtTableDataEdit.ColItem._field">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtTableDataEdit.ColItem.field">
+            <summary>
+            字段名，必须与数据源字段名一致
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtTableDataEdit.ColItem.getField">
+            <summary>
+            获取字段名
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtTableDataEdit.ColItem.title">
+            <summary>
+            列标题
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtTableDataEdit.ColItem.width">
+            <summary>
+            列宽度
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtTableDataEdit.ColItem.edit">
+            <summary>
+            是否可编辑，文本编辑=text
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtTableDataEdit.ColItem.hide">
+            <summary>
+            是否为隐藏值
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtTableDataEdit.defaultValue">
+            <summary>
+            json数组：[{"name":"姓名1","age":"年龄1"},{"name":"姓名2","age":"年龄2"}]
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtTableDataEdit.Js">
+            <summary>
+            Page页面变量及方法
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtTableDataEdit.Js.#ctor(System.String)">
+            <summary>
+            调用name组件的js方法
+            </summary>
+            <param name="name"></param>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtHandExcelRead">
+            <summary>
+            Excel读取器
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtHandExcelRead.#ctor(System.String)">
+            <summary>
+            数据选择
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtHandExcelRead.name">
+            <summary>
+            元素名称，3-30个英文字符（需要获取对象数组时，格式为:l_名称）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtHandExcelRead.titleSelect">
+            <summary>
+            选择文件文本
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtHandExcelRead.titleCopy">
+            <summary>
+            快捷复制数据文本
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtHandExcelRead.titleDown">
+            <summary>
+            表格示例模板下载文本
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtHandExcelRead.exampleFileUrl">
+            <summary>
+            示例文件下载地址，为空时则动态生成
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtHandExcelRead.colItems">
+            <summary>
+            数据列
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtHandExcelRead.ColItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtHandExcelRead.ColItem.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="field"></param>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtHandExcelRead.ColItem._field">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtHandExcelRead.ColItem.field">
+            <summary>
+            字段名，必须与数据源字段名一致
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtHandExcelRead.ColItem.getField">
+            <summary>
+            获取字段名
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtHandExcelRead.ColItem.title">
+            <summary>
+            列标题
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtHandExcelRead.ColItem.width">
+            <summary>
+            列宽度
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtHandExcelRead.ColItem.edit">
+            <summary>
+            是否可编辑，文本编辑=text
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtHandExcelRead.TemplateUrl">
+            <summary>
+            模板文件地址
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtHandExcelRead.defaultValue">
+            <summary>
+            json数组：[{"name":"姓名1","age":"年龄1"},{"name":"姓名2","age":"年龄2"}]
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtLabel">
+            <summary>
+            Label文本内容
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtLabel.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtStep">
+            <summary>
+            复杂步骤
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtStep.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtStep.title">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel">
+            <summary>
+            页面级视图模型
+            </summary>
+            <summary>
+            页面级模型
+            </summary>
+            <summary>
+            页面级模型
+            </summary>
+            <summary>
+            页面级模型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.Detail">
+            <summary>
+            详情页面
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageModel.Detail.#ctor(System.String)">
+            <summary>
+            HTML模板路径
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Detail.formDisplay">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.Detail.StepItem">
+            <summary>
+            分步
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Detail.StepItem.title">
+            <summary>
+            分步标题
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Detail.StepItem.index">
+            <summary>
+            分步步骤
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Detail.buttonItems">
+            <summary>
+            扩展按钮组（右侧）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Detail.ctlTab">
+            <summary>
+            Tab页（下方或右侧）
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.GoodsPageList">
+            <summary>
+            商品分页列表（绑定模板）
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageModel.GoodsPageList.#ctor(System.String)">
+            <summary>
+            定义控件所用模板，需要分端处理
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.GoodsPageList.itemTpl">
+            <summary>
+            数据项模板
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.GoodsPageList.callBackJsFunc">
+            <summary>
+            当前组件支持的JS回调
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.GoodsPageList.CallBackJsFunc">
+            <summary>
+            页面回调JS
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.GoodsPageList.CallBackJsFunc.reloadList">
+            <summary>
+            重新加载列表
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.GoodsPageList.listData">
+            <summary>
+            扩展功能：数据源渲染
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.GoodsPageList.ListData">
+            <summary>
+            列表数据源
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.GoodsPageList.ListData.attachFilterSql">
+            <summary>
+            附加列表过滤SQL语句
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.GoodsPageList.ListData.Req">
+            <summary>
+            异步数据请求类型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.GoodsPageList.ListData.Req.pager">
+            <summary>
+            分页参数
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.GoodsPageList.ListData.Req.attachFilterSql">
+            <summary>
+            附加列表过滤SQL语句
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.GoodsPageList.ListData.Req.data_json">
+            <summary>
+            动态变量参数json
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.GoodsPageList.ListData.Res">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.View">
+            <summary>
+            表单提交页面
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageModel.View.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.View.formDisplay">
+            <summary>
+            编辑提交表单控件
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.Post">
+            <summary>
+            表单提交页面
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageModel.Post.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Post.eventCsAction">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.Post.EventCsAction">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Post.EventCsAction.func">
+            <summary>
+            设置链接提交处理的回调函数
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Post.EventCsAction.attachPara">
+            <summary>
+            附加请求参数,支持js变量
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Post.actionUrl">
+            <summary>
+            设置表单提交处理的URL地址
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Post.postedReturn">
+            <summary>
+            提交后返回对象
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.Post.PostedReturn">
+            <summary>
+            提交后返回
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Post.PostedReturn.returnUrl">
+            <summary>
+            设置返回URL
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Post.PostedReturn.callBefore">
+            <summary>
+            提交前的执行回调js函数(对象参数:data)
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Post.PostedReturn.callBack">
+            <summary>
+            提交成功的回调js函数(对象参数:data)
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Post.PostedReturn.returnType">
+            <summary>
+            返回类型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.Post.PostedReturn.ReturnType">
+            <summary>
+            执行成功处理
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.PageModel.Post.PostedReturn.ReturnType.刷新父窗口">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.PageModel.Post.PostedReturn.ReturnType.刷新当前窗口">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.PageModel.Post.PostedReturn.ReturnType.父窗口跳转URL">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.PageModel.Post.PostedReturn.ReturnType.当前窗口跳转URL">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.PageModel.Post.PostedReturn.ReturnType.执行回调函数">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Post.ctlConfirm">
+            <summary>
+            前置确认
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.Post.StepItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Post.StepItem.title">
+            <summary>
+            分步标题
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Post.StepItem.index">
+            <summary>
+            分步步骤
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Post.buttonGroup">
+            <summary>
+            按钮组控件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Post.formDisplay">
+            <summary>
+            编辑提交表单控件
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.Post.Req">
+            <summary>
+            公共参数
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Post.Req.formDisplayDisableds">
+            <summary>
+            显示字段
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.jsFileNames">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageModel.LoadAttchFiles">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageModel.GetLayout">
+            <summary>
+            获取页面母版页（基础环境）
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageModel.GetPageLayout">
+            <summary>
+            获取页面母版页（页面环境）
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.ListView">
+            <summary>
+            列表数据页面
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageModel.ListView.#ctor">
+            <summary>
+            定义控件所用模板，需要分端处理
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.ListView.listFilter">
+            <summary>
+            列表筛选控件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.ListView.buttonGroup">
+            <summary>
+            按钮组控件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.ListView.listDisplay">
+            <summary>
+            列表显示控件
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.ListView.Req">
+            <summary>
+            列表显示页，接收外部参数
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.ListView.Req.isOpenCheckBox">
+            <summary>
+            开启筛选框
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.ListView.Req.isOpenRadio">
+            <summary>
+            开启单选框
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.ListView.Req.isOpenNumbers">
+            <summary>
+            开启行自动序号，默认禁用
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.ListView.Req.isExport">
+            <summary>
+            是否显示导出按钮，默认显示
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.ListView.Req.isTotalRow">
+            <summary>
+            是否显示统计行，默认不显示
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.ListView.Req.listFilterDisableds">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.ListView.Req.listDisplayDisableds">
+            <summary>
+            待删除
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.ListView.Req.buttonGroupDisableds">
+            <summary>
+            待删除
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.Controls">
+            <summary>
+            Tab选项卡页面
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageModel.Controls.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Controls.style">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Controls.elementHtml">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.Controls.Style">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.Diy">
+            <summary>
+            自定义页面
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Diy.HtmlModel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.Frame">
+            <summary>
+            框架页面
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageModel.Frame.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Frame.type">
+            <summary>
+            框架结构（0=左右结构，1=上下结构）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Frame.url1">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Frame.url2">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.Guide">
+            <summary>
+            向导页面
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageModel.Guide.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Guide.pages">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.Guide.Page">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Guide.Page.title">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.Guide.Page.url">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.TreeList">
+            <summary>
+            左树右表
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageModel.TreeList.#ctor(System.String)">
+            <summary>
+            定义控件所用模板，需要分端处理
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.TreeList.treeMenuTitle">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.TreeList.tree">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.TreeList.callBackJsFunc">
+            <summary>
+            当前组件支持的JS回调
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.TreeList.CallBackJsFunc">
+            <summary>
+            页面回调JS
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.TreeList.CallBackJsFunc.reloadList">
+            <summary>
+            重新加载列表
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.TreeList.listFilter">
+            <summary>
+            列表筛选控件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.TreeList.buttonGroup">
+            <summary>
+            按钮组控件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.TreeList.listDisplay">
+            <summary>
+            列表显示控件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.TreeList.dType">
+            <summary>
+            类型：数据列表;数据选择器
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.TreeList.Req">
+            <summary>
+            列表显示页，接收外部参数（仅用于被继承）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.TreeList.Req.dType">
+            <summary>
+            类型：数据列表;数据选择器
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.TreeList.Req.isOpenCheckBox">
+            <summary>
+            开启筛选框
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.TreeList.Req.isOpenNumbers">
+            <summary>
+            开启行自动序号，默认禁用
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.TreeList.Req.isExport">
+            <summary>
+            是否显示导出按钮，默认显示
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.TreeList.Req.isTotalRow">
+            <summary>
+            是否显示统计行，默认不显示
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.TreeList.Req.listFilterDisableds">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.TreeList.Req.listDisplayDisableds">
+            <summary>
+            待删除
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModel.TreeList.Req.buttonGroupDisableds">
+            <summary>
+            待删除
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModel.TreeList.DType">
+            <summary>
+            类型
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.PageModel.TreeList.DType.数据列表">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.PageModel.TreeList.DType.数据选择器">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.CtlFloatTool">
+            <summary>
+            浮动工具面板
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.CtlFloatTool.#ctor(System.String)">
+            <summary>
+            浮动工具面板
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.CtlFloatNav">
+            <summary>
+            右侧浮动导航
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.CtlFloatNav.#ctor(System.String)">
+            <summary>
+            右侧浮动导航
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlFloatNav.items">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.CtlFloatNav.Item">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlFloatNav.Item.name">
+            <summary>
+            锚点name
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlFloatNav.Item.text">
+            <summary>
+            文本内容
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.CtlTree">
+            <summary>
+            树形目录
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.CtlTree.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlTree.url">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlTree.data">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlTree.initLevel">
+            <summary>
+            初始打开节点级别
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlTree.eventJsClick">
+            <summary>
+            组件click事件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlTree.eventJsClicks">
+            <summary>
+            组件click事件
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.CtlTree.EventJsClick">
+            <summary>
+            组件click事件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlTree.EventJsClick.eventComponent">
+            <summary>
+            触发事件调用组件的方法
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlTree.EventJsClick.eventJavascript">
+            <summary>
+            调用js方法
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.CtlTree.EventJsClick.ReturnPara">
+            <summary>
+            事件参数e
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlTree.EventJsClick.ReturnPara.id">
+            <summary>
+            返回选中值{{js变量或语句}}
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlTree.EventJsClick.ReturnPara.text">
+            <summary>
+            返回选中文本{{js变量或语句}}
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageList">
+            <summary>
+            列表显示页
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageList.#ctor(System.String)">
+            <summary>
+            定义控件所用模板，需要分端处理
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.entity">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.callBackJsFunc">
+            <summary>
+            当前组件支持的JS回调
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageList.CallBackJsFunc">
+            <summary>
+            页面回调JS
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.CallBackJsFunc.reloadList">
+            <summary>
+            重新加载列表
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.listFilter">
+            <summary>
+            列表筛选控件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.buttonGroup">
+            <summary>
+            按钮组控件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.listDisplay">
+            <summary>
+            列表显示控件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.layerPartials">
+            <summary>
+            在页面添加弹窗组件
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageList.Req">
+            <summary>
+            列表显示页，接收外部参数（仅用于被继承）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.Req.isOpenCheckBox">
+            <summary>
+            开启筛选框
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.Req.isOpenNumbers">
+            <summary>
+            开启行自动序号，默认禁用
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.Req.isExport">
+            <summary>
+            是否显示导出按钮，默认显示
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.Req.listFilterDisableds">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.Req.listDisplayDisableds">
+            <summary>
+            待删除
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.Req.buttonGroupDisableds">
+            <summary>
+            待删除 - 禁用按钮组
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.dataSelect">
+            <summary>
+            扩展:数据选择器
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageList.DataSelect">
+            <summary>
+            数据选择器
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.DataSelect.selectEvent">
+            <summary>
+            点击选择事件
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageList.SelectEvent">
+            <summary>
+            未使用
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.SelectEvent.cbSelected">
+            <summary>
+            设置点击选择按钮回调函数(参数:JSON.stringify(已选中数据行))
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.SelectEvent.href">
+            <summary>
+            跳转到指定URL
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageList.ListData">
+            <summary>
+            模块基础列表数据源
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageList.ListData.Req">
+            <summary>
+            请求对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.ListData.Req.pager">
+            <summary>
+            分页参数
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.ListData.Req.listExportDisableds">
+            <summary>
+            导出字段 禁止导出
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.ListData.Req.supportConfig">
+            <summary>
+            支持配置
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageList.ListData.Req.SupportConfig">
+            <summary>
+            支持配置
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.ListData.Req.SupportConfig.export_data">
+            <summary>
+            数据导出标识，1时为数据导出
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageList.ListData.Res">
+            <summary>
+            返回对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.ListData.Res.pager">
+            <summary>
+            分页参数
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.ListData.Res.totalRow">
+            <summary>
+            汇总项列表
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageList.Js">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageList.Js.#ctor(System.String)">
+            <summary>
+            Page页面变量及方法
+            </summary>
+            <param name="name"></param>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageList.Js.reload(WeiCode.Models.ModelBasic.PageList.Js.Req)">
+            <summary>
+            重新加载数据表格
+            </summary>
+            <param name="req">参数对象</param>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.Js.req">
+            <summary>
+            组件方法所需要的参数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageList.Js.Req">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.Js.Req.s_type">
+            <summary>
+            搜索参数名
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageList.Js.Req.s_value">
+            <summary>
+            搜索值,{{js变量或方法}}
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageList.reloadListByFilter(System.String,System.String)">
+            <summary>
+            根据参数值筛选
+            </summary>
+            <param name="para">参数名</param>
+            <param name="value">参数值</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.CtlListFilter">
+            <summary>
+            列表筛选表单
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.CtlListFilter.#ctor(WeiCode.Models.ModelBasic.PageList.Req)">
+            <summary>
+            
+            </summary>
+            <param name="req"></param>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListFilter.isExport">
+            <summary>
+            是否显示导出按钮，默认显示
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListFilter.exportFilename">
+            <summary>
+            导出文件名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListFilter.listFilterDisableds">
+            <summary>
+            筛选字段 禁止显示
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListFilter.formItems">
+            <summary>
+            元素集合
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.CtlButtonGroup">
+            <summary>
+            扩展按钮组
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.CtlButtonGroup.#ctor(WeiCode.Models.ModelBasic.PageList.Req)">
+            <summary>
+            
+            </summary>
+            <param name="req"></param>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlButtonGroup.buttonItems">
+            <summary>
+            按钮元素集合
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.CtlListDisplay">
+            <summary>
+            表格数据分页 TablePageList
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.CtlListDisplay.#ctor(WeiCode.Models.ModelBasic.PageList.Req)">
+            <summary>
+            
+            </summary>
+            <param name="req"></param>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.operateWidth">
+            <summary>
+            操作列宽度
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.isHideOperate">
+            <summary>
+            是否隐藏操作列
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.isOpenCheckBox">
+            <summary>
+            开启筛选框
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.isOpenNumbers">
+            <summary>
+            是否显示自动序号，默认不显示
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.isTotalRow">
+            <summary>
+            是否显示统计行，默认不显示
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.listBatchItems">
+            <summary>
+            对批量选择数据进行操作的按钮组
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.listBatchSysOperateItems">
+            <summary>
+            系统内置列表批量操作功能
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.CtlListDisplay.SysOperate.删除">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.listBatchItemsDisableds">
+            <summary>
+            设置禁用批量操作按钮name,多个用,隔开
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.listItems">
+            <summary>
+            显示元素集合
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.listItemsDisableds">
+            <summary>
+            设置禁用列表字段names,多个用逗号隔开
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.listOperateItems">
+            <summary>
+            操作列元素
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.listOperateItemsDisableds">
+            <summary>
+            设置禁用操作列元素name,多个用,隔开
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.listData">
+            <summary>
+            扩展功能：数据源渲染
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.CtlListDisplay.ListData">
+            <summary>
+            列表数据源
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.CtlListDisplay.ListData.getList``2(WeiCode.DataBase.DoMySql.Filter,WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            获取当前租户下列表数据
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="filter"></param>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.CtlListDisplay.ListData.getList``3(WeiCode.DataBase.DoMySql.Filter,WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            获取列表数据
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="K1"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="filter"></param>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.CtlListDisplay.ListData.getList``4(WeiCode.DataBase.DoMySql.Filter,WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            获取列表数据
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="K1"></typeparam>
+            <typeparam name="K2"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="filter"></param>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.ListData.attachFilterSql">
+            <summary>
+            附加列表过滤SQL语句(不要包含AND)
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.ListData.synDataSource">
+            <summary>
+            异步数据源
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.ListData.funcGetListData">
+            <summary>
+            回调cs函数
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.ListData.attachPara">
+            <summary>
+            附加请求参数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req">
+            <summary>
+            列表异步数据请求参数
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req.pager">
+            <summary>
+            分页参数
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req.attachFilterSql">
+            <summary>
+            附加列表过滤SQL语句
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req.__totalFields">
+            <summary>
+            汇总字段
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req.__exportFields">
+            <summary>
+            导出字段
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req.__exportFilename">
+            <summary>
+            导出文件名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req.summaryReqJson">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req.tenant_id">
+            <summary>
+            查询指定租户id的数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageListHtml">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageListHtml.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.listFilter">
+            <summary>
+            列表筛选控件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.itemColLength">
+            <summary>
+            列宽:范围值：1-12
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.tempItemHtml">
+            <summary>
+            列表项模板html
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.listData">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageListHtml.ListData">
+            <summary>
+            列表数据源
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageListHtml.ListData.getList``2(WeiCode.DataBase.DoMySql.Filter,WeiCode.Models.ModelBasic.PageListHtml.ListData.Req)">
+            <summary>
+            获取当前租户下列表数据
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="filter"></param>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageListHtml.ListData.getList``3(WeiCode.DataBase.DoMySql.Filter,WeiCode.Models.ModelBasic.PageListHtml.ListData.Req)">
+            <summary>
+            获取列表数据
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="K1"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="filter"></param>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageListHtml.ListData.getList``4(WeiCode.DataBase.DoMySql.Filter,WeiCode.Models.ModelBasic.PageListHtml.ListData.Req)">
+            <summary>
+            获取列表数据
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="K1"></typeparam>
+            <typeparam name="K2"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="filter"></param>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.ListData.attachFilterSql">
+            <summary>
+            附加列表过滤SQL语句(不要包含AND)
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.ListData.func">
+            <summary>
+            回调cs函数
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.ListData.attachPara">
+            <summary>
+            附加请求参数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageListHtml.ListData.Req">
+            <summary>
+            列表异步数据请求参数
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageListHtml.ListData.Req.getDtoReqJson``1">
+            <summary>
+            将接收到的CtlListFilter筛选参数的json格式转换为自定义的模型格式（按名称一致进行匹配）
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageListHtml.ListData.Req.GetPara">
+            <summary>
+            获取请求参数
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.ListData.Req.pager">
+            <summary>
+            分页参数
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.ListData.Req.attachFilterSql">
+            <summary>
+            附加列表过滤SQL语句
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.ListData.Req.data_json">
+            <summary>
+            动态变量参数json
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.ListData.Req.__totalFields">
+            <summary>
+            汇总字段
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.ListData.Req.__exportFields">
+            <summary>
+            导出字段
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.ListData.Req.__exportFilename">
+            <summary>
+            导出文件名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.ListData.Req.summaryReqJson">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.ListData.Req.tenant_id">
+            <summary>
+            查询指定租户id的数据
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.eventJsClick">
+            <summary>
+            组件click事件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.eventJsClicks">
+            <summary>
+            组件click事件
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageListHtml.EventJsClick">
+            <summary>
+            组件click事件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.EventJsClick.eventComponent">
+            <summary>
+            触发事件调用组件的方法
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.EventJsClick.eventJavascript">
+            <summary>
+            调用js方法
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageListHtml.EventJsClick.ReturnPara">
+            <summary>
+            事件参数e
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.EventJsClick.ReturnPara.id">
+            <summary>
+            返回选中值
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.EventJsClick.ReturnPara.text">
+            <summary>
+            返回选中文本{{js变量或语句}}
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageListHtml.Js">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageListHtml.Js.#ctor(System.String)">
+            <summary>
+            Page页面变量及方法
+            </summary>
+            <param name="name"></param>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageListHtml.Js.reload(WeiCode.Models.ModelBasic.PageListHtml.Js.Req)">
+            <summary>
+            重新加载数据表格
+            </summary>
+            <param name="req">参数对象</param>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.Js.req">
+            <summary>
+            组件方法所需要的参数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageListHtml.Js.Req">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.Js.Req.s_type">
+            <summary>
+            搜索参数名
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListHtml.Js.Req.s_value">
+            <summary>
+            搜索值,{{js变量或方法}}
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageListTmpl">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageListTmpl.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListTmpl.listFilter">
+            <summary>
+            列表筛选控件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListTmpl.itemColLength">
+            <summary>
+            列宽:范围值：1-12
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:WeiCode.Models.ModelBasic.PageListTmpl.items" -->
+        <member name="P:WeiCode.Models.ModelBasic.PageListTmpl.itemHtml">
+            <summary>
+            列表项模板html
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListTmpl.eventJsClick">
+            <summary>
+            组件click事件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListTmpl.eventJsClicks">
+            <summary>
+            组件click事件
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageListTmpl.EventJsClick">
+            <summary>
+            组件click事件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListTmpl.EventJsClick.eventComponent">
+            <summary>
+            触发事件调用组件的方法
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListTmpl.EventJsClick.eventJavascript">
+            <summary>
+            调用js方法
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageListTmpl.EventJsClick.ReturnPara">
+            <summary>
+            事件参数e
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListTmpl.EventJsClick.ReturnPara.id">
+            <summary>
+            返回选中值
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListTmpl.EventJsClick.ReturnPara.text">
+            <summary>
+            返回选中文本{{js变量或语句}}
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListTmpl.listData">
+            <summary>
+            扩展功能：数据源渲染
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageListTmpl.ListData">
+            <summary>
+            列表数据源
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageListTmpl.ListData.getList``2(WeiCode.DataBase.DoMySql.Filter,WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            获取列表数据
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="filter"></param>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageListTmpl.ListData.getList``3(WeiCode.DataBase.DoMySql.Filter,WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            获取列表数据
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="K1"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="filter"></param>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageListTmpl.ListData.getList``4(WeiCode.DataBase.DoMySql.Filter,WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            获取列表数据
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="K1"></typeparam>
+            <typeparam name="K2"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="filter"></param>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListTmpl.ListData.attachFilterSql">
+            <summary>
+            附加列表过滤SQL语句(不要包含AND)
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListTmpl.ListData.funcGetListData">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageListTmpl.ListData.Req">
+            <summary>
+            列表异步数据请求参数
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.PageListTmpl.ListData.Req.getDtoReqJson``1">
+            <summary>
+            将接收到的CtlListFilter筛选参数的json格式转换为自定义的模型格式（按名称一致进行匹配）
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListTmpl.ListData.Req.pager">
+            <summary>
+            分页参数
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListTmpl.ListData.Req.attachFilterSql">
+            <summary>
+            附加列表过滤SQL语句
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListTmpl.ListData.Req.data_json">
+            <summary>
+            动态变量参数json
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListTmpl.ListData.Req.__totalFields">
+            <summary>
+            汇总字段
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListTmpl.ListData.Req.__exportFields">
+            <summary>
+            导出字段
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListTmpl.ListData.Req.__exportFilename">
+            <summary>
+            导出文件名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageListTmpl.ListData.Req.summaryReqJson">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageListTmpl.ListData.Res">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.CtlConfirm">
+            <summary>
+            确认内容控件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlConfirm.confirms">
+            <summary>
+            元素集合
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.CtlConfirm.Confirm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlConfirm.Confirm.examine_content">
+            <summary>
+            确认内容
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlConfirm.Confirm.status">
+            <summary>
+            确认状态
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.CtlFormDisplay">
+            <summary>
+            表单元素组
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlFormDisplay.formDisplayDisableds">
+            <summary>
+            展示字段 禁止显示
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlFormDisplay.formItems">
+            <summary>
+            元素集合
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlFormDisplay.confirmText">
+            <summary>
+            提交前确定询问文本
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlFormDisplay.buttonSubmitText">
+            <summary>
+            提交按钮显示文本
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.CtlFormItem">
+            <summary>
+            详情页的元素组
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlFormItem.formDisplayDisableds">
+            <summary>
+            展示字段 禁止显示
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlFormItem.formItems">
+            <summary>
+            元素集合
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.CtlListCard">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.CtlListCard.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListCard.itemColLength">
+            <summary>
+            列宽:范围值：1-12
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListCard.synDataSource">
+            <summary>
+            异步方法名(必需)
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListCard.itemParas">
+            <summary>
+            循环项的属性设置
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.CtlListCard.ItemPara">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListCard.ItemPara.title">
+            <summary>
+            标题
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListCard.ItemPara.badge">
+            <summary>
+            标签
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListCard.ItemPara.imgUrl">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListCard.ItemPara.masterAmount">
+            <summary>
+            主要金额
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListCard.ItemPara.bottomTitle">
+            <summary>
+            底部标题
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlListCard.ItemPara.bottomAmount">
+            <summary>
+            底部金额
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.IconPicker">
+            <summary>
+            图标选择器
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.IconPicker.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtExt">
+            <summary>
+            扩展组件
+            </summary>
+            <summary>
+            扩展组件
+            </summary>
+            <summary>
+            扩展组件
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtExt.InputSelect">
+            <summary>
+            目录树
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtExt.InputSelect.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExt.InputSelect.synDataSource">
+            <summary>
+            异步数据源URL
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExt.InputSelect.options">
+            <summary>
+            选项数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtExt.Dtree">
+            <summary>
+            目录树
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtExt.Dtree.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExt.Dtree.synDataSource">
+            <summary>
+            异步数据源URL
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExt.Dtree.bindData">
+            <summary>
+            同步数据源(标准目录树数据格式 Json)
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtExt.XmSelect">
+            <summary>
+            XmSelect下拉框
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtExt.XmSelect.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExt.XmSelect.synDataSource">
+            <summary>
+            异步数据源URL
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExt.XmSelect.bindData">
+            <summary>
+            Json数据源(ModelBasic.EmtExt.XmSelect.DataItem Json)
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExt.XmSelect.options">
+            <summary>
+            模型数据源
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExt.XmSelect.bindOptions">
+            <summary>
+            选项数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtExt.XmSelect.DataItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExt.XmSelect.DataItem.name">
+            <summary>
+            显示名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExt.XmSelect.DataItem.value">
+            <summary>
+            值
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExt.XmSelect.isRadio">
+            <summary>
+            是否是单选
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExt.XmSelect.isSearch">
+            <summary>
+            是否可以搜索
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExt.XmSelect.isToolbar">
+            <summary>
+            是否工具支持
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExt.XmSelect.showCount">
+            <summary>
+            最大显示数量, 0:不限制
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtSelectFull">
+            <summary>
+            单选框(为了兼容ModelDoBasic.Option数据格式)
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtSelectFull.#ctor(System.String)">
+            <summary>
+            单选框
+            <para>options:选择项(List{ModelDoBasic.Option})</para>
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtSelectFull.options">
+            <summary>
+            选项数据
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtSelectFull.isSearch">
+            <summary>
+            是否可以搜索
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtSelectFull.isCanDiy">
+            <summary>
+            是否允许自定义值
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtRadio">
+            <summary>
+            单选框
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtRadio.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtRadio.options">
+            <summary>
+            可选项
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtRadio.displayNames">
+            <summary>
+            显示关联组件(names)
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtTimeSelect">
+            <summary>
+            日期时间选择器
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtTimeSelect.#ctor(System.String,System.Boolean)">
+            <summary>
+            时间选择
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtTimeSelect.mold">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtTimeSelect.Mold">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtTimeSelect.Mold.year">
+            <summary>
+            年选择器
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtTimeSelect.Mold.month">
+            <summary>
+            年月选择器
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtTimeSelect.Mold.date">
+            <summary>
+            日期选择器
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtTimeSelect.Mold.time">
+            <summary>
+            时间选择器
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtTimeSelect.Mold.datetime">
+            <summary>
+            日期时间选择器
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtTimeSelect.Mold.year_range">
+            <summary>
+            年范围
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtTimeSelect.Mold.month_range">
+            <summary>
+            月范围
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtTimeSelect.Mold.datetime_range">
+            <summary>
+            日期时间范围
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtTimeSelect.Mold.date_range">
+            <summary>
+            日期范围
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtTextarea">
+            <summary>
+            内容编辑
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtTextarea.#ctor(System.String)">
+            <summary>
+            内容编辑器
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtTextarea.height">
+            <summary>
+            控件高度
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtTextarea.mode">
+            <summary>
+            样式类型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtTextarea.Mode">
+            <summary>
+            元素模式
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtTextarea.Mode.富文本">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtTextarea.Mode.TextArea">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtTableEdit">
+            <summary>
+            表格编辑
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtTableEdit.#ctor(System.String)">
+            <summary>
+            数据选择
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtTableEdit.defaultValue">
+            <summary>
+            默认值[{"name": "名称1","memo": "备注1"},{"name": "名称2","memo": "备注2"}]
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtTableEdit.colItems">
+            <summary>
+            数据列
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtTableEdit.ColItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtTableEdit.ColItem.field">
+            <summary>
+            字段名，必须与数据源字段名一致
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtTableEdit.ColItem.title">
+            <summary>
+            列标题
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtTableEdit.ColItem.width">
+            <summary>
+            列宽度
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtTableEdit.ColItem.emtModel">
+            <summary>
+            字段的元素类型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.CtlTab">
+            <summary>
+            Tab标签
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.CtlTab.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlTab.defaultValue">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlTab.items">
+            <summary>
+            选项数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.CtlTab.Item">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlTab.Item.url">
+            <summary>
+            值
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlTab.Item.text">
+            <summary>
+            显示文本
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlTab.Item.badge">
+            <summary>
+            标签提醒
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.CtlTab.Item.model">
+            <summary>
+            组件
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtSteps">
+            <summary>
+            复杂步骤
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtSteps.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtSteps.items">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtSteps.Item">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtSteps.Item.name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtSteps.Item.isActive">
+            <summary>
+            是否当前步骤
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtSlider">
+            <summary>
+            滑块
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtSlider.#ctor(System.String)">
+            <summary>
+            时间选择
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtSelectUnFold">
+            <summary>
+            选择项（支持图片）（平铺，包含单选，多选）
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtSelectUnFold.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtSelectUnFold.options">
+            <summary>
+            选项数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtSelectUnFold.Option">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtSelectUnFold.Option.value">
+            <summary>
+            值
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtSelectUnFold.Option.text">
+            <summary>
+            显示文本
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtSelectUnFold.Option.img_url">
+            <summary>
+            图片地址
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtSelectUnFold.Option.describe">
+            <summary>
+            描述信息
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtSelectUnFold.Option.displayNames">
+            <summary>
+            联动显示关联组件,多个name用逗号拼接
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtSelectFold">
+            <summary>
+            选择项（下拉，单选，多选）
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtSelectFold.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtSelectFold.options">
+            <summary>
+            可选项
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtSelectFold.displayNames">
+            <summary>
+            联动显示关联组件,多个name用逗号拼接
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtSelect">
+            <summary>
+            普通下拉框（包含单选，多选）
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtSelect.#ctor(System.String)">
+            <summary>
+            普通下拉框（包含单选，多选）
+            <para>options:选择项(Dictionary string,string)</para>
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtSelect.options">
+            <summary>
+            选项数据
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtSelect.isSearch">
+            <summary>
+            是否可以搜索
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtSelect.isCanDiy">
+            <summary>
+            是否允许自定义值
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtSelect.Js">
+            <summary>
+            Page页面变量及方法
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtSelect.Js.#ctor(System.String)">
+            <summary>
+            调用name组件的js方法
+            </summary>
+            <param name="name"></param>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtSelect.Js.options(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            重置选择项
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtSelect.Js.options(System.String)">
+            <summary>
+            重置选择项，格式:{"选项一":"1","选项二":"2"}
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtSelect.Js.clear">
+            <summary>
+            清空选择项
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtRate">
+            <summary>
+            评分
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtRate.#ctor(System.String)">
+            <summary>
+            评分
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtQRCode">
+            <summary>
+            二维码
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtQRCode.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtQRCode.type">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtQRCode.Type">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtQRCode.Type.QrCode">
+            <summary>
+            二维码
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtQRCode.Type.BarCode">
+            <summary>
+            条形码
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtPassword">
+            <summary>
+            密码域
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtPassword.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtPassword.defultValue">
+            <summary>
+            默认值
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtLinkageSelect">
+            <summary>
+            联动下拉选择
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtLinkageSelect.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtLinkageSelect.options">
+            <summary>
+            待选数据项
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtInputMoney">
+            <summary>
+            金额输入
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtInputMoney.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtInputMobile">
+            <summary>
+            手机验证码
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtInputMobile.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtInputMobile.defultValue">
+            <summary>
+            默认值
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtInputMobile.CheckCode(System.String)">
+            <summary>
+            核对验证码
+            </summary>
+            <param name="vcode"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtInput">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtInput.#ctor(System.String)">
+            <summary>
+            文本域
+            <para>multiLine:多行输入时分隔符(MultiLine)</para>
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtInput.multiLine">
+            <summary>
+            多行输入时分隔符
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtInput.MultiLine">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtInput.MultiLine.split">
+            <summary>
+            分隔符
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtInput.autoComplete">
+            <summary>
+            扩展功能：智能提示自动完成
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtInput.AutoComplete">
+            <summary>
+            组件附属功能配置子项
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtInput.AutoComplete.eleType">
+            <summary>
+            元素类型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtInput.AutoComplete.minCharNum">
+            <summary>
+            最少搜索字符数
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtInput.AutoComplete.colItems">
+            <summary>
+            数据列
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtInput.AutoComplete.ColItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtInput.AutoComplete.ColItem.field">
+            <summary>
+            字段名，必须与数据源字段名一致
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtInput.AutoComplete.ColItem.title">
+            <summary>
+            列标题
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtInput.AutoComplete.width">
+            <summary>
+            宽度
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtInput.AutoComplete.height">
+            <summary>
+            高度
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtInput.AutoComplete.viewType">
+            <summary>
+            展示类型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtInput.AutoComplete.ViewType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtInput.AutoComplete.ViewType.sug">
+            <summary>
+            下拉框
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtInput.AutoComplete.ViewType.sugTable">
+            <summary>
+            下拉表格
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtInput.AutoComplete.funcGetData">
+            <summary>
+            查询远程数据回调函数（当为下拉框时，数据源必需以id作为字段名）
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtInput.AutoComplete.Req">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtInput.AutoComplete.Req.keyword">
+            <summary>
+            关键词
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtInput.AutoComplete.Res">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtInput.AutoComplete.Res.code">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtInput.AutoComplete.Res.data">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtInput.Js">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtInput.Js.#ctor(System.String)">
+            <summary>
+            Page页面变量及方法
+            </summary>
+            <param name="name"></param>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtImageSelect">
+            <summary>
+            图片选择器
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtImageSelect.#ctor(System.String)">
+            <summary>
+            选择图片
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtImageSelect.uploadMaxNum">
+            <summary>
+            最大上传图片数量,默认值:1
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtHtml">
+            <summary>
+            Html代码块
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtHtml.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtHtml.HtmlModel">
+            <summary>
+            自定义对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtHtml.Content">
+            <summary>
+            HTML内容
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtViewer">
+            <summary>
+            隐藏域
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtViewer.#ctor(System.String)">
+            <summary>
+            时间选择
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtViewer.img_urls">
+            <summary>
+            演示图,多张用分号隔开
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtViewer.img_width">
+            <summary>
+            缩略图宽度
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtViewer.img_height">
+            <summary>
+            缩略图高度
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtFileSelect">
+            <summary>
+            文件选择器
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtFileSelect.#ctor(System.String)">
+            <summary>
+            选择文件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtFileSelect.uploadMaxNum">
+            <summary>
+            最大上传文件数量,默认值:1
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtFieldset">
+            <summary>
+            分隔线
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtFieldset.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtFieldset.textAlign">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtFieldset.serialNumber">
+            <summary>
+            序号
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtFieldset.TextAlign">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtFieldset.TextAlign.left">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtFieldset.TextAlign.center">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtFieldset.TextAlign.right">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtExcelRead">
+            <summary>
+            Excel读取器
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtExcelRead.#ctor(System.String)">
+            <summary>
+            数据选择
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExcelRead.titleSelect">
+            <summary>
+            选择文件文本
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExcelRead.titleCopy">
+            <summary>
+            快捷复制数据文本
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExcelRead.titleDown">
+            <summary>
+            表格示例模板下载文本
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExcelRead.exampleFileUrl">
+            <summary>
+            示例文件下载地址，为空时则动态生成
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExcelRead.colItems">
+            <summary>
+            数据列
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtExcelRead.ColItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtExcelRead.ColItem.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="field"></param>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExcelRead.ColItem._field">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExcelRead.ColItem.field">
+            <summary>
+            字段名，必须与数据源字段名一致
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtExcelRead.ColItem.getField">
+            <summary>
+            获取字段名
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExcelRead.ColItem.title">
+            <summary>
+            列标题
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExcelRead.ColItem.width">
+            <summary>
+            列宽度
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExcelRead.ColItem.edit">
+            <summary>
+            是否可编辑，文本编辑=text
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExcelRead.ColItem.hide">
+            <summary>
+            是否为隐藏值
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExcelRead.TemplateUrl">
+            <summary>
+            模板文件地址
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtExcelRead.defaultValue">
+            <summary>
+            json数组：[{"name":"姓名1","age":"年龄1"},{"name":"姓名2","age":"年龄2"}]
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtExcelRead.Mode">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtExcelRead.Mode.普通">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtExcelRead.Mode.固定的初始数据">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtCopyText">
+            <summary>
+            EmtQRCode
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtCopyText.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtCopyText.buttonStyle">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.buttonStyle">
+            <summary>
+            按钮样式
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtSplitCols">
+            <summary>
+            布局：分列
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtSplitCols.#ctor(System.String)">
+            <summary>
+            布局：分列
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtSplitCols.items">
+            <summary>
+            分列项
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtSplitCols.Item">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtSplitCols.Item.colLength">
+            <summary>
+            列宽:范围值：1-12
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtSplitCols.Item.title">
+            <summary>
+            标题
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtSplitCols.Item.items">
+            <summary>
+            分列中的元素集合
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtButtonGroup">
+            <summary>
+            按钮组
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtButtonGroup.#ctor(System.String)">
+            <summary>
+            按钮组
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtButtonGroup.buttonItems">
+            <summary>
+            按钮元素集合
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtButtonGroup.buttonItemsDisableds">
+            <summary>
+            设置禁用按钮组names
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtButtonGroup.text">
+            <summary>
+            显示文本
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtDataSelect">
+            <summary>
+            数据选择器
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtDataSelect.#ctor(System.String)">
+            <summary>
+            数据选择
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtDataSelect.reloadListByData(System.String)">
+            <summary>
+            重新加载列表数据
+            </summary>
+            <param name="para"></param>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtDataSelect.buttonText">
+            <summary>
+            按钮显示文本
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtDataSelect.buttonAddOneText">
+            <summary>
+            “增加一行”按钮文本，为空则不显示
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtDataSelect.selectUrl">
+            <summary>
+            选择器数据来源URL(支持js变量)
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtDataSelect.colItems">
+            <summary>
+            数据列
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtDataSelect.ColItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtDataSelect.ColItem.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="field"></param>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtDataSelect.ColItem._field">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtDataSelect.ColItem.field">
+            <summary>
+            字段名，必须与数据源字段名一致
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtDataSelect.ColItem.getField">
+            <summary>
+            获取字段名
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtDataSelect.ColItem.title">
+            <summary>
+            列标题
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtDataSelect.ColItem.width">
+            <summary>
+            列宽度
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtDataSelect.ColItem.edit">
+            <summary>
+            是否可编辑，文本编辑=text
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtDataSelect.ColItem.isHide">
+            <summary>
+            是否隐藏
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtDataSelect.Js">
+            <summary>
+            Page页面变量及方法
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtDataSelect.Js.#ctor(System.String)">
+            <summary>
+            调用name组件的js方法
+            </summary>
+            <param name="name"></param>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtDataSelect.Js.clear">
+            <summary>
+            清空选择项
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtModel">
+            <summary>
+            元素的属性Model
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtModel.ButtonItem">
+            <summary>
+            按钮元素基模型
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.mode">
+            <summary>
+            元素类型：1=直接跳转；2=弹出浮动窗口
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.text">
+            <summary>
+            显示文本
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.confirmText">
+            <summary>
+            确认询问框文本
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.eventToUrl">
+            <summary>
+            设置弹出层属性
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.EventToUrl">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.EventToUrl.url">
+            <summary>
+            跳转地址
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.EventToUrl.target">
+            <summary>
+            目标框架
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.eventOpenLayer">
+            <summary>
+            设置弹出层属性
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.EventOpenLayer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.EventOpenLayer.url">
+            <summary>
+            跳转地址
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.EventOpenLayer.layer_width">
+            <summary>
+            弹出层宽度
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.EventOpenLayer.layer_height">
+            <summary>
+            弹出层高度
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.eventAjaxUrl">
+            <summary>
+            异步请求
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.EventAjaxUrl">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.EventAjaxUrl.url">
+            <summary>
+            跳转地址
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.eventCsAction">
+            <summary>
+            设置提交处理的回调cs函数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.EventCsAction">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.EventCsAction.func">
+            <summary>
+            设置链接提交处理的回调函数
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.EventCsAction.attachPara">
+            <summary>
+            附加请求参数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.Mode">
+            <summary>
+            类型
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.Mode.页面跳转按钮">
+            <summary>
+            页面跳转按钮
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.Mode.页面弹框按钮">
+            <summary>
+            专用属性:eventOpenLayer
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.Mode.请求处理_Ajax调用指定URL">
+            <summary>
+            请求处理_指定URL
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.Mode.请求处理_回调cs函数">
+            <summary>
+            专用属性:eventCsAction
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ButtonItem.buttonItems">
+            <summary>
+            子按钮
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtModel.ListItem">
+            <summary>
+            列表项元素基模型
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtModel.ListItem.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="field"></param>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListItem._field">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListItem.field">
+            <summary>
+            字段名，必须与数据源字段名一致
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtModel.ListItem.getField">
+            <summary>
+            获取字段名
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListItem.index">
+            <summary>
+            默认值:100
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListItem.mode">
+            <summary>
+            元素类型（可选，默认为文本）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListItem.dateFormat">
+            <summary>
+            日期格式化
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListItem.text">
+            <summary>
+            显示文本（必需）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListItem.align">
+            <summary>
+            对齐方式（可选，默认为左对齐）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListItem.fix">
+            <summary>
+            设置固定列，即不跟随 table 横向滚动条而滚动
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListItem.width">
+            <summary>
+            单元格宽度（可选，默认为150）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListItem.minWidth">
+            <summary>
+            单元格最小宽度（可选，默认为30）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListItem.sort">
+            <summary>
+            是否可排序（可选，默认为false）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListItem.isExport">
+            <summary>
+            是否为可导出字段
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListItem.formatTime">
+            <summary>
+            mode=时间格式化(必须),格式:yyyy年MM月dd日 HH:mm:ss
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListItem.summaryReq">
+            <summary>
+            列汇总
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListItem.total">
+            <summary>
+            是否求和（可选，默认为false）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListItem.eventOnclick">
+            <summary>
+            鼠标点击事件
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtModel.ListItem.EventOnclick">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListItem.EventOnclick.tipsContent">
+            <summary>
+            显示tips浮动层的内容
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtModel.ListItem.Mode">
+            <summary>
+            元素类型
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListItem.Mode.文本">
+            <summary>
+            文本
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListItem.Mode.缩略图">
+            <summary>
+            缩略图
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListItem.Mode.链接地址">
+            <summary>
+            链接地址
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListItem.Mode.进度条">
+            <summary>
+            进度条
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListItem.Mode.Switch开关">
+            <summary>
+            Switch开关
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListItem.Mode.时间格式化">
+            <summary>
+            时间格式化
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListItem.Mode.隐藏字段">
+            <summary>
+            隐藏字段
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtModel.ListItem.Fixed">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListItem.Fixed.none">
+            <summary>
+            不固定
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListItem.Fixed.left">
+            <summary>
+            固定在左
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListItem.Fixed.right">
+            <summary>
+            固定在右
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListItem.disabled">
+            <summary>
+            是否禁用
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem">
+            <summary>
+            列表操作列基模型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.mode">
+            <summary>
+            元素类型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.actionEvent">
+            <summary>
+            操作事件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.name">
+            <summary>
+            唯一标识
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.text">
+            <summary>
+            显示文本
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.title">
+            <summary>
+            窗口标题
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.style">
+            <summary>
+            按钮样式
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.eventToUrl">
+            <summary>
+            设置弹出层属性
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.EventToUrl">
+            <summary>
+            跳转URL
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.EventToUrl.url">
+            <summary>
+            跳转地址
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.EventToUrl.target">
+            <summary>
+            目标框架（打开新窗口：_bank）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.EventToUrl.field_paras">
+            <summary>
+            请求参数字段，参数别名格式：别名=字段名；多个用逗号隔开
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.eventOpenLayer">
+            <summary>
+            设置弹出层属性
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.EventOpenLayer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.EventOpenLayer.url">
+            <summary>
+            跳转地址
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.EventOpenLayer.layer_width">
+            <summary>
+            弹出层宽度
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.EventOpenLayer.layer_height">
+            <summary>
+            弹出层高度
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.EventOpenLayer.field_paras">
+            <summary>
+            请求参数字段，参数别名格式：别名=字段名；多个用逗号隔开
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.eventAjaxUrl">
+            <summary>
+            异步请求
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.EventAjaxUrl">
+            <summary>
+            ajax请求
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.EventAjaxUrl.url">
+            <summary>
+            跳转地址
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.EventAjaxUrl.field_paras">
+            <summary>
+            请求参数字段，参数别名格式：别名=字段名；多个用逗号隔开
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.eventJsFunction">
+            <summary>
+            执行回调js
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.EventJsFunction">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.EventJsFunction.code">
+            <summary>
+            js代码
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.EventJsFunction.field_paras">
+            <summary>
+            请求参数字段，多个用逗号隔开（在js代码中可直接引用）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.eventOpenTabs">
+            <summary>
+            打开Tab标签页
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.EventOpenTabs">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.EventOpenTabs.url">
+            <summary>
+            跳转地址
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.EventOpenTabs.field_paras">
+            <summary>
+            请求参数字段，参数别名格式：别名=字段名；多个用逗号隔开
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.eventCsAction">
+            <summary>
+            “请求处理_回调cs函数”时设置
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.EventCsAction">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.EventCsAction.func">
+            <summary>
+            设置链接提交处理的回调函数
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.EventCsAction.attachPara">
+            <summary>
+            附加请求参数
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.EventCsAction.field_paras">
+            <summary>
+            请求参数字段名，参数别名格式：别名=字段名；多个用逗号隔开
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.hideWith">
+            <summary>
+            隐藏条件，当字段值不满足条件时按钮为隐藏
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.HideWith">
+            <summary>
+            隐藏条件，当字段值不满足条件时按钮为隐藏
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.HideWith.compareType">
+            <summary>
+            比较类型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.HideWith.field">
+            <summary>
+            字段名
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.HideWith.value">
+            <summary>
+            条件值,多个条件值时用逗号隔开
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.CompareType">
+            <summary>
+            比较类型
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.CompareType.等于">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.CompareType.不等于">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.CompareType.包含">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.CompareType.不包含">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.StyleEnum">
+            <summary>
+            样式枚举
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.StyleEnum.danger">
+            <summary>
+            警告按钮
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.StyleEnum.disabled">
+            <summary>
+            禁用按钮
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.StyleEnum.warm">
+            <summary>
+            暖色按钮
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.StyleEnum.normal">
+            <summary>
+            百搭按钮
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.StyleEnum.primary">
+            <summary>
+            原始按钮
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.Mode">
+            <summary>
+            类型
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.Mode.普通样式按钮">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.Mode.Switch开关">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.items">
+            <summary>
+            子按钮
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.ActionEvent">
+            <summary>
+            操作事件
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.ActionEvent.跳转URL">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.ActionEvent.弹出窗口">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.ActionEvent.请求处理_Ajax调用指定URL">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.ActionEvent.查看JSON">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.ActionEvent.自定义js代码">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.ActionEvent.打开标签页">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.ActionEvent.请求处理_回调cs函数">
+            <summary>
+            专有属性:eventCsAction
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.ActionEvent.打开新窗口">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtModel.ListOperateItem.disabled">
+            <summary>
+            是否禁用
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtTableInput">
+            <summary>
+            表格编辑
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtTableInput.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtTableSelect">
+            <summary>
+            下拉框
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtTableSelect.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtTableSelect.options">
+            <summary>
+            选项数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtTableSelect.Option">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtTableSelect.Option.value">
+            <summary>
+            值
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtTableSelect.Option.text">
+            <summary>
+            文本
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtTableSelect.Option.displayNames">
+            <summary>
+            显示组件,多个names用逗号拼接
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtTableTimeSelect">
+            <summary>
+            日期时间选择器
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelBasic.EmtTableTimeSelect.#ctor(System.String)">
+            <summary>
+            时间选择
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.EmtTableTimeSelect.mold">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.EmtTableTimeSelect.Mold">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.PageModels">
+            <summary>
+            多个页面模型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ModelBasic.PageModels.items">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelBasic.JsFileName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ModelBasic.JsFileName.通知消息">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ApproveEventRes">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ApproveEventRes.theme">
+            <summary>
+            主题信息
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ApproveEventRes.handlers">
+            <summary>
+            审批-指定待处理人
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ApproveEventRes.reminder_time">
+            <summary>
+            设置到期提醒时间
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ApproveEventRes.Handler">
+            <summary>
+            审批-指定下步流程的待处理人
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ApproveEventRes.Handler.handlerType">
+            <summary>
+            审批者类型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Models.ApproveEventRes.Handler.handler_ids">
+            <summary>
+            关联id,多个值时用逗号隔开
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ApproveEventRes.HandlerType">
+            <summary>
+            审批者类型
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ApproveEventRes.HandlerType.指定账号">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ApproveEventRes.HandlerType.指定部门">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Models.ApproveEventRes.HandlerType.指定角色">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.Basic.PageFactory">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.Basic.PageFactory.UserBaseList">
+            <summary>
+            账号列表
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.Basic.PageFactory.UserBaseList.GetListFilter(WeiCode.Modular.UserBaseTplPara)">
+            <summary>
+            设置列表筛选表单的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.Basic.PageFactory.UserBaseList.GetButtonGroup(WeiCode.Modular.UserBaseTplPara)">
+            <summary>
+            设置扩展的按钮组
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.Basic.PageFactory.UserBaseList.GetListDisplay(WeiCode.Modular.UserBaseTplPara)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Models.Basic.PageFactory.UserBaseList.GetListData(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            data数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Models.Basic.PageFactory.UserBaseList.ItemDataModel">
+            <summary>
+            数据项模型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.ComponentController">
+            <summary>
+            组件示例
+            </summary>
+            <summary>
+            组件示例
+            </summary>
+            <summary>
+            设置中心
+            </summary>
+            <summary>
+            设置中心
+            </summary>
+            <summary>
+            设置中心
+            </summary>
+            <summary>
+            组件异步请求处理
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ComponentController.ListData(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            列表数据异步请求
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ComponentController.ListDataExport(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            列表数据导出
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ComponentController.Dels(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="table"></param>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ComponentController.List(System.String,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+            <param name="title"></param>
+            <param name="defaultValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ComponentController.ListHtmlData(WeiCode.Models.ModelBasic.PageListHtml.ListData.Req)">
+            <summary>
+            列表数据异步请求
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ComponentController.Post(System.String,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+            <param name="title"></param>
+            <param name="defaultValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ComponentController.IconPicker(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="text"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ComponentController.Input(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+            <param name="title"></param>
+            <param name="defaultValue"></param>
+            <param name="multiLineSplit"></param>
+            <param name="autoComplete"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ComponentController.GetData(WeiCode.Models.ModelBasic.EmtInput.AutoComplete.Req)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ComponentController.AutoComplete(WeiCode.Models.ModelBasic.EmtInput.AutoComplete.Req)">
+            <summary>
+            自动补齐
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ComponentController.ImageSelectUpload">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ComponentController.FileSelectUpload">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ComponentController.CopyText(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="text"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ComponentController.TableEdit">
+            <summary>
+            添加/编辑子表明细
+            </summary>
+            <param name="req">组件固定参数</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.UserTypeList">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.UserTypeList.Get(WeiCode.Modular.Basic.Controllers.UserTypeList.DtoReq)">
+            <summary>
+            获取页面数据模型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.UserTypeList.GetListFilter(WeiCode.Modular.Basic.Controllers.UserTypeList.DtoReq)">
+            <summary>
+            设置列表筛选表单的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.UserTypeList.GetButtonGroup(WeiCode.Modular.Basic.Controllers.UserTypeList.DtoReq)">
+            <summary>
+            设置扩展的按钮组
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.UserTypeList.GetListDisplay(WeiCode.Modular.Basic.Controllers.UserTypeList.DtoReq)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.UserTypeList.DtoReq">
+            <summary>
+            请求参数对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Basic.Controllers.UserTypeList.DtoReq.filterForm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.UserTypeList.DtoReq.FilterForm">
+            <summary>
+            筛选参数（自定义）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Basic.Controllers.UserTypeList.DtoReq.FilterForm.keyword">
+            <summary>
+            关键词
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.UserTypeList.GetListData(WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req)">
+            <summary>
+            data数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.UserTypeList.DtoReqListData">
+            <summary>
+            自定义筛选参数（自定义数据，与属性对应）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Basic.Controllers.UserTypeList.DtoReqListData.keyword">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.UserTypeList.DtoResListData">
+            <summary>
+            返回结果对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Basic.Controllers.UserTypeList.DtoResListData.itemDataModels">
+            <summary>
+            列表数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.UserTypeList.DtoResListData.ItemDataModel">
+            <summary>
+            数据项模型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.UserTypePost">
+            <summary>
+            创建/编辑页面
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.UserTypePost.GetFormDisplay(WeiCode.Models.ModelBasic.PageModel.Post,WeiCode.Modular.Basic.Controllers.UserTypePost.DtoReq)">
+            <summary>
+            配置表单元素控件
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="P:WeiCode.Modular.Basic.Controllers.UserTypePost.DtoReq.formData">
+            <summary>
+            附加额外参数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.InputMobileController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.InputMobileController.GetVCode(System.String)">
+            <summary>
+            获取验证码
+            </summary>
+            <param name="mobile"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.ExcelReadController">
+            <summary>
+            设置中心
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ExcelReadController.ExcelUpload(System.String,System.String)">
+            <summary>
+            上传EXCEL文件
+            </summary>
+            <param name="file_name"></param>
+            <param name="json"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ExcelReadController.ExcelDown(System.String)">
+            <summary>
+            下载Excel“示例文件”
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ExcelReadController.FileDown(System.String)">
+            <summary>
+            下载自定义文件地址的示例文件
+            </summary>
+            <param name="fileName"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.PositionController">
+            <summary>
+            职位
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.PositionController.List(System.Int32)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.PositionController.Add(System.Int32,System.Int32)">
+            <summary>
+            添加子部门
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.PositionController.Add(WeiCode.ModelDbs.ModelDbBasic.sys_position)">
+            <summary>
+            
+            </summary>
+            <param name="sys_position"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.PositionController.Edit(System.Int32)">
+            <summary>
+            编辑职位
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.PositionController.Edit(WeiCode.ModelDbs.ModelDbBasic.sys_position)">
+            <summary>
+            
+            </summary>
+            <param name="sys_position"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.PositionController.Delete(System.Int32)">
+            <summary>
+            删除菜单
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.PositionController.GetRoot(System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="user_type"></param>
+            <param name="parentId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.PositionController.GetChildren(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="parentId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.WorkBenchController">
+            <summary>
+            工作台
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.WorkBenchController.Index">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.WorkBenchController.Config">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.WorkBenchController.UpdateConfig(System.Int32,System.Int32,System.SByte)">
+            <summary>
+            
+            </summary>
+            <param name="item_id"></param>
+            <param name="workbench_id"></param>
+            <param name="status"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.TenantController">
+            <summary>
+            租户中心
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.TenantController.PlanList(System.String,System.Int32,System.String)">
+            <summary>
+            按方案
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.TenantController.PlanListData(System.String,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="code"></param>
+            <param name="user_type_id"></param>
+            <param name="page"></param>
+            <param name="limit"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.TenantController.TenantPlanItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Basic.Controllers.TenantController.TenantPlanItem.tenant_names">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.TenantController.PlanListCreate(System.String,System.Int32)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.TenantController.PlanListCreateAction(System.String,System.Int32,System.String,System.String,System.String,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+            <param name="tenant_type">选择租户的类型</param>
+            <param name="tenant_ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.TenantController.TenantList(System.String,System.Int32,System.String)">
+            <summary>
+            按租户
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.TenantController.TenantListData(System.String,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="code"></param>
+            <param name="user_type_id"></param>
+            <param name="page"></param>
+            <param name="limit"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.TenantController.TenantTenantItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Basic.Controllers.TenantController.TenantTenantItem.tenant_names">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.TenantController.TenantListCreate(System.String,System.Int32)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.TenantController.TenantListCreateAction(System.String,System.Int32,System.String,System.String,System.String,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+            <param name="tenant_type">选择租户的类型</param>
+            <param name="tenant_ids"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.BasicHomeController">
+            <summary>
+            设置中心
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.BasicHomeController.Index(System.String)">
+            <summary>
+            内容短链接系统
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.AuthController">
+            <summary>
+            设置中心
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.AuthController.Register(System.String,System.String)">
+            <summary>
+            注册页面
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.AuthController.RegisterPost(System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            注册提交
+            </summary>
+            <param name="username"></param>
+            <param name="password"></param>
+            <param name="name"></param>
+            <param name="r_password"></param>
+            <param name="mobile"></param>
+            <param name="vcode">验证码</param>
+            <param name="f_user_sn"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.AuthController.Login(System.String,System.String)">
+            <summary>
+            登录
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.AuthController.WxUserInfo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Basic.Controllers.AuthController.WxUserInfo.status">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Basic.Controllers.AuthController.WxUserInfo.client_user_sn">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Basic.Controllers.AuthController.WxUserInfo.open_id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.AuthController.LoginPost(System.String,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="username"></param>
+            <param name="password"></param>
+            <param name="vercode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.AuthController.FastLogin(System.String,System.String)">
+            <summary>
+            快捷登录(微信环境下通过open_id识别)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.AuthController.Err(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.AuthController.AuthorizedLogin(System.String,System.String,System.String,System.String)">
+            <summary>
+            以授权方式登录
+            </summary>        
+            <param name="secret">签名:Md5(user_sn+AuthorizedKey)</param>
+            <param name="user_sn">留空则默认取第一个用户</param>
+            <param name="toUrl">框架页的跳转URL</param>
+            <param name="isDev">是否为开发者环境</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.AuthController.VCode">
+            <summary>
+            图片验证码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.AuthController.PhoneMsg(System.String)">
+            <summary>
+             短信验证码
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.AuthController.WxAuthBack(System.String,System.String)">
+            <summary>
+            微信授权返回
+            </summary>
+            <param name="visitUrl">访问页url</param>
+            <param name="openid"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.AuthLoginController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.AuthLoginController.Exit">
+            <summary>
+            退出登陆
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.UpdateVersionController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.UpdateVersionController.List(System.String,System.String,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="table_name"></param>
+            <param name="filed_name"></param>
+            <param name="data_id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.UpdateVersionController.GetData(System.String,System.String,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.HomeNoticeController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.HomeNoticeController.Default">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.SystemConfigController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.SystemConfigController.Index">
+            <summary>
+            列表视图
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.SystemConfigController.Debug(System.String,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="controlTs"></param>
+            <param name="viewTs"></param>
+            <param name="url"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.SystemConfigController.DebugClear">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.HomeConfigController">
+            <summary>
+            设置中心
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.HomeConfigController.Default(System.String)">
+            <summary>
+            首页
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.HomeConfigController.GetUserInfo(System.String)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.DataDictionaryController">
+            <summary>
+            数据字典
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.DataDictionaryController.List(System.Nullable{System.Int32},System.Int32)">
+            <summary>
+            返回列表页面
+            </summary>
+            <param name="category_id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.DataDictionaryController.GetData(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            获取字典数据
+            </summary>
+            <param name="category_id"></param>
+            <param name="pid"></param>
+            <param name="page"></param>
+            <param name="limit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.DataDictionaryController.Add(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            返回添加字典页面
+            </summary>
+            <param name="id"></param>
+            <param name="pid"></param>
+            <param name="category_id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.DataDictionaryController.Add(WeiCode.ModelDbs.ModelDbBasic.sys_dict)">
+            <summary>
+            添加字典
+            </summary>
+            <param name="sys_Dict"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.DataDictionaryController.Delete(System.Int32)">
+            <summary>
+            删除字典选项
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.DataDictionaryController.ChangeAbled(System.Int32,System.Int32)">
+            <summary>
+            修改选项状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.DataDictionaryController.AddCategory(System.Int32)">
+            <summary>
+            返回添加字典页面
+            </summary>
+            <param name="id">id</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.DataDictionaryController.AddCategory(WeiCode.ModelDbs.ModelDbBasic.sys_dict_category)">
+            <summary>
+            添加字典
+            </summary>
+            <param name="sys_Dict_Category"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.ComponentActionController">
+            <summary>
+            执行自定义回调函数
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ComponentActionController.Post(WeiCode.DataBase.JsonRequestAction)">
+            <summary>
+            通用Post请求
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.HomePageController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.HomePageController.Index">
+            <summary>
+            默认首页跳转规则
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.HomePageController.MIndex(System.String,System.String)">
+            <summary>
+            框架页
+            </summary>
+            <param name="p">pc端</param>
+            <param name="m">移动端</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.HomePageController.UIndex">
+            <summary>
+            客户端：首页
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.HomePageController.Default">
+            <summary>
+            角色工作台
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.HomePageController.ChangeRole(System.Int32)">
+            <summary>
+            切换角色
+            </summary>
+            <param name="manager_role_id">用户角色id</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.HomePageController.MyInfo(System.String)">
+            <summary>
+            个人资料中的修改密码
+            </summary>
+            <param name="back_url">操作成功后页面跳转地址</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.HomePageController.MyInfo(WeiCode.ModelDbs.ModelDbBasic.user_base)">
+            <summary>
+            
+            </summary>
+            <param name="sys_manager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.HomePageController.TIndex(System.Int32)">
+            <summary>
+            Tab页：首页
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.ManagerController">
+            <summary>
+            帐户
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ManagerController.ListT(System.Int32)">
+            <summary>
+            下级用户余额信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ManagerController.List(System.Int32)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ManagerController.GetData(System.Int32,System.String,System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="user_type"></param>
+            <param name="keyword"></param>
+            <param name="page"></param>
+            <param name="limit"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.ManagerController.GetDataItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Basic.Controllers.ManagerController.GetDataItem.role_names">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Basic.Controllers.ManagerController.GetDataItem.user_type_name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Basic.Controllers.ManagerController.GetDataItem.organize_name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Basic.Controllers.ManagerController.GetDataItem.organize_wt_txt">
+            <summary>
+            级别
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Basic.Controllers.ManagerController.GetDataItem.status_name">
+            <summary>
+            账号状态
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ManagerController.Add(System.Int32)">
+            <summary>
+            添加帐户
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ManagerController.Add(WeiCode.ModelDbs.ModelDbBasic.user_base)">
+            <summary>
+            
+            </summary>
+            <param name="sys_manager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ManagerController.Edit(System.Int32)">
+            <summary>
+            编辑帐户
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ManagerController.Edit(WeiCode.ModelDbs.ModelDbBasic.user_base)">
+            <summary>
+            
+            </summary>
+            <param name="sys_manager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ManagerController.Delete(System.Int32)">
+            <summary>
+            删除帐户
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ManagerController.Login(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="user_sn"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ManagerController.RolesList(System.String)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ManagerController.GetRolesData(System.String)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.ManagerController.RolesItemDataModel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Basic.Controllers.ManagerController.RolesItemDataModel.position_name">
+            <summary>
+            职位
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Basic.Controllers.ManagerController.RolesItemDataModel.role_name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ManagerController.RolesAdd(System.String)">
+            <summary>
+            赋予新的角色
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ManagerController.RolesAdd(WeiCode.ModelDbs.ModelDbBasic.user_role,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="user_role"></param>
+            <param name="position_id_select_nodeId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ManagerController.RolesEdit(System.Int32)">
+            <summary>
+            编辑帐户
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ManagerController.RolesEdit(WeiCode.ModelDbs.ModelDbBasic.user_base)">
+            <summary>
+            
+            </summary>
+            <param name="sys_manager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ManagerController.RolesDelete(System.Int32)">
+            <summary>
+            删除角色
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.MenuFuntionController">
+            <summary>
+            菜单功能
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.MenuFuntionController.List(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.MenuFuntionController.GetData(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="menu_id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.MenuFuntionController.Add(System.Int32)">
+            <summary>
+            添加菜单功能
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.MenuFuntionController.Add(WeiCode.ModelDbs.ModelDbBasic.sys_modular_function)">
+            <summary>
+            
+            </summary>
+            <param name="sys_modular_function"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.MenuFuntionController.Edit(System.Int32)">
+            <summary>
+            编辑菜单功能
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.MenuFuntionController.Edit(WeiCode.ModelDbs.ModelDbBasic.sys_modular_function)">
+            <summary>
+            
+            </summary>
+            <param name="sys_modular_function"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.MenuFuntionController.Delete(System.Int32)">
+            <summary>
+            删除菜单功能
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.MenusController">
+            <summary>
+            菜单
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.MenusController.Add(System.Int32)">
+            <summary>
+            添加子菜单
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.MenusController.Edit(System.Int32)">
+            <summary>
+            编辑菜单
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.MenusController.Delete(System.Int32)">
+            <summary>
+            删除菜单
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.MenusController.SwapSort(System.Int32,System.Int32)">
+            <summary>
+            排序
+            </summary>
+            <param name="currentId"></param>
+            <param name="swapId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.ModularController">
+            <summary>
+            模块
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ModularController.List">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ModularController.GetData">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ModularController.Add">
+            <summary>
+            添加模块
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ModularController.Add(WeiCode.ModelDbs.ModelDbBasic.sys_modular)">
+            <summary>
+            
+            </summary>
+            <param name="sys_modular"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ModularController.Edit(System.Int32)">
+            <summary>
+            编辑模块
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ModularController.Edit(WeiCode.ModelDbs.ModelDbBasic.sys_modular)">
+            <summary>
+            
+            </summary>
+            <param name="sys_modular"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.ModularController.Delete(System.Int32)">
+            <summary>
+            删除模块
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.OrganizeController">
+            <summary>
+            组织部门
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.OrganizeController.List(System.Int32)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.OrganizeController.Add(System.Int32,System.Int32)">
+            <summary>
+            添加子部门
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.OrganizeController.Add(WeiCode.ModelDbs.ModelDbBasic.sys_organize)">
+            <summary>
+            
+            </summary>
+            <param name="sys_organize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.OrganizeController.Edit(System.Int32)">
+            <summary>
+            编辑菜单
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.OrganizeController.Edit(WeiCode.ModelDbs.ModelDbBasic.sys_organize)">
+            <summary>
+            
+            </summary>
+            <param name="sys_organize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.OrganizeController.Delete(System.Int32)">
+            <summary>
+            删除菜单
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.OrganizeController.GetRoot(System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="user_type"></param>
+            <param name="parentId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.OrganizeController.GetChildren(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="parentId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.Controllers.RolesController">
+            <summary>
+            角色权限
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.RolesController.List(System.Int32)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.RolesController.GetMenusRoot(System.Nullable{System.Int32},System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="roleId"></param>
+            <param name="user_type"></param>
+            <param name="parentId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.RolesController.GetMenusChild(System.Nullable{System.Int32},System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="roleId"></param>
+            <param name="parentId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.RolesController.GetFunctionRoot(System.Nullable{System.Int32},System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="roleId"></param>
+            <param name="user_type"></param>
+            <param name="parentId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.RolesController.GetFunctionChild(System.Nullable{System.Int32},System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="roleId"></param>
+            <param name="parentId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.RolesController.GetRolesList(System.Int32)">
+            <summary>
+            获取角色列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.RolesController.Post(System.Nullable{System.Int32},System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <param name="user_type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.RolesController.Post(WeiCode.ModelDbs.ModelDbBasic.sys_role)">
+            <summary>
+            
+            </summary>
+            <param name="role"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.RolesController.Delete(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.RolesController.ChangeAuthor(System.String[],System.String)">
+            <summary>
+            
+            </summary>
+            <param name="arrMenuId"></param>
+            <param name="roleId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.Controllers.RolesController.ChangeFunction(System.String[],System.String)">
+            <summary>
+            
+            </summary>
+            <param name="arrMenuId"></param>
+            <param name="roleId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Basic.BasicAreaRegistration">
+            <summary>
+            基础
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Basic.BasicAreaRegistration.AreaName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Basic.BasicAreaRegistration.RegisterArea(System.Web.Mvc.AreaRegistrationContext,MvcContrib.PortableAreas.IApplicationBus)">
+            <summary>
+            
+            </summary>
+            <param name="context"></param>
+            <param name="bus"></param>
+        </member>
+        <member name="T:WeiCode.Modular.ModularBasic">
+            <summary>
+            用户账号
+            </summary>
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.ModularBasic.UserBaseApp">
+            <summary>
+            用户
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.ModularBasic.UserTypeApp">
+            <summary>
+            用户类型
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.ModularBasic.UserTypeApp.GetManagerTab(System.String,WeiCode.Models.ModelBasic.PageList@,System.Int32)">
+            <summary>
+            （管理）列表页面权限 用户类型的Tab（开发者后台进行设置）
+            </summary>
+            <param name="need_names">功能名称，为空则显示所有tab</param>
+            <param name="pageModel"></param>
+            <param name="user_type_id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.ModularBasic.UserTypeApp.GetManagerTab(System.String,WeiCode.Models.ModelBasic.PageModel.Post@,System.Int32)">
+            <summary>
+            （管理）表单页面权限 用户类型的Tab（开发者后台进行设置）
+            </summary>
+            <param name="need_names"></param>
+            <param name="pageModel"></param>
+            <param name="user_type_id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.ModularBasic.UserTypeApp.HaveNeed(System.String,System.Nullable{System.Int32})">
+            <summary>
+            判断指定用户端是否 安装了指定的流程
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.ModularBasic.UserTypeApp.HaveDataView(System.String,System.Int32)">
+            <summary>
+            判断当前用户端是否拥有指定流程的管理权限
+            </summary>
+            <param name="need_names"></param>
+            <param name="user_type_id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBaseTpl">
+            <summary>
+            模型模板基类：用户账号
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBaseTpl.Get(WeiCode.Modular.UserBaseTplPara)">
+            <summary>
+            获取页面数据模型
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBaseTpl.GetListFilter(WeiCode.Modular.UserBaseTplPara)">
+            <summary>
+            
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBaseTpl.GetButtonGroup(WeiCode.Modular.UserBaseTplPara)">
+            <summary>
+            设置扩展的按钮组
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserBaseTpl.GetListDisplay(WeiCode.Modular.UserBaseTplPara)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserBaseTpl.ItemDataModelBase">
+            <summary>
+            列表项基类
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBaseTpl.ItemDataModelBase.role_names">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBaseTpl.ItemDataModelBase.user_type_name">
+            <summary>
+            类型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBaseTpl.ItemDataModelBase.organize_name">
+            <summary>
+            组织部门
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBaseTpl.ItemDataModelBase.organize_wt_txt">
+            <summary>
+            级别
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBaseTpl.ItemDataModelBase.status_name">
+            <summary>
+            账号状态
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.UserBaseTplPara">
+            <summary>
+            管理：用户账号列表模板基类
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBaseTplPara.#ctor(System.Int32)">
+            <summary>
+            管理：用户账号列表模板基类，传入用户类型id
+            </summary>
+            <param name="user_type_id"></param>
+        </member>
+        <member name="P:WeiCode.Modular.UserBaseTplPara.listFilter">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBaseTplPara.buttonGroup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBaseTplPara.listDisplay">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserBaseTplPara.user_type_id">
+            <summary>
+            用户类型id
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.UserBaseTplAction">
+            <summary>
+            异步请求处理类
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserBaseTplAction.UserBaseDel(WeiCode.DataBase.JsonRequestAction)">
+            <summary>
+            链接提交处理的回调函数
+            </summary>
+            <param name="req">回调函数提交统一的封装对象</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserTypeTemplate`1">
+            <summary>
+            模型模板基类：用户类型
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.UserTypeTemplate`1.Get(`0)">
+            <summary>
+            获取页面数据模型
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserTypeTemplate`1.GetListFilter(`0)">
+            <summary>
+            
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserTypeTemplate`1.GetButtonGroup(`0)">
+            <summary>
+            设置扩展的按钮组
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.UserTypeTemplate`1.GetListDisplay(`0)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.UserTypeTemplateReq">
+            <summary>
+            请求参数对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserTypeTemplateReq.listFilter">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserTypeTemplateReq.buttonGroup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserTypeTemplateReq.listDisplay">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserTypeTemplateReq.user_type_id">
+            <summary>
+            当前选中的用户类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.UserTypeTemplateReq.need_names">
+            <summary>
+            限制显示已安装流程的名称,多个用逗号隔开，为空则表示不限制
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.PageFactoryBasic">
+            <summary>
+            附加数据的页面模型基类
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.PageFactoryBasic.AttchDataList">
+            <summary>
+            订单列表
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.PageFactoryBasic.AttchDataList.Get(WeiCode.Modular.PageFactoryBasic.AttchDataList.DtoReq)">
+            <summary>
+            获取页面数据模型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.PageFactoryBasic.AttchDataList.GetListFilter(WeiCode.Modular.PageFactoryBasic.AttchDataList.DtoReq)">
+            <summary>
+            设置列表筛选表单的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.PageFactoryBasic.AttchDataList.GetButtonGroup(WeiCode.Modular.PageFactoryBasic.AttchDataList.DtoReq)">
+            <summary>
+            设置扩展的按钮组
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.PageFactoryBasic.AttchDataList.GetListDisplay(WeiCode.Modular.PageFactoryBasic.AttchDataList.DtoReq)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.PageFactoryBasic.AttchDataList.DtoReq">
+            <summary>
+            请求参数对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.PageFactoryBasic.AttchDataList.DtoReq.filterForm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.PageFactoryBasic.AttchDataList.DtoReq.FilterForm">
+            <summary>
+            筛选参数（自定义）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.PageFactoryBasic.AttchDataList.DtoReq.FilterForm.name">
+            <summary>
+            关键词
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.PageFactoryBasic.AttchDataPost`1">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.PageFactoryBasic.AttchDataPost`1.Get(`0,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="req"></param>
+            <param name="sn">唯一编号</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.PageFactoryBasic.AttchDataPost`1.GetFormDisplay(WeiCode.Models.ModelBasic.PageModel.Post,`0)">
+            <summary>
+            配置表单元素控件
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.PageFactoryBasic.TemplateAttchDataReq">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.PageFactoryBasic.AttchDataDetail">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.PageFactoryBasic.AttchDataAction">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbModularBasic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Modular.Api.AuthorizationApi">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Modular.Api.AuthorizationApi.role_ids">
+            <summary>
+            角色id
+            </summary>
+        </member>
+        <member name="F:Modular.Api.AuthorizationApi.data_view">
+            <summary>
+            数据权限 仅自己=0;所在部门=1;全部=2
+            </summary>
+        </member>
+        <member name="M:Modular.Api.AuthorizationApi.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Modular.Api.AuthorizationApi.MenuAuthorize(System.String)">
+            <summary>
+            根据菜单url判断当前账户有无权限访问
+            </summary>
+            <param name="url"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Modular.Api.AuthorizationApi.GetMenuFunctuin(System.Int32)">
+            <summary>
+            获取菜单中当前账户拥有的菜单功能
+            </summary>
+            <param name="menu_id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Modular.Api.AuthorizationApi.MenuFunctionAuthorize(System.Int32,System.Int32)">
+            <summary>
+            菜单功能权限
+            </summary>
+            <param name="menu_id"></param>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,2302 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WeiCode.Domain.Basic</name>
+    </assembly>
+    <members>
+        <member name="T:WeiCode.Domain.Basic.ModularAuthorize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.Basic.ModularAuthorize.getName">
+            <summary>
+            模块名称
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainBasicStatic">
+            <summary>
+            领域函数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.DomainBasicStatic.DoMySql">
+            <summary>
+            通用数据查询功能
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasicStatic.DoMySql.FindEntity``1(System.String,System.Boolean,System.String,WeiCode.Utility.UtilityStatic.CodeNotes,System.Int32)">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="where"></param>
+            <param name="exist"></param>
+            <param name="errInfo"></param>
+            <param name="codeNotes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasicStatic.DoMySql.FindEntity``1(System.String,System.String,System.Int32)">
+            <summary>
+            获取table表符合条件sql的对象
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="where">查询条件</param>
+            <param name="errInfo">数据不存在时错误提示</param>
+            <param name="tenant_id">tenant_id</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasicStatic.DoMySql.FindEntity``1(System.String,WeiCode.Utility.UtilityStatic.CodeNotes,System.Int32)">
+            <summary>
+            获取table表符合条件sql的对象
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="where">查询条件</param>
+            <param name="codeNotes">代码注释</param>
+            <param name="tenant_id">tenant_id</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasicStatic.DoMySql.FindField``1(System.String,System.String,System.Int32)">
+            <summary>
+            获取table表符合条件字段值，支持多个字段
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="field"></param>
+            <param name="where"></param>
+            <param name="tenant_id"></param>
+            <returns>DataRow</returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasicStatic.DoMySql.FindGroupConcat``1(System.String,System.String,System.Int32)">
+            <summary>
+            GROUP_CONCAT
+            </summary>
+            <typeparam name="K"></typeparam>
+            <param name="field"></param>
+            <param name="where"></param>
+            <param name="tenant_id"></param>
+            <returns>字段值1,字段值2</returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasicStatic.DoMySql.FindKvList``1(System.String,System.String,System.Int32)">
+            <summary>
+            获取Key,Value形式List,fields:如id,name
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasicStatic.DoMySql.FindList``1(System.String,System.Int32)">
+            <summary>
+            获取table表符合条件的list对象(单表，联表查询)
+            当返回类型不为表类型或联表查询时需要单独定义模型
+            </summary>
+            <typeparam name="T">实体对象</typeparam>
+            <param name="where">查询条件</param>
+            <param name="tenant_id">tenant_id</param>
+            <returns>表实体LIST</returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasicStatic.DoMySql.FindList``1(WeiCode.DataBase.DoMySql.Filter,System.Int32)">
+            <summary>
+            获取table表符合条件的list对象(单表，联表查询)
+            当返回类型不为表类型或联表查询时需要单独定义模型
+            </summary>
+            <typeparam name="T">实体对象</typeparam>
+            <param name="filter">条件对象</param>
+            <param name="tenant_id">tenant_id</param>
+            <returns>表实体LIST</returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasicStatic.DoMySql.FindList``1(WeiCode.DataBase.DoMySql.Filter,WeiCode.DataBase.DoMySql.Pager,System.Int32)">
+            <summary>
+            单表查询
+            </summary>
+            <typeparam name="K"></typeparam>
+            <param name="filter">条件对象</param>
+            <param name="pagination">分页对象</param>
+            <param name="tenant_id">tenant_id</param>
+            <returns>表实体list</returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasicStatic.DoMySql.FindList``1(WeiCode.DataBase.DoMySql.Filter,WeiCode.DataBase.DoMySql.Export,System.Int32)">
+            <summary>
+            单表查询
+            </summary>
+            <typeparam name="K"></typeparam>
+            <param name="filter">条件对象</param>
+            <param name="export">导出对象</param>
+            <param name="tenant_id">tenant_id</param>
+            <returns>表实体list</returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasicStatic.DoMySql.FindList``2(System.String,System.Int32)">
+            <summary>
+            单表查询，返回新模型
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="where"></param>
+            <param name="tenant_id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasicStatic.DoMySql.FindList``2(WeiCode.DataBase.DoMySql.Filter,System.Int32)">
+            <summary>
+            单表查询，返回新模型
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="filter">条件对象</param>
+            <param name="tenant_id">tenant_id</param>
+            <returns>表实体list</returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasicStatic.DoMySql.FindList``2(WeiCode.DataBase.DoMySql.Filter,WeiCode.DataBase.DoMySql.Pager,System.Int32)">
+            <summary>
+            单表查询，返回新模型
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="filter">条件对象</param>
+            <param name="pager">分页对象</param>
+            <param name="tenant_id">tenant_id</param>
+            <returns>表实体list</returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasicStatic.DoMySql.FindList``2(WeiCode.DataBase.DoMySql.Filter,WeiCode.DataBase.DoMySql.Export,System.Int32)">
+            <summary>
+            单表查询，返回新模型
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="filter">筛选对象</param>
+            <param name="export">导出对象</param>
+            <param name="tenant_id">tenant_id</param>
+            <returns>表实体list</returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasicStatic.DoMySql.FindList``3(WeiCode.DataBase.DoMySql.Filter,WeiCode.DataBase.DoMySql.Pager,System.Int32)">
+            <summary>
+            单表查询，返回新模型
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="K1"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="filter">筛选对象</param>
+            <param name="pager">导出对象</param>
+            <param name="tenant_id">tenant_id</param>
+            <returns>表实体list</returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasicStatic.DoMySql.FindList``3(WeiCode.DataBase.DoMySql.Filter,WeiCode.DataBase.DoMySql.Export,System.Int32)">
+            <summary>
+            单表查询，返回新模型
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="K1"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="filter">筛选对象</param>
+            <param name="export">导出对象</param>
+            <param name="tenant_id">tenant_id</param>
+            <returns>表实体list</returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasicStatic.DoMySql.FindList``4(WeiCode.DataBase.DoMySql.Filter,WeiCode.DataBase.DoMySql.Pager,System.Int32)">
+            <summary>
+            单表查询，返回新模型
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="K1"></typeparam>
+            <typeparam name="K2"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="filter">筛选对象</param>
+            <param name="pager">导出对象</param>
+            <param name="tenant_id">tenant_id</param>
+            <returns>表实体list</returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasicStatic.DoMySql.FindList``4(WeiCode.DataBase.DoMySql.Filter,WeiCode.DataBase.DoMySql.Export,System.Int32)">
+            <summary>
+            单表查询，返回新模型
+            </summary>
+            <typeparam name="K"></typeparam>
+            <typeparam name="K1"></typeparam>
+            <typeparam name="K2"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="filter">筛选对象</param>
+            <param name="export">导出对象</param>
+            <param name="tenant_id">tenant_id</param>
+            <returns>表实体list</returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasicStatic.DoMySql.WhereWithOrderby``1(System.String,System.Int32)">
+            <summary>
+            处理where条件中有order by的情况
+            </summary>
+            <param name="where"></param>
+            <param name="tenant_id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainBasicStatic.DoMySqlNot">
+            <summary>
+            租户与系统二选一(先查自己租户下的记录，如果没有记录，再查询系统下的记录)
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasicStatic.DoMySqlNot.FindList``1(System.String)">
+            <summary>
+            获取table表符合条件的list对象(单表，联表查询)
+            当返回类型不为表类型或联表查询时需要单独定义模型
+            </summary>
+            <typeparam name="T">实体对象</typeparam>
+            <param name="where">查询条件</param>
+            <returns>表实体LIST</returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainBasic">
+            <summary>
+            领域函数
+            </summary>
+            <summary>
+            领域函数
+            </summary>
+            <summary>
+            领域函数
+            </summary>
+            <summary>
+            领域函数
+            </summary>
+            <summary>
+            领域函数
+            </summary>
+            <summary>
+            领域函数
+            </summary>
+            <summary>
+            领域函数
+            </summary>
+            <summary>
+            领域函数
+            </summary>
+            <summary>
+            领域函数
+            </summary>
+            <summary>
+            领域函数
+            </summary>
+            <summary>
+            领域函数
+            </summary>
+            <summary>
+            领域函数
+            </summary>
+            <summary>
+            领域函数
+            </summary>
+            <summary>
+            领域函数
+            </summary>
+            <summary>
+            领域函数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.DomainBasic.PositionApp">
+            <summary>
+            职位
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.PositionApp.GetTree(System.String,System.Int32)">
+            <summary>
+            获取部门树
+            </summary>
+            <param name="user_type_code">用户类型sys_code</param>
+            <param name="parent_id">父级部门id</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainBasic.RoleMenusApp">
+            <summary>
+            角色菜单
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.RoleMenusApp.GetListFromParentId(System.Int32,WeiCode.Services.UserIdentityBag)">
+            <summary>
+            读取当前用户指定菜单数下的一级菜单数据(根据id)
+            </summary>
+            <param name="parent_id"></param>
+            <param name="userIdentityBag"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.RoleMenusApp.GetListFromParentName(System.String,WeiCode.Services.UserIdentityBag)">
+            <summary>
+            读取当前用户指定菜单数下的一级菜单数据(根据name)
+            </summary>
+            <param name="name"></param>
+            <param name="userIdentityBag"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.RoleMenusApp.CheckHaveUrl(System.String)">
+            <summary>
+            检查是否具有指定菜单的权限
+            </summary>
+            <param name="url"></param>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.RoleMenusApp.IsHaveUrl(System.String)">
+            <summary>
+            判断当前用户 是否具有指定菜单的权限
+            </summary>
+            <param name="url">URL</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.RoleMenusApp.GetMenuUrl(System.String)">
+            <summary>
+            根据菜单名称获取菜单URL，格式：一级菜单.二级工菜单
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainBasic.RoleFunctionApp">
+            <summary>
+            角色功能
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.RoleFunctionApp.CheckRole(System.String)">
+            <summary>
+            校验当前用户 是否具有指定功能的权限
+            </summary>
+            <param name="name"></param>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.RoleFunctionApp.IsHaveName(System.String)">
+            <summary>
+            判断当前用户 是否具有指定功能的权限
+            </summary>
+            <param name="name">权限名称</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainBasic.OrganizeApp">
+            <summary>
+            组织部门
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.OrganizeApp.GetTree(System.String,System.Int32)">
+            <summary>
+            获取部门树
+            </summary>
+            <param name="user_type_code">用户类型sys_code</param>
+            <param name="parent_id">父级部门id</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainBasic.OperAuthApp">
+            <summary>
+            操作人身份权限管理
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.OperAuthApp.Set(WeiCode.Domain.DomainBasic.OperAuthApp.OpType)">
+            <summary>
+            设置当前操作人身份
+            </summary>
+            <param name="opType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.OperAuthApp.Verify(System.String)">
+            <summary>
+            校验当前操作人身份
+            </summary>
+            <param name="user_sn">用户编号</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainBasic.OperAuthApp.OpType">
+            <summary>
+            操作人类型
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.DomainBasic.OperAuthApp.OpType.管理员">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.DomainBasic.OperAuthApp.OpType.上级用户">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.DomainBasic.UserRoleApp">
+            <summary>
+            用户角色
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.UserRoleApp.GetInfoById(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.UserRoleApp.GetDefaultRole(System.String)">
+            <summary>
+            根据用户sn获取用户默认的角色权限
+            </summary>
+            <param name="user_sn"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.UserRoleApp.GetCurrentRole">
+            <summary>
+            获取当前登录用户的角色权限
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainBasic.UserApp">
+            <summary>
+            用户账户
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.UserApp.GetInfoById(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.UserApp.GetInfosByWhere(System.String)">
+            <summary>
+            获取用户列表
+            </summary>
+            <param name="where">筛选条件</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.UserApp.GetInfoByUserSn(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="user_sn"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.UserApp.GetCurrentRole">
+            <summary>
+            获取用户当前角色
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.UserApp.GetIdByUserSn(System.String)">
+            <summary>
+            根据user_sn获得id
+            </summary>
+            <param name="user_sn"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.UserApp.GetUserByUserSn(System.String)">
+            <summary>
+            根据user_sn获得user实体
+            </summary>
+            <param name="user_sn"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.UserApp.Create(WeiCode.ModelDbs.ModelDbBasic.user_base,System.Boolean)">
+            <summary>
+            创建一个账号
+            </summary>
+            <param name="user_Base"></param>
+            <param name="isTran"></param>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.UserApp.Create(System.String,System.String,System.String,System.Int32,System.String,System.String,System.Int32,System.String,System.Int32,System.Boolean)">
+            <summary>
+            创建一个账号
+            </summary>
+            <param name="username"></param>
+            <param name="password"></param>
+            <param name="mobile"></param>
+            <param name="name"></param>
+            <param name="remark"></param>
+            <param name="organize_id"></param>
+            <param name="user_type_id"></param>
+            <param name="user_sn"></param>
+            <param name="tenant_id"></param>
+            <param name="isTran"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.UserApp.GetAuthLoginUrl(System.String,System.String)">
+            <summary>
+            获取授权登录Url
+            </summary>
+            <param name="user_sn">用户sn</param>
+            <param name="toUrl">登录成功后跳转地址</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.UserApp.SetUserInfoByEntity(WeiCode.ModelDbs.ModelDbBasic.user_base)">
+            <summary>
+            修改用户信息
+            </summary>
+            <param name="user_Base"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.UserApp.GetUsersByUserTypeId(System.Int32)">
+            <summary>
+            根据user_type_id获取用户实体集合
+            </summary>
+            <param name="user_type_id">用户类型id</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.UserApp.GetUsersByUserTypeIdForOption(System.Int32)">
+            <summary>
+            根据user_type_id获取用户信息集合（下拉菜单数据源）
+            </summary>
+            <param name="user_type_id">用户类型id</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainBasic.ModularPageApp">
+            <summary>
+            模块功能-页面视图
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.ModularPageApp.GetParaContent(System.String,System.String,System.String)">
+            <summary>
+            获取额外的内容或值
+            </summary>
+            <param name="modular_name">模块名称</param>
+            <param name="name">页面名称</param>
+            <param name="para_key">关键词</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainBasic.ModularFunctionApp">
+            <summary>
+            模块功能-流程参数
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.ModularFunctionApp.GetParaBool(System.String,System.String,System.String)">
+            <summary>
+            判断当前模块是否具备某功能选项
+            </summary>
+            <param name="modular_name">模块名称</param>
+            <param name="name">参数名称</param>
+            <param name="para">允许的参数值</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.ModularFunctionApp.GetParaList(System.String,System.String,System.String)">
+            <summary>
+            多选时，返回list
+            </summary>
+            <param name="modular_name">当前的模块id(我的模块>appId)</param>
+            <param name="name"></param>
+            <param name="para"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.ModularFunctionApp.GetParaContent(System.String,System.String,System.String,System.String)">
+            <summary>
+            获取参数值 额外的内容
+            </summary>
+            <param name="modular_name">模块名称</param>
+            <param name="name">页面名称/功能参数</param>
+            <param name="para_key">参数值</param>
+            <param name="cname">字段别名</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainBasic.HttpHelperApp">
+            <summary>
+            网络请求（失败日志表）
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.HttpHelperApp.HttpPost(System.String,System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            请求失败时记录日志
+            </summary>
+            <param name="url"></param>
+            <param name="postData"></param>
+            <param name="encoding"></param>
+            <param name="cookie"></param>
+            <param name="headers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.HttpHelperApp.HttpPost(System.String,System.String,WeiCode.Utility.UtilityStatic.HttpHelper.HttpPostReq)">
+            <summary>
+            
+            </summary>
+            <param name="url"></param>
+            <param name="postData"></param>
+            <param name="httpPostReq"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainBasic.NoticeApp">
+            <summary>
+            系统消息
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.NoticeApp.Create(System.Int32,System.String,System.String,System.String,System.Int32,System.Boolean)">
+            <summary>
+            创建一个系统消息
+            </summary>
+            <param name="category_id"></param>
+            <param name="user_sn"></param>
+            <param name="content"></param>
+            <param name="title"></param>
+            <param name="tenant_id"></param>
+            <param name="isTran"></param>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.NoticeApp.Create(WeiCode.ModelDbs.ModelDbBasic.sys_notice,System.Boolean)">
+            <summary>
+            创建一个系统消息
+            </summary>
+            <param name="sys_Notice"></param>
+            <param name="isTran"></param>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.NoticeApp.getEntity(System.String)">
+            <summary>
+            查询一个系统消息
+            </summary>
+            <param name="where"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainBasic.UserTypeApp">
+            <summary>
+            用户类型
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.UserTypeApp.GetInfoById(System.Int32)">
+            <summary>
+            根据id获取用户类型
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.UserTypeApp.GetInfo">
+            <summary>
+            获取当前站点所属用户类型(自动识别)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.UserTypeApp.GetInfoByName(System.String)">
+            <summary>
+            根据name获取用户类型
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.UserTypeApp.GetInfoByCode(System.String)">
+            <summary>
+            根据系统码获取用户类型
+            </summary>
+            <param name="sys_code"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.UserTypeApp.GetListByUdsName(System.String)">
+            <summary>
+            根据所属上下游获取用户类型列表
+            </summary>
+            <param name="uds_name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.UserTypeApp.GetDefaultPage">
+            <summary>
+            获取当前用户类型配置的默认首页URL
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainBasic.DataQueryApp">
+            <summary>
+            通用数据查询功能
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.DataQueryApp.GetTree(System.Int32,System.String,System.String[],System.String,System.String)">
+            <summary>
+            获取树形结构数据
+            </summary>
+            <param name="parentId">根节点id</param>
+            <param name="tableName">数据库表名</param>
+            <param name="fields">默认值：{ "id", "name", "parent_id", "memo" }</param>
+            <param name="filterSql">过滤Sql</param>
+            <param name="title">根节点名称</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.DataQueryApp.findAllChildsByParentId``1(System.Int32,System.Boolean,System.String)">
+            <summary>
+            根据根节点id获取子集数据List
+            </summary>
+            <param name="parentId"></param>
+            <param name="isHavRoot">是否包含当前根节点数据</param>
+            <param name="filterSql"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.DataQueryApp.findAllChildsById``1(System.Collections.Generic.List{``0},System.Int32,System.String)">
+            <summary>
+            根据根节点id获取子集数据List
+            </summary>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainBasic.DictionaryApp">
+            <summary>
+            字典操作类
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.DictionaryApp.GetTreeData(System.Int32,System.String,System.String[])">
+            <summary>
+            遍历子对象数据，返回树型结构Json
+            </summary>
+            <param name="parentId">根节点id</param>
+            <param name="tableName"></param>
+            <param name="fields">默认值：new string[] { "id", "name", "parent_id", "memo" }</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.DictionaryApp.GetListForOption(System.Enum)">
+            <summary>
+            选项格式Dictionary(string, string)
+            </summary>
+            <param name="category_name">字典类别名称</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.DictionaryApp.GetKeyFromValue(System.String,System.String)">
+            <summary>
+            通过字典值获得字典名称
+            </summary>
+            <param name="category_name">字典类别名称</param>
+            <param name="value">字典值</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.DictionaryApp.GetValueFromKey(System.String,System.String)">
+            <summary>
+            通过字典名称获得字典值
+            </summary>
+            <param name="category_name">字典类别名称</param>
+            <param name="name">字典值</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainBasic.TenantApp">
+            <summary>
+            租户
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.TenantApp.GetInfo">
+            <summary>
+            获取当前站点所属租户信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.TenantApp.GetInfoByDomain">
+            <summary>
+            根据域名获取所属租户信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.TenantApp.GetInfoByTenantSn(System.String)">
+            <summary>
+            根据TenantSn获取所属租户信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.TenantApp.GetInfoByAuto">
+            <summary>
+            自动识别当前所属租户信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.TenantApp.GetConfigRelationIdByPlanCode(System.String)">
+            <summary>
+            根据租户id获取关联的配置id（plan_id或tenant_id）
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.TenantApp.GetUdsNameByAuto">
+            <summary>
+            自动识别当前上下游
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainBasic.TenantDomainApp">
+            <summary>
+            域名
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.TenantDomainApp.GetInfo">
+            <summary>
+            获取当前站点所属租户域名实体
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.TenantDomainApp.GetDomainsByUserTypeId(System.Int32)">
+            <summary>
+            根据用户类型id获取当前域名所属租户下其所有域名
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.TenantDomainApp.GetInfoByTenantId(System.Nullable{System.Int32},System.String)">
+            <summary>
+            根据Tenantid租户域名实体
+            </summary>
+            <param name="tenant_id"></param>
+            <param name="sys_code">用户端别名</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainBasic.TenantDomainApp.GetInfoByTenantSn(System.String,System.String)">
+            <summary>
+            根据TenantSn租户域名实体
+            </summary>
+            <param name="tenant_sn"></param>
+            <param name="sys_code">用户端别名</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.ModelDoBasic1">
+            <summary>
+            基础Model
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.ModelDoBasic1.Item">
+            <summary> 
+            节点的实体类，记录了数据库中的3个字段 为的是方便操作
+             </summary>
+        </member>
+        <member name="F:WeiCode.Domain.ModelDoBasic1.Item.id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.ModelDoBasic1.Item.title">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.ModelDoBasic1.Item.parentId">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.ModelDoBasic1.Item.contentText">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.ModelDoBasic1.JieDian">
+            <summary>
+            节点类，基础类
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.ModelDoBasic1.JieDian.children">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.ModelDoBasic1.Cliet">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.ModelDoBasic1.Cliet.GetTheItems(System.Int32,System.String,System.String[],System.String)">
+            <summary>
+            根据parentBh获取相应的子目录集合
+            </summary>
+            <param name="parentId">父级id</param>
+            <param name="tableName">表名</param>
+            <param name="fields">字段名</param>
+            <param name="filterSql">过滤Sql</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.ModelDoBasic1.Cliet.creatTheTree(System.Int32,WeiCode.Domain.ModelDoBasic1.JieDian,System.String,System.String[],System.String)">
+            <summary>
+            生成树的方法
+            </summary>
+            <param name="parentId"></param>
+            <param name="tableName"></param>
+            <param name="fields">默认值：{ "id", "name", "parent_id" }</param>
+            <param name="filterSql"></param>
+        </member>
+        <member name="T:WeiCode.Domain.DataBase.ServiceModelBase">
+            <summary>
+            框架服务用的Model基类
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.DataBase.ServiceModelBase.Req">
+            <summary>
+            输入对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.DataBase.ServiceModelBase.Req.push_unique_sn">
+            <summary>
+            作为推送消息的唯一编号(每次请求重新生成)
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.DataBase.ServiceModelBase.Req.SQLStringList">
+            <summary>
+            SQL事务语句
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.DataBase.ServiceModelBase.Res">
+            <summary>
+            输出对象
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.DataBase.ServiceModelBase.Log">
+            <summary>
+            日志对象
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.DataBase.ServiceTran">
+            <summary>
+            服务事务
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DataBase.ServiceTran.Add(WeiCode.Domain.DataBase.ServiceModelBase.Req)">
+            <summary>
+            
+            </summary>
+            <param name="req"></param>
+        </member>
+        <member name="M:WeiCode.Domain.DataBase.ServiceTran.Execute">
+            <summary>
+            服务事务执行
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.SystemBizLogApp">
+            <summary>
+            业务日志处理
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.SystemBizLogApp.Insert(System.Collections.Generic.List{System.String},WeiCode.ModelDbs.ModelDbBasic.sys_biz_log)">
+            <summary>
+            写入一条日志
+            </summary>
+            <param name="lSql"></param>
+            <param name="systemBizLog"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_event_fact">
+            <summary>
+            事件-发生的事实
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_event_fact.event_name">
+            <summary>
+            事件名
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_event_fact.para">
+            <summary>
+            参数信息
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_event_fact.push_status">
+            <summary>
+            推送状态 0=待处理 1=已处理
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_event_fact.push_time">
+            <summary>
+            推送时间
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_event_push">
+            <summary>
+            事件-推送记录
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_event_push.push_sn">
+            <summary>
+            推送唯一编号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_event_push.fact_id">
+            <summary>
+            事件事实id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_event_push.event_name">
+            <summary>
+            事件名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_event_push.url">
+            <summary>
+            事件订阅url id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_event_push.push_time">
+            <summary>
+            推送时间
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_event_push.push_times">
+            <summary>
+            累计推送次数
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_event_url">
+            <summary>
+            事件-订阅的URL
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_event_url.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_event_url.event_name">
+            <summary>
+            事件名
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_event_url.modular_name">
+            <summary>
+            模块名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_event_url.t_modular_name">
+            <summary>
+            订阅方的模块名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_event_url.need_id">
+            <summary>
+            按需功能id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_event_url.url">
+            <summary>
+            订阅URL
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_event_url.memo">
+            <summary>
+            备注信息
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_event_url.status">
+            <summary>
+            状态#enum:正常=0;停用=1
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_biz_log">
+            <summary>
+            实体-系统业务日志 
+            </summary>	
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_biz_log.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_biz_log.log_type">
+            <summary>
+            日志类型#enum:用户模块=1;商品模块=2;订单模块=3;财务模块=4
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_biz_log.modular_function">
+            <summary>
+            模块功能名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_biz_log.relation_sn">
+            <summary>
+            关联编号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_biz_log.client_ip">
+            <summary>
+            客户端ip
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_biz_log.user_type_id">
+            <summary>
+            用户类型
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_biz_log.user_sn">
+            <summary>
+            用户编号，由客户端定义的每个用户的唯一编号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_biz_log.memo">
+            <summary>
+            备注信息
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_biz_log.info">
+            <summary>
+            操作日志信息
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_biz_log.LogBase">
+            <summary>
+            Log基类
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_biz_log.LogBase.info">
+            <summary>
+            操作日志信息
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_biz_log.LogBase.memo">
+            <summary>
+            备注信息
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_modular">
+            <summary>
+            管理-模块
+            </summary>	
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular.name">
+            <summary>
+            模块名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular.tb_prefix">
+            <summary>
+            表前缀
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_modular_function">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_function.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_function.user_type_id">
+            <summary>
+            用户端类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_function.modular_name">
+            <summary>
+            模块名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_function.parent_id">
+            <summary>
+            父级功能id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_function.name">
+            <summary>
+            功能名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_function.icon">
+            <summary>
+            菜单图标
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_function.url">
+            <summary>
+            菜单链接
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_function.introduce">
+            <summary>
+            功能介绍 
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_function.sort">
+            <summary>
+            排序号
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_modular_functionconfig">
+            <summary>
+            模块-配置值-功能映射
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_functionconfig.modular_name">
+            <summary>
+            模块名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_functionconfig.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_functionconfig.user_type_id">
+            <summary>
+            用户类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_functionconfig.f_type">
+            <summary>
+            功能类型#enum:按需功能=1;功能配置=2
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_functionconfig.name">
+            <summary>
+            按需功能或功能名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_functionconfig.para_val">
+            <summary>
+            禁用的功能明细或配置值（用逗号隔开） 
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_modular_pageconfig">
+            <summary>
+            模块-视图页面-配置值
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_pageconfig.modular_name">
+            <summary>
+            模块名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_pageconfig.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_pageconfig.user_type_id">
+            <summary>
+            用户类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_pageconfig.name">
+            <summary>
+            页面名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_pageconfig.para_key">
+            <summary>
+            参数关键词 
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_pageconfig.para_val">
+            <summary>
+            配置值 
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_modular_needconfig">
+            <summary>
+            模块-配置值-按需引用
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_needconfig.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_needconfig.modular_name">
+            <summary>
+            模块名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_needconfig.need_name">
+            <summary>
+            功能名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_needconfig.user_type_id">
+            <summary>
+            用户类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_needconfig.m_user_type_ids">
+            <summary>
+            管理端的user_type_id，多个用逗号隔开
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_modular_menu">
+            <summary>
+            实体-菜单基础数据
+            </summary>	
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_menu.modular_id">
+            <summary>
+            模块id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_menu.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_menu.user_type_id">
+            <summary>
+            用户端类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_menu.parent_id">
+            <summary>
+            父级id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_menu.name">
+            <summary>
+            菜单名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_menu.introduce">
+            <summary>
+            简要介绍
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_menu.icon">
+            <summary>
+            菜单图标
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_menu.url">
+            <summary>
+            菜单链接
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_menu.is_open">
+            <summary>
+            展开状态#关闭=0;展开=1
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_modular_menu.sort">
+            <summary>
+            排序号
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_organize">
+            <summary>
+            管理-组织结构
+            </summary>	
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_organize.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_organize.user_type_id">
+            <summary>
+            用户类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_organize.parent_id">
+            <summary>
+            上级部门id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_organize.name">
+            <summary>
+            部门名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_organize.sort">
+            <summary>
+            排序号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_organize.is_default">
+            <summary>
+            是否默认
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_position">
+            <summary>
+            管理-职位
+            </summary>	
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_position.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_position.user_type_id">
+            <summary>
+            用户类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_position.parent_id">
+            <summary>
+            上级部门id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_position.name">
+            <summary>
+            部门名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_position.sort">
+            <summary>
+            排序号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_position.is_default">
+            <summary>
+            是否默认
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_role">
+            <summary>
+            实体-角色 
+            </summary>	
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_role.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_role.user_type_id">
+            <summary>
+            用户端类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_role.workbench_id">
+            <summary>
+            工作台id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_role.name">
+            <summary>
+            角色名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_role.memo">
+            <summary>
+            备注信息
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_role.data_view">
+            <summary>
+            数据查看#enum:仅自己=0;所在部门=1;全部=2
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_role.is_default">
+            <summary>
+            是否默认
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_role__menu">
+            <summary>
+            管理-角色菜单关联 
+            </summary>	
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_role__menu.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_role__menu.role_id">
+            <summary>
+            角色id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_role__menu.menu_id">
+            <summary>
+            菜单id
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_role__function">
+            <summary>
+            系统-角色功能关联 
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_role__function.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_role__function.role_id">
+            <summary>
+            角色id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_role__function.function_id">
+            <summary>
+            菜单id
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_role__extra">
+            <summary>
+            系统-权限-例外
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_role__extra.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_role__extra.user_type_id">
+            <summary>
+            角色id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_role__extra.b_type">
+            <summary>
+            菜单id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_role__extra.c_type">
+            <summary>
+            菜单id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_role__extra.data_id">
+            <summary>
+            菜单或功能idx
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.user_role">
+            <summary>
+            实体-成员账号-角色明细
+            
+            </summary>	
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_role.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_role.user_sn">
+            <summary>
+            用户user_sn
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_role.position_id">
+            <summary>
+            职位id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_role.role_id">
+            <summary>
+            角色id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_role.remark">
+            <summary>
+            备注说明
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_role.is_default">
+            <summary>
+            是否设为默认角色#否=0;是=1
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_tenant">
+            <summary>
+            实体-租户
+            </summary>	
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_tenant.tenant_sn">
+            <summary>
+            租户sn
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_tenant.uds_name">
+            <summary>
+            所属上下游
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_tenant.name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_tenant.beian_no">
+            <summary>
+            网站备案号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_tenant.memo">
+            <summary>
+            备注信息
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_tenant.expire_time">
+            <summary>
+            到期时间
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_tenant_plan">
+            <summary>
+            实体-租户-方案
+            </summary>	
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_tenant_plan.code">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_tenant_plan.user_type_id">
+            <summary>
+            用户类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_tenant_plan.c_type">
+            <summary>
+            所属配置类型 1=所属方案分组id 2=所属租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_tenant_plan.tenant_ids">
+            <summary>
+            涉及租户ids，0表示应用于所有租户
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_tenant_plan.name">
+            <summary>
+            方案名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_tenant_plan.memo">
+            <summary>
+            备注信息
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_tenant_plan.level">
+            <summary>
+            优先级，越大越优先
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_tenant_plan.start_time">
+            <summary>
+            生效开始时间
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_tenant_plan.end_time">
+            <summary>
+            生效结束时间
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_tenant_domain">
+            <summary>
+            实体-租户域名
+            </summary>	
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_tenant_domain.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_tenant_domain.user_type_id">
+            <summary>
+            用户类型id
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:WeiCode.ModelDbs.ModelDbBasic.sys_tenant_domain.host_domain" -->
+        <!-- Badly formed XML comment ignored for member "P:WeiCode.ModelDbs.ModelDbBasic.sys_tenant_domain.page_title" -->
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_tenant_domain.beian_no">
+            <summary>
+            网站备案号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_tenant_domain.support_weixinsiteid">
+            <summary>
+            微信支撑平台id
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_dict_category">
+            <summary>
+            实体-字典类别
+            </summary>	
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_dict_category.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_dict_category.parent_id">
+            <summary>
+            父级id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_dict_category.name">
+            <summary>
+            字典类别名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_dict_category.description">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_dict_category.icon">
+            <summary>
+            图标
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_dict">
+            <summary>
+            实体-数据字典
+            </summary>	
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_dict.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_dict.category_id">
+            <summary>
+            字典类别
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_dict.pid">
+            <summary>
+            父级id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_dict.d_key">
+            <summary>
+            字典key
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_dict.d_value">
+            <summary>
+            字典value
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_dict.description">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_dict.is_default">
+            <summary>
+            是否默认
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_dict.sort">
+            <summary>
+            排序号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_dict.is_abled">
+            <summary>
+            是否可用 0=可用；1=禁用
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_update_version">
+            <summary>
+            数据修改版本
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_update_version.table_name">
+            <summary>
+            数据表名
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_update_version.filed_name">
+            <summary>
+            数据字段名
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_update_version.data_id">
+            <summary>
+            数据记录id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_update_version.data_value">
+            <summary>
+            数据值
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_update_version.user_id">
+            <summary>
+            操作用户id
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_short_url">
+            <summary>
+            短网址
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_short_url.code">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_short_url.full_url">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_temp">
+            <summary>
+            组件模板
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_temp.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_temp.name">
+            <summary>
+            模板名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_temp.content">
+            <summary>
+            模板内容
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_temp.sort">
+            <summary>
+            排序号
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_enum">
+            <summary>
+            枚举
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_enum.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_enum.enum_sn">
+            <summary>
+            枚举sn
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_enum.name">
+            <summary>
+            枚举名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_enum.cname">
+            <summary>
+            枚举英文
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_enum.sort">
+            <summary>
+            排序号
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_enum_item">
+            <summary>
+            枚举项
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_enum_item.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_enum_item.enum_sn">
+            <summary>
+            枚举sn
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_enum_item.e_text">
+            <summary>
+            枚举文本
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_enum_item.e_value">
+            <summary>
+            枚举值
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_enum_item.sort">
+            <summary>
+            排序号
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.user_type">
+            <summary>
+            用户类型
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_type.uds_name">
+            <summary>
+            所属上下游
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_type.name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_type.sys_code">
+            <summary>
+            系统码
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_type.introduce">
+            <summary>
+            简要介绍
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_type.home_page">
+            <summary>
+            游客主页
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_type.user_page">
+            <summary>
+            用户主页
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_type.m_home_page">
+            <summary>
+            游客主页(移动端)
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_type.m_user_page">
+            <summary>
+            用户主页(移动端)
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_type.sort">
+            <summary>
+            排序号
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.user_base">
+            <summary>
+            用户表
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.user_sn">
+            <summary>
+            用户编号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.username">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.mobile">
+            <summary>
+            手机号码
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.password">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.secret_key">
+            <summary>
+            密钥
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.name">
+            <summary>
+            用户名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.user_type_id">
+            <summary>
+            账户类型:买家=1;分销商=2;供应商=3;代理商=4;店铺=5
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.organize_id">
+            <summary>
+            组织id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.organize_wt">
+            <summary>
+            组织权重#enum:员工=1;主管=2
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.grade_id">
+            <summary>
+            等级id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.remark">
+            <summary>
+            备注信息
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.receipt_truename">
+            <summary>
+            收款人姓名
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.receipt_account">
+            <summary>
+            收款人账号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.integral_balance">
+            <summary>
+            积分账户余额
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.integral_total">
+            <summary>
+            累积积分
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.cash_balance">
+            <summary>
+            现金账户余额
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.trade_balance">
+            <summary>
+            交易账户余额
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.attach1">
+            <summary>
+            附加字段1
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.attach2">
+            <summary>
+            附加字段2
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.login_err_times">
+            <summary>
+            连续登录失败次数
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.last_login_time">
+            <summary>
+            最后登录时间
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.last_login_ip">
+            <summary>
+            最后登录ip
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user_base.status">
+            <summary>
+            状态#正常=0;禁用=1;逻辑删除=9
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_workbench">
+            <summary>
+            实体-工作台 
+            </summary>	
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_workbench.user_type_id">
+            <summary>
+            用户端类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_workbench.name">
+            <summary>
+            角色名称
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_workbench_item">
+            <summary>
+            工作台的组件
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_workbench_item.workbench_id">
+            <summary>
+            用户端类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_workbench_item.url">
+            <summary>
+            url
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_workbench_item.info">
+            <summary>
+            说明
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_workbench_item.width">
+            <summary>
+            组件宽度
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_workbench_item.height">
+            <summary>
+            组件高度
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_workbench_item.is_show">
+            <summary>
+            默认是否显示
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.user__workbench">
+            <summary>
+            用户的工作台设置
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user__workbench.user_sn">
+            <summary>
+            user_sn
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user__workbench.workbench_id">
+            <summary>
+            用户端类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user__workbench.item_id">
+            <summary>
+            组件id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user__workbench.status">
+            <summary>
+            状态0=停用，1=启用
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.user__workbench.sort">
+            <summary>
+            排序
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_notice">
+            <summary>
+            系统消息
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_notice.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_notice.category_id">
+            <summary>
+            通知类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_notice.user_sn">
+            <summary>
+            user_sn
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_notice.content">
+            <summary>
+            消息内容
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_notice.title">
+            <summary>
+            消息标题
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_notice.is_read">
+            <summary>
+            是否已读#enum:未读=0;已读=1
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_notice.send_code">
+            <summary>
+            发送标记码
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbBasic.sys_notice_category">
+            <summary>
+            用户的工作台设置
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_notice_category.name">
+            <summary>
+            user_sn
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_notice_category.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_notice_category.s_type">
+            <summary>
+            消息类型#enum:系统=0;用户=1
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_notice_category.sys_code">
+            <summary>
+            类型别名
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbBasic.sys_notice_category.user_type_id">
+            <summary>
+            用户端类型id
+            </summary>
+        </member>
+        <member name="T:WeiCode.Services.UserIdentityBag">
+            <summary>
+            用户身份状态包
+            </summary>
+        </member>
+        <member name="M:WeiCode.Services.UserIdentityBag.#ctor(System.String,System.Boolean)">
+            <summary>
+            身份别名
+            </summary>
+            <param name="cname"></param>
+            <param name="isLogin"></param>
+        </member>
+        <member name="P:WeiCode.Services.UserIdentityBag.id">
+            <summary>
+            身份id（必须）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Services.UserIdentityBag.user_sn">
+            <summary>
+            用户唯一编号（必须）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Services.UserIdentityBag.username">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:WeiCode.Services.UserIdentityBag.name">
+            <summary>
+            昵称
+            </summary>
+        </member>
+        <member name="P:WeiCode.Services.UserIdentityBag.cur_organize_id">
+            <summary>
+            当前身份所属组织部门id
+            </summary>
+        </member>
+        <member name="P:WeiCode.Services.UserIdentityBag.cur_role_id">
+            <summary>
+            当前身份所属角色id
+            </summary>
+        </member>
+        <member name="P:WeiCode.Services.UserIdentityBag.cur_position_id">
+            <summary>
+            当前身份所属职位id
+            </summary>
+        </member>
+        <member name="P:WeiCode.Services.UserIdentityBag.from">
+            <summary>
+            身份来源
+            </summary>
+        </member>
+        <member name="P:WeiCode.Services.UserIdentityBag.data">
+            <summary>
+            额外的信息
+            </summary>
+        </member>
+        <member name="P:WeiCode.Services.UserIdentityBag.expire">
+            <summary>
+            过期时间(默认7天)
+            </summary>
+        </member>
+        <member name="P:WeiCode.Services.UserIdentityBag.cname">
+            <summary>
+            身份别名
+            </summary>
+        </member>
+        <member name="M:WeiCode.Services.UserIdentityBag.Get(System.Boolean)">
+            <summary>
+            获取身份信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Services.UserIdentityBag.Set(System.String,System.Boolean)">
+            <summary>
+            创建身份信息
+            </summary>
+            <param name="domain">设置域</param>
+            <param name="isCanSameTime">是否允许多设备同时登录</param>
+        </member>
+        <member name="M:WeiCode.Services.UserIdentityBag.IsLogin">
+            <summary>
+            是否已经登录
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Services.UserIdentityBag.Empty">
+            <summary>
+            清除身份cookie
+            </summary>
+        </member>
+        <member name="T:WeiCode.Services.UserAuthorizeBag">
+            <summary>
+            用户权限包
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,80 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <link href="/Assets/layui/css/layui.css" rel="stylesheet" />
+    <link href="/Assets/css/animate.min.css" rel="stylesheet" />
+    <style>
+        .z-body {
+            margin: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="z-body animated fadeIn">
+        <form class="layui-form layui-form-pane">
+            <input type="hidden" name="id" value="@ViewBag.role.id" />
+            <div class="layui-form-item">
+                <label for="name" class="layui-form-label">
+                    角色名称
+                </label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" value="@ViewBag.role.name" lay-verify="required" lay-vertype="tips" autocomplete="off" placeholder="请输入角色名称" class="layui-input" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="memo" class="layui-form-label">
+                    备注信息
+                </label>
+                <div class="layui-input-block">
+                    <input type="text" name="memo" value="@ViewBag.role.memo" lay-verify="required" lay-vertype="tips" autocomplete="off" placeholder="请输入备注信息" class="layui-input" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="data_view" class="layui-form-label">
+                    数据查看
+                </label>
+                <div class="layui-input-block">
+                    <input type="radio" name="data_view" value="0" title="仅自己" checked>
+                    <input type="radio" name="data_view" value="1" title="所在部门">
+                    <input type="radio" name="data_view" value="2" title="全部">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" style="margin-left:0;text-align:center;">
+                    <button class="layui-btn layui-btn-blue" lay-submit="" lay-filter="add">增加</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="/Assets/js/jquery.js"></script>
+    <script src="/Assets/layui/layui.js"></script>
+    <script src="/Assets/js/common.js"></script>
+    <script>
+        layui.config({
+            base: '/Assets/layui/extend/'
+        }).use('form', function () {
+            $ = layui.jquery;
+            var form = layui.form;
+
+            // 监听提交
+            form.on('submit(add)', function (form) {
+                $.post('/Config/Roles/Post', form.field, function (result) {
+                    layerMsg_P(result.msg, result.code);
+                }, 'json');
+                return false;
+            });
+
+            if ("@ViewBag.role.data_view" != "") {
+                $("input[type=radio][value=@ViewBag.role.data_view]").next().trigger('click');
+            }
+        });
+    </script>
+</body>
+</html>

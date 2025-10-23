@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WeiCode.Modular.Crm</name>
+    </assembly>
+    <members>
+        <member name="T:WeiCode.Models.ModelCrm">
+            <summary>
+            项目基础控件级模型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelCrm.EmtUserTest">
+            <summary>
+            文本域
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelCrm.EmtUserTest.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.ModularCrm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.ModularCrm.InfoApp">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.CrmBaseTemplate`1">
+            <summary>
+            视图模板基类：客户档案
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.CrmBaseTemplate`1.Get(`0)">
+            <summary>
+            获取页面数据模型
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.CrmBaseTemplate`1.GetDefault(`0)">
+            <summary>
+            
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.CrmBaseTemplate`1.GetListFilter(`0)">
+            <summary>
+            
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.CrmBaseTemplate`1.GetButtonGroup(`0)">
+            <summary>
+            设置扩展的按钮组
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.CrmBaseTemplate`1.GetListDisplay(`0)">
+            <summary>
+            设置列表显示的元素
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.CrmBaseTemplateReq">
+            <summary>
+            请求参数对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.CrmBaseTemplateReq.listFilter">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.CrmBaseTemplateReq.buttonGroup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.CrmBaseTemplateReq.listDisplay">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.CrmBaseTemplateReq.crm_type_name">
+            <summary>
+            类型名称
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.CrmBaseTemplateHelp">
+            <summary>
+            模板辅助类
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.CrmBaseTemplateHelp.getList``2(System.String,WeiCode.Models.ModelBasic.CtlListDisplay.ListData.Req,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="where">自定义查询条件</param>
+            <param name="reqJson"></param>
+            <param name="fields">自定义查询字段</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.Crm.CrmcAreaRegistration">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.Crm.CrmcAreaRegistration.AreaName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.Crm.CrmcAreaRegistration.RegisterArea(System.Web.Mvc.AreaRegistrationContext,MvcContrib.PortableAreas.IApplicationBus)">
+            <summary>
+            
+            </summary>
+            <param name="context"></param>
+            <param name="bus"></param>
+        </member>
+        <member name="T:WeiCode.Modular.Crm.Controllers.TestController">
+            <summary>
+            功能名称
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:WeiCode.Modular.Crm.Controllers.TestController.GetHtml(System.String)" -->
+        <member name="T:WeiCode.ModelDbs.ModelDbModularCrm">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,181 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@model Services.Project.PageFactory.TableVO
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+
+    keyword-span{
+        color:red;
+    }
+</style>
+<!-- 以下书写自己的页面内容代码 -->
+<form class="layui-form" action="/jixiao/jiezou/QNSIndex">
+    <div class="layui-row" style="display:flex;justify-content:center;">
+        <div class="layui-input-inline" style="width:300px;">
+            @ViewModelBag.Load(Html, new ModelBasic.EmtInput("keyword")
+            {
+                title = "搜索",
+                placeholder = "搜索",
+                defaultValue=ViewBag.keyword
+            })
+        </div>
+        <button type="submit" class="layui-btn layui-btn-normal">搜索</button>
+    </div>
+    <div class="layui-row">
+        
+        <div class="layui-col-md12" style="display:flex;justify-content:center;">
+            <table class="layui-table" style="text-align:center;max-width:95%;width:95%" id="table2" name="table2">
+                <colgroup>
+                    <col width="100">
+                    <col width="200">
+                    <col width="400">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th colspan="3" style="text-align: center; background-color: #FFF3CA; font-size: 18px; font-weight: 700 ">运营团队节奏梳理</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ for (int step = 1; step <= 6; step++)
+                        {
+                            <tr>
+                                <th style="background-color:#FFF2CC">阶段</th>
+                                <th style="background-color:#FFF2CC">遇到问题</th>
+                                <th style="background-color:#FFF2CC">解决方案</th>
+                            </tr>
+                            List<ServiceFactory.JiezouService.JiezouQNS> l_qns = new ServiceFactory.JiezouService().GetQNS(step,ViewBag.keyword);
+                            foreach (ServiceFactory.JiezouService.JiezouQNS item in l_qns)
+                            {
+                                <tr>
+                                    @{
+                                        if (item.StepRowspan)
+                                        {
+                                            <td rowspan="@GetLines(step)">@GetStep(step)</td>
+                                        }
+                                        if (item.QuestionRowspan)
+                                        {
+                                            <td style="text-align:left;white-space:normal;overflow-wrap:break-word;" rowspan="@GetSolutionsNum(item.qns_sn)">@(Html.Raw(ViewBag.keyword == "" ? item.Question : item.Question.Replace(ViewBag.keyword, $@"<span style=""color:red;"">{ViewBag.keyword}</span>")))</td>
+                                        }
+                                    }
+                                    
+                                    <td style="text-align: left; white-space: normal; overflow-wrap: break-word; ">@(Html.Raw(ViewBag.keyword == "" ? item.Solution : item.Solution.Replace(ViewBag.keyword, $@"<span style=""color:red;"">{ViewBag.keyword}</span>")))</td>
+                                </tr>
+                            }
+                            if (l_qns.Count == 0)
+                            {
+                                <tr>
+                                    <td>@GetStep(step)</td>
+                                    <td style="text-align: left; white-space: normal; overflow-wrap: break-word; ">暂无数据</td>
+                                    <td style="text-align: left; white-space: normal; overflow-wrap: break-word; ">暂无数据</td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</form>
+
+
+<script>
+
+    layui.use(function () {
+        var form = layui.form;
+        var layer = layui.layer;
+    });
+
+</script>
+
+@functions{
+    public int GetLines(int step)
+    {
+        int num = 0;
+        var Question = DoMySql.FindList<ModelDb.qns_questions>($" tenant_id='{new DomainBasic.TenantApp().GetInfo().id}' and step='{step}'");
+        foreach (var item in Question)
+        {
+            string keyword = ViewBag.keyword;
+            var Solution = DoMySql.FindList<ModelDb.qns_solutions>($"qns_sn='{item.qns_sn}'");
+            if (!keyword.IsNullOrEmpty() && Solution.FindAll(x => x.solution.Contains(keyword)).Count == 0 && !item.question.Contains(keyword))
+            {
+                continue;
+            }
+
+            num += Solution.Count;
+            if (Solution.Count == 0)
+            {
+                num++;
+            }
+        }
+        return num;
+    }
+
+
+    public int GetSolutionsNum(string qns_sn)
+    {
+        int num = DoMySql.FindList<ModelDb.qns_solutions>($"qns_sn='{qns_sn}'").Count;
+        return num == 0 ? 1 : num;
+    }
+
+    public string GetStep(int step)
+    {
+        string Step = "";
+        switch (step)
+        {
+            case 1:
+                Step = "0.5阶段";
+                break;
+            case 2:
+                Step = "1.0阶段";
+                break;
+            case 3:
+                Step = "2.0阶段";
+                break;
+            case 4:
+                Step = "3.0阶段";
+                break;
+            case 5:
+                Step = "4.0阶段";
+                break;
+            case 6:
+                Step = "其他";
+                break;
+            default:
+                break;
+        }
+        return Step;
+    }
+
+}

@@ -1,0 +1,527 @@
+﻿@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <script src="~/Assets/js/jq.js"></script>
+    <script src="~/Assets/js/vue.js"></script>
+
+    <title></title>
+    <style>
+        .flex {
+            display: flex;
+        }
+
+        .flex_ac_jc {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .flex_jsb {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .flex_ac {
+            display: flex;
+            align-items: center;
+        }
+
+        .margin_a {
+            margin-left: auto
+        }
+
+        .min_w {
+            min-width: 0
+        }
+
+        .flex1 {
+            flex: 1;
+        }
+
+        .flex_d {
+            flex-direction: column;
+        }
+
+        .flex_s {
+            flex-shrink: 0
+        }
+
+        .flex_wrap {
+            flex-wrap: wrap;
+        }
+
+        .flex_w {
+            flex-wrap: wrap;
+        }
+
+        .mark_div {
+            position: fixed;
+            user-select: none;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 20;
+        }
+
+        .window_div {
+            width: 960px;
+            position: absolute;
+            transition: 0.3s;
+            min-height: 500px;
+            transform: translate(-50%,-50%) scale(0.8);
+            opacity: 0;
+            left: 50%;
+            top: 50%;
+            background: #fff;
+            border-radius: 5px;
+        }
+
+            .window_div.active_ani {
+                transform: translate(-50%,-50%) scale(1);
+                opacity: 1;
+            }
+
+        .round_data {
+            width: 120px;
+            height: 120px;
+            position: relative;
+        }
+
+            .round_data .num {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                margin-left: -35px;
+                margin-top: -35px;
+                background: #11aa66;
+                border-radius: 50%;
+                width: 70px;
+                height: 70px;
+                color: #fff;
+                font-size: 30px;
+                font-weight: bold;
+            }
+
+            .round_data .line {
+                position: absolute;
+                width: 1px;
+                height: 61px;
+                left: 60px;
+                transform-origin: center bottom;
+                bottom: 60px;
+            }
+
+                .round_data .line div {
+                    width: 1px;
+                    height: 16px;
+                    background: #11aa66;
+                }
+
+                .round_data .line.dis div {
+                    background: #ccc !important;
+                }
+
+            .round_data.color_2 .num {
+                background: #f59c29;
+            }
+
+            .round_data.color_2 .line div {
+                background: #f59c29;
+            }
+
+            .round_data.color_3 .num {
+                background: #d93d3d;
+            }
+
+            .round_data.color_3 .line div {
+                background: #d93d3d;
+            }
+
+        .sub_btn {
+            cursor: pointer;
+            line-height: 36px;
+            border-radius: 36px;
+            border: 2px solid #11aa66;
+            background: #11aa66;
+            color: #fff;
+            width: 100px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold
+        }
+        /* .tips{padding:15px 0; font-size:15px; color:red} */
+        .title_text {
+            padding-left: 30px;
+        }
+
+            .title_text .tt {
+                font-size: 22px;
+                line-height: 30px;
+                margin-bottom: 10px;
+            }
+
+            .title_text .pp {
+                color: #999;
+                font-size: 14px;
+            }
+
+        .tips {
+            margin-left: 20px;
+            font-size: 14px;
+            background: #e8fff8;
+            border: 1px solid #11aa66;
+            border-radius: 5px;
+            color: #11aa66;
+            padding: 0 10px;
+            line-height: 22px;
+        }
+
+        .load_bar_d {
+            width: 100%;
+            height: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .load_bar_d.opa {
+                opacity: 0;
+            }
+
+                .load_bar_d.opa .load_bar_img {
+                    transition: none !important;
+                }
+
+            .load_bar_d .load_bar_img {
+                width: 100%;
+                height: 8px;
+                top: 0;
+                right: 100%;
+                position: absolute;
+                filter: hue-rotate(99deg) brightness(0.8);
+                opacity: 0.9;
+            }
+
+        .js_list {
+            padding: 15px;
+            height: 400px;
+            overflow: auto;
+        }
+
+        .par_tt {
+            height: 50px;
+            border-bottom: 1px solid #eee;
+            color: #333;
+        }
+
+            .par_tt .left_d {
+                width: 400px;
+            }
+
+            .par_tt .icon {
+                width: 20px;
+                height: 20px;
+                margin-right: 10px;
+            }
+
+                .par_tt .icon.load {
+                    animation: nl_btn 2s linear 0s infinite
+                }
+
+        @@-webkit-keyframes nl_btn {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .child_list {
+            padding: 10px 0;
+        }
+
+            .child_list .item {
+                height: 30px;
+                color: #777;
+                font-size: 14px;
+                padding-left: 30px;
+            }
+
+                .child_list .item .left_d {
+                    width: 400px;
+                }
+
+                .child_list .item.std_1 {
+                    color: #11aa66;
+                }
+
+                .child_list .item.std_2 {
+                    color: #f59c29;
+                }
+
+                .child_list .item.std_3 {
+                    color: #d93d3d;
+                }
+
+                .child_list .item a {
+                    text-decoration: underline;
+                    color: #d93d3d;
+                }
+
+        .js_list::-webkit-scrollbar {
+            /* width: 10px;
+          height: 10px;
+          background-color:none; */
+            display: none;
+        }
+
+        .js_list::-webkit-scrollbar-thumb {
+            display: none;
+        }
+
+        .js_list::-webkit-scrollbar-track {
+            display: none;
+        }
+
+        .close_btn {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 30px;
+            height: 30px;
+            background: url(/Assets/images/close.png) center center no-repeat;
+            background-size: 14px 14px;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+            .close_btn:hover {
+                opacity: 0.5;
+            }
+    </style>
+</head>
+<body>
+    <a href="javascript:;" onclick="show_window()">打开弹窗</a>
+    <div id="app">
+        <div class="mark_div" v-if="show_win">
+            <div class="window_div" v-show="show_win" :class="show_win_active?'active_ani':''">
+                <div class="close_btn" @@click="try_close()"></div>
+                <div class="flex_ac" style="padding: 15px 30px 15px 15px;">
+                    <div class="round_data" :class="'color_'+get_color(score-(100-tar_score)*(all_num==0?0:load_num/all_num))">
+                        <div class="num flex_ac_jc">{{(score-(100-tar_score)*(all_num==0?0:load_num/all_num)).toFixed(0)}}</div>
+                        <div v-for="(item,index) in 100" :key="index" :class="index+1<=(score-(100-tar_score)*(all_num==0?0:load_num/all_num))?'':'dis'" :style="'transform: rotate('+3.6*index+'deg)'" class="line"><div></div></div>
+                    </div>
+                    <div class="flex1 title_text">
+                        <div class="tt flex_ac">{{is_end==0?'点击开始检测':is_end==1?'智能扫描中···':'点击开始检测'}} <div class="tips">智能检测语音厅健康分，已接入智能大脑分析师</div></div>
+                        <div class="pp">{{is_end==0?'点击检测直播间主播才艺':is_end==1?'正在检测直播间主播才艺':'直播间主播才艺检测完成'}}</div>
+                    </div>
+                    <div class="sub_btn" @@click="start_jc_btn">{{is_end==0?'开始检测':is_end==1?'取消检测':'再次检测'}}</div>
+                </div>
+                <div class="load_bar_d" :class="is_end==1?'':'opa'">
+                    <img src="~/Assets/images/load_bar.png" :style="'right:'+(100-(all_num==0?0:load_num*100/all_num))+'%;transition: all '+fps/1000+'s linear 0s;'" class="load_bar_img">
+                </div>
+                <div class="js_list">
+                    <div class="js_t"></div>
+                    <div v-for="(item,index) in list" :key="index">
+                        <div class="par_tt flex_ac">
+                            <img src="~/Assets/images/load.png" class="icon" v-show="item.std!=3" :class="item.std==2?'load':''" alt="" />
+                            <img src="~/Assets/images/ok.png" class="icon" v-show="item.std==3" alt="" />
+                            <div class="flex1 flex_ac">
+                                <div class="left_d flex_ac">{{item.title}}  <div class="tips">{{item.child.length}}项</div></div>
+                                <!-- //1待检查，2检查中，3检查结束 -->
+                                <div class="flex1" v-if="item.std==3">综合得分 {{item.score}}分</div>
+                            </div>
+                        </div>
+                        <div class="child_list" v-if="is_end==1 || is_end==2">
+                            <div class="item flex_ac" :class="item2.std==2?'jcz':('std_'+item2.status)" v-for="(item2,index2) in item.child" :key="index2">
+                                <div class="left_d">{{item2.title}}</div>
+                                <div class="flex1" v-if="item2.std==2">检测中···</div>
+                                <div class="flex1" v-if="item2.std==3" v-html="item2.text || status_text[item2.status]"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+	  var app = new Vue({
+	  	el: '#app',
+	  	data:{
+	  		show_win:false,
+			show_win_active:false,
+			score:100,
+			load_num:0,
+			tar_score:100,
+			list:[],
+			status_text:{
+				1:'完美',
+				2:'合格',
+				3:'不合格'
+			},
+			now_index:[-1,-1],
+			all_num:0,
+			is_end:0, // 0 未开始，1进行中，2已结束
+			fps:1000
+	  	},
+	  	methods:{
+			re_set_list(){
+				const _this=this;
+				let list=JSON.parse(JSON.stringify(_this.olist))
+				let pn=0;
+				let all_num=0;
+				for(let i=0;i<list.length;i++){
+					list[i].std=1; //1待检查，2检查中，3检查结束
+					list[i].num=pn;
+					pn++;
+					let cn=0;
+					for(let k=0;k<list[i].child.length;k++){
+						list[i].child[k].std=1; //1待检查，2检查中，3检查结束
+						list[i].child[k].status=0;
+						list[i].child[k].num=cn;
+						cn++;
+						all_num++
+					}
+				}
+				_this.all_num=all_num;
+				_this.list=list;
+			},
+			try_close(){
+				this.hide_ani('show_win');
+				if(this.is_end==1){
+					this.start_jc_btn()
+				}
+			},
+			start_jc_btn(){
+				const _this=this;
+				if(_this.is_end==0 || _this.is_end==2){
+					_this.re_set_list()
+					_this.now_index=[-1,-1];
+					_this.is_end=0;
+					_this.score=100;
+					_this.load_num=0;
+					setTimeout(()=>{
+						_this.start_jc()
+					},50)
+				}else{
+					_this.load_num=0;
+					_this.re_set_list()
+					_this.is_end=2;
+					if(_this.timeout){
+						clearTimeout(_this.timeout)
+					}
+				}
+
+			},
+			get_color(score){
+				if(score>=70){
+					return 1
+				}else if(score<70 && score>50){
+					return 2
+				}else{
+					return 3
+				}
+			},
+			start_jc(){
+				const _this=this;
+				if(_this.is_end==2){return false;}
+				_this.is_end=1
+				let list=JSON.parse(JSON.stringify(_this.list));
+				if(_this.now_index[0]==-1){
+					_this.now_index=[0,0];
+					list[_this.now_index[0]].std=2
+					list[_this.now_index[0]].child[_this.now_index[1]].std=2;
+					_this.load_num++
+				}else{
+					list[_this.now_index[0]].std=3;
+					list[_this.now_index[0]].child[_this.now_index[1]]=JSON.parse(JSON.stringify(_this.olist[_this.now_index[0]].child[_this.now_index[1]]))
+					list[_this.now_index[0]].child[_this.now_index[1]].std=3;
+					if(list[_this.now_index[0]].child[_this.now_index[1]+1]){
+						_this.now_index[1]=_this.now_index[1]+1;
+						list[_this.now_index[0]].std=2
+						list[_this.now_index[0]].child[_this.now_index[1]].std=2;
+						_this.load_num++
+					}else{
+						if(list[_this.now_index[0]+1]){
+							_this.now_index[0]=_this.now_index[0]+1;
+							_this.now_index[1]=0;
+							list[_this.now_index[0]].std=2
+							list[_this.now_index[0]].child[_this.now_index[1]].std=2;
+							_this.load_num++
+						}else{
+							_this.is_end=2
+						}
+					}
+				}
+				_this.list=list;
+				setTimeout(()=>{
+					if($('.js_list .jcz').length>0){
+						var targetOffset = $('.js_list .jcz').offset().top-$('.js_t').offset().top;
+						$('.js_list').animate({
+						  scrollTop: targetOffset-50
+						}, 500);
+					}
+				},50)
+				if(_this.is_end!=2){
+					_this.timeout=setTimeout(()=>{
+						_this.start_jc()
+					},_this.fps)
+				}
+			},
+	  		get_data(){
+				const _this=this;
+				_this.show_ani('show_win');
+				_this.is_end=0
+				// tar_score 总分
+					// list  检测项目
+				_this.tar_score =@ViewBag.avg_score
+				_this.olist=@Html.Raw(ViewBag.obj);
+
+				_this.re_set_list()
+
+				return false;
+	  			$.ajax({
+	  			     url:'https://www.baidu.com/api/Index/get_dm',
+	  			     method:'get',
+	  			     dataType:"json",
+	  			     data:{},
+	  			     success(res){
+
+	  			     }
+	  			 })
+	  		},
+			show_ani(key){
+				this[key]=true;
+				setTimeout(()=>{
+					this[key+'_active']=true
+				},20)
+			},
+			hide_ani(key){
+				this[key+'_active']=false
+				setTimeout(()=>{
+					this[key]=false;
+				},350)
+			}
+	  	},
+	  })
+
+	  function show_window(){
+		  app.get_data()
+	  }
+</script>
+</html>

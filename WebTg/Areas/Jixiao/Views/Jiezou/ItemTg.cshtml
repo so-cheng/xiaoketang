@@ -1,0 +1,497 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@model Services.Project.PageFactory.TableVO
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+</style>
+<form id="mainForm" class="layui-form" action="">
+    <div class="layui-row">
+        <div class="layui-col-md8">
+
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <table class="layui-table" style="text-align:center;width:100%;" id="table1" name="table1">
+                <colgroup>
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+
+                    <col width="100">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th colspan="13" style="text-align: center; background-color: #FFF3CA; font-size: 18px; font-weight: 700 ">团队课表</th>
+                    </tr>
+                    <tr>
+                        <th rowspan="3" style="background-color:#FFF2CC">开始时间</th>
+                        <th rowspan="3" style="background-color:#FFF2CC">厅管</th>
+                        <th rowspan="3" style="background-color:#FFF2CC">厅名</th>
+                        <th colspan="2" style="background-color:#FFF2CC">0.5阶段预计时间</th>
+                        <th colspan="2" style="background-color:#FFE9E8">1.0阶段预计时间</th>
+                        <th colspan="2" style="background-color:#FDEBFF">2.0阶段预计时间</th>
+                        <th colspan="2" style="background-color:#E5F6FF">3.0阶段预计时间</th>
+                        <th colspan="2" style="background-color:#FFE9E8">4.0阶段预计时间</th>
+                    </tr>
+
+                    <tr>
+                        <th colspan="2" style="background-color:#FFF2CC">流量阶段/熟悉情景拉新阶段</th>
+                        <th colspan="2" style="background-color:#FFE9E8">全员破蛋（每档每人1个拉新）</th>
+                        <th colspan="2" style="background-color:#FDEBFF">拉齐拉新（每档每人2个拉新）</th>
+                        <th colspan="2" style="background-color:#E5F6FF">拉齐二消建联（二消30% 建联60%）</th>
+                        <th colspan="2" style="background-color:#FFE9E8">拉齐pk</th>
+                    </tr>
+
+                    <tr>
+                        <th style="background-color:#FFF2CC">完成进度</th>
+                        <th style="background-color:#FFF2CC">周期时间</th>
+                        <th style="background-color:#FFE9E8">完成进度</th>
+                        <th style="background-color:#FFE9E8">周期时间</th>
+                        <th style="background-color:#FDEBFF">完成进度</th>
+                        <th style="background-color:#FDEBFF">周期时间</th>
+                        <th style="background-color:#E5F6FF">完成进度</th>
+                        <th style="background-color:#E5F6FF">周期时间</th>
+                        <th style="background-color:#FFE9E8">完成进度</th>
+                        <th style="background-color:#FFE9E8">周期时间</th>
+                    </tr>
+
+                </thead>
+
+                @{
+                    var jiezou = DoMySql.FindEntity<ModelDb.jiezou>($"jiezou_sn='{ViewBag.jiezou_sn}'",false);
+                    int sort = 0;
+                    int step1 = 0;
+                    int step2 = 0;
+                    int step3 = 0;
+                    int step4 = 0;
+                    int step5 = 0;
+                    foreach (ModelDbBasic.user_base item in new DomainUserBasic.UserRelationApp().GetNextUsers(ModelEnum.UserRelationTypeEnum.运营邀厅管, ViewBag.yy_user_sn))
+                    {
+
+                        var jiezou_instance = DoMySql.FindEntity<ModelDb.jiezou_item>($"status=0 and tg_user_sn='{item.user_sn}' and jiezou_sn='{ViewBag.jiezou_sn}'", false);
+
+                        if (jiezou_instance.IsNullOrEmpty())
+                        {
+                            continue;
+                        }
+                        sort++;
+                        if (jiezou_instance.step==(decimal)0.5) { step1++; }
+                        if (jiezou_instance.step == (decimal)1) { step2++; }
+                        if (jiezou_instance.step == (decimal)2) { step3++; }
+                        if (jiezou_instance.step == (decimal)3) { step4++; }
+                        if (jiezou_instance.step == (decimal)4) { step5++; }
+                                <tr>
+                                    @{
+                                        if (jiezou.status == 0)
+                                        {
+                                            bool isEditable = new DomainUserBasic.UserRelationApp().GetParentUserSn(ModelEnum.UserRelationTypeEnum.厅管邀厅管, item.user_sn) == new UserIdentityBag().user_sn;
+                                            <td style="background-color:#EAFAF1" data-name="@($"start_date_{sort}")" data-tg="@item.user_sn" data-type="date" data-value="@jiezou_instance.start_date">
+                                                @if (isEditable)
+                                                {
+                                                    @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect($"start_date_{sort}")
+                                                    {
+                                                        mold = ModelBasic.EmtTimeSelect.Mold.date,
+                                                        style = "background-color:#FFE9E8",
+                                                        defaultValue = jiezou_instance.start_date.IsNullOrEmpty() ? "" : jiezou_instance.start_date.ToDate().ToString("yyyy-MM-dd"),
+                                                        eventJsChange = new EmtFormBase.EventJsChange
+                                                        {
+                                                            eventCsAction = new EmtFormBase.EventJsChange.EventCsAction
+                                                            {
+                                                                attachPara = new Dictionary<string, object>
+                                                            {
+                                                                {"yy_user_sn",ViewBag.yy_user_sn},
+                                                                {"jiezou_sn",ViewBag.jiezou_sn},
+                                                                {"tg_user_sn",item.user_sn},
+                                                                { "date",$"<%=page.start_date_{sort}.value%>"}
+                                                            },
+                                                                func = new ServiceFactory.JiezouService().SetTime,
+                                                                resCallJs = "",
+                                                            }
+                                                        },
+                                                        colLength = 6,
+                                                    })
+                                                }
+                                                else { 
+                                                <p>@(jiezou_instance.start_date.IsNullOrEmpty() ? "" : jiezou_instance.start_date.ToDate().ToString("yyyy-MM-dd"))</p>
+                                                }
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td style="background-color:#EAFAF1" data-name="@($"start_date_{sort}")" data-tg="@item.user_sn" data-type="date" data-value="@jiezou_instance.start_date">
+                                                @(jiezou_instance.start_date.IsNullOrEmpty() ? "" : jiezou_instance.start_date.ToDate().ToString("yyyy-MM-dd"))
+                                            </td>
+                                        }
+                                    }
+
+                                    <td style="background-color:#EAFAF1">@(item.name)</td>
+                                    <td style="background-color:#EAFAF1">@(item.username)</td>
+                                    <!--<td style="background-color:#EAFAF1">
+        <div class="layui-col-xs6">
+            @if (jiezou_instance.step >= (decimal)0.5&&jiezou.status==0)
+            {
+                <a href="javascript:LastStep('@item.user_sn','@ViewBag.jiezou_sn');" class="layui-btn layui-btn-xs">上一步</a>
+            }
+            else
+            {
+                <a class="layui-btn layui-btn-disabled layui-btn-xs">上一步</a>
+            }
+        </div>
+        <div class="layui-col-xs6">
+            @if (jiezou_instance.step <= 4 && jiezou.status == 0)
+            {
+                <a href="javascript:NextStep('@item.user_sn','@ViewBag.jiezou_sn');" class="layui-btn layui-btn-xs">下一步</a>
+            }
+            else
+            {
+                <a class="layui-btn layui-btn-disabled layui-btn-xs">下一步</a>
+            }
+        </div>
+    </td>-->
+
+                                    @{
+                                        //如果节奏表是最新的表
+                                        if (jiezou.status == 0)
+                                        {
+                                            string className = "UnEditAble";
+                                            if (new DomainUserBasic.UserRelationApp().GetParentUserSn(ModelEnum.UserRelationTypeEnum.厅管邀厅管,item.user_sn)== new UserIdentityBag().user_sn)
+                                            {
+                                                className = "EditAble";
+                                            }
+                                            <td class="@className" style="background-color:#FFF2CC" data-jiezousn="@(jiezou_instance.jiezou_sn)" data-progress="@(jiezou_instance.progress_1)" data-plan="@(jiezou_instance.time_plan_1.IsNullOrEmpty()?DateTime.Today.ToString("yyyy-MM-dd").ToString():jiezou_instance.time_plan_1.ToDate().ToString("yyyy-MM-dd"))" data-tg="@item.user_sn" data-step="1">@(jiezou_instance.progress_1.IsNullOrEmpty()?"-": GetProgress(jiezou_instance.progress_1))</td>
+                                            <td class="@className" style="background-color:#FFF2CC" data-jiezousn="@(jiezou_instance.jiezou_sn)" data-progress="@(jiezou_instance.progress_1)" data-plan="@(jiezou_instance.time_plan_1.IsNullOrEmpty()?DateTime.Today.ToString("yyyy-MM-dd").ToString():jiezou_instance.time_plan_1.ToDate().ToString("yyyy-MM-dd"))" data-tg="@item.user_sn" data-step="1">@(jiezou_instance.time_plan_1.IsNullOrEmpty() ? "-" : jiezou_instance.time_plan_1.ToDate().ToString("MM-dd"))</td>
+
+                                            <td class="@className" style="background-color:#FFE9E8" data-jiezousn="@(jiezou_instance.jiezou_sn)" data-progress="@(jiezou_instance.progress_2)" data-plan="@(jiezou_instance.time_plan_2.IsNullOrEmpty()?DateTime.Today.ToString("yyyy-MM-dd").ToString():jiezou_instance.time_plan_2.ToDate().ToString("yyyy-MM-dd"))" data-tg="@item.user_sn" data-step="2">@(jiezou_instance.progress_2.IsNullOrEmpty()?"-": GetProgress(jiezou_instance.progress_2))</td>
+                                            <td class="@className" style="background-color:#FFE9E8" data-jiezousn="@(jiezou_instance.jiezou_sn)" data-progress="@(jiezou_instance.progress_2)" data-plan="@(jiezou_instance.time_plan_2.IsNullOrEmpty()?DateTime.Today.ToString("yyyy-MM-dd").ToString():jiezou_instance.time_plan_2.ToDate().ToString("yyyy-MM-dd"))" data-tg="@item.user_sn" data-step="2">@(jiezou_instance.time_plan_2.IsNullOrEmpty() ? "-" : jiezou_instance.time_plan_2.ToDate().ToString("MM-dd"))</td>
+
+                                            <td class="@className" style="background-color:#FDEBFF" data-jiezousn="@(jiezou_instance.jiezou_sn)" data-progress="@(jiezou_instance.progress_3)" data-plan="@(jiezou_instance.time_plan_3.IsNullOrEmpty()?DateTime.Today.ToString("yyyy-MM-dd").ToString():jiezou_instance.time_plan_3.ToDate().ToString("yyyy-MM-dd"))" data-tg="@item.user_sn" data-step="3">@(jiezou_instance.progress_3.IsNullOrEmpty()?"-": GetProgress(jiezou_instance.progress_3))</td>
+                                            <td class="@className" style="background-color:#FDEBFF" data-jiezousn="@(jiezou_instance.jiezou_sn)" data-progress="@(jiezou_instance.progress_3)" data-plan="@(jiezou_instance.time_plan_3.IsNullOrEmpty()?DateTime.Today.ToString("yyyy-MM-dd").ToString():jiezou_instance.time_plan_3.ToDate().ToString("yyyy-MM-dd"))" data-tg="@item.user_sn" data-step="3">@(jiezou_instance.time_plan_3.IsNullOrEmpty() ? "-" : jiezou_instance.time_plan_3.ToDate().ToString("MM-dd"))</td>
+
+                                            <td class="@className" style="background-color:#E5F6FF" data-jiezousn="@(jiezou_instance.jiezou_sn)" data-progress="@(jiezou_instance.progress_4)" data-plan="@(jiezou_instance.time_plan_4.IsNullOrEmpty()?DateTime.Today.ToString("yyyy-MM-dd").ToString():jiezou_instance.time_plan_4.ToDate().ToString("yyyy-MM-dd"))" data-tg="@item.user_sn" data-step="4">@(jiezou_instance.progress_4.IsNullOrEmpty()?"-": GetProgress(jiezou_instance.progress_4))</td>
+                                            <td class="@className" style="background-color:#E5F6FF" data-jiezousn="@(jiezou_instance.jiezou_sn)" data-progress="@(jiezou_instance.progress_4)" data-plan="@(jiezou_instance.time_plan_4.IsNullOrEmpty()?DateTime.Today.ToString("yyyy-MM-dd").ToString():jiezou_instance.time_plan_4.ToDate().ToString("yyyy-MM-dd"))" data-tg="@item.user_sn" data-step="4">@(jiezou_instance.time_plan_4.IsNullOrEmpty() ? "-" : jiezou_instance.time_plan_4.ToDate().ToString("MM-dd"))</td>
+
+                                            <td class="@className" style="background-color:#FFE9E8" data-jiezousn="@(jiezou_instance.jiezou_sn)" data-progress="@(jiezou_instance.progress_5)" data-plan="@(jiezou_instance.time_plan_5.IsNullOrEmpty()?DateTime.Today.ToString("yyyy-MM-dd").ToString():jiezou_instance.time_plan_5.ToDate().ToString("yyyy-MM-dd"))" data-tg="@item.user_sn" data-step="5">@(jiezou_instance.progress_5.IsNullOrEmpty()?"-": GetProgress(jiezou_instance.progress_5))</td>
+                                            <td class="@className" style="background-color:#FFE9E8" data-jiezousn="@(jiezou_instance.jiezou_sn)" data-progress="@(jiezou_instance.progress_5)" data-plan="@(jiezou_instance.time_plan_5.IsNullOrEmpty()?DateTime.Today.ToString("yyyy-MM-dd").ToString():jiezou_instance.time_plan_5.ToDate().ToString("yyyy-MM-dd"))" data-tg="@item.user_sn" data-step="5">@(jiezou_instance.time_plan_5.IsNullOrEmpty() ? "-" : jiezou_instance.time_plan_5.ToDate().ToString("MM-dd"))</td>
+
+                                        }
+                                        else
+                                        {
+                                            <td style="background-color: #FFF2CC">@(jiezou_instance.progress_1.IsNullOrEmpty()?"-": GetProgress(jiezou_instance.progress_1))</td>
+                                            <td style="background-color: #FFF2CC">@(jiezou_instance.time_plan_1.IsNullOrEmpty() ? "-" : jiezou_instance.time_plan_1.ToDate().ToString("MM-dd"))</td>
+
+                                            <td style="background-color: #FFE9E8">@(jiezou_instance.progress_2.IsNullOrEmpty()?"-": GetProgress(jiezou_instance.progress_2))</td>
+                                            <td style="background-color: #FFE9E8">@(jiezou_instance.time_plan_2.IsNullOrEmpty() ? "-" : jiezou_instance.time_plan_2.ToDate().ToString("MM-dd"))</td>
+
+                                            <td style="background-color: #FDEBFF">@(jiezou_instance.progress_3.IsNullOrEmpty()?"-": GetProgress(jiezou_instance.progress_3))</td>
+                                            <td style="background-color: #FDEBFF">@(jiezou_instance.time_plan_3.IsNullOrEmpty() ? "-" : jiezou_instance.time_plan_3.ToDate().ToString("MM-dd"))</td>
+
+                                            <td style="background-color: #E5F6FF">@(jiezou_instance.progress_4.IsNullOrEmpty()?"-": GetProgress(jiezou_instance.progress_4))</td>
+                                            <td style="background-color: #E5F6FF">@(jiezou_instance.time_plan_4.IsNullOrEmpty() ? "-" : jiezou_instance.time_plan_4.ToDate().ToString("MM-dd"))</td>
+
+                                            <td style="background-color: #FFE9E8">@(jiezou_instance.progress_5.IsNullOrEmpty()?"-": GetProgress(jiezou_instance.progress_5))</td>
+                                            <td style="background-color: #FFE9E8">@(jiezou_instance.time_plan_5.IsNullOrEmpty() ? "-" : jiezou_instance.time_plan_5.ToDate().ToString("MM-dd"))</td>
+
+                                        }
+                                    }
+
+                                </tr>
+
+                    }
+
+                    <tr>
+                        <td colspan="3" style="background-color: #EAFAF1">
+                            <p style="font-size: 18px; text-align: center;">合计厅数</p>
+                            <br>
+                            <p style="font-size: 18px; text-align: center;">@sort</p>
+                        </td>
+
+                        <td colspan="2" style="background-color: #FFF2CC ">
+                            <p style="font-size: 18px; text-align: center;">0.5阶段厅数量</p>
+                            <br>
+                            <p style="font-size: 18px; text-align: center;">@step1</p>
+                        </td>
+
+                        <td colspan="2" style="background-color: #FFE9E8 ">
+                            
+                            <p style="font-size: 18px; text-align: center;">1.0阶段厅数量</p>
+                            <br>
+                            <p style="font-size: 18px; text-align: center; ">@step2</p>
+                        </td>
+
+                        <td colspan="2" style="background-color: #FDEBFF ">
+                            
+                            <p style="font-size: 18px; text-align: center;">2.0 阶段厅数量</p>
+                            <br>
+                            <p style="font-size: 18px; text-align: center;">@step3</p>
+                        </td>
+
+                        <td colspan="2" style="background-color: #E5F6FF ">
+                            
+                            <p style="font-size: 18px; text-align: center;">3.0阶段厅数量</p>
+                            <br>
+                            <p style="font-size: 18px; text-align: center;">@step4</p>
+                        </td>
+
+                        <td colspan="2" style="background-color: #FFE9E8 ">
+                            
+                            <p style="font-size: 18px; text-align: center;">4.0阶段厅数量</p>
+                            <br>
+                            <p style="font-size: 18px; text-align: center;">@step5</p>
+                        </td>
+                    </tr>
+                    
+                }
+            </table>
+            
+        </div>
+    </div>
+
+    @ViewModelBag.Load(Html, new ModelBasic.AdjFloatLayer("floatlayer")
+{
+    position = ModelBasic.AdjFloatLayer.Position.相对定位,
+    positionRelative = new ModelBasic.AdjFloatLayer.PositionRelative
+    {
+        className = $"EditAble",
+        offset_y = 40
+    },
+    emtModelBase = new ModelBasic.EmtGrid("grid")
+    {
+        items = new List<ModelBasic.EmtGrid.Item>
+            {
+                new ModelBasic.EmtGrid.Item
+                {
+                    title="完成进度",
+                    colLength=12,
+                    emtModelBase = new ModelBasic.EmtSelect($"progress")
+                    {
+                        options=new Dictionary<string, string>
+                        {
+                            {"进行中","1"},
+                            {"已完成","2"}
+                        },
+                        //defaultValue="<%=page.amount_text.value%>",
+                        width = "120"
+                    },
+
+                },
+
+                new ModelBasic.EmtGrid.Item
+                {
+                    title="周期时间",
+                    colLength=12,
+                    emtModelBase = new ModelBasic.EmtTimeSelect($"plan")
+                    {
+
+                        mold= ModelBasic.EmtTimeSelect.Mold.date,
+                        //defaultValue="<%=page.amount_text.value%>",
+                        width = "120"
+                    },
+
+                },
+                new ModelBasic.EmtGrid.Item
+                {
+                    colLength=6,
+                    emtModelBase = new ModelBasic.EmtButton("button")
+                    {
+                        defaultValue = "提交",
+
+                        eventJsChange = new EmtFormBase.EventJsChange
+                        {
+                            eventCsAction=new EmtFormBase.EventJsChange.EventCsAction
+                            {
+                                attachPara=new Dictionary<string, object>
+                                {
+                                    {"progress","<%=page.progress.value%>"},
+                                    {"plan","<%=page.plan.value%>"},
+                                    {"step","<%=page.focus.attr('data-step')%>"},
+                                    {"yy_user_sn",$"{ViewBag.yy_user_sn}" },
+                                    {"tg_user_sn","<%=page.focus.attr('data-tg')%>" },
+                                    {"jiezou_sn","<%=page.focus.attr('data-jiezousn')%>" },
+                                },
+                                resCallJs="page.floatlayer.hide();location.reload();",
+                                func=new ServiceFactory.JiezouService().Edit
+                            }
+                        }
+                    }
+                },
+                new ModelBasic.EmtGrid.Item
+                {
+                    colLength=6,
+                    emtModelBase = new ModelBasic.EmtButton("cancel")
+                    {
+                        defaultValue = "取消",
+
+                        eventJsChange = new EmtFormBase.EventJsChange
+                        {
+                            eventJavascript=new EventJavascript
+                            {
+                                code="page.floatlayer.hide();page.focus.css('font-weight', 'normal');"
+                            }
+                        }
+                    }
+                }
+            }
+    },
+    eventJsAnies = new List<ModelBase.EventJsAny>
+    {
+        new ModelBase.EventJsAny
+        {
+            eventName= ModelBasic.AdjFloatLayer.EventJs.show,
+            eventJavascript= new EventJavascript
+            {
+                code="page.progress.set(page.focus.attr('data-progress'));page.plan.set(page.focus.attr('data-plan'));",
+            }
+        },
+        new ModelBase.EventJsAny
+        {
+            eventName=ModelBasic.AdjFloatLayer.EventJs.show,
+            eventJavascript=new EventJavascript
+            {
+                code="page.focus.css('font-weight', 'bold')"
+            }
+        }
+    },
+    width = "300px",
+    height = "150px",
+
+})
+
+</form>
+
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        var layer = layui.layer;
+    });
+    function ReSetStep() {
+        $.ajax({
+            type: "POST",
+            url: "/jixiao/jiezou/ReSetStep",
+            async: false,
+            dataType: 'json',
+            success: function () {
+                location.reload();
+            },
+            error: function () {
+                alert('操作失败');
+            }
+        });
+    }
+    function NextStep(tg,jiezou) {
+        $.ajax({
+            type: "POST",
+            url: "/jixiao/jiezou/NextStep",
+            data: { tg_user_sn: tg, jiezou_sn:jiezou },
+            async: false,
+            dataType: 'json',
+            success: function () {
+                location.href = '/jixiao/jiezou/Item?jiezou_sn=@ViewBag.jiezou_sn';
+            },
+            error: function () {
+                alert('操作失败');
+            }
+        });
+    }
+    function LastStep(tg,jiezou) {
+        $.ajax({
+            type: "POST",
+            url: "/jixiao/jiezou/LastStep",
+            data: { tg_user_sn: tg , jiezou_sn:jiezou},
+            async: false,
+            dataType: 'json',
+            success: function () {
+                location.href= '/jixiao/jiezou/Item?jiezou_sn=@ViewBag.jiezou_sn';
+            },
+            error: function () {
+                alert('操作失败');
+            }
+        });
+    }
+    function Post() {
+        win_pop_iframe('新建', '/jixiao/jiezou/post', 600, 800);
+    }
+    function List() {
+        win_pop_iframe('课表记录', '/jixiao/jiezou/list', 800, 800);
+    }
+</script>
+
+@functions{
+    /// <summary>
+    /// 判断是否为当前档期首行
+    /// </summary>
+    /// <param name="p_jixiao_session"></param>
+    /// <param name="session"></param>
+    /// <param name="color"></param>
+    /// <returns></returns>
+    public bool isFirstRow()
+    {
+        return false;
+    }
+
+    public double getRate(double? A, double? B)
+    {
+        if (B == null || B == 0)
+        {
+            return 0;
+        }
+        else
+        {
+            return Math.Round((A * 100 / B).ToDouble(), 0);
+        }
+    }
+
+    public string GetProgress(sbyte? value)
+    {
+        if (value == 1)
+        {
+            return ModelDb.jiezou_item.progress_1_enum.进行中.ToString();
+        }
+        if (value == 2)
+        {
+            return ModelDb.jiezou_item.progress_1_enum.已完成.ToString();
+        }
+        return "";
+    }
+}

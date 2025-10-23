@@ -1,0 +1,184 @@
+﻿
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+<script src="~/Assets/js/layui.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.js"></script>
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+@{
+    Layout = null;
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+        border: 1px solid #000 !important;
+    }
+
+    .layui-table td {
+        font-size: 15px;
+        border: 1px solid #000 !important;
+    }
+
+    .layui-table {
+        border: 1px solid #000 !important;
+        border-collapse: collapse !important;
+    }
+</style>
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>厅管平均二消音浪排名</title>
+</head>
+@{
+    string c_date_e = ViewBag.c_date_e;
+    string c_date_s = ViewBag.c_date_s;
+    string dateRange = c_date_s + " ~ " + c_date_e;
+}
+<body>
+    <div class="layui-card" style="width:95%;margin-top:130px;margin:0 auto">
+        <blockquote class="layui-elem-quote news_search">
+            <div class="layui-inline">
+                <form class="layui-form">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">日期范围</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="dateRange" name="dateRange" value="@dateRange" placeholder="选择日期范围">
+                        </div>
+                    </div>
+                    <button type="submit" class="layui-btn search_btn">查询</button>
+                </form>
+
+            </div>
+            <a style="color:blue;float:right;font-size:17px;" href="javascript:win_pop_iframe('规则说明', '/jixiao/rank/TingRuleDefinition', 800,800);">排名规则说明</a>
+        </blockquote>
+
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title">
+                <li style="padding: 0 14px;">
+                    <a href="/jixiao/rank/TgNewNumRankTable?dateRange=@dateRange">单厅主播平均拉新个数</a>
+                </li>
+                <li style="padding: 0 14px;">
+                    <a href="/jixiao/rank/TgNum2RankTable?dateRange=@dateRange">单厅主播平均二消个数</a>
+                </li>
+                <li class="layui-this" lay-id="11">单厅主播平均二消音浪</li>
+                <li style="padding: 0 14px;">
+                    <a href="/jixiao/rank/TgContactNumRankTable?dateRange=@dateRange">单厅主播平均建联数</a>
+                </li>
+            </ul>
+
+            <div class="layui-tab-content">
+                @{
+                    var days = (c_date_e.ToDate() - c_date_s.ToDate()).TotalDays.ToInt() + 1;
+
+                    string tb_jx = "select tg_user_sn as user_sn,count(*) as count,sum(amount_2) as amount_2 from p_jixiao_day WHERE" +
+$" c_date BETWEEN '{c_date_s}' and '{c_date_e}' and (p_jixiao_day.new_num!=0 or p_jixiao_day.amount_1!=0 or p_jixiao_day.num_2!=0 or p_jixiao_day.amount_2!=0  or p_jixiao_day.contact_num!=0) and tenant_id='{new DomainBasic.TenantApp().GetInfo().id}'group by tg_user_sn";
+                    var jixiaoDayList = DoMySql.FindListBySql<ServiceFactory.Jixiao.TgJixiaoRankModel>($"select amount_2/count average,user_sn,amount_2 as jixiaoSum from ({tb_jx} ) tb_jx order by average desc limit 50");
+
+                    <table class="layui-table" style="text-align:center;" id="table" name="table" width="100%">
+                        <colgroup>
+
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                        </colgroup>
+                        <thead>
+                            <tr style="background-color: #DAE3F4; font-weight: 700;">
+
+                                <th> 厅名</th>
+                                <th> 厅管</th>
+                                <th> 所属团队</th>
+                                <th> 总二消音浪</th>
+                                <th> 主播平均二消音浪</th>
+                                <th> 厅排名</th>
+                            </tr>
+                            @{
+                                foreach (var tg in jixiaoDayList)
+                                {
+                                    var tgInfo = new ServiceFactory.UserInfo.Tg().GetTgInfoByUsersn(tg.user_sn);
+                                    tg.username = tgInfo.username;
+                                    tg.name = tgInfo.name;
+                                    tg.yy_name = new ServiceFactory.UserInfo.Yy().GetInfoByUserSn(tgInfo.yy_sn).name;
+                                }
+                                int rank = 1;
+                                <tr style="background-color: #FBE6D5">
+                                    @foreach (var tg in jixiaoDayList)
+                                    {
+                                    @:</tr><tr style="background-color: #FBE6D5">
+                                        <td>@tg.username</td>
+                                        <td>@tg.name</td>
+                                        <td>@tg.yy_name</td>
+                                        <td>@tg.jixiaoSum</td>
+                                        <td>@tg.average.ToDouble().ToString("0.00")</td>
+                                        switch (rank)
+                                        {
+                                            case 1:
+                                                <td><img src="/Assets/images/rank1.png" width="30" height="30"></td>
+                                                break;
+                                            case 2:
+                                                <td><img src="/Assets/images/rank2.png" width="30" height="30"></td>
+                                                break;
+                                            case 3:
+                                                <td><img src="/Assets/images/rank3.png" width="30" height="30"></td>
+                                                break;
+                                            case 4:
+                                                <td><img src="/Assets/images/rank4.png" width="30" height="30"></td>
+                                                break;
+                                            case 5:
+                                                <td><img src="/Assets/images/rank5.png" width="30" height="30"></td>
+                                                break;
+                                            default:
+                                                <td>@rank</td>
+                                                break;
+                                        }
+                                        rank++;
+                                    }
+                                </tr>
+                            }
+                        </thead>
+                    </table>
+
+                }
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+@ViewModelBag.Load(Html, new ModelBasic.AdjScreenshot("screenshot")
+{
+    elem = "table"
+})
+<script>
+    //设置时间筛选的数据格式
+    layui.use(['form', 'laydate'], function () {
+        var form = layui.form;
+        var laydate = layui.laydate;
+
+        //日期时间段选择
+        laydate.render({
+            elem: '#dateRange'
+            , range: '~'
+        });
+    });
+
+</script>

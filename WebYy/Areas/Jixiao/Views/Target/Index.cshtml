@@ -1,0 +1,134 @@
+﻿@{
+    Layout = null;
+}
+
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.ModelDbs;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Web;
+@using System.Web.Mvc;
+@using WeiCode.Services;
+
+@using WeiCode.ModelDbs;
+@using Services.Project;
+@using WeiCode.Domain;
+@using WeiCode.ModelDbs;
+@using WeiCode.Models;
+@using WeiCode.Domain;
+
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+
+
+
+<style>
+    .layuiadmin-big-font {
+        font-weight: bold;
+        font-size: 42px;
+        margin: 10px;
+    }
+</style>
+
+
+
+<div class="layui-card">
+    <div class="layui-card-header">绩效目标</div>
+
+    <div class="layui-card-body" style="background-color:#F6F6F6">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-sm3 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        本月已完成音浪
+                    </div>
+                    <div class="layui-card-body layuiadmin-card-list">
+                        <a href="javascript:parent.win_pop_iframe('绩效目标','/TgManage/Target/ScheduleTg', 800, 650)"><span class="layuiadmin-span-color"><p class="layuiadmin-big-font">@ViewBag.month_amount</p></span></a>
+                    </div>
+                    <p style="margin:10px;">
+                        总目标
+                        <a href="javascript:parent.win_pop_iframe('绩效目标','/TgManage/Target/ScheduleTg', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.amount</span></a>
+                        完成:@ViewBag.amount_per
+                    </p>
+                </div>
+            </div>
+            <div class="layui-col-sm3 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        本月已完成拉新
+                    </div>
+                    <div class="layui-card-body layuiadmin-card-list">
+                        <a href="javascript:parent.win_pop_iframe('绩效目标','/TgManage/Target/ScheduleTg', 800, 650)"><span class="layuiadmin-span-color"><p class="layuiadmin-big-font">@ViewBag.month_new_num</p></span></a>
+                    </div>
+                    <p style="margin:10px;">
+                        总目标
+                        <a href="javascript:parent.win_pop_iframe('绩效目标','/TgManage/Target/ScheduleTg', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.new_num</span></a>
+                        完成:@ViewBag.new_num_per
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/other/echarts.min.4.3.0.js"></script>
+<div id="main" style="width: 100%; height: 400px;"></div>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    // 指定图表的配置项和数据
+
+        // 指定图表的配置项和数据
+    var option = {
+        title: {
+        text: ''
+        },
+        tooltip: {},
+        legend: {
+            data: ['音浪', '拉新', '建联', '大头'],
+            selected: {
+                '拉新': false,
+                '建联': false,
+                '大头': false
+                }
+        },
+        xAxis: {
+        data: @Html.Raw(Json.Encode(ViewBag.dateArray)),
+        },
+        yAxis: {
+        },
+        series: [
+            {
+                name: '音浪',
+                type: 'line',
+                data: @Html.Raw(Json.Encode(ViewBag.amountArray)),
+            },
+            {
+                name: '拉新',
+                type: 'line',
+                data: @Html.Raw(Json.Encode(ViewBag.newNumArray)),
+            },
+            {
+                name: '建联',
+                type: 'line',
+                data: @Html.Raw(Json.Encode(ViewBag.contactNumArray)),
+            },
+            {
+                name: '大头',
+                type: 'line',
+                data: @Html.Raw(Json.Encode(ViewBag.datouNumArray)),
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>
+
+
+

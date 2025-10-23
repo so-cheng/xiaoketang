@@ -1,0 +1,155 @@
+﻿@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@model ServiceFactory.MengxinZbService.p_join_need
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.js"></script>
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 14px;
+    }
+
+    .layui-table td {
+        font-size: 14px;
+    }
+</style>
+
+<style>
+    .layuiadmin-big-font {
+        font-weight: bold;
+        font-size: 42px;
+        margin: 10px;
+    }
+</style>
+
+
+<blockquote class="layui-elem-quote news_search">
+
+    <div class="layui-inline">
+        <form class="layui-form">
+
+            <div class="layui-input-inline">
+                <label class="layui-form-label">日期</label>
+            </div>
+
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("dateRange")
+                    {
+                        title = "日期",
+                        defaultValue = ViewBag.dateRange,
+                        mold = ModelBasic.EmtTimeSelect.Mold.date_range,
+                        eventJsChange = new EmtFormBase.EventJsChange
+                        {
+                            eventJavascript = new EventJavascript
+                            {
+                                code = "window.location.href = '/Waixuan/Datas/ApproveSumTable?dateRange=' + page.dateRange.value;"
+                            },
+                        },
+                        placeholder = "补人申请日期筛选",
+                    })
+                </div>
+            </div>
+
+
+
+        </form>
+    </div>
+</blockquote>
+<body>
+    <div>
+        <table class="layui-table" style="text-align:center;" id="table1" name="table1">
+            <colgroup>
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>直播厅</th>
+                    <th>申请数</th>
+                    <th>已补数</th>
+                    <th>流失数</th>
+                    <th>流失率</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @{
+                    string where = $"";
+                    string dateRange = ViewBag.dateRange;
+                    if (!dateRange.IsNullOrEmpty())
+                    {
+                        var range = UtilityStatic.CommonHelper.DateRangeFormat(dateRange, 0);
+                        where += $" and create_time >= '{range.date_range_s}' and create_time < '{range.date_range_e.ToDate().AddDays(1).ToString("yyyy-MM-dd")}'";
+                    }
+
+                    var p_join_need = DoMySql.FindList<ModelDb.p_join_need>($"yy_user_sn ='{new UserIdentityBag().user_sn}' and {where}");
+                    double supplement_count = 0;
+                    double quit_count = 0;
+                }
+
+                @foreach (var item in p_join_need)
+                {
+                    <tr>
+                        <td>@(new DomainBasic.UserApp().GetInfoByUserSn(item.yy_user_sn).username)</td>
+                        <td>@item.zb_count</td>
+                        <td>@item.supplement_count</td>
+                        <td>@item.quit_count</td>
+                        <td>@(item.supplement_count==0?"0":(item.quit_count.ToDouble() / (item.quit_count + item.supplement_count).ToDouble()).ToString("0.00"))%</td>
+                    </tr>
+                    quit_count += item.quit_count.ToDouble();
+                    supplement_count += item.supplement_count.ToDouble();
+                }
+                <tr>
+                    <td>合计(@(p_join_need.Count)个厅)</td>
+                    <td>@(p_join_need.Sum(x=>x.zb_count.ToInt()))</td>
+                    <td>@(p_join_need.Sum(x=>x.supplement_count.ToInt()))</td>
+                    <td>@(p_join_need.Sum(x=>x.quit_count.ToInt()))</td>
+                    <td>@(supplement_count==0?"0":(quit_count.ToDouble() / (quit_count + supplement_count).ToDouble()).ToString("0.00"))%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+<script>
+    layui.use(function () {
+        var form = layui.form;
+        var layer = layui.layer;
+        // select 事件
+
+    });
+
+    function applicationlist(dateRange, yy_user_sn, status) {
+        win_pop_iframe('明细', '/Waixuan/Datas/ApproveApplicationList?dateRange=' + dateRange + '&yy_user_sn=' + yy_user_sn + '&status=' + status, 1600, 800);
+    }
+</script>
+
+
+@{
+
+}

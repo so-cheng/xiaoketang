@@ -1,0 +1,395 @@
+﻿
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+    var p_tingzhan = new ServiceFactory.TingZhanService().getNewTingzhan();
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-collapse: collapse;
+        border-style: solid;
+        border-width: 1px;
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    .layui-table td {
+        font-size: 15px;
+    }
+
+    .yy_item {
+        font-size: 13px;
+        color: #FF5722;
+    }
+</style>
+<!-- 以下书写自己的页面内容代码 -->
+<form class="layui-form">
+    <div class="layui-row">
+        <div class="layui-row">
+            <input type="hidden" name="tingzhan_id" id="tingzhan_id" value="@p_tingzhan.id" />
+            <div class="layui-col-md12" style="text-align: center; position: fixed; top: 10px; background-color:#ffffff; z-index:9999; padding:8px;">
+                <label class="layui-input-inline" style="font-size:18px; font-weight:bold">厅战时间：@p_tingzhan.c_date.ToDate().ToString("yyyy-MM-dd")</label>
+                @if (ViewBag.mates1.Count > 0 || ViewBag.mates2.Count > 0)
+                {
+                    <blockquote class="layui-elem-quote news_search">
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <label class="layui-form-label">运营</label>
+                            </div>
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    @ViewModelBag.Load(Html, new ModelBasic.EmtSelect("yy_user_sn")
+                                    {
+                                        placeholder = "请选择运营",
+                                        options = new ServiceFactory.UserInfo.Yy().GetAllYyForKv(),
+                                        defaultValue = ViewBag.yy_user_sn,
+                                        eventJsChange = new EmtFormBase.EventJsChange
+                                        {
+                                            eventJavascript = new EventJavascript
+                                            {
+                                                code = "window.location.href = '/TingZhan/Mate/Index?yy_user_sn='+page.yy_user_sn.value;"
+                                            },
+                                        }
+                                    })
+                                </div>
+                            </div>
+                            <div class="layui-input-inline">
+                                <label class="layui-form-label">直播厅</label>
+                            </div>
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    @{
+                                        var option = new Dictionary<string, string>();
+                                        foreach (var item in new ServiceFactory.UserInfo.Ting().GetBaseInfosForKv(new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter
+                                        {
+                                            attachUserType = new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType()
+                                            {
+                                                userType = ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType.UserType.运营,
+                                                UserSn = ViewBag.yy_user_sn
+                                            }
+                                        }))
+                                        {
+                                            option.Add(item.Key, item.Value);
+                                        }
+                                    }
+                                    @ViewModelBag.Load(Html, new ModelBasic.EmtSelect("ting_sn")
+                                    {
+                                        placeholder = "请选择直播厅",
+                                        options = option,
+                                        defaultValue = ViewBag.ting_sn,
+                                        eventJsChange = new EmtFormBase.EventJsChange
+                                        {
+                                            eventJavascript = new EventJavascript
+                                            {
+                                                code = "window.location.href = '/TingZhan/Mate/Index?ting_sn='+page.ting_sn.value+'&yy_user_sn='+page.yy_user_sn.value;"
+                                            },
+                                        }
+                                    })
+                                </div>
+                            </div>
+                            <button type="button" class="layui-btn layui-btn-danger" id="delBtn">删除对战表</button>
+                            <button type="button" class="layui-btn" id="submitBtn">调换位置</button>
+                            <button type="button" class="layui-btn layui-btn-normal" id="exportBtn">导出对战表格</button>
+                            <a href="javascript:win_pop_iframe('新增对战关系', '/TingZhan/Mate/Add', 800,800);" class="layui-btn">新增对战关系</a>
+                        </div>
+                    </blockquote>
+                }
+                else
+                {
+                    <button type="button" class="layui-btn layui-btn-normal btn-submit">生成对战表</button>
+                }
+            </div>
+        </div>
+        <div style="color: #ffffff; height: 120px;">-</div>
+        @if (ViewBag.mates1.Count > 0 || ViewBag.mates2.Count > 0)
+        {
+            int sum = 0;
+            <div class="layui-row">
+                <div class="layui-card" style="width:95%; margin:0 auto">
+                    <table class="layui-table" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th colspan="4" style="text-align: center; background-color: #FFF3CA; font-size: 18px; font-weight: 700 ">第一梯队</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align: center; width: 40%;">队伍A</td>
+                                <td style="text-align: center; width: 40%;">队伍B</td>
+                                <td style="text-align: center; width: 15%; ">目标音浪</td>
+                                <td style="text-align: center; width: 5%; "></td>
+                            </tr>
+                            @foreach (var item in ViewBag.mates1)
+                            {
+                                sum += item.amont;
+
+                                // 获取厅信息
+                                var ting_sn1 = new ServiceFactory.UserInfo.Ting().GetTingBySn(item.ting_sn1);
+                                var ting_sn2 = new ServiceFactory.UserInfo.Ting().GetTingBySn(item.ting_sn2);
+
+                                // 获取厅战目标
+                                var tingzhan_target1 = DoMySql.FindEntity<ModelDb.p_tingzhan_target>($"tingzhan_id = {item.tingzhan_id} and ting_sn = '{item.ting_sn1}'", false);
+                                var tingzhan_target2 = DoMySql.FindEntity<ModelDb.p_tingzhan_target>($"tingzhan_id = {item.tingzhan_id} and ting_sn = '{item.ting_sn2}'", false);
+                                <tr>
+                                    <td style="text-align: center; width: 40%;"><input type="checkbox" lay-skin="primary" value="l_@item.id" name="ting_replace"><a href="javascript:win_pop_iframe('修改直播厅', '/TingZhan/Mate/ChangeTgPost?id=@(item.id)&type=1', 1000, 550, '')">(<span class="yy_item">@(new ServiceFactory.UserInfo.Yy().GetInfoByUserSn(tingzhan_target1.yy_user_sn).name)</span>) @ting_sn1.ting_name（@Convert.ToDecimal(tingzhan_target1.day_amount).ToFixed(2)）</a></td>
+                                    <td style="text-align: center; width: 40%;"><input type="checkbox" lay-skin="primary" value="r_@item.id" name="ting_replace"><a href="javascript:win_pop_iframe('修改直播厅', '/TingZhan/Mate/ChangeTgPost?id=@(item.id)&type=2', 1000, 550, '')">(<span class="yy_item">@(new ServiceFactory.UserInfo.Yy().GetInfoByUserSn(tingzhan_target2.yy_user_sn).name)</span>) @ting_sn2.ting_name（@Convert.ToDecimal(tingzhan_target2.day_amount).ToFixed(2)）</a></td>
+                                    <td class="EditAble" data-id="@item.id" data-amont="@(Convert.ToInt32(item.amont))" style="text-align: center; width: 15%; ">@(Convert.ToInt32(item.amont))W</td>
+                                    <td style="text-align: center; width: 5%; "><a class="layui-btn layui-btn-xs" href="javascript:del_mate(@item.id);">删除</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <table class="layui-table" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th colspan="4" style="text-align: center; background-color: #FFF3CA; font-size: 18px; font-weight: 700 ">第二梯队</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align: center; width: 40%;">队伍A</td>
+                                <td style="text-align: center; width: 40%;">队伍B</td>
+                                <td style="text-align: center; width: 15%; ">目标音浪</td>
+                                <td style="text-align: center; width: 5%; "></td>
+                            </tr>
+                            @foreach (var item in ViewBag.mates2)
+                            {
+                                sum += item.amont;
+
+                                // 获取厅信息
+                                var ting_sn1 = new ServiceFactory.UserInfo.Ting().GetTingBySn(item.ting_sn1);
+                                var ting_sn2 = new ServiceFactory.UserInfo.Ting().GetTingBySn(item.ting_sn2);
+
+                                // 获取厅战目标
+                                var tingzhan_target1 = DoMySql.FindEntity<ModelDb.p_tingzhan_target>($"tingzhan_id = {item.tingzhan_id} and  ting_sn = '{item.ting_sn1}'", false);
+                                var tingzhan_target2 = DoMySql.FindEntity<ModelDb.p_tingzhan_target>($"tingzhan_id = {item.tingzhan_id} and  ting_sn = '{item.ting_sn2}'", false);
+                                <tr>
+                                    <td style="text-align: center; width: 40%;"><input type="checkbox" lay-skin="primary" value="l_@item.id" name="ting_replace"><a href="javascript:win_pop_iframe('修改直播厅', '/TingZhan/Mate/ChangeTgPost?id=@(item.id)&type=1', 1000, 550, '')">(<span class="yy_item">@(new ServiceFactory.UserInfo.Yy().GetInfoByUserSn(tingzhan_target1.yy_user_sn).name)</span>) @ting_sn1.ting_name（@Convert.ToDecimal(tingzhan_target1.day_amount).ToFixed(2)）</a></td>
+                                    <td style="text-align: center; width: 40%;"><input type="checkbox" lay-skin="primary" value="r_@item.id" name="ting_replace"><a href="javascript:win_pop_iframe('修改直播厅', '/TingZhan/Mate/ChangeTgPost?id=@(item.id)&type=2', 1000, 550, '')">(<span class="yy_item">@(new ServiceFactory.UserInfo.Yy().GetInfoByUserSn(tingzhan_target2.yy_user_sn).name)</span>) @ting_sn2.ting_name（@Convert.ToDecimal(tingzhan_target2.day_amount).ToFixed(2)）</a></td>
+                                    <td class="EditAble" data-id="@item.id" data-amont="@(Convert.ToInt32(item.amont))" style="text-align: center; width: 15%; ">@(Convert.ToInt32(item.amont))W</td>
+                                    <td style="text-align: center; width: 5%; "><a class="layui-btn layui-btn-xs" href="javascript:del_mate(@item.id);">删除</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <table class="layui-table" style="width: 100%;">
+                        <tr>
+                            <td style="text-align: center; width: 40%;">合计</td>
+                            <td style="text-align: center; width: 40%;"></td>
+                            <td style="text-align: center; width: 15%; ">@(Convert.ToInt32(sum))W</td>
+                            <td style="text-align: center; width: 5%;"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            @ViewModelBag.Load(Html, new ModelBasic.AdjFloatLayer("floatlayer")
+       {
+           position = ModelBasic.AdjFloatLayer.Position.相对定位,
+           positionRelative = new ModelBasic.AdjFloatLayer.PositionRelative
+           {
+               className = $"EditAble",
+               offset_y = 40
+           },
+           emtModelBase = new ModelBasic.EmtGrid("grid")
+           {
+               items = new List<ModelBasic.EmtGrid.Item>
+            {
+                   new ModelBasic.EmtGrid.Item
+               {
+                   title = "目标音浪",
+                   colLength = 12,
+                   emtModelBase = new ModelBasic.EmtInput($"amont")
+                   {
+
+                   },
+               },
+                new ModelBasic.EmtGrid.Item
+                {
+                    colLength=6,
+                    emtModelBase = new ModelBasic.EmtButton("button")
+                    {
+                        defaultValue = "提交",
+
+                        eventJsChange = new EmtFormBase.EventJsChange
+                        {
+                            eventCsAction=new EmtFormBase.EventJsChange.EventCsAction
+                            {
+                                attachPara=new Dictionary<string, object>
+                                    {
+                                        {"amont","<%=page.amont.value%>"},
+                                        {"id","<%=page.focus.attr('data-id')%>" },
+                                    },
+                                resCallJs="page.floatlayer.hide();location.reload();",
+                                func=new ServiceFactory.TingZhanService().EditMate
+                            }
+                        }
+                    }
+           },
+                new ModelBasic.EmtGrid.Item
+                {
+                    colLength=6,
+                    emtModelBase = new ModelBasic.EmtButton("cancel")
+                    {
+                       defaultValue = "取消",
+
+                       eventJsChange = new EmtFormBase.EventJsChange
+                       {
+                           eventJavascript=new EventJavascript
+                           {
+                               code="page.floatlayer.hide();page.focus.css('font-weight', 'normal');"
+                           }
+                       }
+                   }
+                 }
+            }
+           },
+           eventJsAnies = new List<ModelBase.EventJsAny>
+            {
+                new ModelBase.EventJsAny
+                {
+                    eventName= ModelBasic.AdjFloatLayer.EventJs.show,
+                    eventJavascript= new EventJavascript
+                    {
+                        code="page.amont.set(page.focus.attr('data-amont'));",
+                    }
+                },
+                new ModelBase.EventJsAny
+                {
+                    eventName=ModelBasic.AdjFloatLayer.EventJs.show,
+                    eventJavascript=new EventJavascript
+                    {
+                        code="page.focus.css('font-weight', 'bold')"
+                    }
+                }
+            },
+           width = "250px",
+           height = "100px",
+       }) }
+        else
+        {
+            <div class="layui-card-body layui-text">
+                <blockquote class="layui-elem-quote" style="border: none;">
+                    <p style="color: orangered;">无对战数据</p>
+                </blockquote>
+            </div>
+        }
+    </div>
+</form>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        form.render('select'); // 仅渲染 select 元素
+    });
+
+    $('#submitBtn').on('click', function () {
+        var checkboxes = document.querySelectorAll('input[type=checkbox][name="ting_replace"]:checked'); // 获取所有选中的复选框
+        var selectedValues = Array.from(checkboxes).map(function (checkbox) { return checkbox.value; }); // 转换为数组并获取值
+        $.ajax({
+            type: "POST",
+            url: "/TingZhan/Mate/Replace",
+            data: { tg_ids: selectedValues },
+            async: false,
+            dataType: 'json',
+            success: function (e) {
+                if (e.code == 0) {
+                    layer.msg(e.msg, {
+                        icon: 6
+                        , shade: 0
+                    });
+                    location.href = '/TingZhan/Mate/Index';
+                } else {
+                    layer.msg(e.msg, {
+                        icon: 5
+                        , shade: 0
+                    });
+                }
+            },
+            error: function () {
+                alert('操作失败');
+            }
+        });
+    });
+
+    $('#delBtn').on('click', function () {
+        layer.confirm('是否确认删除?', { icon: 3, title: '提示' }, function (index) {
+            $.ajax({
+                type: "POST",
+                url: "/TingZhan/Mate/Del",
+                data: { tingzhan_id: $("#tingzhan_id").val() },
+                async: false,
+                dataType: 'json',
+                success: function (e) {
+                    if (e.code == 0) {
+                        layer.msg(e.msg, {
+                            icon: 6
+                            , shade: 0
+                        });
+                        location.href = '/TingZhan/Mate/Index';
+                    } else {
+                        layer.msg(e.msg, {
+                            icon: 5
+                            , shade: 0
+                        });
+                    }
+                },
+                error: function () {
+                    alert('操作失败');
+                }
+            });
+
+            layer.close(index);
+        });
+    });
+
+    $('#exportBtn').on('click', function () {
+        location.href = '/TingZhan/Mate/ExportToExcel';
+    });
+
+    function del_mate(id) {
+        layer.confirm('是否确认删除?', { icon: 3, title: '提示' }, function (index) {
+            $.ajax({
+                type: "POST",
+                url: "/TingZhan/Mate/DelMate",
+                data: { id: id },
+                async: false,
+                dataType: 'json',
+                success: function (e) {
+                    if (e.code == 0) {
+                        layer.msg(e.msg, {
+                            icon: 6
+                            , shade: 0
+                        });
+                        location.href = '/TingZhan/Mate/Index';
+                    } else {
+                        layer.msg(e.msg, {
+                            icon: 5
+                            , shade: 0
+                        });
+                    }
+                },
+                error: function () {
+                    alert('操作失败');
+                }
+            });
+
+            layer.close(index);
+        });
+    }
+</script>

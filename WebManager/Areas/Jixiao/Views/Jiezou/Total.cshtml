@@ -1,0 +1,184 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@model Services.Project.PageFactory.TableVO
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+</style>
+<!-- 以下书写自己的页面内容代码 -->
+<form id="mainForm" class="layui-form" action="DayTarget">
+    <div class="layui-row">
+        <div class="layui-col-md8">
+
+        </div>
+    </div>
+    <div class="layui-row">
+
+        <div class="layui-col-md12">
+
+            <table class="layui-table" style="text-align:center;width:100%;" id="table1" name="table1">
+                
+                <colgroup>
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                </colgroup>
+                
+                <thead>
+
+                    <tr>
+                        <th colspan="12" style="text-align: center; background-color: #FFF3CA; font-size: 18px; font-weight: 700 ">团队课表</th>
+                    </tr>
+
+                    <tr style="background-color: #FCE4D3;">
+                        <th style="font-size: 18px;">运营</th>
+                        <th style="font-size: 18px;">参与厅数</th>
+                        <th style="font-size: 18px;">未开始</th>
+                        <th style="font-size: 18px;">0.5阶段厅数</th>
+                        <th style="font-size: 18px;">1.0阶段厅数</th>
+                        <th style="font-size: 18px;">2.0阶段厅数</th>
+                        <th style="font-size: 18px;">3.0阶段厅数</th>
+                        <th style="font-size: 18px;">4.0阶段厅数</th>
+                        <th style="font-size: 18px;">5.0阶段厅数</th>
+                        <th style="font-size: 18px;">6.0阶段厅数</th>
+                        <th style="font-size: 18px;">已完成</th>
+                        <th style="font-size: 18px;">未参与厅数</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @{
+                        int count = 0;
+                        int step0 = 0;
+                        int step05 = 0;
+                        int step1 = 0;
+                        int step2 = 0;
+                        int step3 = 0;
+                        int step4 = 0;
+                        int step5 = 0;
+                        int step6 = 0;
+                        int step7 = 0;
+                        int missing = 0;
+                        foreach (var item in DoMySql.FindList<ModelDb.jiezou>($"tenant_id='{new DomainBasic.TenantApp().GetInfo().id}' and status=0 group by yy_user_sn order by create_time desc"))
+                        {
+                            var yy = DoMySql.FindEntity<ModelDb.user_base>($"user_sn='{item.yy_user_sn}' and status=0", false);
+                            if (yy.IsNullOrEmpty()) { continue; }
+                            var list = DoMySql.FindList<ModelDb.jiezou_item>($"jiezou_sn='{item.jiezou_sn}' and status=0 and tg_user_sn in{new DomainUserBasic.UserRelationApp().GetNextAllUsersForSql(ModelEnum.UserRelationTypeEnum.运营邀厅管, item.yy_user_sn)}");
+                            int missingNum = new DomainUserBasic.UserRelationApp().GetNextUsers(ModelEnum.UserRelationTypeEnum.运营邀厅管,yy.user_sn).Count - list.Count;
+                                        <tr style="background-color: #E3F2D9; font-size: 18px; ">
+                                            <td style="font-size: 18px;">
+                                                <a href="javascript:YyDetail(@($"'{item.yy_user_sn}'"),@($"'{item.jiezou_sn}'"));">
+                                                    @(yy.username)(@(new DomainUserBasic.UserRelationApp().GetNextUsers(ModelEnum.UserRelationTypeEnum.运营邀厅管,item.yy_user_sn).Count)个厅)
+                                                </a>
+                                            </td>
+                                            <td style="font-size: 18px;">@(list.Count)</td>
+                                            <td style="font-size: 18px; color: darkblue;"><a href="javascript:show(0,'@item.jiezou_sn');" style="color: darkblue;">@(list.Count(x=>x.step.ToDouble()==0))</a></td>
+                                            <td style="font-size: 18px; color: darkblue;"><a href="javascript:show(0.5,'@item.jiezou_sn');" style="color: darkblue;">@(list.Count(x=>x.step.ToDouble()==0.5))</a></td>
+                                            <td style="font-size: 18px; color: darkblue;"><a href="javascript:show(1,'@item.jiezou_sn');" style="color: darkblue;">@(list.Count(x=>x.step.ToDouble()==1))</a></td>
+                                            <td style="font-size: 18px; color: darkblue;"><a href="javascript:show(2,'@item.jiezou_sn');" style="color: darkblue;">@(list.Count(x=>x.step.ToDouble()==2))</a></td>
+                                            <td style="font-size: 18px; color: darkblue;"><a href="javascript:show(3,'@item.jiezou_sn');" style="color: darkblue;">@(list.Count(x=>x.step.ToDouble()==3))</a></td>
+                                            <td style="font-size: 18px; color: darkblue;"><a href="javascript:show(4,'@item.jiezou_sn');" style="color: darkblue;">@(list.Count(x=>x.step.ToDouble()==4))</a></td>
+                                            <td style="font-size: 18px; color: darkblue;"><a href="javascript:show(5,'@item.jiezou_sn');" style="color: darkblue;">@(list.Count(x=>x.step.ToDouble()==5))</a></td>
+                                            <td style="font-size: 18px; color: darkblue;"><a href="javascript:show(6,'@item.jiezou_sn');" style="color: darkblue;">@(list.Count(x=>x.step.ToDouble()==6))</a></td>
+                                            <td style="font-size: 18px; color: darkblue;"><a href="javascript:show(7,'@item.jiezou_sn');" style="color: darkblue;">@(list.Count(x=>x.step.ToDouble()==7))</a></td>
+                                            <td style="font-size: 18px; color: darkblue;"><a href="javascript:TgMissing('@item.jiezou_sn');" style="color: darkblue;">@missingNum</a></td>
+                                        </tr>
+                            count += list.Count;
+                            step0 += list.Count(x => x.step.ToDouble() == 0);
+                            step05 += list.Count(x => x.step.ToDouble() == 0.5);
+                            step1 += list.Count(x => x.step.ToDouble() == 1);
+                            step2 += list.Count(x => x.step.ToDouble() == 2);
+                            step3 += list.Count(x => x.step.ToDouble() == 3);
+                            step4 += list.Count(x => x.step.ToDouble() == 4);
+                            step5 += list.Count(x => x.step.ToDouble() == 5);
+                            step6 += list.Count(x => x.step.ToDouble() == 6);
+                            step7 += list.Count(x => x.step.ToDouble() == 7);
+                            missing += missingNum;
+                        }
+                        if (count>0)
+                        {
+                            <tr style="background-color: #E3F2D9;">
+                                <th style="font-size: 18px;">合计</th>
+                                <td style="font-size: 18px;">@count</td>
+                                <td style="font-size: 18px;">@step0 (@(100*step0/count)%)</td>
+                                <td style="font-size: 18px;">@step05 (@(100*step05/count)%)</td>
+                                <td style="font-size: 18px;">@step1 (@(100*step1/count)%)</td>
+                                <td style="font-size: 18px;">@step2 (@(100*step2/count)%)</td>
+                                <td style="font-size: 18px;">@step3 (@(100*step3/count)%)</td>
+                                <td style="font-size: 18px;">@step4 (@(100*step4/count)%)</td>
+                                <td style="font-size: 18px;">@step5 (@(100*step5/count)%)</td>
+                                <td style="font-size: 18px;">@step6 (@(100*step6/count)%)</td>
+                                <td style="font-size: 18px;">@step7 (@(100*step7/count)%)</td>
+                                <td style="font-size: 18px;">@missing (@(100*missing/count)%)</td>
+                            </tr>
+                        }
+
+                    }
+                </tbody>
+                
+            </table>
+
+        </div>
+
+    </div>
+
+</form>
+
+
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        var layer = layui.layer;
+    });
+
+    function show(step, jiezou_sn) {
+        win_pop_iframe('厅管名单', '/jixiao/jiezou/tgdetail?step=' + step + '&jiezou_sn=' + jiezou_sn, 476, 800);
+    }
+    function TgMissing(yy_user_sn) {
+        win_pop_iframe('厅管名单', '/jixiao/jiezou/tgMissing?jiezou_sn=' + yy_user_sn , 476, 800);
+    }
+    function YyDetail(yy_user_sn, jiezou_sn) {
+        window.open('/jixiao/jiezou/item?yy_user_sn=' + yy_user_sn + '&jiezou_sn=' + jiezou_sn, '_blank');
+    }
+
+</script>
+

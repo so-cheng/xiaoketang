@@ -1,0 +1,984 @@
+﻿@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>直播间列表</title>
+
+    <link href="~/Assets/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px 16px;
+        }
+
+        .search-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+            .search-input:focus {
+                outline: none;
+                border-color: #667eea;
+            }
+
+        .filter-btn {
+            padding: 12px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+            .filter-btn:hover {
+                background: #5a6fd8;
+            }
+
+        .area-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+
+        .area-tab {
+            padding: 12px 24px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .area-tab::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+                transition: left 0.5s ease;
+            }
+
+            .area-tab:hover::before {
+                left: 100%;
+            }
+
+            .area-tab.active {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                border-color: #667eea;
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            }
+
+            .area-tab:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            }
+
+        .tables-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .table-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .table-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+                transition: left 0.6s ease;
+            }
+
+            .table-card:hover::before {
+                left: 100%;
+            }
+
+            .table-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .table-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .table-status {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-available {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-occupied {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .status-reserved {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .qr-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .qr-code {
+            width: 120px;
+            height: 120px;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px auto;
+            font-size: 12px;
+            color: #666;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .qr-code::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 80px;
+                height: 80px;
+                background-size: 20px 20px;
+                background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+                opacity: 0.3;
+            }
+
+        .table-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .table-capacity {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background: #5a6fd8;
+                transform: translateY(-1px);
+            }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #e0e0e0;
+        }
+
+            .btn-secondary:hover {
+                background: #e9ecef;
+            }
+
+        .btn-print {
+            background: #ff9800;
+            color: white;
+        }
+
+            .btn-print:hover {
+                background: #f57c00;
+                transform: translateY(-1px);
+            }
+
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .stat-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+                transition: left 0.5s ease;
+            }
+
+            .stat-card:hover::before {
+                left: 100%;
+            }
+
+            .stat-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            }
+
+            .stat-card.active {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            }
+
+                .stat-card.active .stat-number {
+                    color: white;
+                }
+
+                .stat-card.active .stat-label {
+                    color: rgba(255, 255, 255, 0.9);
+                }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+
+        @@media (max-width: 768px) {
+            .tables-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .area-tabs {
+                padding: 0 16px;
+            }
+
+            .container {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 统计卡片 -->
+        <div class="stats-cards">
+            <div class="stat-card" data-filter="all" onclick="filterByStatus('all')">
+                <div class="stat-number" id="totalTables">0</div>
+                <div class="stat-label">总直播间</div>
+            </div>
+            <div class="stat-card" data-filter="0" onclick="filterByStatus('0')">
+                <div class="stat-number" id="availableTables">0</div>
+                <div class="stat-label">可用直播间</div>
+            </div>
+            <div class="stat-card" data-filter="1" onclick="filterByStatus('1')">
+                <div class="stat-number" id="occupiedTables">0</div>
+                <div class="stat-label">已占用</div>
+            </div>
+            <div class="stat-card" data-filter="2" onclick="filterByStatus('2')">
+                <div class="stat-number" id="reservedTables">0</div>
+                <div class="stat-label">已预订</div>
+            </div>
+        </div>
+
+        <!-- 搜索栏 -->
+        <div class="search-bar">
+            <input type="text" class="search-input" placeholder="搜索直播间名称或编号..." id="searchInput">
+            <button class="filter-btn" onclick="resetAllFilters()" style="background: #6c757d;">🔄 重置</button>
+            <button class="filter-btn" onclick="printAllQRCodes()" style="background: #ff9800;">🖨️ 批量打印</button>
+        </div>
+        <!-- 区域标签 -->
+        <div class="area-tabs">
+            <div class="area-tab active" data-area="all" onclick="filterByArea('all')">全部区域</div>
+
+            @foreach (var item in DoMySql.FindList<ModelDb.p_liveroom_area>($"tenant_id='{new DomainBasic.TenantApp().GetInfo().id}' and zt_user_sn = '{new UserIdentityBag().user_sn}'"))
+            {
+                <div class="area-tab" data-area="@item.id" onclick="filterByArea('@item.id')">@item.name</div>
+            }
+        </div>
+
+        <!-- 位网格 -->
+        <div class="tables-grid" id="tablesGrid">
+            <!-- 卡片将通过JavaScript动态生成 -->
+        </div>
+    </div>
+
+    <script src="~/Assets/js/jquery.js"></script>
+    <script src="~/Assets/layui/layui.js"></script>
+    <script>
+
+        // 数据
+        // 状态：1-空闲，2-已占用，3-已预订
+        let tablesData = [];
+        let currentFilter = 'all';
+        let currentStatusFilter = 'all';
+        // 初始化页面
+        function init() {
+
+            $.ajax({
+                type: "get",
+                url: "/LiveRoom/Manage/List",
+                dataType: "json",
+                success: function (res) {
+                    tablesData = res.data;
+                    renderTables();
+                    updateStats();
+                }
+            })
+        }
+        // 渲染直播间列表
+        function renderTables() {
+            const grid = document.getElementById('tablesGrid');
+            let filteredTables = tablesData
+
+            filteredTables.map(table => {
+                table.url = "http://" + document.domain + "/liveroom/manage/qrcode?id=" + table.id;
+            });
+            // 应用状态筛选
+            if (currentFilter !== 'all') {
+                const currentFilterNumber = parseInt(currentFilter);
+                filteredTables = tablesData.filter(table => table.area_id === currentFilterNumber);
+            }
+            // 应用状态筛选
+            if (currentStatusFilter !== 'all') {
+                const statusNumber = parseInt(currentStatusFilter);
+                filteredTables = filteredTables.filter(table => table.status === statusNumber);
+            }
+
+            grid.innerHTML = filteredTables.map(table => `<div class="table-card" data-table-id="${table.id}">
+                                                                                                                <div class="table-header">
+                                                                                                                    <div class="table-name">${table.name}</div>
+                                                                                                                    <div class="table-status status-${table.status}">
+                                                                                                                 <span>${getStatusText(table.status)}</span>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="qr-container">
+                                                                                                                     <div class="qr-code" onclick="showQRCode('${table.name}')">
+                                                                                                                         <div>`+ `
+                                                                                                                   <img src="${table.url}"` + ` style="width: 120px; height: 120px;" alt="二维码"></div>
+                                                                                                                     </div>
+                                                                                                                </div>
+                                                                                                                <div class="table-info">
+                                                                                                                    <div class="table-capacity">📍 ${table.catename}</div>
+                                                                                                                    <div class="table-actions">
+                                                                                                                        <button class="action-btn btn-print" onclick="printQRCode('${table.id}', '${table.name}','${table.url}', ${table.capacity})">🖨️ 打印</button>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        `).join('');
+        }
+
+        // 获取状态文本
+        function getStatusText(status) {
+            const statusMap = {
+                0: '<span class="layui-badge layui-bg-green">空闲</span>',
+                1: '<span class="layui-badge">已占用</span>',
+                2: '<span class="layui-badge layui-bg-orange">已预订</span>'
+            };
+            return statusMap[status] || status;
+        }
+
+
+        // 按区域筛选
+        function filterByArea(area) {
+            console.log("区域:" + area)
+            currentFilter = area;
+
+            // 更新标签状态
+            document.querySelectorAll('.area-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`[data-area="${area}"]`).classList.add('active');
+            renderTables();
+        }
+
+        // 按状态筛选
+        function filterByStatus(status) {
+            console.log("状态：" + status)
+            currentStatusFilter = status;
+
+            // 更新统计卡片状态
+            document.querySelectorAll('.stat-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            document.querySelector(`[data-filter="${status}"]`).classList.add('active');
+
+            renderTables();
+        }
+
+        // 更新统计信息
+        function updateStats() {
+            const total = tablesData.length;
+            const available = tablesData.filter(t => t.status === parseInt("0")).length;
+            const occupied = tablesData.filter(t => t.status === parseInt("1")).length;
+            const reserved = tablesData.filter(t => t.status === parseInt("2")).length;
+            document.getElementById('totalTables').textContent = total;
+            document.getElementById('availableTables').textContent = available;
+            document.getElementById('occupiedTables').textContent = occupied;
+            document.getElementById('reservedTables').textContent = reserved;
+        }
+        // 显示二维码
+        function showQRCode(tableName) {
+            alert(`直播间 ${tableName} 的二维码\n\n扫码即可进入直播间页面`);
+        }
+
+        // 打印二维码
+        function printQRCode(id, tableName, url, capacity) {
+            // 创建打印窗口
+            const printWindow = window.open('', '_blank', 'width=800,height=600');
+
+            // 生成二维码内容（这里使用简单的文本模拟，实际项目中可以使用QR码库）
+            const qrContent = generateQRCodeContent(tableName);
+
+            // 打印页面HTML
+            const printHTML = `
+                                                                                                            <!DOCTYPE html>
+                                                                                                            <html lang="zh-CN">
+                                                                                                            <head>
+                                                                                                                <meta charset="UTF-8">
+                                                                                                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                                                                                                 <title>直播间二维码 - ${tableName}</title>
+                                                                                                                <style>
+                                                                                                                    * {
+                                                                                                                        margin: 0;
+                                                                                                                        padding: 0;
+                                                                                                                        box-sizing: border-box;
+                                                                                                                    }
+
+                                                                                                                    body {
+                                                                                                                        font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+                                                                                                                        background: white;
+                                                                                                                        color: #333;
+                                                                                                                        display: flex;
+                                                                                                                        justify-content: center;
+                                                                                                                        align-items: center;
+                                                                                                                        min-height: 100vh;
+                                                                                                                        padding: 20px;
+                                                                                                                    }
+
+                                                                                                                    .print-container {
+                                                                                                                        text-align: center;
+                                                                                                                        max-width: 400px;
+                                                                                                                        width: 100%;
+                                                                                                                    }
+
+                                                                                                                    .restaurant-logo {
+                                                                                                                        font-size: 24px;
+                                                                                                                        font-weight: bold;
+                                                                                                                        color: #667eea;
+                                                                                                                        margin-bottom: 20px;
+                                                                                                                    }
+
+                                                                                                                    .table-title {
+                                                                                                                        font-size: 28px;
+                                                                                                                        font-weight: bold;
+                                                                                                                        color: #333;
+                                                                                                                        margin-bottom: 10px;
+                                                                                                                    }
+
+                                                                                                                    .table-info {
+                                                                                                                        font-size: 16px;
+                                                                                                                        color: #666;
+                                                                                                                        margin-bottom: 30px;
+                                                                                                                    }
+
+                                                                                                                    .qr-code-container {
+                                                                                                                        background: #f8f9fa;
+                                                                                                                        border: 3px solid #333;
+                                                                                                                        border-radius: 12px;
+                                                                                                                        padding: 30px;
+                                                                                                                        margin: 20px 0;
+                                                                                                                        display: inline-block;
+                                                                                                                        position: relative;
+                                                                                                                    }
+
+                                                                                                                    .qr-code {
+                                                                                                                        width: 200px;
+                                                                                                                        height: 200px;
+                                                                                                                        background: white;
+                                                                                                                        border: 2px solid #333;
+                                                                                                                        border-radius: 8px;
+                                                                                                                        display: flex;
+                                                                                                                        align-items: center;
+                                                                                                                        justify-content: center;
+                                                                                                                        position: relative;
+                                                                                                                        margin: 0 auto;
+                                                                                                                    }
+
+                                                                                                                    .qr-pattern {
+                                                                                                                        width: 180px;
+                                                                                                                        height: 180px;
+                                                                                                                        background:
+                                                                                                                            linear-gradient(45deg, #000 25%, transparent 25%),
+                                                                                                                            linear-gradient(-45deg, #000 25%, transparent 25%),
+                                                                                                                            linear-gradient(45deg, transparent 75%, #000 75%),
+                                                                                                                            linear-gradient(-45deg, transparent 75%, #000 75%);
+                                                                                                                        background-size: 20px 20px;
+                                                                                                                        background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+                                                                                                                    }
+
+                                                                                                                    .scan-text {
+                                                                                                                        font-size: 18px;
+                                                                                                                        font-weight: bold;
+                                                                                                                        color: #333;
+                                                                                                                        margin-top: 20px;
+                                                                                                                    }
+
+                                                                                                                    .instructions {
+                                                                                                                        font-size: 14px;
+                                                                                                                        color: #666;
+                                                                                                                        margin-top: 10px;
+                                                                                                                        line-height: 1.5;
+                                                                                                                    }
+
+                                                                                                                    .footer {
+                                                                                                                        margin-top: 30px;
+                                                                                                                        font-size: 12px;
+                                                                                                                        color: #999;
+                                                                                                                    }
+
+                                                                                                                    @@media print {
+                                                                                                                        body {
+                                                                                                                            margin: 0;
+                                                                                                                            padding: 10px;
+                                                                                                                        }
+
+                                                                                                                        .print-container {
+                                                                                                                            max-width: none;
+                                                                                                                            width: 100%;
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                </style>
+                                                                                                            </head>
+                                                                                                            <body>
+                                                                                                                <div class="print-container">
+                                                                                                                     <div class="restaurant-logo"> 千广传媒直播间</div>
+                                                                                                                     <div class="table-title">直播间 ${tableName}</div>
+                                                                                                                    <div class="qr-code-container">
+                                                                                                                        <div class="qr-code">
+                                                                                                                            <div class="qr-pattern">
+                                                                                                                      <img src="${url}" style="width: 180px; height: 180px;" alt="二维码">
+                                                                                                                      </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+
+                                                                                                                     <div class="scan-text">扫码直播</div>
+                                                                                                                     <div class="instructions">
+                                                                                                                         请使用手机扫描上方二维码<br>
+                                                                                                                         即可进入直播间页面
+                                                                                                                     </div>
+
+                                                                                                                    <div class="footer">
+                                                                                                                        生成时间：${new Date().toLocaleString()}
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </body>
+                                                                                                            </html>`;
+
+            // 写入内容并打印
+            printWindow.document.write(printHTML);
+            printWindow.document.close();
+
+            // 等待内容加载完成后打印
+            printWindow.onload = function () {
+                printWindow.focus();
+                printWindow.print();
+                printWindow.close();
+            };
+        }
+
+        // 生成二维码内容（模拟）
+        function generateQRCodeContent(tableName) {
+            // 这里可以生成真实的二维码内容
+            // 例如：https://restaurant.com/order?table=${tableName}
+            return `https://restaurant.com/order?table=${tableName}`;
+        }
+
+        // 批量打印所有直播间二维码
+        function printAllQRCodes() {
+            let filteredTables = currentFilter === 'all'
+                ? tablesData
+                : tablesData.filter(table => table.cate_id === currentFilter);
+
+            // 应用状态筛选
+            if (currentStatusFilter !== 'all') {
+                const statusNumber = parseInt(currentStatusFilter);
+                filteredTables = filteredTables.filter(table => table.status === statusNumber);
+            }
+
+            if (filteredTables.length === 0) {
+                alert('没有可打印的直播间');
+                return;
+            }
+
+            if (confirm(`确定要打印当前筛选的 ${filteredTables.length} 个直播间二维码吗？`)) {
+                // 创建打印窗口
+                const printWindow = window.open('', '_blank', 'width=1200,height=800');
+
+                // 生成批量打印HTML
+                const printHTML = generateBatchPrintHTML(filteredTables);
+
+                // 写入内容并打印
+                printWindow.document.write(printHTML);
+                printWindow.document.close();
+
+                // 等待内容加载完成后打印
+                printWindow.onload = function () {
+                    printWindow.focus();
+                    printWindow.print();
+                    printWindow.close();
+                };
+            }
+        }
+        // 生成批量打印HTML
+        function generateBatchPrintHTML(tables) {
+            const tableCards = tables.map(table => `
+                                                                                                             <div class="table-print-card">
+                                                                                                                 <div class="table-title">直播间: ${table.name}</div>
+                                                                                                                 <div class="qr-code-container">
+                                                                                                                     <div class="qr-code">
+                                                                                                                         <div class="qr-pattern">
+                                                                                                                             <div class="scan-text">
+                                                                                                                               <img  src="${table.url}"style="width: 120px; height: 120px;" alt="二维码">
+                                                                                                                              </div>
+                                                                                                                         </div>
+                                                                                                                     </div>
+                                                                                                                 </div>
+                                                                                                             </div>
+                                                                                                        `).join('');
+
+            return `
+                                                                                                            <!DOCTYPE html>
+                                                                                                            <html lang="zh-CN">
+                                                                                                            <head>
+                                                                                                                <meta charset="UTF-8">
+                                                                                                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                                                                                                 <title>直播间二维码批量打印</title>
+                                                                                                                <style>
+                                                                                                                    * {
+                                                                                                                        margin: 0;
+                                                                                                                        padding: 0;
+                                                                                                                        box-sizing: border-box;
+                                                                                                                    }
+
+                                                                                                                    body {
+                                                                                                                        font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+                                                                                                                        background: white;
+                                                                                                                        color: #333;
+                                                                                                                        padding: 20px;
+                                                                                                                    }
+
+                                                                                                                    .print-header {
+                                                                                                                        text-align: center;
+                                                                                                                        margin-bottom: 30px;
+                                                                                                                        padding-bottom: 20px;
+                                                                                                                        border-bottom: 2px solid #e0e0e0;
+                                                                                                                    }
+
+                                                                                                                    .restaurant-logo {
+                                                                                                                        font-size: 28px;
+                                                                                                                        font-weight: bold;
+                                                                                                                        color: #667eea;
+                                                                                                                        margin-bottom: 10px;
+                                                                                                                    }
+
+                                                                                                                    .print-title {
+                                                                                                                        font-size: 20px;
+                                                                                                                        color: #666;
+                                                                                                                    }
+
+                                                                                                                    .tables-grid {
+                                                                                                                        display: grid;
+                                                                                                                        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                                                                                                                        gap: 30px;
+                                                                                                                        max-width: 1200px;
+                                                                                                                        margin: 0 auto;
+                                                                                                                    }
+
+                                                                                                                    .table-print-card {
+                                                                                                                        text-align: center;
+                                                                                                                        border: 2px solid #e0e0e0;
+                                                                                                                        border-radius: 12px;
+                                                                                                                        padding: 20px;
+                                                                                                                        background: #fafafa;
+                                                                                                                    }
+
+                                                                                                                    .table-title {
+                                                                                                                        font-size: 24px;
+                                                                                                                        font-weight: bold;
+                                                                                                                        color: #333;
+                                                                                                                        margin-bottom: 8px;
+                                                                                                                    }
+
+                                                                                                                    .table-info {
+                                                                                                                        font-size: 16px;
+                                                                                                                        color: #666;
+                                                                                                                        margin-bottom: 20px;
+                                                                                                                    }
+
+                                                                                                                    .qr-code-container {
+                                                                                                                        background: white;
+                                                                                                                        border: 2px solid #333;
+                                                                                                                        border-radius: 8px;
+                                                                                                                        padding: 20px;
+                                                                                                                        margin: 15px 0;
+                                                                                                                        display: inline-block;
+                                                                                                                    }
+
+                                                                                                                    .qr-code {
+                                                                                                                        width: 150px;
+                                                                                                                        height: 150px;
+                                                                                                                        background: white;
+                                                                                                                        border: 1px solid #333;
+                                                                                                                        border-radius: 4px;
+                                                                                                                        display: flex;
+                                                                                                                        align-items: center;
+                                                                                                                        justify-content: center;
+                                                                                                                        position: relative;
+                                                                                                                        margin: 0 auto;
+                                                                                                                    }
+
+                                                                                                                    .qr-pattern {
+                                                                                                                        width: 130px;
+                                                                                                                        height: 130px;
+                                                                                                                        background-size: 15px 15px;
+                                                                                                                        background-position: 0 0, 0 7.5px, 7.5px -7.5px, -7.5px 0px;
+                                                                                                                    }
+
+                                                                                                                    .scan-text {
+                                                                                                                        font-size: 16px;
+                                                                                                                        font-weight: bold;
+                                                                                                                        color: #333;
+                                                                                                                        margin-top: 10px;
+                                                                                                                    }
+
+                                                                                                                    .print-footer {
+                                                                                                                        text-align: center;
+                                                                                                                        margin-top: 40px;
+                                                                                                                        padding-top: 20px;
+                                                                                                                        border-top: 2px solid #e0e0e0;
+                                                                                                                        font-size: 12px;
+                                                                                                                        color: #999;
+                                                                                                                    }
+
+                                                                                                                    @@media print {
+                                                                                                                        body {
+                                                                                                                            margin: 0;
+                                                                                                                            padding: 10px;
+                                                                                                                        }
+
+                                                                                                                        .tables-grid {
+                                                                                                                            grid-template-columns: repeat(2, 1fr);
+                                                                                                                            gap: 20px;
+                                                                                                                        }
+
+                                                                                                                        .table-print-card {
+                                                                                                                            page-break-inside: avoid;
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                </style>
+                                                                                                            </head>
+                                                                                                            <body>
+                                                                                                                <div class="print-header">
+                                                                                                                     <div class="restaurant-logo">千广直播间</div>
+                                                                                                                     <div class="print-title">直播间二维码批量打印</div>
+                                                                                                                </div>
+
+                                                                                                                <div class="tables-grid">
+                                                                                                                    ${tableCards}
+                                                                                                                </div>
+
+                                                                                                                 <div class="print-footer">
+                                                                                                                     生成时间：${new Date().toLocaleString()} | 共 ${tables.length} 个直播间
+                                                                                                                 </div>
+                                                                                                            </body>
+                                                                                                            </html>
+                                                                                                        `;
+        }
+
+        // 重置所有筛选
+        function resetAllFilters() {
+            // 重置区域筛选
+            currentFilter = 'all';
+            document.querySelectorAll('.area-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector('[data-area="all"]').classList.add('active');
+
+            // 重置状态筛选
+            currentStatusFilter = 'all';
+            document.querySelectorAll('.stat-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            document.querySelector('[data-filter="all"]').classList.add('active');
+
+            // 清空搜索框
+            document.getElementById('searchInput').value = '';
+
+            // 重新渲染
+            renderTables();
+        }
+
+
+        // 搜索功能
+        document.getElementById('searchInput').addEventListener('input', function (e) {
+            const searchTerm = e.target.value.toLowerCase();
+            let filteredTables = tablesData.filter(table =>
+                table.name.toLowerCase().includes(searchTerm)
+            );
+
+            // 应用区域筛选
+            if (currentFilter !== 'all') {
+                filteredTables = filteredTables.filter(table => table.area === currentFilter);
+            }
+
+            // 应用状态筛选
+            if (currentStatusFilter !== 'all') {
+                const statusNumber = parseInt(currentStatusFilter);
+                filteredTables = filteredTables.filter(table => table.status === statusNumber);
+            }
+
+            const grid = document.getElementById('tablesGrid');
+            grid.innerHTML = filteredTables.map(table => `
+                                                                                                            <div class="table-card" data-table-id="${table.id}">
+                                                                                                                <div class="table-header">
+                                                                                                                    <div class="table-name">${table.name}</div>
+                                                                                                                    <div class="table-status status-${table.status}">
+                                                                                                                        ${getStatusText(table.status)}
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="qr-container">
+                                                                                                                     <div class="qr-code" onclick="showQRCode('${table.name}')">
+                                                                                                                         <div><img src="http://t-x-m.com/QRCode/qrcode.asp?bc1=http%3A%2F%2Fassister.hospital.kedianbao.com%2FShuye%2FOpeate%2FQrToUrl%3Fid%3D${table.id}&bc2=33&bc3=3.5&bc4=3.5&bc5=1&bc6=1&bc7=1&bc8=5&bc9=1" style="width: 120px; height: 120px;" alt="二维码"></div>
+                                                                                                                     </div>
+                                                                                                                </div>
+                                                                                                                <div class="table-info">
+                                                                                                                    <div class="table-capacity"> ${table.catename}</div>
+                                                                                                                    <div class="table-actions">
+                                                                                                                        <button class="action-btn btn-print" onclick="printQRCode('${table.name}', ${table.capacity})">🖨️ 打印</button>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        `).join('');
+        });
+
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

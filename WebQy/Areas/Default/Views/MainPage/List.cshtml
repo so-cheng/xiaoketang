@@ -1,0 +1,197 @@
+﻿
+@{
+    Layout = null;
+}
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+<style>
+    .layui-col-md3 .layui-card {
+        background-color: #eeeeee
+    }
+
+    .layuiadmin-span-color {
+    }
+
+    .layui-badge {
+        cursor: pointer;
+        margin-left: 10px;
+        background-color: #c2c2c2;
+    }
+
+    .layuiadmin-card-list > p {
+        height: 25px;
+        font-size: 25px;
+    }
+</style>
+
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+
+<div>
+    <div class="layui-row layui-col-space15 statistics">
+        <div class="layui-col-sm12 good-0">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    统计
+                    <div style=" position: absolute; right: 16px; top: -2px;">
+                        <span class="layui-badge layui-bg-cyan" onclick="GetData('@DateTime.Today.ToString("yyyy-MM-dd") ~ @DateTime.Today.ToString("yyyy-MM-dd")')">今天</span>
+                        <span class="layui-badge" onclick="GetData('@DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd") ~ @DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd")')">昨天</span>
+                        <span class="layui-badge" onclick="GetData('@DateTime.Today.ToString("yyyy-MM-01") ~ @DateTime.Today.AddMonths(1).ToString("yyyy-MM-01").ToDate().AddDays(-1).ToString("yyyy-MM-dd")')">当月</span>
+                        <span class="layui-badge" onclick="GetData('@DateTime.Today.AddDays(-6).ToString("yyyy-MM-dd") ~ @DateTime.Today.ToString("yyyy-MM-dd")')">近7天</span>
+                    </div>
+                </div>
+
+                <div class="layui-card-body layui-row layui-col-space15">
+                    <div class="layui-col-xs6 layui-col-md3">
+                        <div class="layui-card">
+                            <div class="layui-card-header">
+                                音浪值
+                            </div>
+                            <div class="layui-card-body layuiadmin-card-list">
+                                <p class="amount"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-md3">
+                        <div class="layui-card">
+                            <div class="layui-card-header">
+                                拉新数
+                            </div>
+                            <div class="layui-card-body layuiadmin-card-list">
+                                <p class="new_num"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-md3">
+                        <div class="layui-card">
+                            <div class="layui-card-header">
+                                建联数
+                            </div>
+                            <div class="layui-card-body layuiadmin-card-list">
+                                <p class="contact_num"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-md3">
+                        <div class="layui-card">
+                            <div class="layui-card-header">
+                                误刷大头
+                            </div>
+                            <div class="layui-card-body layuiadmin-card-list">
+                                <p class="datou_num"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="main" style="width: 100%;height:400px;"></div>
+
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.2.6.10.js"></script>
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+
+<script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    // 指定图表的配置项和数据
+     // 指定图表的配置项和数据
+    var dateArray = @Html.Raw(Json.Encode(ViewBag.dateArray));
+    var amountArray = @Html.Raw(Json.Encode(ViewBag.amountArray));
+    var newNumArray = @Html.Raw(Json.Encode(ViewBag.newNumArray));
+    var contactNumArray =@Html.Raw(Json.Encode(ViewBag.contactNumArray));
+    var datouNumArray=@Html.Raw(Json.Encode(ViewBag.datouNumArray));
+        // 指定图表的配置项和数据
+    var option = {
+        title: {
+        text: ''
+        },
+        tooltip: {},
+        legend: {
+            data: ['音浪', '拉新', '建联', '大头'],
+            selected: {
+                '拉新': false,
+                '建联': false,
+                '大头': false
+                }
+        },
+        xAxis: {
+        data: dateArray
+        },
+        yAxis: {
+        },
+        series: [
+            {
+                name: '音浪',
+                type: 'line',
+                data: amountArray
+            },
+            {
+                name: '拉新',
+                type: 'line',
+                data: newNumArray
+            },
+            {
+                name: '建联',
+                type: 'line',
+                data: contactNumArray
+            },
+            {
+                name: '大头',
+                type: 'line',
+                data: datouNumArray
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>
+
+
+<script>
+
+    layui.use(['layer', 'laytpl', 'laypage'], function () {
+        var layer = layui.layer
+        var date_range ="@DateTime.Today.ToString("yyyy-MM-dd") ~ @DateTime.Today.ToString("yyyy-MM-dd")";
+        GetData(date_range);
+
+        //
+        $('.layui-card-header .layui-badge').on('click', function () {
+            $(this).addClass('layui-bg-cyan').siblings().removeClass('layui-bg-cyan');
+        })
+    })
+
+    function GetData(date_range) {
+        $.ajax({
+            type: "POST",
+            url: "/Default/MainPage/GetData",
+            data: { date_range: date_range },
+            async: false,
+            dataType: 'json',
+            success: function (res) {
+                setTimeout(function () {
+                    if (res.code == 0) {
+                        let data = res.data;
+                        //console.log(data)
+                        $(`.amount`).text(data.amount)
+                        $(`.new_num`).text(data.new_num)
+                        $(`.contact_num`).text(data.contact_num)
+                        $(`.datou_num`).text(data.datou_num)
+                    }
+                }, 500);
+            }
+        });
+    }
+</script>

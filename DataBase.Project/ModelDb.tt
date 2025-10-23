@@ -1,0 +1,326 @@
+﻿<#@ template debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Core" #>
+<#@ Assembly Name="System.Windows.Forms" #>
+<#@ Assembly Name="System.Data" #>
+<#@ assembly name="System.Configuration.dll" #>
+
+<#@ assembly name="$(SolutionDir)\DataBase.Project\lib\MySql.Data.Dll" #>
+<#@ import namespace="System.Data" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #> 
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="MySql.Data.MySqlClient" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #> 
+<#@ include file="EF.Utility.CS.ttinclude"#>
+<#@ import namespace="System.Configuration" #>
+<# var manager = EntityFrameworkTemplateFileManager.Create(this);#>	 
+
+<#
+    string appPath = Path.Combine(Host.ResolveAssemblyReference("$(ProjectDir)"),"App.Config");
+    var configMap = new ExeConfigurationFileMap { ExeConfigFilename = appPath }; 
+    Configuration config = System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
+    AppSettingsSection appSettingSection = (AppSettingsSection)config.GetSection("appSettings");
+
+    string data_server = appSettingSection.Settings["data_server"].Value;
+	string data_userid = appSettingSection.Settings["data_userid"].Value;
+	string data_password = appSettingSection.Settings["data_password"].Value;
+	string data_database = appSettingSection.Settings["data_database"].Value;
+    string connectionString = @"server=" + data_server + ";user id=" + data_userid + "; password=" + data_password + "; database=" + data_database + ";Max Pool Size=10000";
+
+    MySqlConnection conn = new MySqlConnection(connectionString);
+    conn.Open();
+    
+    string selectQuery = "select * from @tableName limit 0 ;";
+    MySqlCommand command = new MySqlCommand(selectQuery, conn);
+    MySqlDataAdapter ad = new MySqlDataAdapter(command);
+    System.Data.DataSet ds = new DataSet();
+
+    System.Data.DataTable schema = conn.GetSchema("Tables"); 
+     #>
+
+namespace WeiCode.ModelDbs
+{
+    using System;
+    using System.Collections.Generic;
+	using WeiCode.Utility;
+    using WeiCode.DataBase;
+	using WeiCode.Services;
+	using WeiCode.Domain;
+
+	public class ModelDb {
+
+    <#foreach(System.Data.DataRow row in schema.Rows)
+    {    
+        ds.Tables.Clear();
+        string tb_name= row["TABLE_NAME"].ToString();        
+        command.CommandText = selectQuery.Replace("@tableName",row["TABLE_NAME"].ToString());
+        ad.FillSchema(ds, SchemaType.Mapped,tb_name);
+        var className = tb_name; 
+
+		var tbNotes = GetTbNotes(connectionString, tb_name, data_database);
+
+		var tbContent = tbNotes.Split('#')[0];
+		var tbNotesBase = GetNotesItem(tbNotes, "#base:");
+		var tbNotesTmpl = GetNotesItem(tbNotes, "#tmpl:");
+
+		string TableBasicBase = "ModelDbBase";
+		if(tbNotesBase != ""){
+			TableBasicBase = "ModelDbModular" + tbNotesBase;
+        }
+		if(tbNotesTmpl != ""){
+			TableBasicBase = "ModelTmplModular" + tbNotesTmpl;
+        }
+		#>
+			/// <summary>
+			/// 表实体-<#=tbContent#> 
+			/// </summary>	
+			public class <#=className#> : <#=TableBasicBase#>
+			{    
+			<#
+				List<string> SysTypes=new List<string>{"int","char","decimal","float","string"};
+				Dictionary<string, string> dic = new Dictionary<string, string>
+				{
+					{"Int64","long?"},
+					{"Boolean","bool?"},
+					{"UInt64","int?"},
+					{"String","string"},
+					{"Decimal","Nullable<decimal>"},
+					{"DateTime","Nullable<DateTime>"},
+					{"Double","Nullable<double>"},
+					{"Int32","Nullable<int>"},
+					{"Single","Single?"},
+					{"Int16","short?"},
+					{"Byte","byte?"},
+					{"Float","Nullable<double>"},
+					{"Guid","Guid?"},
+					{"Object","object"},
+					{"SByte","Nullable<sbyte>"},
+					{"Tinyint","int?"}
+				};			
+			#>
+				public <#=className#>(){}
+				public <#=className#>(bool isDefault = false)
+				{
+					if (isDefault)
+					{
+						<#
+						string dataTypeNameD = "";
+						foreach (DataColumn dc in ds.Tables[0].Columns) 
+						{
+							if (!dic.TryGetValue(dc.DataType.Name, out dataTypeNameD))
+								dataTypeNameD = dc.DataType.Name;
+							string coumnName=SysTypes.Contains(dc.ColumnName)?"@"+dc.ColumnName:dc.ColumnName;
+							string column_default = Get(connectionString, tb_name, dc.ColumnName, "column_default");
+							string column_default_code = "";
+							if (column_default != "" && dataTypeNameD.IndexOf("int") >= 0) column_default_code = @" " + column_default + ";";
+							if (column_default != "" && dataTypeNameD.IndexOf("decimal") >= 0) column_default_code = @" " + column_default + "m;";
+							if (column_default_code != "")
+                            {
+							#>
+							this.<#=coumnName#> = <#=column_default_code#>
+							<#
+                            }
+                        }
+						#>
+					}
+				}
+			<#        				
+				string dataTypeName="";
+				PushIndent("		");
+
+				foreach (DataColumn dc in ds.Tables[0].Columns) 
+				{                
+					if (!dic.TryGetValue(dc.DataType.Name, out dataTypeName))
+						dataTypeName=dc.DataType.Name;
+					string coumnName=SysTypes.Contains(dc.ColumnName)?"@"+dc.ColumnName:dc.ColumnName;
+					coumnName=CamelName(coumnName); 
+
+					//if(dataTypeName == "Nullable<sbyte>") dataTypeName = coumnName + "_enum";
+
+					string notes = Get(connectionString, tb_name, data_database, dc.ColumnName);
+					
+					if (coumnName != "id" && coumnName != "unique_sn"  && coumnName != "create_time" && coumnName != "modify_time")
+					{
+
+						if(notes.Contains("#json:"))
+						{
+							string jsonNotes = GetNotesItem(notes, "#json:");
+							dataTypeName = coumnName + "_json";
+							WriteLine("public class " + dataTypeName + " : Entity{");
+							WriteLine(GetNotesItem(notes, "#json:"));
+							WriteLine("}");
+						}
+
+						if (tbNotesBase == "" || notes.Contains("#project:"))
+						{
+							WriteLine("/// <summary>");
+							WriteLine("/// " + notes);
+							WriteLine("/// </summary>");
+							Write(GetScalarProperty(dc));
+
+							WriteLine("public " + dataTypeName + " " + coumnName + "{ get; set; }");
+                        }
+						
+						if(notes.Contains("#base:"))
+						{
+							WriteLine("/// <summary>");
+							WriteLine("/// " + notes);
+							WriteLine("/// </summary>");
+							Write(GetScalarProperty(dc));
+							WriteLine("public " + dataTypeName + " " + coumnName + "{");
+							WriteLine("get {");
+							WriteLine("return base." + GetNotesItem(notes, "#base:") + ";");
+							WriteLine("}");
+							WriteLine("set {");
+							WriteLine("base." + GetNotesItem(notes, "#base:") + " = value;");
+							WriteLine("}");
+							WriteLine("}");
+                        }
+
+						if(notes.Contains("#enum:"))
+						{
+							string enumNotes = GetNotesItem(notes, "#enum:");
+							string[] values = enumNotes.Split(';');
+							WriteLine("public enum " + coumnName + "_enum {");
+							for(int v_i = 0; v_i < values.Length; v_i++)
+							{
+								WriteLine("	" + values[v_i] + ",");
+							}
+							WriteLine("}");
+						}
+					}
+				}
+				PopIndent();
+				#>
+			}
+	    <#}#>
+	}
+}
+<#
+        manager.EndBlock();                
+    conn.Close();  
+    manager.Process(true);  
+#> 
+<#+
+    public static string Get(string connectionString, string tablename, string data_database, string columnName, string colContent = "COLUMN_COMMENT")
+    { 
+        string sql = @"select " + colContent + " from information_schema.columns where table_name='{0}' AND `COLUMN_NAME`='{1}' AND table_schema = '" + data_database + "'";
+        sql = string.Format(sql, tablename, columnName);
+        using(MySqlConnection conn = new MySqlConnection(connectionString))
+		{
+			conn.Open();
+			MySqlCommand command = new MySqlCommand(sql, conn);
+			command.CommandText = sql;
+			MySqlDataAdapter ad = new MySqlDataAdapter(command);
+			System.Data.DataSet ds = new DataSet();    
+			ad.Fill(ds);  
+			if(ds.Tables.Count>0&&ds.Tables[0].Rows.Count>0)
+				return ds.Tables[0].Rows[0][0].ToString().Replace("\n","\n		/// ");
+			else return ds.Tables.Count.ToString();
+		}
+    }
+
+	public static string GetTbNotes(string connectionString, string tablename, string data_database)
+    { 
+        string sql = @"select table_comment from information_schema.TABLES where table_name = '{0}' AND table_schema = '" + data_database + "'";
+        sql = string.Format(sql, tablename);
+        using(MySqlConnection conn = new MySqlConnection(connectionString))
+		{
+			conn.Open();
+			MySqlCommand command = new MySqlCommand(sql, conn);
+			command.CommandText = sql;
+			MySqlDataAdapter ad = new MySqlDataAdapter(command);
+			System.Data.DataSet ds = new DataSet();    
+			ad.Fill(ds);  
+			return ds.Tables[0].Rows[0][0].ToString();
+		}
+    }
+	
+    public static string GetScalarProperty(DataColumn column)
+    {
+		List<string> arr=new List<string>() ;		
+		bool pk = column.Table.PrimaryKey.Any(p=>p.ColumnName==column.ColumnName);	
+		bool dft=!string.IsNullOrEmpty(column.DefaultValue.ToString());
+		bool ai = column.AutoIncrement;
+
+        if (pk) arr.Add("PrimaryKey = true");
+        //arr.Add("DefaultValue="+column.DefaultValue);
+        if (ai) arr.Add("AutoIncrement = true");
+        string str=string.Empty;
+        if (arr.Any())
+        {
+            str = string.Format("[ScalarProperty({0})]\r\n",string.Join(",",arr));
+        }
+        return str;
+    }
+
+    public static String ClassName(string name) {
+        if(name.IndexOf("_")==1)name=name.Substring(1);
+        StringBuilder result = new StringBuilder();
+        // 快速检查
+        if (!name.Contains("_")) {
+            // 不含下划线，仅将首字母小写
+            return name.Substring(0, 1).ToUpper() + name.Substring(1);
+        }
+        // 用下划线将原始字符串分割
+        string[] camels = name.Split('_');
+        foreach (var camel in  camels) {
+            // 跳过原始字符串中开头、结尾的下换线或双重下划线
+            if (string.IsNullOrWhiteSpace(camel)) {
+                continue;
+            }
+            // 其他的驼峰片段，首字母大写
+            result.Append(camel.Substring(0, 1).ToUpper());
+            result.Append(camel.Substring(1).ToLower());
+        }
+        return result.ToString();
+    }
+
+    public static String CamelName(string name) {
+        //if(name.IndexOf("_")==1)name=name.Substring(1);
+        //StringBuilder result = new StringBuilder();
+        //// 快速检查
+        //if (!name.Contains("_")) {
+            //// 不含下划线，仅将首字母小写
+            //return name.Substring(0, 1).ToUpper() + name.Substring(1);
+        //}
+        //// 用下划线将原始字符串分割
+        //string[] camels = name.Split('_');
+        //foreach (var camel in  camels) {
+            //// 跳过原始字符串中开头、结尾的下换线或双重下划线
+            //if (string.IsNullOrWhiteSpace(camel)) {
+                //continue;
+            //}
+            //// 其他的驼峰片段，首字母大写
+            //result.Append(camel.Substring(0, 1).ToUpper());
+            //result.Append(camel.Substring(1).ToLower());
+        //}
+        //return result.ToString();
+        return name;
+    }
+
+	public static string GetNotesItem(string str, string item){
+		int startIndex = str.IndexOf(item);
+		if (startIndex <= 0) return "";
+		string tmpStr = str.Substring(startIndex + item.Length , str.Length - item.Length - startIndex);
+		tmpStr = tmpStr.Split('#')[0];
+		return tmpStr;
+    }
+
+	public static DataRow GetTableRow(string connectionString, string tableName, string where){
+		string sql = @"select * from " + tableName + " where " + where + "";
+        using(MySqlConnection conn = new MySqlConnection(connectionString))
+		{
+			conn.Open();
+			MySqlCommand command = new MySqlCommand(sql, conn);
+			command.CommandText = sql;
+			MySqlDataAdapter ad = new MySqlDataAdapter(command);
+			System.Data.DataSet ds = new DataSet();    
+			ad.Fill(ds);  
+			return ds.Tables[0].Rows[0];
+		}
+    }
+#>

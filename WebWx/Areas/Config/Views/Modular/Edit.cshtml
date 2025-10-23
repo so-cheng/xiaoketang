@@ -1,0 +1,95 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>编辑模块</title>
+    <link href="/Assets/layui/css/layui.css" rel="stylesheet" />
+    <link href="/Assets/css/animate.min.css" rel="stylesheet" />
+    <style>
+        .z-body {
+            margin: 30px;
+        }
+
+        .rightmenu {
+            position: absolute;
+            width: 110px;
+            z-index: 9999;
+            display: none;
+            background-color: #fff;
+            padding: 2px;
+            color: #333;
+            border: 1px solid #eee;
+            border-radius: 2px;
+            cursor: pointer
+        }
+
+            .rightmenu li {
+                text-align: center;
+                display: block;
+                height: 30px;
+                line-height: 30px;
+                margin: 8px 0 8px 0
+            }
+
+                .rightmenu li:hover {
+                    background-color: #f2f2f2;
+                    color: #000
+                }
+    </style>
+</head>
+<body>
+    <div class="z-body animated fadeIn">
+        <form class="layui-form layui-form-pane">
+            <input type="hidden" name="id" value="@ViewBag.modular.id" />
+            <div class="layui-form-item">
+                <label for="name" class="layui-form-label">
+                    模块名称
+                </label>
+                <div class="layui-input-block">
+                    <input type="text" id="name" name="name" value="@ViewBag.modular.name" lay-verify="required" lay-vertype="tips" autocomplete="off" placeholder="请输入模块名称" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="tb_prefix" class="layui-form-label">
+                    表前缀
+                </label>
+                <div class="layui-input-block">
+                    <input type="text" id="tb_prefix" name="tb_prefix" value="@ViewBag.modular.tb_prefix" lay-verify="required" lay-vertype="tips" autocomplete="off" placeholder="请输入表前缀" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" style="margin-left:0;text-align:center;">
+                    <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="add">保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="/Assets/js/jquery.js"></script>
+    <script src="/Assets/layui/layui.js"></script>
+    <script src="~/Assets/js/common.js"></script>
+    <script>
+
+        layui.config({
+            base: '/Assets/layui/extend/'
+        }).use(['form', 'layer', 'element'], function () {
+            var $ = layui.jquery,
+                form = layui.form,
+                layer = layui.layer,
+                element = layui.element;
+
+            // 监听提交
+            form.on('submit(add)', function (form) {
+                $.post('/Config/Modular/Edit', form.field, function (result) {
+                    layerMsg_P(result.msg, result.code);
+                }, 'json');
+                return false;
+            });
+        });
+    </script>
+</body>
+</html>

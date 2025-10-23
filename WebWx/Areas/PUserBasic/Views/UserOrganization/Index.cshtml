@@ -1,0 +1,87 @@
+﻿
+@{
+    Layout = null;
+}
+@using System.Web.Mvc;
+@using WeiCode.Services;
+
+@using WeiCode.ModelDbs;
+@using Services.Project;
+@using WeiCode.Domain;
+@using WeiCode.ModelDbs;
+@using WeiCode.Models;
+@using WeiCode.Domain;
+@using WeiCode.Utility;
+
+@model List<ModelDbBasic.user_base>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+    <script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+    <script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.2.5.6.js"></script>
+    <script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+
+    <link href="//unpkg.com/layui@2.9.18/dist/css/layui.css" rel="stylesheet">
+    <script src="//unpkg.com/layui@2.9.18/dist/layui.js"></script>
+    <style>
+        .user_organization {
+            font-size: large,
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>用户关系组织结构图</h1>
+    </div>
+    <div class="user_organization">
+        @{
+            var yy_users = new DomainBasic.UserApp().GetUsersByUserTypeId(ModelEnum.UserTypeEnum.yyer.ToInt());
+            foreach (var yy in yy_users)
+            {
+                Response.Write($"<div>{yy.username}</div>");
+                var tgs = GetDirectNextTgsFromYY(yy);
+                foreach (var tg in tgs)
+                {
+                    Response.Write($"<div>----{tg.username}</div>");
+                    var next_tgs = new DomainUserBasic.UserRelationApp().GetNextAllUsersForOption(ModelEnum.UserRelationTypeEnum.厅管邀厅管, tg.user_sn, "----");
+                    foreach (var item in next_tgs)
+                    {
+                        Response.Write($"<div>----{item.text}</div>");
+                    }
+                }
+            }
+
+
+            /// <summary>
+            /// 获取运营的直接下级厅管
+            /// </summary>
+            /// <param name="user"></param>
+            /// <returns></returns>
+            List<ModelDbBasic.user_base> GetDirectNextTgsFromYY(ModelDbBasic.user_base user)
+            {
+                var resultUsers = new List<ModelDbBasic.user_base>();
+                //1.获取运营的所有厅管
+                var allTgs = new DomainUserBasic.UserRelationApp().GetNextUsers(ModelEnum.UserRelationTypeEnum.运营邀厅管, user.user_sn);
+                //2.找到直接上级只有一个且上级是该运营的厅管
+                foreach (var tg in allTgs)
+                {
+                    //2.1 获取厅管的直接上级厅管
+                    string parentTg_user_sn = new DomainUserBasic.UserRelationApp().GetParentUserSn(ModelEnum.UserRelationTypeEnum.厅管邀厅管, tg.user_sn);
+                    //2.2 判断是否为运营
+                    if (parentTg_user_sn.IsNullOrEmpty())
+                    {
+                        resultUsers.Add(tg);
+                    }
+                }
+                return resultUsers;
+            }
+        }
+    </div>
+</body>
+</html>

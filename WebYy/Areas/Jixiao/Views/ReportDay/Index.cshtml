@@ -1,0 +1,283 @@
+﻿@{
+    Layout = null;
+}
+
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.ModelDbs;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Web;
+@using System.Web.Mvc;
+@using WeiCode.Services;
+
+@using WeiCode.ModelDbs;
+@using Services.Project;
+@using WeiCode.Domain;
+@using WeiCode.ModelDbs;
+@using WeiCode.Models;
+@using WeiCode.Domain;
+
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 14px;
+    }
+    .layui-table td {
+        font-size: 14px;
+    }
+</style>
+
+<style>
+    .layuiadmin-big-font {
+        font-weight: bold;
+        font-size: 42px;
+        margin: 10px;
+    }
+</style>
+
+@{
+
+    ///今日上报
+    var payable_today = DoMySql.FindField<ModelDb.user_base>("COUNT(id)", $"user_sn in(select t_user_sn from user_relation where relation_type_id='1' and f_user_sn in {new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.运营邀厅管, new UserIdentityBag().user_sn)}) and user_sn not in(select zb_user_sn from p_jixiao_vacation where c_date='{DateTime.Today.ToDate()}')");
+
+    var real_today = DoMySql.FindField<ModelDb.p_jixiao_day>("COUNT(id)", $"tg_user_sn in {new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.运营邀厅管, new UserIdentityBag().user_sn)} and c_date = '{DateTime.Today}'");
+
+    ///昨日上报
+    var payable_yesterday = DoMySql.FindField<ModelDb.user_base>("COUNT(id)", $"user_sn in(select t_user_sn from user_relation where relation_type_id='1' and f_user_sn in {new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.运营邀厅管, new UserIdentityBag().user_sn)}) and create_time<'{DateTime.Today}' and user_sn not in(select zb_user_sn from p_jixiao_vacation where c_date='{DateTime.Today.AddDays(-1).ToDate()}')");
+
+    var real_yesterday = DoMySql.FindField<ModelDb.p_jixiao_day>("COUNT(id)", $"tg_user_sn in {new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.运营邀厅管, new UserIdentityBag().user_sn)} and c_date = '{DateTime.Today.AddDays(-1)}'");
+
+}
+
+<div class="layui-card">
+    <div class="layui-card-header">核心数据</div>
+
+    <div class="layui-card-body" style="background-color:#F6F6F6">
+        <div class="layui-row layui-col-space15">
+
+            <div class="layui-col-sm12 layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        @(DateTime.Today.AddDays(-1).ToString("MM月dd日"))未提交名单
+                    </div>
+
+                    <table class="layui-table" style="text-align:center;" id="table2" name="table2">
+                        <colgroup>
+                            <col width="160">
+                            <col width="160">
+                            <col width="600">
+                            <col width="160">
+                            <col width="400">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <td colspan="14" style="text-align: center; background-color: #FFF3CA; font-size: 18px; font-weight: 700 ">@(DateTime.Today.AddDays(-1).ToString("MM月dd日"))未提交名单</td>
+                            </tr>
+                            <tr style="background-color: #FCE4D3;font-weight:700;">
+                                <th>厅名</th>
+                                <th>未提交</th>
+                                <th>未提交主播</th>
+                                <th>请假人数</th>
+                                <th>请假主播</th>
+                            </tr>
+                        </thead>
+
+                        @{
+
+                            int yesterday_unreport_sum = 0;
+                            int yesterday_vacation_sum = 0;
+                            foreach (var tg in new DomainUserBasic.UserRelationApp().GetNextUsers(ModelEnum.UserRelationTypeEnum.运营邀厅管, new UserIdentityBag().user_sn))
+                            {
+                                var yesterday_unreport = DoMySql.FindListBySql<ModelDb.user_base>($"SELECT * FROM user_base where user_sn not in (select zb_user_sn from p_jixiao_day where tg_user_sn='{tg.user_sn}' and c_date='{DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd")}') and user_sn in{new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.厅管邀主播, tg.user_sn)} and status!=9");
+                                var yesterday_vacation = DoMySql.FindList<ModelDb.p_jixiao_vacation>($"tg_user_sn='{tg.user_sn}' and c_date='{DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd")}'");
+                                string names_unreport = "";
+                                string names_vacation = "";
+                                foreach (var item in yesterday_unreport)
+                                {
+                                    names_unreport += item.name + " ";
+                                }
+                                foreach (var item in yesterday_vacation)
+                                {
+                                    names_vacation += new DomainBasic.UserApp().GetInfoByUserSn(item.zb_user_sn).name + " ";
+                                }
+                                if (yesterday_unreport.Count > 0 || yesterday_vacation.Count > 0)
+                                {
+
+                                    yesterday_unreport_sum += yesterday_unreport.Count;
+                                    yesterday_vacation_sum += yesterday_vacation.Count;
+                                    <tr style="background-color: #E1EBF5 ">
+                                        <td style="background-color: #E3F2D9">@tg.name</td>
+                                        <td style="background-color: #E3F2D9">@yesterday_unreport.Count 人</td>
+                                        <td style="background-color: #E3F2D9">@names_unreport</td>
+                                        <td style="background-color: #E3F2D9">@yesterday_vacation.Count 人</td>
+                                        <td style="background-color: #E3F2D9">@names_vacation</td>
+                                    </tr>
+                                }
+                            }
+
+                            <tr style="background-color: #E1EBF5">
+                                <td style="background-color: #E3F2D9">合计</td>
+                                <td style="background-color: #E3F2D9">@yesterday_unreport_sum 人</td>
+                                <td style="background-color: #E3F2D9"></td>
+                                <td style="background-color: #E3F2D9">@yesterday_vacation_sum 人</td>
+                                <td style="background-color: #E3F2D9"></td>
+                            </tr>
+
+                            var p_jixiao_day = DoMySql.FindList<ModelDb.p_jixiao_day>($"c_date='{ViewBag.c_date}' and tg_user_sn='{ViewBag.tg_user_sn}'");
+                            foreach (var item in p_jixiao_day)
+                            {
+                                var zhubo = DoMySql.FindEntity<ModelDb.user_base>($"user_sn='{item.zb_user_sn}'");
+
+                                <tr style="background-color: #E1EBF5 ">
+                                    <td>@zhubo.username</td>
+                                    <td>@(item.job.IsNullOrEmpty() ? zhubo.attach1:item.job)</td>
+                                    <td>@item.new_num</td>
+                                    <td>@item.amount_1</td>
+                                    <td>@item.num_2</td>
+                                    <td>@item.contact_num</td>
+                                    <td>@(item.new_num == 0 ? "0" : (item.contact_num.ToDouble() * 100 / item.new_num.ToInt()).ToString("0.00"))%</td>
+                                    <td>@item.amount_2</td>
+                                    <td>@(item.new_num == 0 ? "0" : (item.num_2.ToDouble() * 100 / item.new_num.ToInt()).ToString("0.00"))%</td>
+                                    <td>@item.old_amount</td>
+                                    <td>@item.datou_num</td>
+                                    <td>@item.amount</td>
+                                    <td>@(item.amount==0? "0": (item.amount_2.ToDouble() * 100 / item.amount.ToInt()).ToString("0.00"))%</td>
+                                    <td>@(item.amount==0? "0": (item.old_amount.ToDouble() * 100 / item.amount.ToInt()).ToString("0.00"))%</td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+            </div>
+
+            <!--
+    <div class="layui-col-sm3 layui-col-md3">
+                    <div class="layui-card">
+                        <div class="layui-card-header">
+                            音浪(昨日)
+                        </div>
+                        <div class="layui-card-body layuiadmin-card-list">
+                            <a href="javascript:parent.win_pop_iframe('每日上报','/TgManage/Report/List?c_date_range=@DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd") ~ @DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color"><p class="layuiadmin-big-font">@ViewBag.yesterday_amount</p></span></a>
+
+                            <p style="margin:10px;">
+                                今日
+                                <a href="javascript:parent.win_pop_iframe('每日上报','/TgManage/Report/List?c_date_range=@DateTime.Today.ToString("yyyy-MM-dd") ~ @DateTime.Today.ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.today_amount</span></a>
+                                本月
+                                <a href="javascript:parent.win_pop_iframe('每日上报','/TgManage/Report/List?c_date_range=@DateTime.Today.ToString("yyyy-MM-01") ~ @DateTime.Today.AddMonths(1).ToString("yyyy-MM-01").ToDate().AddDays(-1).ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.month_amount</span></a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-sm3 layui-col-md3">
+                    <div class="layui-card">
+                        <div class="layui-card-header">
+                            拉新(昨日)
+                        </div>
+                        <div class="layui-card-body layuiadmin-card-list">
+                            <a href="javascript:parent.win_pop_iframe('每日上报','/TgManage/Report/List?c_date_range=@DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd") ~ @DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color"><p class="layuiadmin-big-font">@ViewBag.yesterday_new_num</p></span></a>
+                            <p style="margin:10px;">
+                                今日
+                                <a href="javascript:parent.win_pop_iframe('每日上报','/TgManage/Report/List?c_date_range=@DateTime.Today.ToString("yyyy-MM-dd") ~ @DateTime.Today.ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.today_new_num</span></a>
+                                本月
+                                <a href="javascript:parent.win_pop_iframe('每日上报','/TgManage/Report/List?c_date_range=@DateTime.Today.ToString("yyyy-MM-01") ~ @DateTime.Today.AddMonths(1).ToString("yyyy-MM-01").ToDate().AddDays(-1).ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.month_new_num</span></a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-sm3 layui-col-md3">
+                    <div class="layui-card">
+                        <div class="layui-card-header">
+                            建联(昨日)
+                        </div>
+                        <div class="layui-card-body layuiadmin-card-list">
+                            <a href="javascript:parent.win_pop_iframe('每日上报','/TgManage/Report/List?c_date_range=@DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd") ~ @DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color"><p class="layuiadmin-big-font">@ViewBag.yesterday_contact_num</p></span></a>
+                            <p style="margin:10px;">
+                                今日
+                                <a href="javascript:parent.win_pop_iframe('每日上报','/TgManage/Report/List?c_date_range=@DateTime.Today.ToString("yyyy-MM-dd") ~ @DateTime.Today.ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.today_contact_num</span></a>
+                                本月
+                                <a href="javascript:parent.win_pop_iframe('每日上报','/TgManage/Report/List?c_date_range=@DateTime.Today.ToString("yyyy-MM-01") ~ @DateTime.Today.AddMonths(1).AddDays(-1).ToString("yyyy-MM-01").ToDate().AddDays(-1).ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.month_contact_num</span></a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-sm3 layui-col-md3">
+                    <div class="layui-card">
+
+                        <div class="layui-card-header">
+                            误刷大头(昨日)
+                        </div>
+
+                        <div class="layui-card-body layuiadmin-card-list">
+                            <a href="javascript:parent.win_pop_iframe('每日上报','/TgManage/Report/List?c_date_range=@DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd") ~ @DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color"><p class="layuiadmin-big-font">@ViewBag.yesterday_datou_num</p></span></a>
+                            <p style="margin:10px;">
+                            <p style="margin:10px;">
+                                今日
+                                <a href="javascript:parent.win_pop_iframe('每日上报','/TgManage/Report/List?c_date_range=@DateTime.Today.ToString("yyyy-MM-dd") ~ @DateTime.Today.ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.today_datou_num</span></a>
+                                本月
+                                <a href="javascript:parent.win_pop_iframe('每日上报','/TgManage/Report/List?c_date_range=@DateTime.Today.ToString("yyyy-MM-01") ~ @DateTime.Today.AddMonths(1).AddDays(-1).ToString("yyyy-MM-01").ToDate().AddDays(-1).ToString("yyyy-MM-dd")', 800, 650)"><span class="layuiadmin-span-color">@ViewBag.month_datou_num</span></a>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+                -->
+
+        </div>
+    </div>
+    <!--
+        <div class="layui-card-body" style="background-color:#F6F6F6">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-sm3 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        应交记录(昨日)
+                    </div>
+                    <div class="layui-card-body layuiadmin-card-list">
+
+                        <p class="layuiadmin-big-font">@payable_yesterday[0]</p>
+                        <p style="margin:10px;">
+                            今日
+                            <span class="layuiadmin-span-color">@payable_today[0]</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-sm3 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        实交记录(昨日)
+                    </div>
+                    <div class="layui-card-body layuiadmin-card-list">
+
+                        <p class="layuiadmin-big-font">@real_yesterday[0]</p>
+
+                        <p style="margin:10px;">
+                            今日
+                            <span class="layuiadmin-span-color">@real_today[0]</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    -->
+
+
+</div>
+
+

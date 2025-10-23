@@ -1,0 +1,4008 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WeiCode.Utility</name>
+    </assembly>
+    <members>
+        <member name="T:WeiCode.Utility.UtilityStatic">
+            <summary>
+            字符串处理
+            </summary>
+            <summary>
+            字符串处理
+            </summary>
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.CsvHelper">
+            <summary>
+            CSV文件转换类
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.CsvHelper.dt2csv(System.Data.DataTable,System.String,System.String,System.String)">
+            <summary>
+            导出报表为Csv
+            </summary>
+            <param name="dt">DataTable</param>
+            <param name="strFilePath">物理路径</param>
+            <param name="tableheader">表头</param>
+            <param name="columname">字段标题,逗号分隔</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.CsvHelper.csv2dt(System.String,System.Int32)">
+            <summary>
+            将Csv读入DataTable
+            </summary>
+            <param name="filePath">csv文件路径</param>
+            <param name="n">表示第n行是字段title,第n+1行是记录开始</param>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.ExcelHelper">
+            <summary>
+            Excel操作类
+            </summary>
+            Microsoft Excel 11.0 Object Library
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ExcelHelper.ExcelToDataTable(System.String,System.Boolean)">
+            <summary>  
+            将excel导入到datatable  
+            </summary>  
+            <param name="filePath">excel路径</param>  
+            <param name="isColumnName">第一行是否是列名</param>  
+            <returns>返回datatable</returns>  
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ExcelHelper.DataTableToExcel(System.Data.DataTable,System.String,System.String)">
+            <summary>
+            将DataTable导出到Excel文件
+            </summary>
+            <param name="dt">DataTable对象</param>        
+            <param name="FileName">文件名</param>
+            <param name="FileType">文件类型</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ExcelHelper.ListToExcel``1(System.Collections.Generic.List{``0},System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary> 
+            将一组对象导出到EXCEL文件
+            </summary> 
+            <typeparam name="T">要导出对象的类型</typeparam> 
+            <param name="objList">一组对象</param> 
+            <param name="FileName">导出后的文件名</param> 
+            <param name="columnInfo">列名信息</param> 
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.DownLoadHelper">
+            <summary>
+            文件下载帮助类
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DownLoadHelper.ResponseFile(System.Web.HttpRequest,System.Web.HttpResponse,System.String,System.String,System.Int64)">
+            <summary>
+             输出硬盘文件，提供下载 支持大文件、续传、速度限制、资源占用小
+            </summary>
+            <param name="_Request">Page.Request对象</param>
+            <param name="_Response">Page.Response对象</param>
+            <param name="_fileName">下载文件名</param>
+            <param name="_fullPath">带文件名下载路径</param>
+            <param name="_speed">每秒允许下载的字节数</param>
+            <returns>返回是否成功</returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DownLoadHelper.DownToLocal(System.String,System.String,System.String)">
+            <summary>
+            远程文件地址
+            </summary>
+            <param name="URL">远程URL地址</param>
+            <param name="localDirectory">本地目录地址</param>
+            <param name="newFilename">文件重命名</param>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.FileDown">
+            <summary>
+            文件下载类
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileDown.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileDown.FileNameExtension(System.String)">
+            <summary>
+            参数为虚拟路径
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileDown.MapPathFile(System.String)">
+            <summary>
+            获取物理地址
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileDown.DownLoadold(System.String)">
+            <summary>
+            普通下载
+            </summary>
+            <param name="FileName">文件虚拟路径</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileDown.DownLoad(System.String)">
+            <summary>
+            分块下载
+            </summary>
+            <param name="FileName">文件虚拟路径</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileDown.ResponseFile(System.Web.HttpRequest,System.Web.HttpResponse,System.String,System.String,System.Int64)">
+            <summary>
+             输出硬盘文件，提供下载 支持大文件、续传、速度限制、资源占用小
+            </summary>
+            <param name="_Request">Page.Request对象</param>
+            <param name="_Response">Page.Response对象</param>
+            <param name="_fileName">下载文件名</param>
+            <param name="_fullPath">带文件名下载路径</param>
+            <param name="_speed">每秒允许下载的字节数</param>
+            <returns>返回是否成功</returns>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.FileUp">
+            <summary>
+            文件上传类
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileUp.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileUp.GetBinaryFile(System.String)">
+            <summary>
+            转换为字节数组
+            </summary>
+            <param name="filename">文件名</param>
+            <returns>字节数组</returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileUp.ConvertStreamToByteBuffer(System.IO.Stream)">
+            <summary>
+            流转化为字节数组
+            </summary>
+            <param name="theStream">流</param>
+            <returns>字节数组</returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileUp.FileSc(System.Web.UI.WebControls.FileUpload,System.String,System.String)">
+            <summary>
+            上传文件
+            </summary>
+            <param name="PosPhotoUpload">控件</param>
+            <param name="saveFileName">保存的文件名</param>
+            <param name="imagePath">保存的文件路径</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileUp.SaveFile(System.Byte[],System.String,System.String)">
+            <summary>
+            上传文件
+            </summary>
+            <param name="binData">字节数组</param>
+            <param name="fileName">文件名</param>
+            <param name="fileType">文件类型</param>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.SecurityRSA">
+            <summary>
+            RSA 密钥生成及加解密
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.SecurityRSA.RsaEncrypt(System.String,System.String)">
+            <summary>
+            RSA 加密
+            </summary>
+            <param name="xmlpublickey">公钥</param>
+            <param name="content"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.SecurityRSA.RsaDecrypt(System.String,System.String)">
+            <summary>
+            RSA 解密
+            </summary>
+            <param name="xmlprivatekey"></param>
+            <param name="content"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.SecurityRSA.GenerateRsaSecretKey(System.Int32)">
+            <summary>
+            生成 RSA 公钥和私钥
+            </summary>
+            <param name="keysize">目前 SET（Secure Electronic Transaction）协议中要求 CA 采用 2048bits 长的密钥，其他实体使用 1024bits 的密钥</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.SecurityRSA.RSAPublicKeyXmlToBase64(System.String)">
+            <summary>
+            XML 字符串转 Base64 编码的字符串（公钥）
+            </summary>
+            <param name="publicKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.SecurityRSA.RSAPrivateKeyXmlToBase64(System.String)">
+            <summary>
+            XML 字符串转 Base64 编码的字符串（私钥）
+            </summary>
+            <param name="privateKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.SecurityRSA.RSAPrivateKeyBase64ToXml(System.String)">
+            <summary>
+            Base64 编码字符串转 XML 字符串（私钥）
+            </summary>
+            <param name="privateKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.SecurityRSA.RSAPublicKeyBase64ToXml(System.String)">
+            <summary>
+            Base64 编码字符串转 XML 字符串（公钥）
+            </summary>
+            <param name="publicKey"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.RsaSecretKey">
+            <summary>
+            RSA 密钥类
+            </summary>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.NetCryptoDes">
+            <summary>
+            .Net加密解密帮助类
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.UtilityStatic.NetCryptoDes.DesIv">
+            <summary>
+            Des默认密钥向量
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.UtilityStatic.NetCryptoDes.DesKey">
+            <summary>
+            Des加解密钥必须8位
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.NetCryptoDes.GetDesKey(System.String)">
+            <summary>
+            获取Des8位密钥
+            </summary>
+            <param name="key">Des密钥字符串</param>
+            <returns>Des8位密钥</returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.NetCryptoDes.Encrypt(System.String,System.String,System.Byte[])">
+            <summary>
+            Des加密
+            </summary>
+            <param name="source">源字符串</param>
+            <param name="key">des密钥，长度必须8位</param>
+            <param name="iv">密钥向量</param>
+            <returns>加密后的字符串</returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.NetCryptoDes.Decrypt(System.String,System.String,System.Byte[])">
+            <summary>
+            Des解密
+            </summary>
+            <param name="source">源字符串</param>
+            <param name="key">des密钥，长度必须8位</param>
+            <param name="iv">密钥向量</param>
+            <returns>解密后的字符串</returns>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.NetCryptoAes">
+            <summary>
+            .Net加密解密帮助类
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.UtilityStatic.NetCryptoAes.AesKey">
+            <summary>
+            Aes加解密钥必须32位
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.NetCryptoAes.GetAesKey(System.String)">
+            <summary>
+            获取Aes32位密钥
+            </summary>
+            <param name="key">Aes密钥字符串</param>
+            <returns>Aes32位密钥</returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.NetCryptoAes.Encrypt(System.String,System.String)">
+            <summary>
+            Aes加密
+            </summary>
+            <param name="source">源字符串</param>
+            <param name="key">aes密钥，长度必须32位</param>
+            <returns>加密后的字符串</returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.NetCryptoAes.Decrypt(System.String,System.String)">
+            <summary>
+            Aes解密
+            </summary>
+            <param name="source">源字符串</param>
+            <param name="key">aes密钥，长度必须32位</param>
+            <returns>解密后的字符串</returns>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.Md5">
+            <summary>
+            Md5
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Md5.getMd5(System.String,System.Boolean)">
+            <summary>
+            32位MD5
+            </summary>
+            <param name="myString"></param>
+            <param name="to32">32位</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Md5.getMd5Old(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Md5.getEncrypt16(System.String)">
+            <summary>
+            16位MD5
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.FileExtension">
+            <summary>
+            文件类型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.FileValidation">
+            <summary>
+            图片检测类
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileValidation.IsAllowedExtension(System.Web.HttpPostedFile,WeiCode.Utility.UtilityStatic.FileExtension[])">
+            <summary>
+            是否允许
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileValidation.IsSecureUploadPhoto(System.Web.HttpPostedFile)">
+            <summary>
+            上传前的图片是否可靠
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileValidation.IsSecureUpfilePhoto(System.String)">
+            <summary>
+            上传后的图片是否安全
+            </summary>
+            <param name="photoFile">物理地址</param>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.RegularMatching">
+            <summary>
+            正则匹配
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.RegularMatching.GetMetaString(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            获得指定区域的内容
+            </summary>
+            <param name="html">原始内容</param>
+            <param name="regStart">开始字符</param>
+            <param name="regEnd">结束字符</param>
+            <param name="ignoreCase">是否区分大小写</param>
+            <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:WeiCode.Utility.UtilityStatic.StringHelper" -->
+        <member name="M:WeiCode.Utility.UtilityStatic.StringHelper.SplitMulti(System.String,System.String)">
+            <summary>
+            把字符串按照分隔符转换成 string[]
+            </summary>
+            <param name="str">待处理字符串</param>
+            <param name="splitstr">分隔符</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.StringHelper.GetStrArray(System.String,System.Char,System.Boolean)">
+            <summary>
+            把字符串按照分隔符转换成 List
+            </summary>
+            <param name="str">源字符串</param>
+            <param name="speater">分隔符</param>
+            <param name="toLower">是否转换为小写</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.StringHelper.GetSubStringList(System.String,System.Char)">
+            <summary>
+            把字符串按照指定分隔符装成 List 去除重复
+            </summary>
+            <param name="o_str"></param>
+            <param name="sepeater"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.StringHelper.GetStrArray(System.String)">
+            <summary>
+            把字符串转 按照, 分割 换为数据
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:WeiCode.Utility.UtilityStatic.StringHelper.GetArrayStr(System.Collections.Generic.List{System.String},System.String)" -->
+        <member name="M:WeiCode.Utility.UtilityStatic.StringHelper.GetArrayStr(System.Collections.Generic.List{System.Int32})">
+            <summary>
+            得到数组列表以逗号分隔的字符串
+            </summary>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.StringHelper.GetArrayValueStr(System.Collections.Generic.Dictionary{System.Int32,System.Int32})">
+            <summary>
+            得到数组列表以逗号分隔的字符串
+            </summary>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.StringHelper.DelLastComma(System.String)">
+            <summary>
+            删除最后结尾的一个逗号
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.StringHelper.DelLastChar(System.String,System.String)">
+            <summary>
+            删除最后结尾的指定字符后的字符
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.StringHelper.ToSBC(System.String)">
+            <summary>
+            转全角的函数(SBC case)
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.StringHelper.ToDBC(System.String)">
+            <summary>
+             转半角的函数(SBC case)
+            </summary>
+            <param name="input">输入</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.StringHelper.GetCleanStyle(System.String,System.String)">
+            <summary>
+             将字符串样式转换为纯字符串
+            </summary>
+            <param name="StrList"></param>
+            <param name="SplitString"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.StringHelper.GetNewStyle(System.String,System.String,System.String,System.String@)">
+            <summary>
+            将字符串转换为新样式
+            </summary>
+            <param name="StrList"></param>
+            <param name="NewStyle"></param>
+            <param name="SplitString"></param>
+            <param name="Error"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.StringHelper.SqlSafeString(System.String,System.Boolean)">
+            <summary>
+            SQL语句中特殊字符处理
+            </summary>
+            <param name="String"></param>
+            <param name="IsDel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.StringHelper.StrToId(System.String)">
+            <summary>
+            获取正确的Id，如果不是正整数，返回0
+            </summary>
+            <param name="_value"></param>
+            <returns>返回正确的整数ID，失败返回0</returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.StringHelper.IsNumberId(System.String)">
+            <summary>
+            检查一个字符串是否是纯数字构成的，一般用于查询字符串参数的有效性验证。(0除外)
+            </summary>
+            <param name="_value">需验证的字符串。。</param>
+            <returns>是否合法的bool值。</returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.StringHelper.QuickValidate(System.String,System.String)">
+            <summary>
+            快速验证一个字符串是否符合指定的正则表达式。
+            </summary>
+            <param name="_express">正则表达式的内容。</param>
+            <param name="_value">需验证的字符串。</param>
+            <returns>是否合法的bool值。</returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.StringHelper.GetMD5(System.String)">
+            <summary>
+            根据配置对指定字符串进行 MD5 加密
+            </summary>
+            <param name="s"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.StringHelper.StrLength(System.String)">
+            <summary>
+            得到字符串长度，一个汉字长度为2
+            </summary>
+            <param name="inputString">参数字符串</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.StringHelper.ClipString(System.String,System.Int32)">
+            <summary>
+            截取指定长度字符串
+            </summary>
+            <param name="inputString">要处理的字符串</param>
+            <param name="len">指定长度</param>
+            <returns>返回处理后的字符串</returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.StringHelper.HtmlToTxt(System.String)">
+            <summary>
+            HTML转行成TEXT
+            </summary>
+            <param name="strHtml"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.StringHelper.TxtSpecialFilter(System.String)">
+            <summary>
+            文本中特殊字符过滤
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.StringHelper.IsNullOrEmpty``1(``0)">
+            <summary>
+            判断对象是否为空，为空返回true
+            </summary>
+            <typeparam name="T">要验证的对象的类型</typeparam>
+            <param name="data">要验证的对象</param>        
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.StringHelper.IsNullOrEmpty(System.Object)">
+            <summary>
+            判断对象是否为空，为空返回true
+            </summary>
+            <param name="data">要验证的对象</param>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.CommonHelper">
+            <summary>
+            常用的未分类函数
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.CommonHelper.CreateOrderNo">
+            <summary>
+            生成不重复的单据号，示例：20210701095007110-1765318050
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.CommonHelper.CreateUniqueSn(System.String,System.String)">
+            <summary>
+            生成不重复的唯一编号，示例：20210701095007110-1765318050
+            </summary>
+            <param name="split1">第一个拼接符号</param>
+            <param name="split2">第二个拼接符号</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.CommonHelper.CreateShortSn(System.String,System.String)">
+            <summary>
+            生成短编号，示例：095007110-1765318050
+            </summary>
+            <param name="split1">第一个拼接符号</param>
+            <param name="split2">第二个拼接符号</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.CommonHelper.CreateUniqueSnShort">
+            <summary>
+            获取一个全球唯一码GUID字符串
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.CommonHelper.DateRangeFormat(System.String,System.Int32,System.Int32)">
+            <summary>
+            日期范围格式化，示例：2021-07-01 ~ 2021-07-01
+            </summary>
+            <param name="date_range">时间范围</param>
+            <param name="Days">date_range为空时，默认范围天数</param>
+            <param name="StartDay">从多少天前开始</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.CommonHelper.DateRangeFormat(System.Int32,System.Int32)">
+            <summary>
+            日期范围格式化，示例：2021-07-01 ~ 2021-07-01
+            </summary>
+            <param name="Days">date_range为空时，默认范围天数</param>
+            <param name="StartDay">从多少天前开始</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.CommonHelper.DateTimeRangeFormat(System.String,System.Int32,System.Int32)">
+            <summary>
+            时间范围格式化，示例：2021-07-01 00:00:00 ~ 2021-07-01 23:59:59
+            </summary>
+            <param name="date_range">时间范围</param>
+            <param name="Days">date_range为空时，默认范围天数</param>
+            <param name="StartDay">从多少天前开始</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.CommonHelper.DateRange">
+            <summary>
+            日期范围模型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.CommonHelper.DateRange.date_range_s">
+            <summary>
+            开始时间
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.CommonHelper.DateRange.date_range_e">
+            <summary>
+            结束时间
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.CommonHelper.DateRange.date_range">
+            <summary>
+            时间范围
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.CommonHelper.DateRange.days">
+            <summary>
+            日期间隔天数
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.CommonHelper.GetCallBackFunc(System.String,System.String)">
+            <summary>
+            获取当前类的完整名字
+            </summary>
+            <param name="name"></param>
+            <param name="assemblyName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.CommonHelper.GetDbNullTime">
+            <summary>
+            指定数据库写入为NULL值
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.CommonHelper.IsAuthorize(System.String)">
+            <summary>
+            授权
+            </summary>
+            <param name="modularName">模块名称</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.CommonHelper.getWeixinOpenId">
+            <summary>
+            获取微信open_id(不可在ajax异步中使用)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.CommonHelper.EnumToDictionary``1">
+            <summary>
+            枚举转字典
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.ConvertJson">
+            <summary>
+            JSON转换类
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ConvertJson.String2Json(System.String)">
+            <summary>
+            过滤特殊字符
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ConvertJson.StringFormat(System.String,System.Type)">
+            <summary>
+            格式化字符型、日期型、布尔型
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ConvertJson.ListToJson``1(System.Collections.Generic.IList{``0})">
+            <summary>
+            List转换成Json
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ConvertJson.ListToJson``1(System.Collections.Generic.IList{``0},System.String)">
+            <summary>
+            List转换成Json 
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ConvertJson.ToJson(System.Object)">
+            <summary> 
+            对象转换为Json 
+            </summary> 
+            <param name="jsonObject">对象</param> 
+            <returns>Json字符串</returns> 
+            <summary>
+            对象转json
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ConvertJson.ToJson(System.Collections.IEnumerable)">
+            <summary> 
+            对象集合转换Json 
+            </summary> 
+            <param name="array">集合对象</param> 
+            <returns>Json字符串</returns> 
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ConvertJson.ToArrayString(System.Collections.IEnumerable)">
+            <summary> 
+            普通集合转换Json 
+            </summary> 
+            <param name="array">集合对象</param> 
+            <returns>Json字符串</returns> 
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ConvertJson.ToJson(System.Data.DataSet)">
+            <summary> 
+            DataSet转换为Json 
+            </summary> 
+            <param name="dataSet">DataSet对象</param> 
+            <returns>Json字符串</returns> 
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ConvertJson.ToJson(System.Data.DataTable)">
+            <summary> 
+            Datatable转换为Json 
+            </summary> 
+            <param name="table">Datatable对象</param> 
+            <returns>Json字符串</returns> 
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ConvertJson.ToJson(System.Data.DataTable,System.String)">
+            <summary>
+            DataTable转换为Json 
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ConvertJson.ToJson(System.Data.Common.DbDataReader)">
+            <summary> 
+            DataReader转换为Json 
+            </summary> 
+            <param name="dataReader">DataReader对象</param> 
+            <returns>Json字符串</returns> 
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.JsonHelper">
+            <summary>
+            Json操作类
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:WeiCode.Utility.UtilityStatic.JsonHelper.JsonToList``1(System.String)" -->
+        <member name="M:WeiCode.Utility.UtilityStatic.JsonHelper.FormatJson(System.String)">
+            <summary>
+            格式化Json字符串，使之能转换成List
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.JsonHelper.FormatJsonMatch(System.Text.RegularExpressions.Match)">
+            <summary>
+            将Json序列化的时间由new Date(1373387734703)转为字符串"\/Date(1373387734703)\/"
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.JsonHelper.FormatJsonDate(System.String)">
+            <summary>
+            将Json序列化的时间由new Date(1373390933250) 或Date(1373390933250)或"\/Date(1373390933250+0800)\/"
+            转为2013-07-09 17:28:53
+            主要用于传给前台
+            </summary>
+            <param name="html"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.JsonHelper.FormatJsonDateMatch(System.Text.RegularExpressions.Match)">
+            <summary>
+            将Json序列化的时间由Date(1294499956278+0800)转为字符串
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:WeiCode.Utility.UtilityStatic.JsonHelper.AttributeToVariable(System.String)" -->
+        <!-- Badly formed XML comment ignored for member "M:WeiCode.Utility.UtilityStatic.JsonHelper.VariableToAttribute(System.String)" -->
+        <member name="T:WeiCode.Utility.UtilityStatic.ConfigHelper">
+            <summary>
+            web.config操作类
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ConfigHelper.GetConfigString(System.String,System.Boolean)">
+            <summary>
+            得到AppSettings中的配置字符串信息（缓存方式）
+            </summary>
+            <param name="key"></param>
+            <param name="isExist">是否验证必须存在</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ConfigHelper.GetConfigBool(System.String)">
+            <summary>
+            得到AppSettings中的配置Bool信息
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ConfigHelper.GetConfigDecimal(System.String)">
+            <summary>
+            得到AppSettings中的配置Decimal信息
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ConfigHelper.GetConfigInt(System.String)">
+            <summary>
+            得到AppSettings中的配置int信息
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ConfigHelper.SetValue(System.String,System.String)">
+            <summary>  
+            根据Key修改Value  
+            </summary>  
+            <param name="key">要修改的Key</param>  
+            <param name="value">要修改为的值</param>  
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ConfigHelper.Add(System.String,System.String)">
+            <summary>  
+            添加新的Key ，Value键值对  
+            </summary>  
+            <param name="key">Key</param>  
+            <param name="value">Value</param>  
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ConfigHelper.Remove(System.String)">
+            <summary>  
+            根据Key删除项  
+            </summary>  
+            <param name="key">Key</param>  
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.DirFileHelper">
+            <summary>
+            文件夹/文件操作
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.IsExistDirectory(System.String)">
+            <summary>
+            检测指定目录是否存在
+            </summary>
+            <param name="directoryPath">目录的绝对路径</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.IsExistFile(System.String)">
+            <summary>
+            检测指定文件是否存在,如果存在则返回true。
+            </summary>
+            <param name="filePath">文件的绝对路径</param>        
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.GetFileNames(System.String)">
+            <summary>
+            获取指定目录中所有文件列表
+            </summary>
+            <param name="directoryPath">指定目录的绝对路径</param>        
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.GetDirectories(System.String)">
+            <summary>
+            获取指定目录中所有子目录列表,若要搜索嵌套的子目录列表,请使用重载方法.
+            </summary>
+            <param name="directoryPath">指定目录的绝对路径</param>        
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.GetFileNames(System.String,System.String,System.Boolean)">
+            <summary>
+            获取指定目录及子目录中所有文件列表
+            </summary>
+            <param name="directoryPath">指定目录的绝对路径</param>
+            <param name="searchPattern">模式字符串，"*"代表0或N个字符，"?"代表1个字符。
+            范例："Log*.xml"表示搜索所有以Log开头的Xml文件。</param>
+            <param name="isSearchChild">是否搜索子目录</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.IsEmptyDirectory(System.String)">
+            <summary>
+            检测指定目录是否为空
+            </summary>
+            <param name="directoryPath">指定目录的绝对路径</param>        
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.Contains(System.String,System.String)">
+            <summary>
+            检测指定目录中是否存在指定的文件,若要搜索子目录请使用重载方法.
+            </summary>
+            <param name="directoryPath">指定目录的绝对路径</param>
+            <param name="searchPattern">模式字符串，"*"代表0或N个字符，"?"代表1个字符。
+            范例："Log*.xml"表示搜索所有以Log开头的Xml文件。</param>        
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.Contains(System.String,System.String,System.Boolean)">
+            <summary>
+            检测指定目录中是否存在指定的文件
+            </summary>
+            <param name="directoryPath">指定目录的绝对路径</param>
+            <param name="searchPattern">模式字符串，"*"代表0或N个字符，"?"代表1个字符。
+            范例："Log*.xml"表示搜索所有以Log开头的Xml文件。</param> 
+            <param name="isSearchChild">是否搜索子目录</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.CreateDir(System.String)">
+            <summary>
+            创建目录
+            </summary>
+            <param name="dir">要创建的目录路径包括目录名</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.DeleteDir(System.String)">
+            <summary>
+            删除目录
+            </summary>
+            <param name="dir">要删除的目录路径和名称</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.DeleteFile(System.String)">
+            <summary>
+            删除文件
+            </summary>
+            <param name="file">要删除的文件路径和名称</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.CreateFile(System.String,System.String)">
+            <summary>
+            创建文件
+            </summary>
+            <param name="dir">带后缀的文件名</param>
+            <param name="pagestr">文件内容</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.MoveFile(System.String,System.String)">
+            <summary>
+            移动文件(剪贴--粘贴)
+            </summary>
+            <param name="dir1">要移动的文件的路径及全名(包括后缀)</param>
+            <param name="dir2">文件移动到新的位置,并指定新的文件名</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.CopyFile(System.String,System.String)">
+            <summary>
+            复制文件
+            </summary>
+            <param name="dir1">要复制的文件的路径已经全名(包括后缀)</param>
+            <param name="dir2">目标位置,并指定新的文件名</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.GetDateDir">
+            <summary>
+            根据时间得到目录名yyyyMMdd
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.GetDateFile">
+            <summary>
+            根据时间得到文件名HHmmssff
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.CopyFolder(System.String,System.String)">
+            <summary>
+            复制文件夹(递归)
+            </summary>
+            <param name="varFromDirectory">源文件夹路径</param>
+            <param name="varToDirectory">目标文件夹路径</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.ExistsFile(System.String)">
+            <summary>
+            检查文件,如果文件不存在则创建  
+            </summary>
+            <param name="FilePath">路径,包括文件名</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.DeleteFolderFiles(System.String,System.String)">
+            <summary>
+            删除指定文件夹对应其他文件夹里的文件
+            </summary>
+            <param name="varFromDirectory">指定文件夹路径</param>
+            <param name="varToDirectory">对应其他文件夹路径</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.GetFileName(System.String)">
+            <summary>
+            从文件的绝对路径中获取文件名( 包含扩展名 )
+            </summary>
+            <param name="filePath">文件的绝对路径</param>        
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.CopyFiles(System.String,System.String)">
+            <summary>
+            复制文件参考方法,页面中引用
+            </summary>
+            <param name="cDir">新路径</param>
+            <param name="TempId">模板引擎替换编号</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.CreateDirectory(System.String)">
+            <summary>
+            创建一个目录
+            </summary>
+            <param name="directoryPath">目录的绝对路径</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.CreateFile(System.String)">
+            <summary>
+            创建一个文件。
+            </summary>
+            <param name="filePath">文件的绝对路径</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.CreateFile(System.String,System.Byte[])">
+            <summary>
+            创建一个文件,并将字节流写入文件。
+            </summary>
+            <param name="filePath">文件的绝对路径</param>
+            <param name="buffer">二进制流数据</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.GetLineCount(System.String)">
+            <summary>
+            获取文本文件的行数
+            </summary>
+            <param name="filePath">文件的绝对路径</param>        
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.GetFileSize(System.String)">
+            <summary>
+            获取一个文件的长度,单位为Byte
+            </summary>
+            <param name="filePath">文件的绝对路径</param>        
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.GetDirectories(System.String,System.String,System.Boolean)">
+            <summary>
+            获取指定目录及子目录中所有子目录列表
+            </summary>
+            <param name="directoryPath">指定目录的绝对路径</param>
+            <param name="searchPattern">模式字符串，"*"代表0或N个字符，"?"代表1个字符。
+            范例："Log*.xml"表示搜索所有以Log开头的Xml文件。</param>
+            <param name="isSearchChild">是否搜索子目录</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.WriteText(System.String,System.String,System.Text.Encoding)">
+            <summary>
+            向文本文件中写入内容
+            </summary>
+            <param name="filePath">文件的绝对路径</param>
+            <param name="text">写入的内容</param>
+            <param name="encoding">编码</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.AppendText(System.String,System.String)">
+            <summary>
+            向文本文件的尾部追加内容
+            </summary>
+            <param name="filePath">文件的绝对路径</param>
+            <param name="content">写入的内容</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.Copy(System.String,System.String)">
+            <summary>
+            将源文件的内容复制到目标文件中
+            </summary>
+            <param name="sourceFilePath">源文件的绝对路径</param>
+            <param name="destFilePath">目标文件的绝对路径</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.Move(System.String,System.String)">
+            <summary>
+            将文件移动到指定目录
+            </summary>
+            <param name="sourceFilePath">需要移动的源文件的绝对路径</param>
+            <param name="descDirectoryPath">移动到的目录的绝对路径</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.GetFileNameNoExtension(System.String)">
+            <summary>
+            从文件的绝对路径中获取文件名( 不包含扩展名 )
+            </summary>
+            <param name="filePath">文件的绝对路径</param>        
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.GetExtension(System.String)">
+            <summary>
+            从文件的绝对路径中获取扩展名
+            </summary>
+            <param name="filePath">文件的绝对路径</param>        
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.ClearDirectory(System.String)">
+            <summary>
+            清空指定目录下所有文件及子目录,但该目录依然保存.
+            </summary>
+            <param name="directoryPath">指定目录的绝对路径</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.ClearFile(System.String)">
+            <summary>
+            清空文件内容
+            </summary>
+            <param name="filePath">文件的绝对路径</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.DeleteDirectory(System.String)">
+            <summary>
+            删除指定目录及其所有子目录
+            </summary>
+            <param name="directoryPath">指定目录的绝对路径</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.GetFilesCount(System.String)">
+            <summary>
+            获取文件夹中文件个数
+            </summary>
+            <param name="dirPath">文件夹路径</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DirFileHelper.GetFiles(System.IO.DirectoryInfo)">
+            <summary>
+            查找文件统计个数
+            </summary>
+            <param name="dirInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.FileOperateHelper">
+            <summary>
+            文件操作
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileOperateHelper.Write_Txt(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="FileName"></param>
+            <param name="Content"></param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileOperateHelper.Read_Txt(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="filename"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileOperateHelper.GetPostfixStr(System.String)">
+            <summary>
+            取后缀名
+            </summary>
+            <param name="filename">文件名</param>
+            <returns>.gif|.html格式</returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileOperateHelper.WriteFile(System.String,System.String)">
+            <summary>
+            写文件
+            </summary>
+            <param name="Path">文件路径</param>
+            <param name="Strings">文件内容</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileOperateHelper.ReadFile(System.String)">
+            <summary>
+            读文件
+            </summary>
+            <param name="Path">文件路径</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileOperateHelper.FileAdd(System.String,System.String)">
+            <summary>
+            追加文件
+            </summary>
+            <param name="Path">文件路径</param>
+            <param name="strings">内容</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileOperateHelper.FileCoppy(System.String,System.String)">
+            <summary>
+            拷贝文件
+            </summary>
+            <param name="OrignFile">原始文件</param>
+            <param name="NewFile">新文件路径</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileOperateHelper.FileDel(System.String)">
+            <summary>
+            删除文件
+            </summary>
+            <param name="Path">路径</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileOperateHelper.FileMove(System.String,System.String)">
+            <summary>
+            移动文件
+            </summary>
+            <param name="OrignFile">原始路径</param>
+            <param name="NewFile">新路径</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileOperateHelper.FolderCreate(System.String,System.String)">
+            <summary>
+            在当前目录下创建目录
+            </summary>
+            <param name="OrignFolder">当前目录</param>
+            <param name="NewFloder">新目录</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileOperateHelper.FolderCreate(System.String)">
+            <summary>
+            创建文件夹
+            </summary>
+            <param name="Path"></param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileOperateHelper.FileCreate(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="Path"></param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileOperateHelper.DeleteFolder(System.String)">
+            <summary>
+            递归删除文件夹目录及文件
+            </summary>
+            <param name="dir"></param>  
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileOperateHelper.CopyDir(System.String,System.String)">
+            <summary>
+            指定文件夹下面的所有内容copy到目标文件夹下面
+            </summary>
+            <param name="srcPath">原始路径</param>
+            <param name="aimPath">目标文件夹</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileOperateHelper.GetFoldAll(System.String)">
+            <summary>
+            获取指定文件夹下所有子目录及文件
+            </summary>
+            <param name="Path">详细路径</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileOperateHelper.ListTreeShow(System.IO.DirectoryInfo,System.Int32,System.String)">
+            <summary>
+            获取指定文件夹下所有子目录及文件函数
+            </summary>
+            <param name="theDir">指定目录</param>
+            <param name="nLevel">默认起始值,调用时,一般为0</param>
+            <param name="Rn">用于迭加的传入值,一般为空</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileOperateHelper.GetFoldAll(System.String,System.String,System.String)">
+             <summary>
+             获取指定文件夹下所有子目录及文件(下拉框形)
+             </summary>
+             <param name="Path">详细路径</param>
+            <param name="DropName">下拉列表名称</param>
+            <param name="tplPath">默认选择模板名称</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileOperateHelper.ListTreeShow(System.IO.DirectoryInfo,System.Int32,System.String,System.String)">
+            <summary>
+            获取指定文件夹下所有子目录及文件函数
+            </summary>
+            <param name="theDir">指定目录</param>
+            <param name="nLevel">默认起始值,调用时,一般为0</param>
+            <param name="Rn">用于迭加的传入值,一般为空</param>
+            <param name="tplPath">默认选择模板名称</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileOperateHelper.GetDirectoryLength(System.String)">
+            <summary>
+            获取文件夹大小
+            </summary>
+            <param name="dirPath">文件夹路径</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.FileOperateHelper.GetFileAttibe(System.String)">
+            <summary>
+            获取指定文件详细属性
+            </summary>
+            <param name="filePath">文件详细路径</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.TxtLog">
+            <summary>
+            记录错误日志到文件
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.UtilityStatic.TxtLog.ErrLog">
+            <summary>
+            Exception异常，并带model输出
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.TxtLog.Error(System.Exception,System.Object,WeiCode.Utility.UtilityStatic.CodeNotes)">
+            <summary>
+            记录错误日志
+            </summary>
+            <typeparam name="T">Exception对象</typeparam>
+            <param name="e"></param>
+            <param name="model">输入参数对象</param>
+            <param name="codeNotes">代码注释信息</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.TxtLog.Error(System.String,WeiCode.Utility.UtilityStatic.CodeNotes)">
+            <summary>
+            自定义错误信息
+            </summary>
+            <param name="message">输出信息</param>
+            <param name="codeNotes">代码注释信息</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.TxtLog.Info(System.String,WeiCode.Utility.UtilityStatic.CodeNotes)">
+            <summary>
+            日志信息
+            </summary>
+            <param name="message">输出信息</param>
+            <param name="codeNotes">代码注释信息</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.TxtLog.Debug(System.String,WeiCode.Utility.UtilityStatic.CodeNotes,System.Boolean)">
+            <summary>
+            Debug日志
+            </summary>
+            <param name="message">输出信息</param>
+            <param name="codeNotes">代码注释信息</param>
+            <param name="isSystem">是否为系统调试信息</param>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.CodeNotes">
+            <summary>
+            代码注释
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.CodeNotes.level">
+            <summary>
+            日志方式，文本记录，微信通知，短信(电话)通知
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.CodeNotes.filePath">
+            <summary>
+            代码位置：文件路径+行数
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.CodeNotes.msg">
+            <summary>
+            注释信息
+            </summary>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.DateHelper">
+            <summary>
+            时间日期相关
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DateHelper.TimeInterval(System.DateTime,System.DateTime)">
+            <summary>
+            计算两个日期的间隔（x年x月x周x日x天）
+            </summary>
+            <param name="Date1"></param>
+            <param name="Date2"></param>
+            <returns>x年x月x周x日x天</returns>
+            
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DateHelper.DateDiff(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Boolean)">
+            <summary>
+            计算两个日期的时间间隔（x天x小时x分钟x秒）
+            </summary>
+            <param name="DateTime1">第一个日期和时间</param>
+            <param name="DateTime2">第二个日期和时间</param>
+            <param name="formatShort">短格式</param>
+            <returns>x天x时x分钟x秒</returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DateHelper.DateDiff(System.Nullable{System.DateTime},System.Nullable{System.DateTime},WeiCode.Utility.UtilityStatic.DateHelper.DiffType)">
+            <summary>
+            计算两个日期的时间间隔
+            </summary>
+            <param name="DateTime1"></param>
+            <param name="DateTime2"></param>
+            <param name="type">间隔类型</param>
+            <returns>xx天/xx小时/xx分钟</returns>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.DateHelper.DiffType">
+            <summary>
+            间隔类型
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.UtilityStatic.DateHelper.DiffType.years">
+            <summary>
+            年
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.UtilityStatic.DateHelper.DiffType.months">
+            <summary>
+            月
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.UtilityStatic.DateHelper.DiffType.days">
+            <summary>
+            月
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.UtilityStatic.DateHelper.DiffType.hours">
+            <summary>
+            小时
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.UtilityStatic.DateHelper.DiffType.minutes">
+            <summary>
+            分
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.UtilityStatic.DateHelper.DiffType.seconds">
+            <summary>
+            秒
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.UtilityStatic.DateHelper.DiffType.weeks">
+            <summary>
+            周
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.DateHelper.DateFromNow(System.DateTime)">
+            <summary>
+            指定时间距当前时间间隔
+            </summary>
+            <param name="dt"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.TimeHelper">
+            <summary>
+            时间格式转换
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.TimeHelper.GetTime(System.String)">
+            <summary>
+            时间戳转为C#格式时间
+            </summary>
+            <param name="timeStamp">时间戳</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.TimeHelper.ConvertDateTime(System.DateTime)">
+            <summary>
+            DateTime时间格式转换为Unix时间戳格式
+            </summary>
+            <param name="time">DateTime</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.TimeHelper.DateRangeFormat(System.String,System.Int32,System.Int32)">
+            <summary>
+            时间/日期范围格式化，示例：2021-07-01 00:00:00 ~ 2021-07-01 23:59:59
+            </summary>
+            <param name="date_range">时间范围</param>
+            <param name="Days">date_range为空时，默认范围天数</param>
+            <param name="StartDay">从多少天前开始</param>
+            <returns>日期范围类型</returns>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.TimeHelper.TimeRange">
+            <summary>
+            日期范围类型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.TimeHelper.TimeRange.range_start">
+            <summary>
+            开始时间
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.TimeHelper.TimeRange.range_end">
+            <summary>
+            结束时间
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.TimeHelper.TimeRange.date_range">
+            <summary>
+            时间范围（参数原样）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.TimeHelper.TimeRange.days">
+            <summary>
+            日期间隔天数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.WeekHelper">
+            <summary>
+            周一为周的起始日期，周日为结束日期
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.WeekHelper.WeekOfMonth(System.DateTime,System.Boolean)">
+            <summary>  
+            获取某日期是本月的第几周  
+            </summary>  
+            <param name="dtSel">DateTime 时间对象</param>  
+            <param name="sundayStart">true:第一天按周日算 false:第一天按周一算</param>  
+            <returns>获取第几周</returns>  
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.WeekHelper.GetWeek(System.String,System.String,System.Int32)">
+            <summary>  
+            输入日期，判断该日期是所在 月、年的第几周  
+            </summary>  
+            <param name="datetype">指定日期类型，"m"表示返回指定日期在所在月的第几周，"y"表示返回指定日期在所在年的第几周</param>  
+            <param name="curdate">指定的日期 string类型</param>  
+            <param name="daystart">确定日期计算时间，1表示月、年起始周从第一个星期日开始计算，其他表示默认</param>  
+            <returns></returns>  
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.WeekHelper.GetDay(System.Int32,System.Int32)">
+            <summary>  
+            判断某月有多少天  
+            </summary>  
+            <remarks>  
+            创建人：zhujt<br/>  
+            创建日期：2012-04-19 13:51:07<br/>  
+            </remarks>  
+            <param name="year">年</param>  
+            <param name="month">月</param>  
+            <returns></returns>  
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.WeekHelper.GetDayOfWeekInt(System.DateTime)">
+            <summary>  
+            获取某日是周几  
+            </summary>  
+            <remarks>  
+            </remarks>  
+            <param name="date">日期</param>  
+            <returns></returns>  
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.WeekHelper.GetDayOfWeekString(System.DateTime)">
+            <summary>  
+            获取某日是周几  
+            </summary>  
+            <remarks>  
+            </remarks>  
+            <param name="date">日期</param>  
+            <returns></returns>  
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.WeekHelper.GetLastDayOfWeek(System.Int32,System.Int32,System.Int32)">
+            <summary>  
+            获取某月最后一周是星期几  
+            </summary>  
+            <param name="year">年</param>  
+            <param name="month">月</param>  
+            <param name="type">显示形式 0：汉字 1：阿拉伯数字</param>  
+            <returns></returns>  
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.WeekHelper.GetDayOfWeek(System.Int32,System.DateTime@)">
+            <summary>  
+            获取日是周几  
+            </summary>  
+            <remarks>  
+            </remarks>
+            <param name="type">显示形式 0：汉字 1：阿拉伯数字</param>
+            <param name="dt"></param>
+            <returns></returns>  
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.WeekHelper.GetMondayDate">
+            <summary>   
+            计算本周的周一日期   
+            </summary>   
+            <returns></returns>   
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.WeekHelper.GetSundayDate">
+            <summary>   
+            计算本周周日的日期   
+            </summary>   
+            <returns></returns>   
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.WeekHelper.GetMondayDate(System.DateTime)">
+              <summary>      
+              计算某日起始日期（礼拜一的日期）      
+              </summary>      
+              <param name="someDate">该周中任意一天</param>      
+              <returns>返回礼拜一日期</returns>      
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.WeekHelper.GetSundayDate(System.DateTime)">
+              <summary>      
+              计算某日结束日期（礼拜日的日期）      
+              </summary>      
+              <param name="someDate">该周中任意一天</param>      
+              <returns>返回礼拜日日期，后面的具体时、分、秒和传入值相等</returns>      
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.WeekHelper.GetMonday(System.DateTime)">
+            <summary>  
+            根据日期获取某周星期一  
+            </summary>  
+            <param name="dt"></param>  
+            <returns></returns>  
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.WeekHelper.GetSundayM(System.DateTime)">
+            <summary>  
+            根据日期获取某周星期日  
+            </summary>  
+            <param name="dt"></param>  
+            <returns></returns>  
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.WeekHelper.GetSunday(System.DateTime)">
+            <summary>  
+            根据日期获取某周星期日  
+            </summary>  
+            <param name="dt"></param>  
+            <returns></returns>  
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.WeekHelper.GetTemp(System.DateTime@)">
+            <summary>  
+            计算该日期为周几  
+            </summary>  
+            <param name="dt"></param>  
+            <returns></returns>  
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.WeekHelper.FirstDayOfMonth(System.DateTime)">
+            <summary>
+            取得某月的第一天
+            </summary>
+            <param name="datetime">要取得月份第一天的时间</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.WeekHelper.LastDayOfMonth(System.DateTime)">
+            <summary>
+            取得某月的最后一天
+            </summary>
+            <param name="datetime">要取得月份最后一天的时间</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.CacheHelper">
+            <summary>
+            System.Web.Caching.Cache缓存
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.CacheHelper.GetCache(System.String)">
+            <summary>
+            获取数据缓存
+            </summary>
+            <param name="CacheKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.CacheHelper.SetCache(System.String,System.Object)">
+            <summary>
+            设置数据缓存
+            </summary>
+            <param name="CacheKey"></param>
+            <param name="objObject"></param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.CacheHelper.SetCache(System.String,System.Object,System.TimeSpan)">
+            <summary>
+            设置数据缓存
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.CacheHelper.SetCache(System.String,System.Object,System.DateTime,System.TimeSpan)">
+            <summary>
+            设置数据缓存
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.CacheHelper.RemoveAllCache(System.String)">
+            <summary>
+            移除指定数据缓存
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.CacheHelper.RemoveAllCache">
+            <summary>
+            移除全部缓存
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:WeiCode.Utility.UtilityStatic.CookieHelper" -->
+        <member name="M:WeiCode.Utility.UtilityStatic.CookieHelper.ClearCookie(System.String)">
+            <summary>
+            清除指定Cookie
+            </summary>
+            <param name="cookiename">cookiename</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.CookieHelper.GetCookieValue(System.String)">
+            <summary>
+            获取指定Cookie值
+            </summary>
+            <param name="cookiename">cookiename</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.CookieHelper.SetCookie(System.String,System.String)">
+            <summary>
+            添加一个Cookie（24小时过期）
+            </summary>
+            <param name="cookiename"></param>
+            <param name="cookievalue"></param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.CookieHelper.SetCookie(System.String,System.String,System.DateTime,System.String)">
+            <summary>
+            添加一个Cookie
+            </summary>
+            <param name="cookiename">cookie名</param>
+            <param name="cookievalue">cookie值</param>
+            <param name="expires">过期时间 DateTime</param>
+            <param name="domain">设置域</param>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.SessionHelper">
+            <summary>
+            Session 操作类
+            1、GetSession(string name)根据session名获取session对象
+            2、SetSession(string name, object val)设置session
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.SessionHelper.GetSession(System.String)">
+            <summary>
+            根据session名获取session对象
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.SessionHelper.SetSession(System.String,System.Object)">
+            <summary>
+            设置session
+            </summary>
+            <param name="name">session 名</param>
+            <param name="val">session 值</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.SessionHelper.ClearSession">
+            <summary>
+            清空所有的Session
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.SessionHelper.RemoveSession(System.String)">
+            <summary>
+            删除一个指定的ession
+            </summary>
+            <param name="name">Session名称</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.SessionHelper.RemoveAllSession(System.String)">
+            <summary>
+            删除所有的ession
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.RegexHelper">
+            <summary>
+            操作正则表达式的公共类
+            </summary>    
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.RegexHelper.IsMatch(System.String,System.String)">
+            <summary>
+            验证输入字符串是否与模式字符串匹配，匹配返回true
+            </summary>
+            <param name="input">输入字符串</param>
+            <param name="pattern">模式字符串</param>        
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.RegexHelper.IsMatch(System.String,System.String,System.Text.RegularExpressions.RegexOptions)">
+            <summary>
+            验证输入字符串是否与模式字符串匹配，匹配返回true
+            </summary>
+            <param name="input">输入的字符串</param>
+            <param name="pattern">模式字符串</param>
+            <param name="options">筛选条件</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.RegexHelper.GetMetaString(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            获得指定区域的内容
+            </summary>
+            <param name="html"></param>
+            <param name="regStart"></param>
+            <param name="regEnd"></param>
+            <param name="ignoreCase">是否区分大小写</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.RegexHelper.GetUrlReplaceJs(System.String,System.String)">
+            <summary>
+            自定义在字符串中书写js格式转换
+            </summary>
+            <param name="url"></param>
+            <param name="joinStr">拼接字符，单引号或双引号</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.ConvertHelper">
+            <summary>
+            处理数据类型转换，数制转换、编码转换相关的类
+            </summary>    
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ConvertHelper.RepairZero(System.String,System.Int32)">
+            <summary>
+            指定字符串的固定长度，如果字符串小于固定长度，
+            则在字符串的前面补足零，可设置的固定长度最大为9位
+            </summary>
+            <param name="text">原始字符串</param>
+            <param name="limitedLength">字符串的固定长度</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ConvertHelper.ConvertBase(System.String,System.Int32,System.Int32)">
+            <summary>
+            实现各进制数间的转换。ConvertBase("15",10,16)表示将十进制数15转换为16进制的数。
+            </summary>
+            <param name="value">要转换的值,即原值</param>
+            <param name="from">原值的进制,只能是2,8,10,16四个值。</param>
+            <param name="to">要转换到的目标进制，只能是2,8,10,16四个值。</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ConvertHelper.StringToBytes(System.String,System.Text.Encoding)">
+            <summary>
+            使用指定字符集将string转换成byte[]
+            </summary>
+            <param name="text">要转换的字符串</param>
+            <param name="encoding">字符编码</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ConvertHelper.BytesToString(System.Byte[],System.Text.Encoding)">
+            <summary>
+            使用指定字符集将byte[]转换成string
+            </summary>
+            <param name="bytes">要转换的字节数组</param>
+            <param name="encoding">字符编码</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ConvertHelper.BytesToInt32(System.Byte[])">
+            <summary>
+            将byte[]转换成int
+            </summary>
+            <param name="data">需要转换成整数的byte数组</param>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.EcanConvertToCh">
+            <summary>
+            汉字转拼音类
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.EcanConvertToCh.convertCh(System.String)">
+            <summary>
+            汉字转换成全拼的拼音
+            </summary>
+            <param name="Chstr">汉字字符串</param>
+            <returns>转换后的拼音字符串</returns>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.MoneyHelper">
+            <summary>
+            货币转换
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:WeiCode.Utility.UtilityStatic.MoneyHelper.CmycurD(System.Decimal)" -->
+        <!-- Badly formed XML comment ignored for member "M:WeiCode.Utility.UtilityStatic.MoneyHelper.CmycurD(System.String)" -->
+        <member name="T:WeiCode.Utility.UtilityStatic.OperateToModel">
+            <summary>
+            类型转换
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.OperateToModel.FillModel``1(System.Data.DataRow)">
+            <summary>
+            DataRow 转对象
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="dr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.OperateToModel.DataTableToList``1(System.Data.DataTable)">
+            <summary>
+            DataTable转List对象
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="dt"></param>
+            <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:WeiCode.Utility.UtilityStatic.PinYin" -->
+        <member name="M:WeiCode.Utility.UtilityStatic.PinYin.GetFirstLetter(System.String)">
+            <summary>
+            取汉字拼音的首字母
+            </summary>
+            <param name="UnName">汉字</param>
+            <returns>首字母</returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.PinYin.GetFullLetter(System.String)">
+            <summary>
+            建立一个convertCh方法用于将汉字转换成全拼的拼音，其中，参数代表汉字字符串，此方法的返回值是转换后的拼音字符串
+            </summary>
+            <param name="Chstr"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.Validate">
+            <summary>
+            格式验证
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.GetStringLength(System.String)">
+            <summary>
+            返回字符串真实长度, 1个汉字长度为2
+            </summary>
+            <returns>字符长度</returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.IsValidUserName(System.String)">
+            <summary>
+            检测用户名格式是否有效
+            </summary>
+            <param name="userName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.IsValidText(System.String)">
+            <summary>
+            检测普通文本格式是否有效
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.IsValidPassword(System.String)">
+            <summary>
+            密码有效性
+            </summary>
+            <param name="password"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.IsValidInt(System.String)">
+            <summary>
+            int有效性
+            </summary>
+            <param name="val"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.IsNumber(System.String)">
+            <summary>
+            是否数字字符串
+            </summary>
+            <param name="inputData">输入字符串</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.IsNumberSign(System.String)">
+            <summary>
+            是否数字字符串 可带正负号
+            </summary>
+            <param name="inputData">输入字符串</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.IsDecimal(System.String)">
+            <summary>
+            是否是浮点数
+            </summary>
+            <param name="inputData">输入字符串</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.IsDecimalSign(System.String)">
+            <summary>
+            是否是浮点数 可带正负号
+            </summary>
+            <param name="inputData">输入字符串</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.IsHasCHZN(System.String)">
+            <summary>
+            检测是否有中文字符
+            </summary>
+            <param name="inputData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.GetCHZNLength(System.String)">
+            <summary> 
+            检测含有中文字符串的实际长度 
+            </summary> 
+            <param name="inputData">字符串</param> 
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.IsIdCard(System.String)">
+            <summary>
+            验证身份证是否合法  15 和  18位两种
+            </summary>
+            <param name="idCard">要验证的身份证</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.IsEmail(System.String)">
+            <summary>
+            是否是邮件地址
+            </summary>
+            <param name="inputData">输入字符串</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.IsValidZip(System.String)">
+            <summary>
+            邮编有效性
+            </summary>
+            <param name="zip"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.IsValidPhone(System.String)">
+            <summary>
+            固定电话有效性
+            </summary>
+            <param name="phone"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.IsValidMobile(System.String)">
+            <summary>
+            手机有效性
+            </summary>
+            <param name="mobile">手机号码</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.IsValidPhoneAndMobile(System.String)">
+            <summary>
+            电话有效性（固话和手机 ）
+            </summary>
+            <param name="number">电话号码</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.IsValidURL(System.String)">
+            <summary>
+            Url有效性
+            </summary>
+            <param name="url"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.IsValidIP(System.String)">
+            <summary>
+            IP有效性
+            </summary>
+            <param name="ip"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.IsValidDomain(System.String)">
+            <summary>
+            domain 有效性
+            </summary>
+            <param name="host">域名</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.IsBase64String(System.String)">
+            <summary>
+            判断是否为base64字符串
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.IsGuid(System.String)">
+            <summary>
+            验证字符串是否是GUID
+            </summary>
+            <param name="guid">字符串</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.IsDate(System.String)">
+            <summary>
+            判断输入的字符是否为日期
+            </summary>
+            <param name="strValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.IsDateHourMinute(System.String)">
+            <summary>
+            判断输入的字符是否为日期,如2004-07-12 14:25|||1900-01-01 00:00|||9999-12-31 23:59
+            </summary>
+            <param name="strValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.CheckMathLength(System.String,System.Int32)">
+            <summary>
+            检查字符串最大长度，返回指定长度的串
+            </summary>
+            <param name="inputData">输入字符串</param>
+            <param name="maxLength">最大长度</param>
+            <returns></returns>			
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.Encode(System.String)">
+            <summary>
+            转换成 HTML code
+            </summary>
+            <param name="str">string</param>
+            <returns>string</returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.Validate.Decode(System.String)">
+             <summary>
+            解析html成 普通文本
+             </summary>
+             <param name="str">string</param>
+             <returns>string</returns>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.ClientHelper">
+            <summary>
+            客户端环境
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ClientHelper.IsMobileRequest">
+            <summary>
+            是否为移动端环境
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ClientHelper.IsWeixinRequest">
+            <summary>
+            是否为微信环境
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ClientHelper.IsAlipayRequest">
+            <summary>
+            是否为支付宝环境
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ClientHelper.setCurBrowser(System.String)">
+            <summary>
+            强制指定客户端浏览器类型
+            </summary>
+            <param name="value">PC=PC端;MOB=手机端</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ClientHelper.GetWebClientIp">
+            <summary>
+            获取web客户端ip
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ClientHelper.GetIpAddress">
+            <summary>
+            获取本机IP地址
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ClientHelper.GetClientIp">
+            <summary>
+            cs项目获取网络客户端ip
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ClientHelper.GetClientHost">
+            <summary>
+            获取当前访问域名
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.HttpHelper">
+            <summary>
+            Http连接操作帮助类 
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.HttpHelper.HttpGet(System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            GET请求
+            </summary>
+            <param name="Url">The URL.</param>
+            <param name="encoding">请求编码</param>
+            <param name="cookie">Cookie</param>
+            <param name="headers">Header信息</param>
+            <returns>System.String.</returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.HttpHelper.HttpGet(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            可以不需要cookie
+            </summary>
+            <param name="Url"></param>
+            <param name="headers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.HttpHelper.HttpPost(System.String,System.String,WeiCode.Utility.UtilityStatic.HttpHelper.HttpPostReq)">
+            <summary>
+            POST请求
+            </summary>
+            <param name="url"></param>
+            <param name="postData"></param>
+            <param name="httpPostReq"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.HttpHelper.HttpPost(System.String,System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            POST请求
+            </summary>
+            <param name="url">The posturl.</param>
+            <param name="postData">The post data.</param>
+            <param name="encoding">请求编码</param>
+            <param name="cookie">Cookie</param>
+            <param name="headers">Header信息</param>
+            <returns>System.String.</returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.HttpHelper.FilePost(System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},WeiCode.Utility.UtilityStatic.HttpHelper.HttpPostReq)">
+            <summary>
+            
+            </summary>
+            <param name="url">请求地址</param>
+            <param name="filePath">上传文件的本地路径</param>
+            <param name="cookie"></param>
+            <param name="pars">其他文本参数</param>
+            <param name="httpPostReq"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.HttpHelper.HttpPostReq">
+            <summary>
+            请求附加对象
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpHelper.HttpPostReq.contentType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpHelper.HttpPostReq.encoding">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpHelper.HttpPostReq.cookie">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpHelper.HttpPostReq.referer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpHelper.HttpPostReq.userAgent">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpHelper.HttpPostReq.timeOut">
+            <summary>
+            超时时间
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpHelper.HttpPostReq.headers">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.HttpHelper.HttpPostReq.ContentType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.UtilityStatic.HttpHelper.HttpPostReq.ContentType.FormLoad">
+            <summary>
+            form表单
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.UtilityStatic.HttpHelper.HttpPostReq.ContentType.PayLoad">
+            <summary>
+            json对象
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.HttpHelper.CreateAutoSubmitForm(System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.Text.Encoding)">
+            <summary>
+            模拟httpPost提交表单,返回HTML
+            </summary>
+            <param name="url">POS请求的网址</param>
+            <param name="data">表单里的参数和值</param>
+            <param name="encoder">页面编码</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.HttpHelper.GetHttpRequestData(WeiCode.Utility.UtilityStatic.HttpItem)">
+            <summary>
+            根据相传入的数据，得到相应页面数据
+            </summary>
+            <param name="objhttpitem">传入的数据Post方式,get方式传NUll或者空字符串都可以</param>
+            <returns>string类型的响应数据</returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.HttpHelper.GetMemoryStream(System.IO.Stream)">
+            <summary>
+            4.0以下.net版本取数据使用
+            </summary>
+            <param name="streamResponse">流</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.HttpHelper.SetRequest(WeiCode.Utility.UtilityStatic.HttpItem)">
+             <summary>
+             为请求准备参数
+             </summary>
+            <param name="objhttpItem">参数列表</param>
+             <param name="_Encoding">读取数据时的编码方式</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.HttpHelper.SetCer(WeiCode.Utility.UtilityStatic.HttpItem)">
+            <summary>
+            设置证书
+            </summary>
+            <param name="objhttpItem"></param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.HttpHelper.SetEncoding(WeiCode.Utility.UtilityStatic.HttpItem)">
+            <summary>
+            设置编码
+            </summary>
+            <param name="objhttpItem">Http参数</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.HttpHelper.SetCookie(WeiCode.Utility.UtilityStatic.HttpItem)">
+            <summary>
+            设置Cookie
+            </summary>
+            <param name="objhttpItem">Http参数</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.HttpHelper.SetPostData(WeiCode.Utility.UtilityStatic.HttpItem)">
+            <summary>
+            设置Post数据
+            </summary>
+            <param name="objhttpItem">Http参数</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.HttpHelper.SetProxy(WeiCode.Utility.UtilityStatic.HttpItem)">
+            <summary>
+            设置代理
+            </summary>
+            <param name="objhttpItem">参数对象</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.HttpHelper.CheckValidationResult(System.Object,System.Security.Cryptography.X509Certificates.X509Certificate,System.Security.Cryptography.X509Certificates.X509Chain,System.Net.Security.SslPolicyErrors)">
+            <summary>
+            回调验证证书问题
+            </summary>
+            <param name="sender">流对象</param>
+            <param name="certificate">证书</param>
+            <param name="chain">X509Chain</param>
+            <param name="errors">SslPolicyErrors</param>
+            <returns>bool</returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.HttpHelper.GetUrl(System.String)">
+            <summary>    
+            传入一个正确或不正确的URl，返回正确的URL
+            </summary>    
+            <param name="URL">url</param>   
+            <returns>
+            </returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.HttpHelper.GetHttpResult(WeiCode.Utility.UtilityStatic.HttpItem)">
+            <summary>
+            采用https协议访问网络,根据传入的URl地址，得到响应的数据字符串。
+            </summary>
+            <param name="objhttpItem">参数列表</param>
+            <returns>String类型的数据</returns>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.HttpItem">
+            <summary>
+            Http请求参考类 
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpItem.URL">
+            <summary>
+            请求URL必须填写
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpItem.Method">
+            <summary>
+            请求方式默认为GET方式
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpItem.Timeout">
+            <summary>
+            默认请求超时时间
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpItem.ReadWriteTimeout">
+            <summary>
+            默认写入Post数据超时间
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpItem.Accept">
+            <summary>
+            请求标头值 默认为text/html, application/xhtml+xml, */*
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpItem.ContentType">
+            <summary>
+            请求返回类型默认 text/html
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpItem.UserAgent">
+            <summary>
+            客户端访问信息默认Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpItem.Encoding">
+            <summary>
+            返回数据编码默认为NUll,可以自动识别
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpItem.PostDataType">
+            <summary>
+            Post的数据类型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpItem.Postdata">
+            <summary>
+            Post请求时要发送的字符串Post数据
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpItem.PostdataByte">
+            <summary>
+            Post请求时要发送的Byte类型的Post数据
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpItem.CookieCollection">
+            <summary>
+            Cookie对象集合
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpItem.Cookie">
+            <summary>
+            请求时的Cookie
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpItem.Referer">
+            <summary>
+            来源地址，上次访问地址
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpItem.CerPath">
+            <summary>
+            证书绝对路径
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpItem.IsToLower">
+            <summary>
+            是否设置为全文小写
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpItem.Allowautoredirect">
+            <summary>
+            支持跳转页面，查询结果将是跳转后的页面
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpItem.Connectionlimit">
+            <summary>
+            最大连接数
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpItem.ProxyUserName">
+            <summary>
+            代理Proxy 服务器用户名
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpItem.ProxyPwd">
+            <summary>
+            代理 服务器密码
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpItem.ProxyIp">
+            <summary>
+            代理 服务IP
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpItem.ResultType">
+            <summary>
+            设置返回类型String和Byte
+            </summary>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.HttpResult">
+            <summary>
+            Http返回参数类
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpResult.Cookie">
+            <summary>
+            Http请求返回的Cookie
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpResult.CookieCollection">
+            <summary>
+            Cookie对象集合
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpResult.Html">
+            <summary>
+            返回的String类型数据 只有ResultType.String时才返回数据，其它情况为空
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityStatic.HttpResult.ResultByte">
+            <summary>
+            返回的Byte数组 只有ResultType.Byte时才返回数据，其它情况为空
+            </summary>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.ResultType">
+            <summary>
+            返回类型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.PostDataType">
+            <summary>
+            Post的数据格式默认为string
+            </summary>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityStatic.ValidateCode">
+            <summary>
+            验证码图片
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ValidateCode.GenerateCheckCode(System.Int32)">
+            <summary>
+            动态生成指定数目的随机数或字母
+            </summary>
+            <param name="num">整数</param>
+            <returns>返回验证码字符串</returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityStatic.ValidateCode.CreateCheckCodeImage(System.String)">
+            <summary>
+            根据验证码字符串生成验证码图片
+            </summary>
+            <param name="checkCode">验证码字符串</param>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityBasic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityBasic.DataToExcel">
+            <summary>
+            操作EXCEL导出数据报表的类（暂不使用）
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.DataToExcel.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.DataToExcel.TitleColorIndex">
+            <summary>
+            标题背景色
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.DataToExcel.CreateExcel">
+            <summary>
+            创建一个Excel示例
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.DataToExcel.KillExcelProcess">
+            <summary>
+            结束Excel进程
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.DataToExcel.ClearFile(System.String)">
+            <summary>
+            将DataTable的数据导出显示为报表(不使用Excel对象)
+            </summary>
+            <param name="dt">数据DataTable</param>
+            <param name="strTitle">标题</param>
+            <param name="FilePath">生成文件的路径</param>
+            <param name="nameList"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityBasic.UpLoadFiles">
+            <summary>
+            文件批量上传类
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.UpLoadFiles.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.UpLoadFiles.UploadFile(System.String,System.Int32,System.String[],System.Web.UI.HtmlControls.HtmlInputFile)">
+            <summary>
+            
+            </summary>
+            <param name="filePath"></param>
+            <param name="maxSize"></param>
+            <param name="fileType"></param>
+            <param name="TargetFile"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.UpLoadFiles.UploadFile(System.String,System.Int32,System.String[],System.Web.UI.HtmlControls.HtmlInputFile,System.String@,System.Int32@)">
+            <summary>
+            上传文件
+            </summary>
+            <param name="filePath">保存文件地址</param>
+            <param name="maxSize">文件最大大小</param>
+            <param name="fileType">文件后缀类型</param>
+            <param name="TargetFile">控件名</param>
+            <param name="saveFileName">保存后的文件名和地址</param>
+            <param name="fileSize">文件大小</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.UpLoadFiles.UploadFile(System.String,System.Int32,System.String[],System.String,System.Web.UI.HtmlControls.HtmlInputFile)">
+            <summary>
+            
+            </summary>
+            <param name="filePath"></param>
+            <param name="maxSize"></param>
+            <param name="fileType"></param>
+            <param name="filename"></param>
+            <param name="TargetFile"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.UpLoadFiles.GetUploadFileName">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.UpLoadFiles.FormatNum(System.String,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="Num"></param>
+            <param name="Bit"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityBasic.ZipExtHelper">
+            <summary>
+            压缩一批文件并保存（支持远程文件下载）
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.UtilityBasic.ZipExtHelper.files">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ZipExtHelper.password">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.ZipExtHelper.DownZipFile(System.String)">
+            <summary>
+            输出的zip文件
+            </summary>
+            <param name="zipedFile">输出的zip文件路径</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.ZipExtHelper.setPasswrod(System.String)">
+            <summary>
+            设置解压密码
+            </summary>
+            <param name="password"></param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.ZipExtHelper.AddFile(System.String)">
+            <summary>
+            支持本地或远程地址
+            </summary>
+            <param name="file">支持本地或远程地址</param>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityBasic.ZipHelper">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.ZipHelper.ZipDirectory(System.String,ICSharpCode.SharpZipLib.Zip.ZipOutputStream,System.String)">
+            <summary>   
+            递归压缩文件夹的内部方法   
+            </summary>   
+            <param name="folderToZip">要压缩的文件夹路径</param>   
+            <param name="zipStream">压缩输出流</param>   
+            <param name="parentFolderName">此文件夹的上级文件夹</param>   
+            <returns></returns>   
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.ZipHelper.ZipDirectory(System.String,System.String,System.String)">
+            <summary>   
+            压缩文件夹    
+            </summary>   
+            <param name="folderToZip">要压缩的文件夹路径</param>   
+            <param name="zipedFile">压缩文件完整路径</param>   
+            <param name="password">密码</param>   
+            <returns>是否压缩成功</returns>   
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.ZipHelper.ZipDirectory(System.String,System.String)">
+            <summary>   
+            压缩文件夹   
+            </summary>   
+            <param name="folderToZip">要压缩的文件夹路径</param>   
+            <param name="zipedFile">压缩文件完整路径</param>   
+            <returns>是否压缩成功</returns>   
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.ZipHelper.ZipFile(System.String,System.String,System.String)">
+            <summary>   
+            压缩文件   
+            </summary>   
+            <param name="fileToZip">要压缩的文件全名</param>   
+            <param name="zipedFile">压缩后的文件名</param>   
+            <param name="password">密码</param>   
+            <returns>压缩结果</returns>   
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.ZipHelper.ZipFile(System.String,System.String)">
+            <summary>   
+            压缩文件   
+            </summary>   
+            <param name="fileToZip">要压缩的文件全名</param>   
+            <param name="zipedFile">压缩后的文件名</param>   
+            <returns>压缩结果</returns>   
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.ZipHelper.Zip(System.String,System.String,System.String)">
+            <summary>   
+            压缩文件或文件夹   
+            </summary>   
+            <param name="fileToZip">要压缩的路径</param>   
+            <param name="zipedFile">压缩后的文件名</param>   
+            <param name="password">密码</param>   
+            <returns>压缩结果</returns>   
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.ZipHelper.Zip(System.String,System.String)">
+            <summary>   
+            压缩文件或文件夹   
+            </summary>   
+            <param name="fileToZip">要压缩的路径</param>   
+            <param name="zipedFile">压缩后的文件名</param>   
+            <returns>压缩结果</returns>   
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.ZipHelper.UnZip(System.String,System.String,System.String)">
+            <summary>   
+            解压功能(解压压缩文件到指定目录)   
+            </summary>   
+            <param name="fileToUnZip">待解压的文件</param>   
+            <param name="zipedFolder">指定解压目标目录</param>   
+            <param name="password">密码</param>   
+            <returns>解压结果</returns>   
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.ZipHelper.UnZip(System.String,System.String)">
+            <summary>   
+            解压功能(解压压缩文件到指定目录)   
+            </summary>   
+            <param name="fileToUnZip">待解压的文件</param>   
+            <param name="zipedFolder">指定解压目标目录</param>   
+            <returns>解压结果</returns>   
+        </member>
+        <member name="T:WeiCode.Utility.UtilityBasic.ImageDown">
+            <summary>
+            图片下载
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.ImageDown.#ctor">
+            <summary>
+            构造函数
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.ImageDown.GetImgTag(System.String)">
+            <summary>
+            获取图片标志
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.ImageDown.GetImgUrl(System.String)">
+            <summary>
+            获取图片URL地址
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.ImageDown.SaveUrlPics(System.String,System.String)">
+            <summary>
+            下载图片到本地
+            </summary>
+            <param name="strHTML">HTML</param>
+            <param name="path">路径</param>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityBasic.ImageUpload">
+            <summary>
+            图片上传类
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.Error">
+            <summary>
+            Error返回值
+            1、没有上传的文件
+            2、类型不允许
+            3、大小超限
+            4、未知错误
+            0、上传成功。 
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.MaxSize">
+            <summary>
+            最大单个上传文件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.FileType">
+            <summary>
+            所支持的上传类型用";"隔开 
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.SavePath">
+            <summary>
+            保存文件的实际路径 
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.SaveType">
+            <summary>
+            上传文件的类型，0代表自动生成文件名
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.FormFile">
+            <summary>
+            上传控件
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.InFileName">
+            <summary>
+            非自动生成文件名设置。
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.OutFileName">
+            <summary>
+            输出文件名
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.OutThumbFileName">
+            <summary>
+            输出的缩略图文件名
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.Iss">
+            <summary>
+            是否有缩略图生成.
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.Width">
+            <summary>
+            获取上传图片的宽度
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.Height">
+            <summary>
+            获取上传图片的高度
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.sWidth">
+            <summary>
+            设置缩略图的宽度
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.sHeight">
+            <summary>
+            设置缩略图的高度
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.IsCreateImg">
+            <summary>
+            是否生成缩略图
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.IsDraw">
+            <summary>
+            是否加水印
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.DrawStyle">
+            <summary>
+            设置加水印的方式
+            0:文字水印模式
+            1:图片水印模式
+            2:不加
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.DrawString_x">
+            <summary>
+            绘制文本的Ｘ坐标（左上角）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.DrawString_y">
+            <summary>
+            绘制文本的Ｙ坐标（左上角）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.AddText">
+            <summary>
+            设置文字水印内容
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.Font">
+            <summary>
+            设置文字水印字体
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.FontSize">
+            <summary>
+            设置文字水印字的大小
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.FileSize">
+            <summary>
+            文件大小
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.UtilityBasic.ImageUpload.CopyIamgePath">
+            <summary>
+            图片水印模式下的覆盖图片的实际地址
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.ImageUpload.GetExt(System.String)">
+            <summary>
+            获取文件的后缀名 
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.ImageUpload.FileName(System.String)">
+            <summary>
+            获取输出文件的文件名
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.ImageUpload.IsUpload(System.String)">
+            <summary>
+            检查上传的文件的类型，是否允许上传。
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.ImageUpload.Upload">
+            <summary>
+            上传
+            </summary>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityBasic.QRcode">
+            <summary>
+            二维码（生成二维码并保存到文件）
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.QRcode.Create(System.String,System.Int32,System.String)">
+            <summary>
+            生成二维码图片
+            </summary>
+            <param name="str">字符串</param>
+            <param name="size">图片大小</param>
+            <param name="path">图片位置 
+            例如  /abc/abc/
+            </param>
+            <returns>返回生成的二维码图片路径</returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.QRcode.CombinImage(System.Drawing.Image,System.String)">
+            <summary>    
+            调用此函数后使此两种图片合并，类似相册，有个    
+            背景图，中间贴自己的目标图片    
+            </summary>    
+            <param name="imgBack">粘贴的源图片</param>    
+            <param name="destImg">粘贴的目标图片</param>    
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.QRcode.KiResizeImage(System.Drawing.Image,System.Int32,System.Int32,System.Int32)">
+            <summary>    
+            Resize图片    
+            </summary>    
+            <param name="bmp">原始Bitmap</param>    
+            <param name="newW">新的宽度</param>    
+            <param name="newH">新的高度</param>    
+            <param name="Mode">保留着，暂时未用</param>    
+            <returns>处理以后的图片</returns>    
+        </member>
+        <member name="T:WeiCode.Utility.UtilityBasic.RandomHelper">
+            <summary>
+            使用Random类生成伪随机数
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.RandomHelper.#ctor">
+            <summary>
+            构造函数
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.RandomHelper.GetRandomInt(System.Int32,System.Int32)">
+            <summary>
+            生成一个指定范围的随机整数，该随机数范围包括最小值，但不包括最大值
+            </summary>
+            <param name="minNum">最小值</param>
+            <param name="maxNum">最大值</param>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.RandomHelper.GetRandomDouble">
+            <summary>
+            生成一个0.0到1.0的随机小数
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.RandomHelper.GetRandomArray``1(``0[])">
+            <summary>
+            对一个数组进行随机排序
+            </summary>
+            <typeparam name="T">数组的类型</typeparam>
+            <param name="arr">需要随机排序的数组</param>
+        </member>
+        <member name="T:WeiCode.Utility.UtilityBasic.RandomOperate">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.UtilityBasic.RandomOperate.rep">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.RandomOperate.GenerateCheckCodeNum(System.Int32)">
+            <summary>
+            随机生成不重复数字字符串
+            </summary>
+            <param name="codeCount"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.RandomOperate.GenerateCheckCode(System.Int32)">
+            <summary>
+            随机生成字符串（数字和字母混和）
+            </summary>
+            <param name="codeCount"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.UtilityBasic.RandomOperate.GetRandomCode(System.String,System.Int32)">
+            <summary>
+            从字符串里随机得到，规定个数的字符串.
+            </summary>
+            <param name="allChar"></param>
+            <param name="CodeCount"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.WeicodeException">
+            <summary>
+            自定义异常类
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.WeicodeException.#ctor">
+            <summary>
+            添加额外的构造函数以便能够提供更多信息
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.WeicodeException.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:WeiCode.Utility.WeicodeException.#ctor(System.String,System.Exception)">
+            <summary>
+            
+            </summary>
+            <param name="message"></param>
+            <param name="innerException"></param>
+        </member>
+        <member name="T:WeiCode.Utility.Entity">
+            <summary>
+            实体，可序列化对象
+            </summary>
+        </member>
+        <member name="T:WeiCode.Utility.ModelDoBasic">
+            <summary>
+            基础Model
+            </summary>
+        </member>
+        <member name="T:WeiCode.Utility.ModelDoBasic.Option">
+            <summary>
+            Select选项model
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.ModelDoBasic.Option.value">
+            <summary>
+            值
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.ModelDoBasic.Option.text">
+            <summary>
+            显示文本
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.ModelDoBasic.Option.displayNames">
+            <summary>
+            联动显示关联组件,多个name用逗号拼接
+            </summary>
+        </member>
+        <member name="T:WeiCode.Utility.FilterFormElement">
+            <summary>
+            表单元素[已废弃]
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.FilterFormElement.filterFormElementType">
+            <summary>
+            元素类型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.FilterFormElement.text">
+            <summary>
+            元素名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.FilterFormElement.style">
+            <summary>
+            样式
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.FilterFormElement.display">
+            <summary>
+            是否显示
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.FilterFormElement.bindData">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Utility.FilterFormElement.FilterFormElementType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Utility.FilterFormElement.SelectDataModel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.FilterFormElement.SelectDataModel.id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.FilterFormElement.SelectDataModel.name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.FilterFormElement.SelectDataModel.mobile">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Utility.DataTableHelper">
+            <summary>
+            DataTable操作
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.DataTableHelper.AddUnion(System.Data.DataTable,System.Data.DataTable,System.String)">
+            <summary>
+            获得两个DataTable的并集(要求数据量及顺序相同)
+            </summary>
+            <param name="value"></param>
+            <param name="dataTable">另一个DataTable</param>
+            <param name="key">关联字段</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.MyException`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="F:WeiCode.Utility.MyException`1.ErrLog">
+            <summary>
+            错误日志目录
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.MyException`1.#ctor">
+            <summary>
+            无参数构造函数
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.MyException`1.#ctor(System.String,`0)">
+            <summary>
+            带一个字符串参数的构造函数，作用：当程序员用Exception类获取异常信息而非 MyException时把自定义异常信息传递过去
+            </summary>
+            <param name="msg"></param>
+            <param name="obj"></param>
+        </member>
+        <member name="M:WeiCode.Utility.MyException`1.#ctor(System.String,System.Exception)">
+            <summary>
+            带有一个字符串参数和一个内部异常信息参数的构造函数
+            </summary>
+            <param name="msg"></param>
+            <param name="innerException"></param>
+        </member>
+        <member name="M:WeiCode.Utility.MyException`1.GetError">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.AlipaySignHelper">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Utility.AlipaySignHelper.Config">
+            <summary>
+            类名：Config
+            功能：基础配置类
+            详细：设置帐户有关信息及返回路径
+            版本：3.3
+            日期：2012-07-05
+            说明：
+            以下代码只是为了方便商户测试而提供的样例代码，商户可以根据自己网站的需要，按照技术文档编写,并非一定要使用该代码。
+            该代码仅供学习和研究支付宝接口使用，只是提供一个参考。
+            
+            如何获取安全校验码和合作身份者ID
+            1.用您的签约支付宝账号登录支付宝网站(www.alipay.com)
+            2.点击“商家服务”(https://b.alipay.com/order/myOrder.htm)
+            3.点击“查询合作者身份(PID)”、“查询安全校验码(Key)”
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.AlipaySignHelper.Config.Partner">
+            <summary>
+            获取或设置合作者身份ID
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.AlipaySignHelper.Config.Key">
+            <summary>
+            获取或设交易安全校验码
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.AlipaySignHelper.Config.Input_charset">
+            <summary>
+            获取字符编码格式
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.AlipaySignHelper.Config.Sign_type">
+            <summary>
+            获取签名方式
+            </summary>
+        </member>
+        <member name="T:WeiCode.Utility.AlipaySignHelper.Core">
+            <summary>
+            类名：Core
+            功能：支付宝接口公用函数类
+            详细：该类是请求、通知返回两个文件所调用的公用函数核心处理文件，不需要修改
+            版本：3.3
+            修改日期：2012-07-05
+            说明：
+            以下代码只是为了方便商户测试而提供的样例代码，商户可以根据自己网站的需要，按照技术文档编写,并非一定要使用该代码。
+            该代码仅供学习和研究支付宝接口使用，只是提供一个参考。
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.AlipaySignHelper.Core.FilterPara(System.Collections.Generic.SortedDictionary{System.String,System.String})">
+            <summary>
+            除去数组中的空值和签名参数并以字母a到z的顺序排序
+            </summary>
+            <param name="dicArrayPre">过滤前的参数组</param>
+            <returns>过滤后的参数组</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:WeiCode.Utility.AlipaySignHelper.Core.CreateLinkString(System.Collections.Generic.Dictionary{System.String,System.String})" -->
+        <!-- Badly formed XML comment ignored for member "M:WeiCode.Utility.AlipaySignHelper.Core.CreateLinkStringUrlencode(System.Collections.Generic.Dictionary{System.String,System.String},System.Text.Encoding)" -->
+        <member name="M:WeiCode.Utility.AlipaySignHelper.Core.LogResult(System.String)">
+            <summary>
+            写日志，方便测试（看网站需求，也可以改成把记录存入数据库）
+            </summary>
+            <param name="sWord">要写入日志里的文本内容</param>
+        </member>
+        <member name="M:WeiCode.Utility.AlipaySignHelper.Core.GetAbstractToMD5(System.IO.Stream)">
+            <summary>
+            获取文件的md5摘要
+            </summary>
+            <param name="sFile">文件流</param>
+            <returns>MD5摘要结果</returns>
+        </member>
+        <member name="M:WeiCode.Utility.AlipaySignHelper.Core.GetAbstractToMD5(System.Byte[])">
+            <summary>
+            获取文件的md5摘要
+            </summary>
+            <param name="dataFile">文件流</param>
+            <returns>MD5摘要结果</returns>
+        </member>
+        <member name="T:WeiCode.Utility.AlipaySignHelper.Notify">
+            <summary>
+            类名：Notify
+            功能：支付宝通知处理类
+            详细：处理支付宝各接口通知返回
+            版本：3.3
+            修改日期：2011-07-05
+            '说明：
+            以下代码只是为了方便商户测试而提供的样例代码，商户可以根据自己网站的需要，按照技术文档编写,并非一定要使用该代码。
+            该代码仅供学习和研究支付宝接口使用，只是提供一个参考。
+            
+            //////////////////////注意/////////////////////////////
+            调试通知返回时，可查看或改写log日志的写入TXT里的数据，来检查通知返回是否正常 
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.AlipaySignHelper.Notify.#ctor(System.String,System.String)">
+            <summary>
+            构造函数
+            从配置文件中初始化变量
+            </summary>
+            <param name="inputPara">通知返回参数数组</param>
+            <param name="notify_id">通知验证ID</param>
+        </member>
+        <member name="M:WeiCode.Utility.AlipaySignHelper.Notify.Verify(System.Collections.Generic.SortedDictionary{System.String,System.String},System.String,System.String)">
+            <summary>
+             验证消息是否是支付宝发出的合法消息
+            </summary>
+            <param name="inputPara">通知返回参数数组</param>
+            <param name="notify_id">通知验证ID</param>
+            <param name="sign">支付宝生成的签名结果</param>
+            <returns>验证结果</returns>
+        </member>
+        <member name="M:WeiCode.Utility.AlipaySignHelper.Notify.GetPreSignStr(System.Collections.Generic.SortedDictionary{System.String,System.String})">
+            <summary>
+            获取待签名字符串（调试用）
+            </summary>
+            <param name="inputPara">通知返回参数数组</param>
+            <returns>待签名字符串</returns>
+        </member>
+        <member name="M:WeiCode.Utility.AlipaySignHelper.Notify.GetSignVeryfy(System.Collections.Generic.SortedDictionary{System.String,System.String},System.String)">
+            <summary>
+            获取返回时的签名验证结果
+            </summary>
+            <param name="inputPara">通知返回参数数组</param>
+            <param name="sign">对比的签名结果</param>
+            <returns>签名验证结果</returns>
+        </member>
+        <member name="M:WeiCode.Utility.AlipaySignHelper.Notify.GetResponseTxt(System.String)">
+            <summary>
+            获取是否是支付宝服务器发来的请求的验证结果
+            </summary>
+            <param name="notify_id">通知验证ID</param>
+            <returns>验证结果</returns>
+        </member>
+        <member name="M:WeiCode.Utility.AlipaySignHelper.Notify.Get_Http(System.String,System.Int32)">
+            <summary>
+            获取远程服务器ATN结果
+            </summary>
+            <param name="strUrl">指定URL路径地址</param>
+            <param name="timeout">超时时间设置</param>
+            <returns>服务器ATN结果</returns>
+        </member>
+        <member name="T:WeiCode.Utility.AlipaySignHelper.Submit">
+            <summary>
+            类名：Submit
+            功能：支付宝各接口请求提交类
+            详细：构造支付宝各接口表单HTML文本，获取远程HTTP数据
+            版本：3.3
+            修改日期：2011-07-05
+            说明：
+            以下代码只是为了方便商户测试而提供的样例代码，商户可以根据自己网站的需要，按照技术文档编写,并非一定要使用该代码。
+            该代码仅供学习和研究支付宝接口使用，只是提供一个参考
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.AlipaySignHelper.Submit.BuildRequestMysign(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            生成请求时的签名
+            </summary>
+            <param name="sPara">请求给支付宝的参数数组</param>
+            <returns>签名结果</returns>
+        </member>
+        <member name="M:WeiCode.Utility.AlipaySignHelper.Submit.BuildRequestPara(System.Collections.Generic.SortedDictionary{System.String,System.String})">
+            <summary>
+            生成要请求给支付宝的参数数组
+            </summary>
+            <param name="sParaTemp">请求前的参数数组</param>
+            <returns>要请求的参数数组</returns>
+        </member>
+        <member name="M:WeiCode.Utility.AlipaySignHelper.Submit.BuildRequestParaToString(System.Collections.Generic.SortedDictionary{System.String,System.String},System.Text.Encoding)">
+            <summary>
+            生成要请求给支付宝的参数数组
+            </summary>
+            <param name="sParaTemp">请求前的参数数组</param>
+            <param name="code">字符编码</param>
+            <returns>要请求的参数数组字符串</returns>
+        </member>
+        <member name="M:WeiCode.Utility.AlipaySignHelper.Submit.BuildRequest(System.Collections.Generic.SortedDictionary{System.String,System.String},System.String,System.String)">
+            <summary>
+            建立请求，以表单HTML形式构造（默认）
+            </summary>
+            <param name="sParaTemp">请求参数数组</param>
+            <param name="strMethod">提交方式。两个值可选：post、get</param>
+            <param name="strButtonValue">确认按钮显示文字</param>
+            <returns>提交表单HTML文本</returns>
+        </member>
+        <member name="M:WeiCode.Utility.AlipaySignHelper.Submit.BuildRequest(System.Collections.Generic.SortedDictionary{System.String,System.String})">
+            <summary>
+            建立请求，以模拟远程HTTP的POST请求方式构造并获取支付宝的处理结果
+            </summary>
+            <param name="sParaTemp">请求参数数组</param>
+            <returns>支付宝处理结果</returns>
+        </member>
+        <member name="M:WeiCode.Utility.AlipaySignHelper.Submit.BuildRequest(System.Collections.Generic.SortedDictionary{System.String,System.String},System.String,System.String,System.Byte[],System.String,System.Int32)">
+            <summary>
+            建立请求，以模拟远程HTTP的POST请求方式构造并获取支付宝的处理结果，带文件上传功能
+            </summary>
+            <param name="sParaTemp">请求参数数组</param>
+            <param name="strMethod">提交方式。两个值可选：post、get</param>
+            <param name="fileName">文件绝对路径</param>
+            <param name="data">文件数据</param>
+            <param name="contentType">文件内容类型</param>
+            <param name="lengthFile">文件长度</param>
+            <returns>支付宝处理结果</returns>
+        </member>
+        <member name="M:WeiCode.Utility.AlipaySignHelper.Submit.Query_timestamp">
+            <summary>
+            用于防钓鱼，调用接口query_timestamp来获取时间戳的处理函数
+            注意：远程解析XML出错，与IIS服务器配置有关
+            </summary>
+            <returns>时间戳字符串</returns>
+        </member>
+        <member name="T:WeiCode.Utility.AlipaySignHelper.AlipayMD5">
+            <summary>
+            类名：MD5
+            功能：MD5加密
+            版本：3.3
+            修改日期：2012-07-05
+            说明：
+            以下代码只是为了方便商户测试而提供的样例代码，商户可以根据自己网站的需要，按照技术文档编写,并非一定要使用该代码。
+            该代码仅供学习和研究支付宝接口使用，只是提供一个参考。
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.AlipaySignHelper.AlipayMD5.Sign(System.String,System.String,System.String)">
+            <summary>
+            签名字符串
+            </summary>
+            <param name="prestr">需要签名的字符串</param>
+            <param name="key">密钥</param>
+            <param name="_input_charset">编码格式</param>
+            <returns>签名结果</returns>
+        </member>
+        <member name="M:WeiCode.Utility.AlipaySignHelper.AlipayMD5.Verify(System.String,System.String,System.String,System.String)">
+            <summary>
+            验证签名
+            </summary>
+            <param name="prestr">需要签名的字符串</param>
+            <param name="sign">签名结果</param>
+            <param name="key">密钥</param>
+            <param name="_input_charset">编码格式</param>
+            <returns>验证结果</returns>
+        </member>
+        <member name="T:WeiCode.Utility.SignHelper">
+            <summary>
+            签名验证
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:WeiCode.Utility.SignHelper.Getsign(System.Collections.Generic.Dictionary{System.String,System.String},System.String)" -->
+        <member name="M:WeiCode.Utility.SignHelper.GetParamSrc(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            参数按照ASCII码从小到大排序（字典序）
+            </summary>
+            <param name="paramsMap"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.SignHelper.GetMd5(System.String)">
+            <summary>
+            MD5计算
+            </summary>
+            <param name="sDataIn"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.MoneyTypeConvert">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.MoneyTypeConvert.ToMoney(System.Nullable{System.Decimal})">
+            <summary>
+            金额千分位格式
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.MoneyTypeConvert.ToMoney(System.Decimal)">
+            <summary>
+            金额千分位格式
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.TypeConvert">
+            <summary>
+            基础类型转换(扩展方法)
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToInt(System.Object,System.Int32)">
+            <summary>
+            转换整型
+            </summary>
+            <param name="value"></param>
+            <param name="defaultValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToInt(System.Object,System.String,WeiCode.Utility.TypeConvert.IntType)">
+            <summary>
+            转换整型
+            </summary>
+            <param name="value"></param>
+            <param name="intType"></param>
+            <param name="errInfo">转换失败时提示信息</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.TypeConvert.IntType">
+            <summary>
+            整数类型
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.TypeConvert.IntType.整数">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.TypeConvert.IntType.正整数">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.TypeConvert.IntType.非负整数">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.TypeConvert.IntType.负整数">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.TypeConvert.IntType.非正整数">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToNullableString(System.Object,System.Int32,System.String)">
+            <summary>
+            转换字符串
+            </summary>
+            <param name="value">需要转换的对象</param>
+            <param name="length">字符串结果的最大长度，如果无限制则为-1</param>
+            <param name="replacetxt">代替省略的字符串的字符，默认为...</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToDecimal(System.Object,System.Decimal)">
+            <summary>
+            转换为Decimal类型
+            </summary>
+            <param name="value"></param>
+            <param name="defaultValue">转换失败时的默认值</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToDecimal(System.Object,System.String,WeiCode.Utility.TypeConvert.DecimalType)">
+            <summary>
+            转换为Decimal类型
+            </summary>
+            <param name="value"></param>
+            <param name="errInfo">转换失败时提示信息</param>
+            <param name="decimalType"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.TypeConvert.DecimalType">
+            <summary>
+            数字类型
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.TypeConvert.DecimalType.数字">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.TypeConvert.DecimalType.正数字">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.TypeConvert.DecimalType.非负数字">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.TypeConvert.DecimalType.负数字">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.TypeConvert.DecimalType.非正数字">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToSByte(System.Object,System.SByte)">
+            <summary>
+            转SByte
+            </summary>
+            <param name="value"></param>
+            <param name="defaultValue">转换失败时的默认值</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToSByte(System.Object,System.String)">
+            <summary>
+            转SByte
+            </summary>
+            <param name="value"></param>
+            <param name="errInfo">转换失败时提示信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToDouble(System.Object,System.Double)">
+            <summary>
+            转ToDouble
+            </summary>
+            <param name="value"></param>
+            <param name="defaultValue">转换失败时的默认值</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToDouble(System.Object,System.String)">
+            <summary>
+            转ToDouble
+            </summary>
+            <param name="value"></param>
+            <param name="errInfo">转换失败时提示信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToFloat(System.Object,System.Single)">
+            <summary>
+            转浮点
+            </summary>
+            <param name="value"></param>
+            <param name="defaultValue">转换失败时的默认值</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToFloat(System.Object,System.String)">
+            <summary>
+            转浮点
+            </summary>
+            <param name="value"></param>
+            <param name="errInfo">转换失败时提示信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToBool(System.Object,System.Boolean)">
+            <summary>
+            转布尔值
+            </summary>
+            <param name="value"></param>
+            <param name="defaultValue">转换失败时的默认值</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToBool(System.Object,System.String)">
+            <summary>
+            转布尔值
+            </summary>
+            <param name="value"></param>
+            <param name="errInfo">转换失败时提示信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToDateTime(System.Object,System.DateTime)">
+            <summary>
+            转时间
+            </summary>
+            <param name="value"></param>
+            <param name="defaultValue">转换失败时的默认值</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToDateTime(System.Object,System.String)">
+            <summary>
+            转时间
+            </summary>
+            <param name="value"></param>
+            <param name="errInfo">转换失败时提示信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToDateTime(System.Object)">
+            <summary>
+            任意格式转DateTime
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToDate(System.Object)">
+            <summary>
+            任意格式转日期
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToFixed(System.Double,System.Int32)">
+            <summary>
+            保留n位小数
+            </summary>
+            <param name="value"></param>
+            <param name="figures">小数位数</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToFixed(System.Decimal,System.Int32)">
+            <summary>
+            保留n位小数
+            </summary>
+            <param name="value"></param>
+            <param name="figures">小数位数</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToEnum(System.Enum,System.String)">
+            <summary>
+            转换成枚举STRING
+            </summary>
+            <param name="value"></param>
+            <param name="defaultValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToString(System.Enum,System.String)">
+            <summary>
+            转换成枚举STRING
+            </summary>
+            <param name="value"></param>
+            <param name="defaultValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToEnum``1(System.Object)">
+            <summary>
+            转枚举值
+            </summary>
+            <param name="key">枚举key</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToDateString(System.Object,System.String)">
+            <summary>
+            转换为日期格式字符串
+            </summary>
+            <param name="value"></param>
+            <param name="defaultValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToJson(System.Object)">
+            <summary>
+            object转Json
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToJObject(System.String)">
+            <summary>
+            Json转JObject
+            </summary>
+            <param name="json"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToJArray(System.String)">
+            <summary>
+            Json转JArray
+            </summary>
+            <param name="json"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.HasValue(System.String)">
+            <summary>
+            是否存在值，级不为null、不为空、空白字符。等效于 !string.IsNullOrWhiteSpace(obj)
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToUrlEncode(System.String)">
+            <summary>
+             Url编码
+            </summary>
+            <param name="url"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToUrlDecode(System.String)">
+            <summary>
+            Url解码
+            </summary>
+            <param name="url"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToHtmlEncode(System.String)">
+            <summary>
+             Html编码
+            </summary>
+            <param name="html"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToHtmlDecode(System.String)">
+            <summary>
+            Html解码
+            </summary>
+            <param name="html"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToSplit(System.String,System.String)">
+            <summary>
+            字符串拆分为数组
+            </summary>
+            <param name="value"></param>
+            <param name="split"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToSplit(System.String,System.String[])">
+            <summary>
+            字符串拆分为数组
+            </summary>
+            <param name="value"></param>
+            <param name="splits"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ReplaceChar(System.String,System.Int32,System.Int32,System.Char)">
+            <summary>
+            固定字符替换指定部分的值(手机号码中间4位显示星号)
+            </summary>
+            <param name="str"></param>
+            <param name="starNum">保留前几位正常显示</param>
+            <param name="endNum">保留后几位正常显示</param>
+            <param name="chr">加密符号</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToModelMerge``2(``0,``1,System.String[])">
+            <summary>
+            将另一个Model属性值（非Null值）合并到指定Model(属性名相同部分)
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="K"></typeparam>
+            <param name="outModel"></param>
+            <param name="mergeModel"></param>
+            <param name="excepts">排除字段</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToModelMerge``2(``0,``1,System.String@)">
+            <summary>
+            将另一个Model属性值（非Null值）合并到指定Model(属性名相同部分)
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="K"></typeparam>
+            <param name="outModel"></param>
+            <param name="mergeModel"></param>
+            <param name="tranSql">SQL事务，记录数据变更版本信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToModel``2(``0)">
+            <summary>
+            类型互转，只对字段交集部分有效
+            </summary>
+            <typeparam name="T">原类型</typeparam>
+            <typeparam name="K">新类型</typeparam>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToModel``1(WeiCode.Utility.Entity)">
+            <summary>
+            类型互转，只对字段交集部分有效
+            </summary>
+            <typeparam name="K"></typeparam>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToModel``1(System.String)">
+            <summary>
+            Json String 转指定Model
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToModels``2(System.Collections.Generic.List{``0})">
+            <summary>
+            List类型互转，只对字段交集部分有效
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="K"></typeparam>
+            <param name="values"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToModelss``1(System.Collections.Generic.List{WeiCode.Utility.Entity})">
+            <summary>
+            List类型互转，只对字段交集部分有效
+            </summary>
+            <typeparam name="K"></typeparam>
+            <param name="values"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToModels``1(System.Data.DataSet)">
+            <summary>
+                DataSetToList
+            </summary>
+            <typeparam name="T">转换类型</typeparam>
+            <param name="dataSet">数据源</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToModels``1(System.Data.DataTable)">
+            <summary>
+                DataSetToList
+            </summary>
+            <typeparam name="T">转换类型</typeparam>
+            <param name="dt">数据源</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToModels``1(System.String)">
+            <summary>
+            json字符串转list
+            </summary>
+            <typeparam name="T">转换类型</typeparam>
+            <param name="json">json字符串</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToUriParam(System.Object,System.Boolean,System.String,System.String,System.String)">
+            <summary>
+            将简单实体对象转URL参数，不能支持子对象处理
+            </summary>
+            <param name="obj"></param>
+            <param name="isAddEmptyValue"></param>
+            <param name="orderBy">元素asc排序</param>
+            <param name="removeFiled">移除那个字段</param>
+            <param name="fieldReplace">格式old,name</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ConvertDateTimeToInt(System.DateTime)">
+            <summary>  
+            将c# DateTime时间格式转换为Unix时间戳格式  
+            </summary>  
+            <param name="value">时间</param>  
+            <returns>long</returns>  
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ConvertStringToDateTime(System.Int64)">
+            <summary>        
+            将时间戳转为C#格式时间        
+            </summary>        
+            <param name="value"></param>        
+            <returns></returns>        
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvert.ToDictionary(WeiCode.Utility.Entity)">
+            <summary>
+            将实体转换为Dictionary（待验证场景）
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.TypeConvertExtend">
+            <summary>
+            扩展方法
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvertExtend.ToJoin(System.Int32[],WeiCode.Utility.TypeConvertExtend.JoinType)">
+            <summary>
+            转拼接字符串
+            </summary>
+            <param name="value"></param>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvertExtend.ToJoin(System.String[],WeiCode.Utility.TypeConvertExtend.JoinType)">
+            <summary>
+            转拼接字符串
+            </summary>
+            <param name="value"></param>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.TypeConvertExtend.JoinType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvertExtend.ToRange(System.DateTime,WeiCode.Utility.EnumCommon.TimeInterval)">
+            <summary>
+            距当前时间间隔天数
+            </summary>
+            <param name="value"></param>
+            <param name="timeInterval"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeConvertExtend.ToRange(System.Nullable{System.DateTime},WeiCode.Utility.EnumCommon.TimeInterval)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <param name="timeInterval"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.EnumCommon">
+            <summary>
+            项目常用内置枚举
+            </summary>
+        </member>
+        <member name="T:WeiCode.Utility.EnumCommon.TimeInterval">
+            <summary>
+            时间间隔类型
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.EnumCommon.TimeInterval.days">
+            <summary>
+            天
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.EnumCommon.TimeInterval.hours">
+            <summary>
+            小时
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.EnumCommon.TimeInterval.minutes">
+            <summary>
+            分钟
+            </summary>
+        </member>
+        <member name="F:WeiCode.Utility.EnumCommon.TimeInterval.seconds">
+            <summary>
+            秒
+            </summary>
+        </member>
+        <member name="T:WeiCode.Utility.TypeVerification">
+            <summary>
+            数据基础类型验证
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.TypeVerification.IsNullOrEmpty(System.String)">
+            <summary>
+            判断object对象是否为空或Null
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeVerification.IsNullOrEmpty(System.Nullable{System.DateTime})">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeVerification.IsNullOrEmpty(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeVerification.IsValidInt(System.Object)">
+            <summary>
+            判断object对象是否为整数
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeVerification.IsValidMoney(System.Object)">
+            <summary>
+            判断object对象是否为金额
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeVerification.IsValidMobile(System.String)">
+            <summary>
+            是否为正确的手机号码
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeVerification.IsValidMobile(System.String,WeiCode.Utility.TypeVerification.ValidMobile)">
+            <summary>
+            是否为正确的手机号码
+            </summary>
+            <param name="value"></param>
+            <param name="validMobile"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.TypeVerification.ValidMobile">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.TypeVerification.ValidMobile.isPrivate">
+            <summary>
+            是否为虚拟号
+            </summary>
+        </member>
+        <member name="P:WeiCode.Utility.TypeVerification.ValidMobile.isNormalOrPrivate">
+            <summary>
+            是否为正常11位手机号或者隐私号
+            </summary>
+        </member>
+        <member name="M:WeiCode.Utility.TypeVerification.IsValidURL(System.String)">
+            <summary>
+            是否为正确的Url
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeVerification.IsValidDate(System.String)">
+            <summary>
+            是否为正确的日期
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeVerification.HasChinese(System.String)">
+            <summary>
+            判断字符串中是否包含中文
+            </summary>
+            <param name="value">需要判断的字符串</param>
+            <returns>判断结果</returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeVerification.IsValidNumeric(System.Object)">
+            <summary>
+            是否为数字
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeVerification.IsNaturalNumber(System.Object)">
+            <summary>
+            是否为自然数
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeVerification.HasSpecialChar(System.String)">
+            <summary>
+            是否包含特殊字符，除汉字、字母、数字外
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeVerification.IsValidUsername(System.String,System.Int32,System.Int32)">
+            <summary>
+            用户名规则：只能包含字母、数字、下划线，并且长度在5到20之间
+            </summary>
+            <param name="username"></param>
+            <param name="min_len">最小长度</param>
+            <param name="max_len">最大长度</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeVerification.IsValidComponentName(System.String,System.Int32,System.Int32)">
+            <summary>
+            组件名规则：只能包含字母、数字、下划线，并且长度在5到20之间
+            </summary>
+            <param name="name"></param>
+            <param name="min_len">最小长度</param>
+            <param name="max_len">最大长度</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Utility.TypeVerification.IsValidVariableName(System.String)">
+            <summary>
+            变量名规则：只能包含字母、数字、下划线
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Utility.TypeVerificationExt">
+            <summary>
+            数据扩展类型验证
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,107 @@
+﻿
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+    var c_date = ((string)ViewBag.c_date).ToDate();
+}
+<!-- 以下书写自己的页面内容代码 -->
+<form class="layui-form">
+    <div class="layui-row">
+        <div class="layui-col-md12" style="text-align: center; background-color: #ffffff; padding: 8px;">
+            <blockquote class="layui-elem-quote news_search">
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("c_date")
+                        {
+                           mold = WeiCode.Models.ModelBasic.EmtTimeSelect.Mold.month,
+                           placeholder = "选择时间",
+                           defaultValue = c_date.ToString("yyyy-MM"),
+                           eventJsChange = new EmtFormBase.EventJsChange
+                           {
+                               eventJavascript = new EventJavascript
+                               {
+                                   code = "window.location.href = '/Xianxiazp/Statistical/Total?c_date=' + page.c_date.value;"
+                               },
+                           }
+                        })
+                    </div>
+                </div>
+            </blockquote>
+        </div>
+        <div class="layui-card" style="width:95%;top:30px;margin:0 auto">
+            <div class="layui-form-item">
+                <label class="layui-form-label">统计年月</label>
+                <div class="layui-input-inline">
+                    <label class="layui-form-label" style="text-align: left;">@c_date.ToString("yyyy-MM")</label>
+                </div>
+            </div>
+            @{
+                var interview_list = DoMySql.FindList<ModelDb.p_xianxiazp_info>($"tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and DATE_FORMAT(interview_date, '%Y-%m') = '{c_date.ToString("yyyy-MM")}' and zt_user_sn = '{new UserIdentityBag().user_sn}'");
+                var ruzhi_list = DoMySql.FindList<ModelDb.p_xianxiazp_info>($"tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and DATE_FORMAT(ruzhi_date, '%Y-%m') = '{c_date.ToString("yyyy-MM")}' and zt_user_sn = '{new UserIdentityBag().user_sn}'");
+            }
+            <div class="layui-form-item">
+                <label class="layui-form-label">到场人数</label>
+                <div class="layui-input-block">
+                    <label class="layui-form-label" style="text-align: left;">@interview_list.Count</label>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">到场男生</label>
+                <div class="layui-input-inline">
+                    <label class="layui-form-label" style="text-align: left;">@interview_list.Where(x => x.gender == "男").ToList().Count</label>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">到场女生</label>
+                <div class="layui-input-inline">
+                    <label class="layui-form-label" style="text-align: left;">@interview_list.Where(x => x.gender == "女").ToList().Count</label>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">入职人数</label>
+                <div class="layui-input-inline">
+                    <label class="layui-form-label" style="text-align: left;">@ruzhi_list.Count</label>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">入职男生</label>
+                <div class="layui-input-inline">
+                    <label class="layui-form-label" style="text-align: left;">@ruzhi_list.Where(x => x.gender == "男").ToList().Count</label>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">入职女生</label>
+                <div class="layui-input-inline">
+                    <label class="layui-form-label" style="text-align: left;">@ruzhi_list.Where(x => x.gender == "女").ToList().Count</label>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">入职率</label>
+                <div class="layui-input-inline">
+                    <label class="layui-form-label" style="text-align: left;">@(interview_list.Count == 0 ? ruzhi_list.Count > 0 ? 100 : 0 : interview_list.Count / interview_list.Count)%</label>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">在职人数</label>
+                <div class="layui-input-inline">
+                    <label class="layui-form-label" style="text-align: left;">1</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        form.render('select'); // 仅渲染 select 元素
+    });
+</script>

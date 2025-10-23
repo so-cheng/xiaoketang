@@ -1,0 +1,213 @@
+﻿@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+<script src="~/Assets/js/layui.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.js"></script>
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    .layui-table td {
+        font-size: 15px;
+    }
+</style>
+
+@{
+    string c_date_e = ViewBag.c_date_e;
+    string c_date_s = ViewBag.c_date_s;
+    string dateRange = ViewBag.dateRange;
+    var p_jixiao_day = DoMySql.FindListBySql<ServiceFactory.JixiaoTable>($@"SELECT
+	user_sn,t2.* 
+FROM
+	user_base
+	LEFT JOIN (
+SELECT
+	zb_user_sn,
+	sum( amount ) AS amount_sum,
+	sum( new_num ) AS new_num_sum,
+	sum( contact_num ) AS contact_num_sum,
+	sum( datou_num ) AS datou_num_sum,
+	sum( amount_1 ) AS amount_1_sum,
+	sum( num_2 ) AS num_2_sum,
+	sum( amount_2 ) AS amount_2_sum,
+	sum( old_amount ) AS old_amount_sum 
+FROM
+	p_jixiao_day 
+WHERE
+	zb_user_sn IN ({ViewBag.zbs}) 
+	AND c_date >= '{c_date_s}' 
+	AND c_date <= '{c_date_e}' 
+GROUP BY
+	zb_user_sn 
+	) AS t2 ON user_base.user_sn = t2.zb_user_sn 
+WHERE
+	user_sn IN ({ViewBag.zbs})");
+}
+
+
+<div class="layui-card">
+
+    <div class="layui-card" style="width:95%;top:30px;margin:0 auto">
+        <div class="layui-card-header">数据统计</div>
+        <blockquote class="layui-elem-quote news_search">
+            <div class="layui-inline">
+                <form class="layui-form">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">日期范围</label>
+                        <div class="layui-input-inline">
+                            @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("dateRange")
+                             {
+                                 title = "日期",
+                                 defaultValue = ViewBag.dateRange,
+                                 mold = ModelBasic.EmtTimeSelect.Mold.date_range,
+                             })
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="users" name="users" value="@(ViewBag.zbs)" />
+                    <button type="submit" class="layui-btn search_btn">查询</button>
+                </form>
+            </div>
+        </blockquote>
+
+        <table class="layui-table" style="text-align:center;" id="table2" name="table2">
+            <colgroup>
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+            </colgroup>
+            <thead>
+                <tr>
+                    <td colspan="13" style="text-align: center; background-color: #D9E1F2; font-size: 18px; font-weight: 700 ">@(c_date_s.ToDateString("MM月dd日"))至@(c_date_e.ToDateString("dd日"))主播数据PK</td>
+                </tr>
+                <tr style="background-color: #B4C6E7; font-weight: 700;">
+                    <th>主播</th>
+                    <th>拉新数量</th>
+                    <th>首消音浪</th>
+                    <th>二消个数</th>
+                    <th>建联</th>
+                    <th>建联率</th>
+                    <th>二消音浪</th>
+                    <th>二消率</th>
+                    <th>老用户</th>
+                    <th>掉大头</th>
+                    <th>个人总音浪</th>
+                    <th>二消音浪占比</th>
+                    <th>老用户占比</th>
+                </tr>
+            </thead>
+            @{
+                string color = "#D9E1F2";
+                foreach (var item in p_jixiao_day)
+                {
+                    string zhubo = DoMySql.FindEntity<ModelDb.user_base>($"user_sn='{item.user_sn}'").username;
+                    <tr style="background-color: @color">
+                        <td>@zhubo</td>
+                        <td>@item.new_num_sum</td>
+                        <td>@item.amount_1_sum</td>
+                        <td>@item.num_2_sum</td>
+                        <td>@item.contact_num_sum</td>
+                        <td>@(item.new_num_sum.ToInt()<=0?"0":(item.contact_num_sum.ToDouble()*100/item.new_num_sum.ToInt()).ToString("0.00"))%</td>
+                        <td>@item.amount_2_sum</td>
+                        <td>@(item.new_num_sum.ToInt()<=0?"0":(item.num_2_sum.ToDouble()*100/item.new_num_sum.ToInt()).ToString("0.00"))%</td>
+                        <td>@item.old_amount_sum</td>
+                        <td>@item.datou_num_sum</td>
+                        <td>@item.amount_sum</td>
+                        <td>@(item.amount_sum.ToInt()<=0?"0":(item.amount_2_sum.ToDouble()*100/item.amount_sum.ToInt()).ToString("0.00"))%</td>
+                        <td>@(item.amount_sum.ToInt()<=0?"0":(item.old_amount_sum.ToDouble()*100/item.amount_sum.ToInt()).ToString("0.00"))%</td>
+                    </tr>
+                    if (color == "#D9E1F2")
+                    {
+                        color = "#B4C6E7";
+                    }
+                    else
+                    {
+                        color = "#D9E1F2";
+                    }
+                }
+            }
+        </table>
+    </div>
+</div>
+
+
+@ViewModelBag.Load(Html, new ModelBasic.AdjScreenshot("screenshot")
+{
+    elem = "table0"
+})
+
+
+<script>
+    //选择厅管后筛选数据
+    layui.use(function () {
+        var form = layui.form;
+        var layer = layui.layer;
+        // select 事件
+        form.on('select(tg)', function (data) {
+            var value = data.value; // 获得被选中的值
+            var dateRange = $('#dateRange').attr('value');
+            window.location.href = '/jixiao/reportday/datas?dateRange=' + dateRange + '&tg_user_sn=' + value;
+        });
+    });
+
+    //设置时间筛选的数据格式
+    layui.use(['form', 'laydate'], function () {
+        var form = layui.form;
+        var laydate = layui.laydate;
+
+        //日期时间段选择
+        laydate.render({
+            elem: '#dateRange'
+            , range: '~'
+        });
+    });
+
+    //卡片面板切换
+    layui.use(function () {
+        var element = layui.element;
+
+        // hash 地址定位
+        var hashName = 'tabid'; // hash 名称
+        var layid = location.hash.replace(new RegExp('^#' + hashName + '='), ''); // 获取 lay-id 值
+
+        // 初始切换
+        element.tabChange('test-hash', layid);
+        // 切换事件
+        element.on('tab(test-hash)', function (obj) {
+            location.hash = hashName + '=' + this.getAttribute('lay-id');
+        });
+    });
+
+
+</script>

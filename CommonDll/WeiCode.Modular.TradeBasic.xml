@@ -1,0 +1,245 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WeiCode.Modular.TradeBasic</name>
+    </assembly>
+    <members>
+        <member name="T:WeiCode.Models.ModelTradeBasic">
+            <summary>
+            项目基础控件级模型
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelTradeBasic.CtlOrderCreate">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelTradeBasic.CtlOrderCreate.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Models.ModelTradeBasic.EmtUserTest">
+            <summary>
+            文本域
+            </summary>
+        </member>
+        <member name="M:WeiCode.Models.ModelTradeBasic.EmtUserTest.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.TradeBasic.DomainTradeBasicGoodsCreate">
+            <summary>
+            创建订单Domain
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.TradeBasic.DomainTradeBasicGoodsCreate.Template`3">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.TradeBasic.DomainTradeBasicGoodsCreate.Template`3.Execute(`0,`1,`2)">
+            <summary>
+            注册事件处理（创建商品）
+            </summary>
+            <param name="req"></param>
+            <param name="res"></param>
+            <param name="log"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Modular.TradeBasic.DomainTradeBasicGoodsCreate.Template`3.Before(`0,`1)">
+            <summary>
+            业务逻辑处理前执行
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.TradeBasic.DomainTradeBasicGoodsCreate.Template`3.CreateGoods(`0,`1)">
+            <summary>
+            创建/编辑 创建商品
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.TradeBasic.DomainTradeBasicGoodsCreate.Template`3.PushSupport(`0,`1)">
+            <summary>
+            统一处理事务
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.TradeBasic.DomainTradeBasicGoodsCreate.Template`3.Complete(`0,`1)">
+            <summary>
+            其它业务逻辑
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.TradeBasic.DomainTradeBasicGoodsCreate.DtoBaseReq">
+            <summary>
+            用户注册实体（输入）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.TradeBasic.DomainTradeBasicGoodsCreate.DtoBaseReq.formData">
+            <summary>
+            外部条件参数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.TradeBasic.DomainTradeBasicGoodsCreate.DtoBaseReq.FormData">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.TradeBasic.DomainTradeBasicGoodsCreate.DtoBaseReq.supportConfig">
+            <summary>
+            支持配置
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.TradeBasic.DomainTradeBasicGoodsCreate.DtoBaseReq.SupportConfig">
+            <summary>
+            支持配置
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.TradeBasic.DomainTradeBasicGoodsCreate.DtoBaseReq.SupportConfig.isUserUniqe">
+            <summary>
+            是否为整个用户表唯一
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.TradeBasic.DomainTradeBasicGoodsCreate.DtoBaseReq.SupportConfig.doMySqlsHelper">
+            <summary>
+            多库链接对象
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.TradeBasic.DomainTradeBasicGoodsCreate.DtoBaseRes">
+            <summary>
+            用户注册实体（输出）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.TradeBasic.DomainTradeBasicGoodsCreate.DtoBaseRes.user_id">
+            <summary>
+            注册用户id
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.TradeBasic.DomainTradeBasicGoodsCreate.DtoBaseLog">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.TradeBasic.DomainTradeBasicGoodsCreate.DtoBaseLog.formData">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.TradeBasic.ModularTradeBasicSaleOrderCreate">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.TradeBasic.ModularTradeBasicSaleOrderCreate.Service`3">
+            <summary>
+            创建商品（课程）
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.TradeBasic.ModularTradeBasicSaleOrderCreate.Service`3.Before(`0,`1)">
+            <summary>
+            执行前
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.TradeBasic.ModularTradeBasicSaleOrderCreate.Service`3.Complete(`0,`1)">
+            <summary>
+            执行后
+            </summary>
+            <param name="req"></param>
+            <param name="res"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Modular.TradeBasic.ModularTradeBasicSaleOrderCreate.DtoReq">
+            <summary>
+            创建用户（输入）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.TradeBasic.ModularTradeBasicSaleOrderCreate.DtoReq.formData">
+            <summary>
+            外部条件参数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.TradeBasic.ModularTradeBasicSaleOrderCreate.DtoReq.FormData">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.TradeBasic.ModularTradeBasicSaleOrderCreate.DtoRes">
+            <summary>
+            下单实体（输出）
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.TradeBasic.ModularTradeBasicSaleOrderCreate.DtoLog">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.TradeBasic.ModularTradeBasicSaleOrderCreate.DtoLog.customer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Modular.TradeBasic.UserBasicAreaRegistration">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Modular.TradeBasic.UserBasicAreaRegistration.AreaName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Modular.TradeBasic.UserBasicAreaRegistration.RegisterArea(System.Web.Mvc.AreaRegistrationContext,MvcContrib.PortableAreas.IApplicationBus)">
+            <summary>
+            
+            </summary>
+            <param name="context"></param>
+            <param name="bus"></param>
+        </member>
+        <member name="T:WeiCode.Modular.TradeBasic.Controllers.OrderController">
+            <summary>
+            订单相关
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:WeiCode.Modular.TradeBasic.Controllers.OrderController.Detail(System.String)" -->
+        <member name="T:WeiCode.Modular.TradeBasic.Controllers.SaleController">
+            <summary>
+            商品
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:WeiCode.Modular.TradeBasic.Controllers.SaleController.Index(System.String)" -->
+        <!-- Badly formed XML comment ignored for member "M:WeiCode.Modular.TradeBasic.Controllers.SaleController.Category(System.String)" -->
+        <!-- Badly formed XML comment ignored for member "M:WeiCode.Modular.TradeBasic.Controllers.SaleController.ListLeftMenu(System.Int32)" -->
+        <member name="M:WeiCode.Modular.TradeBasic.Controllers.SaleController.ListData(System.Int32)">
+            <summary>
+             列表数据
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:WeiCode.Modular.TradeBasic.Controllers.SaleController.Detail(System.String)" -->
+        <!-- Badly formed XML comment ignored for member "M:WeiCode.Modular.TradeBasic.Controllers.SaleController.Cart(System.String)" -->
+        <!-- Badly formed XML comment ignored for member "M:WeiCode.Modular.TradeBasic.Controllers.SaleController.OrderView(System.String)" -->
+        <member name="T:WeiCode.Modular.TradeBasic.Controllers.TestController">
+            <summary>
+            功能名称
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:WeiCode.Modular.TradeBasic.Controllers.TestController.GetHtml(System.String)" -->
+        <member name="T:WeiCode.ModelDbs.ModelDbModularTradeBasic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbModularTradeBasic.trade_goods_course">
+            <summary>
+            实体:视频基础信息
+            </summary>	
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbModularTradeBasic.trade_goods_course.goods_sn">
+            <summary>
+            商品编号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbModularTradeBasic.trade_goods_course.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+    </members>
+</doc>

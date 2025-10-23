@@ -1,0 +1,183 @@
+﻿@using System;
+@using System.Linq;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+
+@{
+    string yearmonth = DateTime.Now.ToString("yyyy-MM");
+
+    // 获取所有厅
+    var allTing = new ServiceFactory.UserInfo.Ting().GetBaseInfos(new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter
+    {
+         attachUserType = new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType
+         {
+              userType = ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType.UserType.运营,
+              UserSn = new UserIdentityBag().user_sn
+         }
+    });
+
+    // 获取当月已上报的厅
+    var reportedTing = DoMySql.FindList<ModelDb.p_jixiao_target_tg>($"yearmonth='{yearmonth}' and  yy_user_sn = '{new UserIdentityBag().user_sn}'");
+
+    // 提取已上报厅的ting_sn列表
+    var reportedTingn = reportedTing.Select(t => t.ting_sn).ToList();
+}
+
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-collapse: collapse;
+        border-style: solid;
+        border-width: 1px;
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 10px;
+    }
+
+    .layui-table td {
+        font-size: 10px;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    .layui-table {
+        background-color: rgba(30, 144, 255, 0.1);
+    }
+
+    /* 表头固定样式 */
+    .layui-table {
+        position: relative;
+    }
+
+        .layui-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: white;
+        }
+
+            .layui-table thead tr:first-child {
+                position: sticky;
+                top: 0;
+                z-index: 11;
+                background-color: #FFF3CA;
+            }
+
+            .layui-table thead tr:nth-child(2) {
+                position: sticky;
+                top: 28px; /* 第一行表头的高度 */
+                z-index: 11;
+                background-color: #FCE4D3;
+            }
+
+            /* 确保表头有足够的背景色 */
+            .layui-table thead th {
+                background-color: inherit;
+            }
+
+    /* 合并列的背景色（与参考逻辑对齐） */
+    .merge-column {
+        background-color: #EAFAF1 !important;
+    }
+</style>
+<form id="mainForm" class="layui-form" action="">
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <table class="layui-table" style="text-align:center;width:100%;border-collapse:collapse;" id="table1" name="table1">
+                <colgroup>
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th colspan="4" style="text-align: center; background-color: #FFF3CA; font-size: 18px; font-weight: 700 ">
+                            厅数据列表
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="background-color:#FFF2CC">运营</th>
+                        <th style="background-color:#FFF2CC">厅管</th>
+                        <th style="background-color:#FFF2CC">厅名</th>
+                        <th style="background-color:#FFF2CC">抖音号</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        string prevYyUserSn = "";
+                        string prevTgUserSn = "";
+
+                        foreach (var item in allTing)
+                        {
+                           
+                            if (reportedTingn.Contains(item.ting_sn))
+                            {
+                                continue;
+                            }
+
+                            var ting = new ServiceFactory.UserInfo.Ting().GetTingBySn(item.ting_sn);
+                            string currentYyUserSn = ting.yy_user_sn;
+                            string currentTgUserSn = item.tg_user_sn;
+
+                            <tr>
+                                <!-- 运营列合并逻辑 -->
+                                @if (currentYyUserSn != prevYyUserSn)
+                                {
+                                    // 计算当前运营下未上报的记录总数
+                                    int yyCount = allTing.Count(t =>
+                                    {
+                                        var Ting = new ServiceFactory.UserInfo.Ting().GetTingBySn(t.ting_sn);
+                                        return Ting.yy_user_sn == currentYyUserSn && !reportedTingn.Contains(t.ting_sn);
+                                    });
+
+                                    <td rowspan="@yyCount" style="background-color:#EAFAF1">
+                                        @(new ServiceFactory.UserInfo.Yy().GetInfoByUserSn(ting.yy_user_sn).name)
+                                    </td>
+
+                                    prevYyUserSn = currentYyUserSn;
+                                }
+
+                                <!-- 厅管列合并逻辑 -->
+                                @if (currentTgUserSn != prevTgUserSn)
+                                {
+                                    // 计算当前厅管下未上报的记录总数（用于rowspan）
+                                    int tgCount = allTing.Count(t =>
+                                    {
+                                        var Ting = new ServiceFactory.UserInfo.Ting().GetTingBySn(t.ting_sn);
+                                        return Ting.yy_user_sn == currentYyUserSn && t.tg_user_sn == currentTgUserSn && !reportedTingn.Contains(t.ting_sn);
+                                    });
+
+                                    <td rowspan="@tgCount" style="background-color:#EAFAF1">
+                                        @(new ServiceFactory.UserInfo.Tg().GetTgInfoByUsersn(item.tg_user_sn).name)
+                                    </td>
+
+                                    // 更新上一行厅管ID
+                                    prevTgUserSn = currentTgUserSn;
+                                }
+
+                                <td style="background-color:#EAFAF1">@(ting.ting_name)</td>
+                                <td style="background-color:#EAFAF1">@(item.dou_UID)</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>

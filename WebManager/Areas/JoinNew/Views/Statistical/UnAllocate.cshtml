@@ -1,0 +1,240 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@model Services.Project.PageFactory.TableVO
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+    string dateRange = ViewBag.dateRange;
+    var range = UtilityStatic.CommonHelper.DateRangeFormat(dateRange, 0);
+}
+
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+
+    /* 表头固定样式 */
+    .layui-table {
+        position: relative;
+    }
+
+        .layui-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: white;
+        }
+
+            .layui-table thead tr:first-child {
+                position: sticky;
+                top: 0;
+                z-index: 11;
+                background-color: #FFF3CA;
+            }
+
+            .layui-table thead tr:nth-child(2) {
+                position: sticky;
+                top: 50px; /* 第一行表头的高度 */
+                z-index: 11;
+                background-color: #FCE4D3;
+            }
+
+            /* 确保表头有足够的背景色 */
+            .layui-table thead th {
+                background-color: inherit;
+            }
+
+    .table {
+        width: 80%;
+        margin-left: 10%;
+        margin-top: 20px;
+        text-align: center;
+    }
+</style>
+
+<!-- 以下书写自己的页面内容代码 -->
+<form id="mainForm" class="layui-form" action="DayTarget">
+    <div class="layui-input-inline">
+        <label class="layui-form-label">日期</label>
+    </div>
+    <div class="layui-inline">
+        <div class="layui-input-inline">
+            @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("dateRange")
+           {
+               title = "拉群日期",
+               defaultValue = ViewBag.dateRange,
+               mold = ModelBasic.EmtTimeSelect.Mold.date_range,
+               eventJsChange = new EmtFormBase.EventJsChange
+               {
+                   eventJavascript = new EventJavascript
+                   {
+                       code = "window.location.href = '/JoinNew/Statistical/UnAllocate?dateRange=' + page.dateRange.value"
+                   }
+               },
+               placeholder = "拉群日期筛选",
+           })
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <table class="layui-table" style="text-align:center;width:100%;" id="table1" name="table1">
+                <colgroup>
+                    <col width="150">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="150">
+                </colgroup>
+                <thead>
+                    <tr style="font-weight:500;">
+                        <th style="background-color: #FFE270;">萌新总未分配人数</th>
+                        <th style="background-color: #FFE270;">0-3</th>
+                        <th style="background-color: #FFE270;">3-6</th>
+                        <th style="background-color: #FFE270;">6-9</th>
+                        <th style="background-color: #FFE270;">9-12</th>
+                        <th style="background-color: #FFE270;">12-15</th>
+                        <th style="background-color: #FFE270;">15-18</th>
+                        <th style="background-color: #FFE270;">18-21</th>
+                        <th style="background-color: #FFE270;">21-24</th>
+                        <th style="background-color: #FFE270;">全职未分</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var data = DoMySql.FindList<ModelDb.p_join_new_info>($"tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and id not in (select user_info_zb_id from p_join_new_info_log where c_type = {ModelDb.p_join_new_info_log.c_type_enum.拉群.ToSByte()}) and term in (select term from p_mengxin where date >= '{range.date_range_s}' and date <= '{range.date_range_e.ToDate().ToString("yyyy-MM-dd")}')");
+                        <tr>
+                            <td style="background-color: #FFC9C7;">
+                                <a href="javascript:win_pop_iframe('未分配', 'UnAllocateList?date_range_s=@range.date_range_s&date_range_e=@range.date_range_e', 1000, 800, '')" style="color:blue;">@data.Count()</a>
+                            </td>
+                            <td style="background-color: #FFC9C7;">
+                                @data.Where(a => a.sessions.Contains("1") && a.full_or_part == "兼职").Count()
+                            </td>
+                            <td style="background-color: #FFC9C7;">
+                                @data.Where(a => a.sessions.Contains("2") && a.full_or_part == "兼职").Count()
+                            </td>
+                            <td style="background-color: #FFC9C7;">
+                                @data.Where(a => a.sessions.Contains("3") && a.full_or_part == "兼职").Count()
+                            </td>
+                            <td style="background-color: #FFC9C7;">
+                                @data.Where(a => a.sessions.Contains("4") && a.full_or_part == "兼职").Count()
+                            </td>
+                            <td style="background-color: #FFC9C7;">
+                                @data.Where(a => a.sessions.Contains("5") && a.full_or_part == "兼职").Count()
+                            </td>
+                            <td style="background-color: #FFC9C7;">
+                                @data.Where(a => a.sessions.Contains("6") && a.full_or_part == "兼职").Count()
+                            </td>
+                            <td style="background-color: #FFC9C7;">
+                                @data.Where(a => a.sessions.Contains("7") && a.full_or_part == "兼职").Count()
+                            </td>
+                            <td style="background-color: #FFC9C7;">
+                                @data.Where(a => a.sessions.Contains("8") && a.full_or_part == "兼职").Count()
+                            </td>
+                            <td style="background-color: #FFC9C7;">
+                                @data.Where(a => a.full_or_part == "全职").Count()
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="layui-col-md12" style="margin-top: 20px;">
+            @{
+                var userdata = DoMySql.FindList<ModelDb.user_base>($"user_type_id = {new DomainBasic.UserTypeApp().GetInfoByCode("mxer").id} and status = {ModelDb.user_base.status_enum.正常.ToSByte()} and tenant_id = {new DomainBasic.TenantApp().GetInfo().id}");
+                foreach (var item in userdata)
+                {
+                    var count = data.Where(a => a.mx_sn == item.user_sn).Count();
+                    if (count > 0)
+                    {
+                        <div class="layui-col-md3">
+                            <table class="layui-table table">
+                                <thead>
+                                    <tr>
+                                        <th>@(item.username)总未分配人数</th>
+                                        <th>未分配时间段</th>
+                                        <th>人数</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td rowspan="9" style="font-size:25px"><a href="javascript:win_pop_iframe('未分配', 'UnAllocateList?date_range_s=@range.date_range_s&date_range_e=@range.date_range_e&mx_sn=@item.user_sn', 1000, 800, '')" style="color:blue;">@count</a></td>
+                                        <td>0-3</td>
+                                        <td>@data.Where(a => a.mx_sn == item.user_sn && a.sessions.Contains("1") && a.full_or_part == "兼职").Count()</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3-6</td>
+                                        <td>@data.Where(a => a.mx_sn == item.user_sn && a.sessions.Contains("2") && a.full_or_part == "兼职").Count()</td>
+                                    </tr>
+                                    <tr>
+                                        <td>6-9</td>
+                                        <td>@data.Where(a => a.mx_sn == item.user_sn && a.sessions.Contains("3") && a.full_or_part == "兼职").Count()</td>
+                                    </tr>
+                                    <tr>
+                                        <td>9-12</td>
+                                        <td>@data.Where(a => a.mx_sn == item.user_sn && a.sessions.Contains("4") && a.full_or_part == "兼职").Count()</td>
+                                    </tr>
+                                    <tr>
+                                        <td>12-15</td>
+                                        <td>@data.Where(a => a.mx_sn == item.user_sn && a.sessions.Contains("5") && a.full_or_part == "兼职").Count()</td>
+                                    </tr>
+                                    <tr>
+                                        <td>15-18</td>
+                                        <td>@data.Where(a => a.mx_sn == item.user_sn && a.sessions.Contains("6") && a.full_or_part == "兼职").Count()</td>
+                                    </tr>
+                                    <tr>
+                                        <td>18-21</td>
+                                        <td>@data.Where(a => a.mx_sn == item.user_sn && a.sessions.Contains("7") && a.full_or_part == "兼职").Count()</td>
+                                    </tr>
+                                    <tr>
+                                        <td>21-24</td>
+                                        <td>@data.Where(a => a.mx_sn == item.user_sn && a.sessions.Contains("8") && a.full_or_part == "兼职").Count()</td>
+                                    </tr>
+                                    <tr>
+                                        <td>全职未分</td>
+                                        <td>@data.Where(a => a.mx_sn == item.user_sn && a.full_or_part == "全职").Count()</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </div>
+</form>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        var layer = layui.layer;
+    });
+</script>

@@ -1,0 +1,108 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>支付结果</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .success-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: url('~/Areas/JixiaoDay/Views/img/success-icon.png') no-repeat center;
+            background-size: contain;
+            margin: 0 auto 20px auto;
+        }
+
+        .success-text {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .amount-text {
+            font-size: 36px;
+            color: #f33;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+
+        .back-btn {
+            background-color: #1aad19;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+            .back-btn:hover {
+                opacity: 0.9;
+            }
+        /* 无账单样式 */
+        .empty-container {
+            text-align: center;
+            padding: 40px 20px;
+            color: orangered;
+        }
+    </style>
+</head>
+<body>
+   
+    <div class="success-container">
+        <div class="success-icon"></div>
+        <div class="success-text">支付成功</div>       
+        <a href="/JixiaoDay/Shangjiao/Post" class="back-btn">返回商家</a>
+    </div>
+    }
+    else if (ViewBag.ting_shangjiao.Count == 0)
+    {
+    <div class="empty-container">
+        <p>无未支付账单</p>
+    </div>
+    }
+    else
+    {
+    <!-- 若有账单但未支付，可保留原列表或其他逻辑，这里简单处理 -->
+    <div class="empty-container">
+        <p>支付未完成，请继续操作</p>
+    </div>
+    }
+
+    <script>
+        layui.use('form', function () {
+            var form = layui.form;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+﻿
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+    var p_tingzhan = new PageFactory.PaibuService().getNewTingzhan();
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-collapse: collapse;
+        border-style: solid;
+        border-width: 1px;
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    .layui-table td {
+        font-size: 15px;
+    }
+</style>
+<!-- 以下书写自己的页面内容代码 -->
+<form class="layui-form">
+    <div class="layui-row">
+        <div class="layui-col-md10">
+            <div class="layui-col-md8" style="text-align:right">
+                <div class="layui-inline">
+                    <label class="layui-input-inline" style="font-size:18px; font-weight:bold">期数：@p_tingzhan.c_date.ToDate().ToString("yyyy-MM-dd")</label>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card" style="width:95%;top:30px;margin:0 auto">
+            <table class="layui-table" style="width: 100%; table-layout: fixed; ">
+                <tr style="background-color: #FCE4D3">
+                    @{
+                        int maxSum = 0;
+                        foreach (var item in ViewBag.targets)
+                        {
+                            if (maxSum < Convert.ToInt32(item.ting_sum)) { maxSum = Convert.ToInt32(item.ting_sum); }
+                            <td style="text-align: center" colspan="4">@(Convert.ToInt32(item.amont))W档</td>
+                        }
+                    }
+                </tr>
+                @{
+                    for (var i = 0; i < maxSum; i++)
+                    {
+                        <tr style="background-color: #E1EBF5 ">
+                            @{
+                                foreach (var item in ViewBag.targets)
+                                {
+                                    var list = DoMySql.FindList<ModelDb.p_tingzhan_mate>($"tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and tingzhan_id = {p_tingzhan.id} and amont = {@item.amont} order by id");
+                                    if (list.Count > i)
+                                    {
+                                        var user_base1 = DoMySql.FindEntity<ModelDb.user_base>($"user_sn = '{list[i].tg_user_sn1}'");
+                                        var user_base2 = DoMySql.FindEntity<ModelDb.user_base>($"user_sn = '{list[i].tg_user_sn2}'");
+                                        <td style="text-align: center;">@user_base1.name</td>
+                                        <td style="text-align: center;">@(list[i].score_1.ToDecimal())W</td>
+                                        <td style="text-align: center;">@user_base2.name</td>
+                                        <td style="text-align: center;">@(list[i].score_2.ToDecimal())W</td>
+                                    }
+                                    else
+                                    {
+                                        <td style="text-align: center;"></td>
+                                        <td style="text-align: center;"></td>
+                                        <td style="text-align: center;"></td>
+                                        <td style="text-align: center;"></td>
+                                    }
+                                }
+                            }
+                        </tr>
+                    }
+                    <tr style="background-color: #E3F2D9 ">
+                        @foreach (var item in ViewBag.targets)
+                        {
+                            decimal sum = 0;
+                            var list = DoMySql.FindList<ModelDb.p_tingzhan_mate>($"tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and tingzhan_id = {p_tingzhan.id} and amont = {@item.amont} order by id");
+                            foreach (var p_tingzhan_mate in list)
+                            {
+                                sum = sum + p_tingzhan_mate.score_1.ToDecimal() + p_tingzhan_mate.score_2.ToDecimal();
+                            }
+                            <td style="text-align: center;">合计</td>
+                            <td style="text-align: center;" colspan="3">@(sum)W</td>
+                        }
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</form>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        form.render('select'); // 仅渲染 select 元素
+    });
+</script>

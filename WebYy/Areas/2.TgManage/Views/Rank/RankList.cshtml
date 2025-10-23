@@ -1,0 +1,129 @@
+﻿
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+@{
+    Layout = null;
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+        border: 1px solid #000 !important;
+    }
+
+    .layui-table td {
+        font-size: 15px;
+        border: 1px solid #000 !important;
+    }
+
+    .layui-table {
+        border: 1px solid #000 !important;
+        border-collapse: collapse !important;
+    }
+</style>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>List</title>
+</head>
+<body>
+    <div>
+        <table class="layui-table" style="text-align:center;" id="table" name="table" width="100%">
+            <colgroup>
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+            </colgroup>
+            <thead>
+                <tr style="background-color: #EE8331; font-weight: 700;">
+                    <th> 运营</th>
+                    <th> 厅管总数</th>
+                    <th> 完整信息厅数</th>
+                    <th> 缺失信息厅数</th>
+                    <th> 完整率</th>
+
+                </tr>
+                @{
+                    var yylist = DoMySql.FindList<ModelDb.user_base>($"user_type_id='{new DomainBasic.UserTypeApp().GetInfoByCode("yyer").id}'").ToModel<List<ServiceFactory.Rank.YyRankModel>>();
+                    int allTgCount=0,allCompleteCount = 0, allLackCount = 0;
+                    foreach (var item in yylist)
+                    {
+                        var tglist = new ServiceFactory.UserInfo.Yy().YyGetNextTg(item.user_sn);
+                        allTgCount += tglist.Count();
+                        item.allCount = tglist.Count();
+                        foreach (var tg in tglist)
+                        {
+                            if (!tg.dou_username.IsNullOrEmpty() && !tg.wechat_username.IsNullOrEmpty() && !tg.UID.IsNullOrEmpty() && !tg.tg_sex.IsNullOrEmpty()&&tg.password!= "e10adc3949ba59abbe56e057f20f883e")
+                            {
+                                item.completeCount++;
+                                allCompleteCount++;
+                            }
+                            else
+                            {
+                                item.lackCount++;
+                                allLackCount++;
+                            }
+                        }
+                        if (tglist.Count > 0)
+                        {
+                            item.rank = (item.completeCount.ToDouble() / tglist.Count.ToDouble()).ToDouble() * 100;
+                        }
+                        else
+                        {
+                            item.rank = 0.ToDouble() * 100;
+                        }
+                    }
+                    foreach (var item in yylist.OrderByDescending(c => c.rank))
+                    {
+                        <tr>
+                            <th>@item.name</th>
+                            <th>共计@(item.allCount)个厅</th>
+                            <th>@(item.completeCount)个</th>
+                            <th class="lack"
+                                data-name="@item.user_sn"
+                                onclick="checkLackInfo(this)">@(item.lackCount)个</th>
+                            <th>@item.rank.ToString("0.00")%</th>
+                        </tr>
+                    }
+            <tr style="background-color: #EE8331; font-weight: 700;">
+                <th>汇总</th>
+                <th>共计@(allTgCount)个厅</th>
+                <th>完整@(allCompleteCount)个</th>
+                <th>缺失@(allLackCount)个</th>
+                <th>平均完整率@(yylist.Count()<=0?"0":(allCompleteCount * 100/ allTgCount).ToString("0.00"))%</th>
+            </tr>
+                }
+            </thead>
+
+        </table>
+
+    </div>
+</body>
+</html>
+<script>
+    function checkLackInfo(element) {
+        const yy_user_sn = element.dataset.name;
+        // 使用数据...
+        window.open(`/tgmanage/rank/list?yy_user_sn=${yy_user_sn}`);
+    }
+</script>

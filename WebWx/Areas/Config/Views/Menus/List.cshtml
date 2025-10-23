@@ -1,0 +1,262 @@
+﻿@{
+    Layout = null;
+}
+@using Common.Core;
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>菜单权限</title>
+    <link href="@ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" rel="stylesheet" />
+    <link href="/Assets/css/animate.min.css" rel="stylesheet" />
+    <link href="/Assets/css/iconfont.css" rel="stylesheet" />
+    <style>
+        .layui-table {
+            width: 100% !important;
+        }
+
+        .zadmin-blue {
+            color: #1E90FF;
+        }
+    </style>
+</head>
+<body class="animated fadeIn">
+    <div class="page-loading">
+        <div class="rubik-loader"></div>
+    </div>
+    <div style="height: 100%">
+        <div style="height: 100%">
+            <div style="padding: 20px; background-color: #F2F2F2;height:100%;">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md3">
+                        <div class="layui-card">
+                            <div class="layui-card-header"><a href="javascropt:void();" class="topMenus">菜单树</a></div>
+                            <div class="layui-card-body" id="toolbarDiv">
+                                <ul id="menuTree" class="dtree" data-id="0"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md9">
+                        <div class="layui-card">
+                            <div class="layui-card-header" id="card-header">菜单列表</div>
+                            <div class="layui-card-body">
+                                <table class="layui-hide" id="menu-table"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/html" id="toolbar">
+        <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" lay-event="add">
+            <i class="zadmin-icon zadmin-icon-xinzeng zadmin-oper-area"></i>
+            新增
+        </button>
+    </script>
+    <script type="text/html" id="column-toolbar">
+        <button lay-event="edit" class="layui-btn layui-btn-xs" type="button">
+            <i class="zadmin-icon zadmin-icon-edit-square zadmin-oper-area"></i>
+            编辑
+        </button>
+        <button lay-event="function" class="layui-btn layui-btn-xs layui-btn-normal" type="button">
+            <i class="zadmin-icon zadmin-icon-setting zadmin-oper-area"></i>
+            功能管理
+        </button>
+        <button lay-event="del" class="layui-btn layui-btn-xs layui-btn-danger" type="button">
+            <i class="zadmin-icon zadmin-icon-delete zadmin-oper-area"></i>
+            删除
+        </button>
+    </script>
+    <script type="text/html" id="column-toolbar-sort">
+        <i class="zadmin-icon zadmin-icon-shangyimian zadmin-oper-area zadmin-blue" lay-event="up" title="上移"></i>
+        <i class="zadmin-icon zadmin-icon-xiayimian zadmin-oper-area zadmin-blue" lay-event="down" title="下移"></i>
+    </script>
+    <script src="@ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+    <script src="@ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.2.5.6.js"></script>
+    <script type="text/javascript" src="@ConfigHelper.GetConfigString("ResourceUrl")/layui/common.min.js"></script>
+    <script>
+        var parentMenuId = 0;
+
+        layui.config({
+            base: '@ConfigHelper.GetConfigString("ResourceUrl")/layui/extend/'
+        }).use(['jquery', 'dtree', 'layer', 'table', 'element', 'tablePlug'], function () {
+            var dtree = layui.dtree;
+            var layer = layui.layer;
+            var table = layui.table;
+            var tablePlug = layui.tablePlug;
+
+            tablePlug.smartReload.enable(true);
+            var DTree = dtree.render({
+                elem: "#menuTree",
+                url: "/Config/Menus/GetMenusRoot",
+                dataStyle: "layuiStyle",
+                initLevel: 5,   // 初始打开节点级别
+                method: "GET",
+                dot: false,     // 圆点是否显示
+                toolbar: false,  // 右键工具栏
+                menubar: false,  // 树上方工具栏, 展开、收缩、刷新、搜索等
+                toolbarShow: [],
+                toolbarScroll: "#toolbarDiv",
+                response: {
+                    statusCode: 0,
+                    message: "msg",
+                    treeId: "id",
+                    parentId: "parentId",
+                    title: "name"
+                }
+            });
+
+            table.render({
+                elem: '#menu-table'
+                , url: '/Config/Menus/GetMenusRoot'
+                , where: {
+                    parentId: 0
+                }
+                , cellMinWidth: 80
+                , toolbar: '#toolbar'
+                , defaultToolbar: []
+                , smartReloadModel: true
+                , cols: [
+                    [
+                        { type: 'numbers', title: '序号', align: 'center', width: "5%" }
+                        , { field: 'id', title: 'ID', align: 'center', hide: true }
+                        , { field: 'modular_name', title: '模块名称', align: 'center', width: "15%" }
+                        , { field: 'name', title: '菜单名称', align: 'center', width: "15%" }
+                        , { field: 'url', title: '链接地址', align: 'center', width: "25%" }
+                        , { title: '排序', fixed: 'right', width: "10%", align: 'center', toolbar: '#column-toolbar-sort' }
+                        , { title: '操作', align: 'center', toolbar: '#column-toolbar' }
+                    ]
+                ]
+            });
+
+            dtree.on("node('menuTree')", function (obj) {
+                reloadTable(obj.param.nodeId, "[" + obj.param.context + "]的子菜单");
+            });
+
+            table.on('toolbar', function (obj) {
+                var event = obj.event;
+                if (event === 'add') {
+                    add(parentMenuId);
+                }
+            });
+
+            table.on('tool', function (obj) {
+                var data = obj.data;
+                var swapId;
+                var currentId;
+                if (obj.event === 'edit') {
+                    edit(data.id);
+                } else if (obj.event === 'del') {
+                    del(data.id);
+                } else if (obj.event === "up") {
+                    swapId = obj.tr.prev().find("td[data-field='id'] div").html();
+                    currentId = data.id;
+                    if (typeof swapId == 'undefined') {
+                        layer.msg("已是第一层");
+                        return;
+                    }
+                    swapSort(currentId, swapId);
+                } else if (obj.event === "down") {
+                    swapId = obj.tr.next().find("td[data-field='id'] div").html();
+                    currentId = data.id;
+                    if (typeof swapId == 'undefined') {
+                        layer.msg("已是最后一层");
+                        return;
+                    }
+                    swapSort(currentId, swapId);
+                } else if (obj.event === "function") {
+                    func(data.id);
+                }
+            });
+
+            $(".topMenus").on("click", function () {
+                reloadTable(0, "菜单列表");
+            });
+
+            // 重新加载列表
+            function reloadTable(parentId, text) {
+                table.reload('menu-table', {
+                    where: {
+                        parentId: parentId
+                    }
+                });
+                parentMenuId = parentId;
+                $("#card-header").html(text);
+            }
+
+            // 排序
+            function swapSort(currentId, swapId) {
+                $.post('/Config/Menus/SwapSort?currentId=' + currentId + '&swapId=' + swapId, function (result) {
+                    if (result.code == 0) {
+                        layer.msg(result.msg, { icon: 6 });
+                        refresh();
+                    } else {
+                        layer.msg(result.msg, { icon: 5 });
+                    }
+                }, 'json');
+            }
+
+            function refresh() {
+                table.reload("menu-table");
+                DTree.menubarMethod().refreshTree();
+            }
+
+            function del(id) {
+                layer.confirm("你确定删除此菜单吗？如果存在对应菜单功能则一并删除", { icon: 3, title: '提示' }, function (index) {
+                    $.post('/Config/Menus/Delete?id=' + id, function (data) {
+                        if (data.code == 0) {
+                            layer.msg(data.msg, { icon: 6 });
+                            refresh();
+                        } else {
+                            layer.msg(data.msg, { icon: 5 });
+                        }
+                    }, 'json');
+                }, function (index) {
+                    layer.close(index);
+                });
+            }
+
+            function add(parentId) {
+                layer.open({
+                    content: "/Config/Menus/Add?parentId=" + parentId,
+                    title: "添加子菜单",
+                    area: ['40%', '55%'],
+                    type: 2,
+                    maxmin: true,
+                    //shadeClose: true,
+                    end: function () {
+                        //refresh();
+                    }
+                });
+            }
+
+            function edit(id) {
+                layer.open({
+                    content: "/Config/Menus/Edit?id=" + id,
+                    title: "编辑",
+                    area: ['40%', '55%'],
+                    type: 2,
+                    maxmin: true,
+                    //shadeClose: true,
+                    end: function () {
+                        //refresh();
+                    }
+                });
+            }
+
+            function func(id) {
+                layer.open({
+                    content: "/Config/MenuFuntion/List?id=" + id,
+                    title: "菜单功能管理",
+                    area: ['55%', '60%'],
+                    type: 2,
+                    maxmin: true
+                });
+            }
+        });
+    </script>
+</body>
+</html>

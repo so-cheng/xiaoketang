@@ -1,0 +1,183 @@
+﻿
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+    string c_date_e = ViewBag.c_date_e;
+    string c_date_s = ViewBag.c_date_s;
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-collapse: collapse;
+        border-style: solid;
+        border-width: 1px;
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    .layui-table td {
+        font-size: 15px;
+        min-width: 50px;
+    }
+
+    /* 表头固定样式 */
+    .layui-table {
+        position: relative;
+    }
+
+        .layui-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: white;
+        }
+
+            .layui-table thead tr:first-child {
+                position: sticky;
+                top: 0;
+                z-index: 11;
+                background-color: #FFF3CA;
+            }
+
+            .layui-table thead tr:nth-child(2) {
+                position: sticky;
+                top: 50px; /* 第一行表头的高度 */
+                z-index: 11;
+                background-color: #FCE4D3;
+            }
+
+            /* 确保表头有足够的背景色 */
+            .layui-table thead th {
+                background-color: inherit;
+            }
+</style>
+<!-- 以下书写自己的页面内容代码 -->
+<form class="layui-form">
+    <div class="layui-row">
+        <div class="layui-col-md10">
+            <div class="layui-col-md8" style="text-align:right">
+                <blockquote class="layui-elem-quote news_search">
+                    <div class="layui-input-inline">
+                        <label class="layui-form-label">厅战时间</label>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("dateRange")
+                            {
+                                title = "日期",
+                                defaultValue = ViewBag.dateRange,
+                                mold = ModelBasic.EmtTimeSelect.Mold.date_range,
+                            })
+                        </div>
+                    </div>
+                    <button type="submit" class="layui-btn search_btn">查询</button>
+                    <div class="layui-input-inline">
+                        <label class="layui-form-label">筛选@(DoMySql.FindList<ModelDb.p_tingzhan>($"c_date >=  '{c_date_s}' and c_date <= '{c_date_e}' and tenant_id = {new DomainBasic.TenantApp().GetInfo().id}").Count)场厅战</label>
+                    </div>
+                </blockquote>
+            </div>
+        </div>
+        <div class="layui-card" style="width:95%;margin:0 auto">
+            @if (ViewBag.targets.Count > 0)
+            {
+                var newList = new List<ServiceFactory.TingZhan.MateRankModel>();
+
+                foreach (var item in ViewBag.targets)
+                {
+                    int win_count = 0;
+                    int ting_count = 0;
+                    var ting1 = DoMySql.FindList<ModelDb.p_tingzhan_mate>($"tingzhan_id in (select id from p_tingzhan where c_date >=  '{c_date_s}' and c_date <= '{c_date_e}' and tenant_id = {new DomainBasic.TenantApp().GetInfo().id}) and ting_sn1 = '{item.ting_sn}'");
+                    foreach (var ting in ting1)
+                    {
+                        if (ting.score_1 > ting.score_2)
+                        {
+                            win_count++;
+                        }
+                    }
+                    var ting2 = DoMySql.FindList<ModelDb.p_tingzhan_mate>($"tingzhan_id in (select id from p_tingzhan where c_date >=  '{c_date_s}' and c_date <= '{c_date_e}' and tenant_id = {new DomainBasic.TenantApp().GetInfo().id}) and ting_sn2 = '{item.ting_sn}'");
+                    foreach (var ting in ting2)
+                    {
+
+                        if (ting.score_2 > ting.score_1)
+                        {
+                            win_count++;
+                        }
+                    }
+                    ting_count = ting1.Count + ting2.Count;
+
+                    newList.Add(new ServiceFactory.TingZhan.MateRankModel
+                    {
+                        ting_name = new ServiceFactory.UserInfo.Ting().GetTingBySn(item.ting_sn).ting_name,
+                        tingsCount = ting_count,
+                        rate = ting_count > 0 ? Math.Round((win_count.ToDecimal() / ting_count.ToDecimal() * 100), 2) : 0
+                    });
+                }
+                int rank = 1;
+                <table class="layui-table">
+                    <thead>
+                        <tr style="background-color: #B4C6E7;">
+                            <td style="text-align: center">厅名</td>
+                            <td style="text-align: center">对战厅数</td>
+                            <td style="text-align: center">胜率</td>
+                            <td style="text-align: center">排名</td>
+                        </tr>
+                    </thead>
+                    @foreach (var item in newList.OrderByDescending(x => x.rate).ToList())
+                    {
+                        <tr style="background-color: #FFF2CC;">
+                            <td style="text-align: center">@item.ting_name</td>
+                            <td style="text-align: center">@item.tingsCount</td>
+                            <td style="text-align: center">@(item.rate)%</td>
+                            @{
+                                switch (rank)
+                                {
+                                    case 1:
+                                        <td style="text-align: center"><img src="/Assets/images/rank1.png" width="30" height="30"></td>
+                                        break;
+                                    case 2:
+                                        <td style="text-align: center"><img src="/Assets/images/rank2.png" width="30" height="30"></td>
+                                        break;
+                                    case 3:
+                                        <td style="text-align: center"><img src="/Assets/images/rank3.png" width="30" height="30"></td>
+                                        break;
+                                    case 4:
+                                        <td style="text-align: center"><img src="/Assets/images/rank4.png" width="30" height="30"></td>
+                                        break;
+                                    case 5:
+                                        <td style="text-align: center"><img src="/Assets/images/rank5.png" width="30" height="30"></td>
+                                        break;
+                                    default:
+                                        <td style="text-align: center">@rank</td>
+                                        break;
+                                }
+                                rank++;
+                            }
+                        </tr>
+                    }
+                </table>
+            }
+        </div>
+    </div>
+</form>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        form.render('select'); // 仅渲染 select 元素
+    });
+</script>

@@ -1,0 +1,241 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>角色权限</title>
+    <link href="/Assets/layui/css/layui.css" rel="stylesheet" />
+    <link href="/Assets/css/animate.min.css" rel="stylesheet" />
+    <link href="/Assets/css/iconfont.css" rel="stylesheet" />
+    <style>
+        .layui-table {
+            width: 100% !important;
+        }
+
+        .zadmin-blue {
+            color: #1E90FF;
+        }
+    </style>
+</head>
+<body class="animated fadeIn">
+    <div class="page-loading">
+        <div class="rubik-loader"></div>
+    </div>
+    <div style="height: 100%">
+        <div style="height: 100%">
+            <div style="padding: 20px; background-color: #F2F2F2;height:100%;">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md9">
+                        <div class="layui-card">
+                            <div class="layui-card-header" id="card-header">角色列表</div>
+                            <div class="layui-card-body">
+                                <table class="layui-hide" id="menu-table" lay-filter="menu-table"></table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md3">
+                        <div class="layui-card">
+                            <div class="layui-card-header">菜单树</div>
+                            <div class="layui-card-body" id="toolbarDiv">
+                                <ul id="menuTree" class="dtree" data-id="0"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/html" id="toolbar">
+        <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" lay-event="add">
+            <i class="zadmin-icon zadmin-icon-xinzeng zadmin-oper-area"></i>
+            新增
+        </button>
+    </script>
+    <script type="text/html" id="column-toolbar">
+        <button lay-event="edit" class="layui-btn layui-btn-xs" type="button">
+            <i class="zadmin-icon zadmin-icon-edit-square zadmin-oper-area"></i>
+            编辑
+        </button>
+        <button lay-event="del" class="layui-btn layui-btn-xs layui-btn-danger" type="button">
+            <i class="zadmin-icon zadmin-icon-delete zadmin-oper-area"></i>
+            删除
+        </button>
+        <button lay-event="editTree" class="layui-btn layui-btn-xs" type="button">
+            <i class="zadmin-icon zadmin-icon-setting zadmin-oper-area"></i>
+            编辑权限
+        </button>
+    </script>
+    <script src="/Assets/js/jquery.js"></script>
+    <script src="/Assets/layui/layui.js"></script>
+    <script src="/Assets/js/common.js"></script>
+    <script>
+        var checkRoleId = "";
+        layui.config({
+            base: '/Assets/layui/extend/'
+        }).use(['jquery', 'dtree', 'layer', 'table', 'element', 'tablePlug'], function () {
+            var dtree = layui.dtree;
+            var layer = layui.layer;
+            var table = layui.table;
+            var tablePlug = layui.tablePlug;
+
+            tablePlug.smartReload.enable(true);
+            var DTree;
+
+            dtree.on("chooseDone('menuTree')", function (obj) {
+                var checked = obj.checkbarParams;
+                var arrMenuId = new Array();
+                var arrMenuFuncId = new Array();
+                $.each(checked, function (n, value) {
+                    if (value.nodeId.indexOf("func") > -1) {
+                        arrMenuFuncId.push(value.nodeId.replace("func-", ""))
+                    } else {
+                        arrMenuId.push(value.nodeId)
+                    }
+                });
+                //var checkStatus = table.checkStatus('menu-table');
+                //if (checkStatus.data.length <= 0) layer.msg('请选择角色', { icon: 5 });
+                //var roleId = checkStatus.data[0].id;
+                if (checkRoleId == "") layer.msg('请选择角色', { icon: 5 });
+                var roleId = checkRoleId;
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Config/Roles/ChangeAuthor",
+                    data: {
+                        roleId: roleId,
+                        arrMenuFuncId: arrMenuFuncId,
+                        arrMenuId: arrMenuId
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.code == 0) {
+                            layer.msg(data.msg, { icon: 6 });
+                        } else {
+                            layer.msg(data.msg, { icon: 5 });
+                        }
+                    }
+                });
+            });
+
+            table.render({
+                elem: '#menu-table'
+                , url: '/Config/Roles/GetRolesRoot?parentId=0'
+                , cellMinWidth: 80
+                , toolbar: '#toolbar'
+                , defaultToolbar: []
+                , smartReloadModel: true
+                , cols: [
+                    [
+                        { type: 'numbers', title: '序号', align: 'center', width: "5%" }
+                        , { field: "id", title: 'ID', align: 'center', hide: true }
+                        , { field: "name", title: '角色名称', align: 'center', width: "15%" }
+                        , { field: "memo", title: '备注说明', align: 'center' }
+                        , { field: "data_view_name", title: '数据查看', align: 'center' }
+                        , { title: '操作', align: 'center', toolbar: '#column-toolbar' }
+                    ]
+                ]
+            });
+
+            table.on('tool', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'edit') {
+                    edit(data.id);
+                } else if (obj.event === 'del') {
+                    del(data.id);
+                } else if (obj.event === 'editTree') {
+                    dtree_r(data.id);
+                }
+            });
+
+            table.on('toolbar', function (obj) {
+                var event = obj.event;
+                if (event === 'add') {
+                    add();
+                }
+            });
+
+            //table.on('radio(menu-table)', function (obj) {
+            //    var id = obj.data.id;
+            //    dtree_r(id);
+            //});
+
+            function refresh() {
+                table.reload("menu-table");
+                dtree_r("");
+            }
+
+            function add() {
+                layer.open({
+                    content: "/Config/Roles/Post",
+                    title: "添加角色",
+                    area: ['40%', '40%'],
+                    type: 2,
+                    maxmin: true,
+                    //shadeClose: true,
+                    end: function () {
+                        //refresh();
+                    }
+                });
+            }
+
+            function del(id) {
+                layer.confirm("你确定删除此角色吗？如果存在对应角色权限则一并删除", { icon: 3, title: '提示' }, function (index) {
+                    $.post('/Config/Roles/Delete/' + id, function (data) {
+                        layer.close(index);
+                        layerMsg_R(data.msg, data.code);
+                    }, 'json');
+                }, function (index) {
+                    layer.close(index);
+                });
+            }
+
+            function edit(id) {
+                layer.open({
+                    content: "/Config/Roles/Post/" + id,
+                    title: "编辑角色",
+                    area: ['40%', '40%'],
+                    type: 2,
+                    maxmin: true,
+                    //shadeClose: true,
+                    end: function () {
+                        //refresh();
+                    }
+                });
+            }
+
+            function dtree_r(id) {
+                DTree = dtree.render({
+                    elem: "#menuTree",
+                    url: "/Config/Roles/GetMenusRoot?roleId=" + id,
+                    dataStyle: "layuiStyle",
+                    initLevel: 5,   // 初始打开节点级别
+                    method: "GET",
+                    dot: false,     // 圆点是否显示
+                    toolbar: false,  // 右键工具栏
+                    menubar: false,  // 树上方工具栏, 展开、收缩、刷新、搜索等
+                    toolbarShow: [],
+                    toolbarScroll: "#toolbarDiv",
+                    checkbar: true,
+                    checkbarType: "all",
+                    response: {
+                        statusCode: 0,
+                        message: "msg",
+                        treeId: "id",
+                        parentId: "parentId",
+                        title: "name"
+                    }
+                });
+
+                checkRoleId = id;
+            }
+
+            dtree_r("");
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1226 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WeiCode.Domain.UserBasic</name>
+    </assembly>
+    <members>
+        <member name="T:WeiCode.Domain.UserBasic.ModularAuthorize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.UserBasic.ModularAuthorize.getName">
+            <summary>
+            模块名称
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.UserBasic.BalanceType">
+            <summary>
+            余额类型
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.UserBasic.BalanceType.现金余额">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.UserBasic.BalanceType.交易余额">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.UserBasic.BalanceType.积分余额">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.UserBasic.BalanceMoveType">
+            <summary>
+            余额转移类型
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.UserBasic.BalanceMoveType.交易余额转现金余额">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.UserBasic.BalanceMoveType.现金余额转交易余额">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.UserBasic.BalanceOperateType">
+            <summary>
+            余额操作类型
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.UserBasic.BalanceOperateType.收入">
+            <summary>
+            余额加
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.UserBasic.BalanceOperateType.支出">
+            <summary>
+            余额减
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.UserBasic.GradeChangeType">
+            <summary>
+            等级变更类型
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.UserBasic.GradeChangeType.升级">
+            <summary>
+            升级
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.UserBasic.GradeChangeType.降级">
+            <summary>
+            降级
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.UserBasic.DomainUserBasicCreate">
+            <summary>
+            用户支付一笔充值
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.UserBasic.DomainUserBasicCreate.Template`3">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.UserBasic.DomainUserBasicCreate.Template`3.Execute(`0,`1,`2)">
+            <summary>
+            注册事件处理（自助注册）
+            </summary>
+            <param name="req"></param>
+            <param name="res"></param>
+            <param name="log"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.UserBasic.DomainUserBasicCreate.Template`3.getAttachAmount(`0,`1)">
+            <summary>
+            获取充值金额
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.UserBasic.DomainUserBasicCreate.Template`3.Before(`0,`1)">
+            <summary>
+            业务逻辑处理前执行
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.UserBasic.DomainUserBasicCreate.Template`3.CreateUser(`0,`1)">
+            <summary>
+            创建/编辑 注册用户
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.UserBasic.DomainUserBasicCreate.Template`3.PushSupport(`0,`1)">
+            <summary>
+            统一处理事务
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.UserBasic.DomainUserBasicCreate.Template`3.Complete(`0,`1)">
+            <summary>
+            其它业务逻辑
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.UserBasic.DomainUserBasicCreate.DtoBaseReq">
+            <summary>
+            用户注册实体（输入）
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.UserBasic.DomainUserBasicCreate.DtoBaseReq.importData">
+            <summary>
+            外部条件参数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.UserBasic.DomainUserBasicCreate.DtoBaseReq.ImportData">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.UserBasic.DomainUserBasicCreate.DtoBaseReq.entityData">
+            <summary>
+            实体属性数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.UserBasic.DomainUserBasicCreate.DtoBaseReq.EntityData">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.UserBasic.DomainUserBasicCreate.DtoBaseReq.EntityData.ActualAmount">
+            <summary>
+            到账金额
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.UserBasic.DomainUserBasicCreate.DtoBaseReq.EntityData.Memo">
+            <summary>
+            交易备注
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.UserBasic.DomainUserBasicCreate.DtoBaseReq.supportConfig">
+            <summary>
+            支持配置数据
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.UserBasic.DomainUserBasicCreate.DtoBaseReq.SupportConfig">
+            <summary>
+            支持配置数据
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.UserBasic.DomainUserBasicCreate.DtoBaseReq.SupportConfig.doMySqlsHelper">
+            <summary>
+            多库链接对象
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.UserBasic.DomainUserBasicCreate.DtoBaseRes">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.UserBasic.DomainUserBasicCreate.DtoBaseRes.user_id">
+            <summary>
+            注册用户id
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.UserBasic.DomainUserBasicCreate.DtoBaseLog">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.UserBasic.DomainUserBasicCreate.DtoBaseLog.entityData">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.DomainUserBasic">
+            <summary>
+            领域函数
+            </summary>
+            <summary>
+            领域函数
+            </summary>
+            <summary>
+            领域函数
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.DomainUserBasic.Balance">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.Balance.change(System.Collections.Generic.List{System.String},WeiCode.Domain.DomainUserBasic.Balance.BalanceType,WeiCode.Domain.DomainUserBasic.Balance.OpType,System.String,System.Nullable{System.Decimal},System.String,System.String,System.Nullable{System.Decimal}@,System.String,System.Int32,System.String,System.String)">
+            <summary> 
+            余额变化 
+            </summary>
+            <param name="SQLStringList"></param>
+            <param name="balanceType">账户余额类型</param>
+            <param name="opType">收支类型:1=收入，2=支出</param>
+            <param name="op_type_name">交易类型名称,如:充值，退款</param>
+            <param name="user_sn">user_sn</param>
+            <param name="trade_sn">交易流水号</param>
+            <param name="operate_id">操作人id</param>
+            <param name="amount">交易金额</param>
+            <param name="old_amount">原有余额，不指定时则查询当前余额</param>
+            <param name="memo">备注信息</param>
+            <param name="attach_sql">操作时需要修改用户表其他字段时的sql</param>
+            <param name="log_time">业务发生时间</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.Balance.change(System.Collections.Generic.List{System.String},WeiCode.Domain.DomainUserBasic.Balance.BalanceType,WeiCode.Domain.DomainUserBasic.Balance.OpType,System.String,System.Nullable{System.Decimal},System.String,System.String,System.String,System.Int32,System.String,System.String)">
+            <summary> 
+            余额变化 
+            </summary>
+            <param name="SQLStringList"></param>
+            <param name="balanceType">账户余额类型</param>
+            <param name="opType">收支类型:1=收入，2=支出</param>
+            <param name="op_type_name">交易类型名称,如:充值，退款</param>
+            <param name="user_sn">user_sn</param>
+            <param name="trade_sn">交易流水号</param>
+            <param name="operate_id">操作人id</param>
+            <param name="amount">交易金额</param>
+            <param name="memo">备注信息</param>
+            <param name="attach_sql">操作时需要修改用户表其他字段时的sql</param>
+            <param name="log_time">业务发生时间</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainUserBasic.Balance.OpType">
+            <summary>
+            收支类型
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.DomainUserBasic.Balance.OpType.收入">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.DomainUserBasic.Balance.OpType.支出">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.DomainUserBasic.Balance.BalanceType">
+            <summary>
+            账户余额类型
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.DomainUserBasic.Balance.BalanceType.现金账户余额">
+            <summary>
+            cash_balance
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.DomainUserBasic.Balance.BalanceType.交易账户余额">
+            <summary>
+            trade_balance
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.DomainUserBasic.Balance.BalanceType.积分账户余额">
+            <summary>
+            integral_balance
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.DomainUserBasic.UserRelationTypeApp">
+            <summary>
+            用户关系类型
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.UserRelationTypeApp.GetInfoById(System.Int32)">
+            <summary>
+            根据id获取用户关系类型
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.UserRelationTypeApp.GetInfoByName(System.String)">
+            <summary>
+            根据name获取用户关系类型
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.UserRelationTypeApp.GetUser_Relation_Types(System.String)">
+            <summary>
+            获取用户关系类型
+            </summary>
+            <param name="where">筛选条件</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainUserBasic.UserRelationApp">
+            <summary>
+            用户关系
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.UserRelationApp.GetInfoById(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.UserRelationApp.GetInfoById(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.UserRelationApp.BindTran(System.Enum,System.String,System.String,System.String,System.String)">
+            <summary>
+            绑定一个用户关系
+            </summary>
+            <param name="name">类型名称</param>
+            <param name="f_user_sn">邀请人user_sn</param>
+            <param name="t_user_sn">被邀人user_sn</param>
+            <param name="labels">用户标签,多个用逗号隔开</param>
+            <param name="notes">备注</param>
+            <returns>返回sql</returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.UserRelationApp.Bind(System.Enum,System.String,System.String,System.String,System.String)">
+            <summary>
+            绑定一个用户关系
+            </summary>
+            <param name="name">类型名称</param>
+            <param name="f_user_sn">邀请人user_sn</param>
+            <param name="t_user_sn">被邀人user_sn</param>
+            <param name="labels">用户标签,多个用逗号隔开</param>
+            <param name="notes">备注</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.UserRelationApp.UnBindTran(System.Enum,System.String,System.String,System.String)">
+            <summary>
+            解绑一个用户关系
+            </summary>
+            <param name="name">类型名称</param>
+            <param name="f_user_sn">邀请人user_sn</param>
+            <param name="t_user_sn">被邀人user_sn</param>
+            <param name="notes">备注</param>
+            <returns>返回sql</returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.UserRelationApp.UnBind(System.Enum,System.String,System.String,System.String)">
+            <summary>
+            解绑一个用户关系
+            </summary>
+            <param name="name">类型名称</param>
+            <param name="f_user_sn">邀请人user_sn</param>
+            <param name="t_user_sn">被邀人user_sn</param>
+            <param name="notes">备注</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.UserRelationApp.GetNextUserSnForSql(System.Enum,System.String,System.String)">
+            <summary>
+            获取当前user_sn下级user_sn集合的SQL(一级)
+            </summary>
+            <param name="relation_type_name">类型名称</param>
+            <param name="user_sn">当前user_sn</param>
+            <param name="attachSql">附加sql，不需要加 and (默认值：user_base.status != 9)</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.UserRelationApp.GetNextUserSnForSql(System.Enum,System.Enum,System.String,System.String)">
+            <summary>
+            获取当前user_sn下级user_sn集合的SQL(二级)
+            </summary>
+            <param name="name">类型名称</param>
+            <param name="name_2">类型名称_二级</param>
+            <param name="user_sn">当前user_sn</param>
+            <param name="attachSql">附加sql，不需要加 and</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.UserRelationApp.GetParentUserSn(System.Enum,System.String)">
+            <summary>
+            获取当前user_sn的上级user_sn，为空表示不存在上级
+            </summary>
+            <param name="name">类型名称</param>
+            <param name="user_sn">当前user_sn</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.UserRelationApp.GetNextUsers(System.Enum,System.String,WeiCode.Domain.DomainUserBasic.UserRelationApp.GetNextUsersType)">
+            <summary>
+            获取当前user_sn所有下级user_base实体集合(不包含已删除账号)
+            </summary>
+            <param name="relation_type_name">关系类型名称</param>
+            <param name="user_sn">当前user_sn</param>
+            <param name="getNextUsersType">筛选</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.UserRelationApp.GetNextUsers(System.Int32,System.String,WeiCode.Domain.DomainUserBasic.UserRelationApp.GetNextUsersType)">
+            <summary>
+            获取当前user_sn所有下级user_base实体集合(不包含已删除账号)
+            </summary>
+            <param name="relation_type_id">关系类型id</param>
+            <param name="user_sn">当前user_sn</param>
+            <param name="getNextUsersType">筛选</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainUserBasic.UserRelationApp.GetNextUsersType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.DomainUserBasic.UserRelationApp.GetNextUsersType.仅正常">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.DomainUserBasic.UserRelationApp.GetNextUsersType.仅删除">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.DomainUserBasic.UserRelationApp.GetNextUsersType.正常和删除">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.UserRelationApp.GetNextUsersForOption(System.Enum,System.String)">
+            <summary>
+            获取当前user_sn所有下级user_base集合（下拉菜单数据源，直接下级）
+            </summary>
+            <param name="relation_type_name">类型名称</param>
+            <param name="user_sn">当前user_sn</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.UserRelationApp.GetNextUsersForOption(System.Int32,System.String)">
+            <summary>
+            获取当前user_sn所有下级user_base集合（下拉菜单数据源，直接下级）
+            </summary>
+            <param name="relation_type_id">关系类型id</param>
+            <param name="user_sn">当前user_sn</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.UserRelationApp.GetNextUsersForKv(System.Enum,System.String,WeiCode.Domain.DomainUserBasic.UserRelationApp.ReturnField)">
+            <summary>
+            获取当前user_sn所有下级user_base集合（下拉菜单数据源，直接下级）
+            </summary>
+            <param name="relation_type_name">关系类型名称</param>
+            <param name="user_sn">当前user_sn</param>
+            <param name="returnField">返回字段</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainUserBasic.UserRelationApp.ReturnField">
+            <summary>
+            返回字段
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.DomainUserBasic.UserRelationApp.ReturnField.Username">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.DomainUserBasic.UserRelationApp.ReturnField.Name">
+            <summary>
+            昵称
+            </summary>
+        </member>
+        <member name="F:WeiCode.Domain.DomainUserBasic.UserRelationApp.ReturnField.UsernameAndMobile">
+            <summary>
+            用户名+手机号
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.UserRelationApp.GetNextAllUsersForOption(System.Enum,System.String,System.String)">
+            <summary>
+            获取当前user_sn所有下级user_base集合（下拉菜单数据源,无限下级）
+            </summary>
+            <param name="name">类型名称</param>
+            <param name="user_sn">当前user_sn</param>
+            <param name="level_str">层级字符</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.UserRelationApp.GetNextAllUsersForSql(System.Enum,System.String)">
+            <summary>
+            获取当前user_sn所有下级user_base集合（作为in条件,包含无限下级）
+            </summary>
+            <param name="name">类型名称</param>
+            <param name="user_sn">当前user_sn</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.UserRelationApp.GetNextAllUsers(System.Int32,System.String,System.Collections.Generic.List{WeiCode.Utility.ModelDoBasic.Option},System.String,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="user_relation_type_id"></param>
+            <param name="user_sn"></param>
+            <param name="list"></param>
+            <param name="level_str"></param>
+            <param name="level"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.UserRelationApp.MoveNextUsersToUserSn(System.Enum,System.String,System.Collections.Generic.List{WeiCode.Domain.DomainUserBasic.UserRelationApp.MoveItem},System.String,System.String)">
+            <summary>
+            转移名下用户到其他user_sn
+            </summary>
+            <param name="relation_type_name">关系类型名称</param>
+            <param name="f_user_sn">源</param>
+            <param name="moveItems">转移的用户</param>
+            <param name="t_user_sn">目标</param>
+            <param name="notes">内部备注信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.UserRelationApp.MoveNextUsersToUserSn(System.Int32,System.String,System.Collections.Generic.List{WeiCode.Domain.DomainUserBasic.UserRelationApp.MoveItem},System.String,System.String)">
+            <summary>
+            转移名下用户到其他user_sn
+            </summary>
+            <param name="relation_type_id">关系类型id</param>
+            <param name="f_user_sn">源</param>
+            <param name="moveItems">转移的用户</param>
+            <param name="t_user_sn">目标</param>
+            <param name="notes">内部备注信息</param>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.Domain.DomainUserBasic.UserRelationApp.MoveItem">
+            <summary>
+            转移列表项模型
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.DomainUserBasic.UserRelationApp.MoveItem.id">
+            <summary>
+            用户关系id
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.DomainUserBasic.UserRelationApp.MoveItem.user_id">
+            <summary>
+            用户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.Domain.DomainUserBasic.UserRelationApp.MoveItem.username">
+            <summary>
+            用户username
+            </summary>
+        </member>
+        <member name="T:WeiCode.Domain.DomainUserBasic.GradeApp">
+            <summary>
+            用户等级
+            </summary>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.GradeApp.GetInfoById(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.GradeApp.change(System.Int32)">
+            <summary>
+            用户等级变更
+            </summary>
+            <param name="confirm_node_id">当前步骤id</param>
+            <returns></returns>
+        </member>
+        <member name="M:WeiCode.Domain.DomainUserBasic.GradeApp.GetGradeInfo(System.String)">
+            <summary>
+            获取指定用户的默认等级
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbUserBasic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbUserBasic.user_balance_log">
+            <summary>
+            实体:用户
+            </summary>	
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_balance_log.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_balance_log.user_type_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_balance_log.trade_sn">
+            <summary>
+            交易编号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_balance_log.user_sn">
+            <summary>
+            用户编号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_balance_log.balance_type">
+            <summary>
+            余额类型 交易=trade_balance 现金=cash_balance  积分=integral_total
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_balance_log.order_no">
+            <summary>
+            关联业务的订单号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_balance_log.op_type">
+            <summary>
+            交易类型:收入=1;支出=2
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_balance_log.op_type_name">
+            <summary>
+            交易类型名称,如:充值，退款
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_balance_log.amount">
+            <summary>
+            操作金额
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_balance_log.e_amount">
+            <summary>
+            操作后金额
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_balance_log.channel">
+            <summary>
+            交易渠道
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_balance_log.channel_no">
+            <summary>
+            交易渠道流水号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_balance_log.memo">
+            <summary>
+            备注信息
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_balance_log.operater_sn">
+            <summary>
+            操作人sn
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbUserBasic.user_grade">
+            <summary>
+            实体:用户等级
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_grade.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_grade.user_type_id">
+            <summary>
+            用户类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_grade.is_default">
+            <summary>
+            是否为缺省等级
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_grade.name">
+            <summary>
+            等级名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_grade.introduce">
+            <summary>
+            介绍说明
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_grade.d_type">
+            <summary>
+            默认优惠类型#
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_grade.d_value">
+            <summary>
+            优惠值
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbUserBasic.user_grade_log">
+            <summary>
+            实体:用户等级变更日志
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_grade_log.user_sn">
+            <summary>
+            用户编号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_grade_log.change_type">
+            <summary>
+            等级变更类型#升级=1;降级=2
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_grade_log.l_grade_id">
+            <summary>
+            变更前等级
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_grade_log.a_grade_id">
+            <summary>
+            变更后等级
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_grade_log.memo">
+            <summary>
+            备注信息
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbUserBasic.user_relation">
+            <summary>
+            用户关系
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation.relation_type_id">
+            <summary>
+            关系类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation.f_user_type_id">
+            <summary>
+            所属源用户类型
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation.f_user_sn">
+            <summary>
+            所属源
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation.t_user_type_id">
+            <summary>
+            所属目标用户类型
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation.t_user_sn">
+            <summary>
+            所属目标
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation.labels">
+            <summary>
+            用户标签，多个用逗号隔开
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation.notes">
+            <summary>
+            内部备注信息
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_type">
+            <summary>
+            用户关系类型
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_type.name">
+            <summary>
+            类型名称
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_type.cname">
+            <summary>
+            显示别名（为空时则显示名称）
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_type.introduce">
+            <summary>
+            简要介绍
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_type.f_user_type_id">
+            <summary>
+            推荐人用户类型
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_type.t_user_type_id">
+            <summary>
+            被邀用户类型
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_type.to_url">
+            <summary>
+            邀请页面URL
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_type.labels">
+            <summary>
+            可选标签项，多个用逗号隔开
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_log">
+            <summary>
+            用户关系日志
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_log.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_log.o_type">
+            <summary>
+            日志类型#enum:转移用户=1;绑定用户=2;解绑用户=3
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_log.user_type_id">
+            <summary>
+            操作人user_type_id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_log.user_sn">
+            <summary>
+            操作人user_sn
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_log.relation_type_id">
+            <summary>
+            关系类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_log.f_user_type_id">
+            <summary>
+            所属源用户类型
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_log.f_user_sn">
+            <summary>
+            所属源
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_log.t_user_type_id">
+            <summary>
+            所属目标用户类型
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_log.t_user_sn">
+            <summary>
+            所属目标
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_log.ids">
+            <summary>
+            转移用户关系id，多个用逗号隔开
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_log.user_ids">
+            <summary>
+            转移用户id，多个用逗号隔开
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_log.user_names">
+            <summary>
+            转移用户username，多个用逗号隔开
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_log.notes">
+            <summary>
+            内部备注信息
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_config">
+            <summary>
+            用户关系类型-配置
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_config.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_config.relation_type_id">
+            <summary>
+            所属邀请类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_config.labels">
+            <summary>
+            可选标签项，多个用逗号隔开
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_config.p_type">
+            <summary>
+            孤立用户的分配规则：0=不处理；1=指定用户；2=随机分配（可排除指定用户）；3=顺序分配（可排除指定用户，最后分配用户）
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_config.p_value1">
+            <summary>
+            可排除指定用户
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_relation_config.p_value2">
+            <summary>
+            最后分配用户
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbUserBasic.pay_config">
+            <summary>
+            支付方式配置
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.pay_config.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.pay_config.name">
+            <summary>
+            支付方式命名
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.pay_config.code">
+            <summary>
+            支付渠道编码
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.pay_config.para_value">
+            <summary>
+            参数及设置值
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.pay_config.memo">
+            <summary>
+            备注信息
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.pay_config.sort">
+            <summary>
+            排序号，越小越靠前
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbUserBasic.pay_tenant">
+            <summary>
+            充值参数
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.pay_tenant.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.pay_tenant.user_type_id">
+            <summary>
+            用户类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.pay_tenant.page_html">
+            <summary>
+            充值页说明
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_recharge">
+            <summary>
+            用户-充值规则
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_recharge.plan_id">
+            <summary>
+            方案id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_recharge.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_recharge.user_type_id">
+            <summary>
+            user_type_id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_recharge.amount">
+            <summary>
+            充值金额
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_recharge.actual_amount">
+            <summary>
+            实际到账
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_recharge.describe">
+            <summary>
+            简要说明
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_recharge.display_with">
+            <summary>
+            显示条件,0=显示；1=首充；2=
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_recharge.display_value">
+            <summary>
+            相关值
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_recharge.default_hide">
+            <summary>
+            状态#显示=0;隐藏=1
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_recharge.sort">
+            <summary>
+            简要说明
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_order">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_order.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_order.user_type_id">
+            <summary>
+            关联user_type的id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_order.trade_sn">
+            <summary>
+            交易编号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_order.user_sn">
+            <summary>
+            用户唯一编号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_order.amount">
+            <summary>
+            充值金额
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_order.actual_amount">
+            <summary>
+            到账金额
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_order.refund_amount">
+            <summary>
+            退款金额
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_order.channel">
+            <summary>
+            支付渠道
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_order.channel_no">
+            <summary>
+            交易渠道流水号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_order.memo">
+            <summary>
+            备注信息
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_order.times">
+            <summary>
+            充值次数
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_pay_order.status">
+            <summary>
+            状态#enum:待支付=0;已支付=1
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_cashout.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbUserBasic.user_cashout_order">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_cashout_order.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_cashout_order.user_type_id">
+            <summary>
+            用户类型id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_cashout_order.trade_sn">
+            <summary>
+            交易编号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_cashout_order.user_sn">
+            <summary>
+            用户唯一编号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_cashout_order.amount">
+            <summary>
+            提现金额
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_cashout_order.channel">
+            <summary>
+            支付渠道
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_cashout_order.channel_no">
+            <summary>
+            交易渠道流水号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_cashout_order.receipt_truename">
+            <summary>
+            收款人姓名(提现)
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_cashout_order.receipt_account">
+            <summary>
+            收款人账号(提现)
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_cashout_order.memo">
+            <summary>
+            申请人备注信息
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_cashout_order.m_image">
+            <summary>
+            付款截图
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_cashout_order.m_memo">
+            <summary>
+            内部备注信息
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_cashout_order.status">
+            <summary>
+            状态#enum:待支付=0;已支付=1;已作废=2
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbUserBasic.user_cashout_order.reason">
+            <summary>
+            提现拒绝原因
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbFuncPay">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbFuncPay.pay_config">
+            <summary>
+            支付方式配置
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbFuncPay.pay_config.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbFuncPay.pay_config.name">
+            <summary>
+            支付方式命名
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbFuncPay.pay_config.code">
+            <summary>
+            支付渠道编码
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbFuncPay.pay_config.para_value">
+            <summary>
+            参数及设置值
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbFuncPay.pay_config.sort">
+            <summary>
+            排序号
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbFuncPay.pay_config.memo">
+            <summary>
+            备注信息
+            </summary>
+        </member>
+        <member name="T:WeiCode.ModelDbs.ModelDbFuncPay.pay_tenant">
+            <summary>
+            支付方式租户
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbFuncPay.pay_tenant.tenant_id">
+            <summary>
+            租户id
+            </summary>
+        </member>
+        <member name="P:WeiCode.ModelDbs.ModelDbFuncPay.pay_tenant.explain">
+            <summary>
+            充值页说明
+            </summary>
+        </member>
+    </members>
+</doc>

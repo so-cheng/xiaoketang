@@ -1,0 +1,799 @@
+﻿@using System;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+
+@{
+    var zhubo = new ServiceFactory.UserInfo.Zhubo().GetZhuboInfo(new UserIdentityBag().user_sn);
+    string img_url = "/Assets/images/default_head.jpg";
+    if (!zhubo.img_url.IsNullOrEmpty())
+    {
+        img_url = zhubo.img_url;
+    }
+}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <title>主页</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+            background: #f3f3f5;
+            color: #222;
+        }
+
+        .profile-section {
+            background: linear-gradient(180deg, #fff 80%, #f3f3f5 100%);
+            padding: 32px 0 18px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-bottom: 8px solid #f3f3f5;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .profile-top {
+            display: flex;
+            align-items: center;
+            width: 92%;
+            margin-bottom: 8px;
+        }
+
+        .avatar {
+            width: 84px;
+            height: 84px;
+            border-radius: 20px;
+            background: #eee;
+            object-fit: cover;
+            margin-right: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 2px solid #f3f3f5;
+        }
+
+        .profile-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .nickname {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+        }
+
+        .wechat-id {
+            color: #888;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .qr {
+            margin-left: 10px;
+            font-size: 22px;
+            color: #b2b2b2;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+            .qr svg {
+                width: 22px;
+                height: 22px;
+                display: block;
+            }
+
+        .profile-status {
+            display: flex;
+            align-items: center;
+            width: 92%;
+            margin-bottom: 6px;
+        }
+
+        .status-btn {
+            border: 1.5px solid #e0e0e0;
+            border-radius: 20px;
+            padding: 3px 18px;
+            font-size: 15px;
+            margin-right: 12px;
+            background: linear-gradient(90deg, #fafafa 60%, #f3f3f5 100%);
+            color: #444;
+            transition: box-shadow 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            cursor: pointer;
+        }
+
+            .status-btn:hover {
+                box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+                border-color: #b2e672;
+            }
+
+        .friends {
+            display: flex;
+            align-items: center;
+            border-radius: 20px;
+            background: #fff;
+            border: 1.5px solid #e0e0e0;
+            padding: 2px 12px 2px 4px;
+            font-size: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+            .friends img {
+                width: 26px;
+                height: 26px;
+                border-radius: 50%;
+                margin-right: 2px;
+                border: 1.5px solid #f3f3f5;
+                background: #fafafa;
+            }
+
+            .friends .medal {
+                width: 22px;
+                height: 22px;
+                margin-right: 2px;
+                background: #fff;
+                border-radius: 50%;
+                border: 1px solid #f3f3f5;
+            }
+
+        .friends-count {
+            margin: 0 4px;
+            color: #444;
+        }
+
+        .red-dot {
+            width: 8px;
+            height: 8px;
+            background: #f33;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 2px;
+            box-shadow: 0 0 2px #fff, 0 0 4px #f33;
+        }
+
+        .menu-section {
+            margin-top: 0;
+            padding: 0 16px;
+        }
+
+        .menu-list {
+            background: #fff;
+            margin-bottom: 16px;
+            border-radius: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            padding: 0;
+            overflow: hidden;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 480px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 18px 22px 18px 22px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 19px;
+            cursor: pointer;
+            transition: background 0.18s;
+        }
+
+            .menu-item:last-child {
+                border-bottom: none;
+            }
+
+            .menu-item:hover {
+                background: #f6fef7;
+            }
+
+        .menu-icon {
+            width: 28px;
+            text-align: center;
+            margin-right: 20px;
+            font-size: 22px;
+            opacity: 0.92;
+        }
+
+        .menu-arrow {
+            margin-left: auto;
+            color: #c8c8c8;
+            font-size: 18px;
+            font-family: Arial, sans-serif;
+            transition: color 0.2s;
+        }
+
+        .menu-item:hover .menu-arrow {
+            color: #1aad19;
+        }
+
+        .setting-section {
+            background: #fff;
+            margin-bottom: 90px;
+            border-radius: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            overflow: hidden;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 480px;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            padding: 18px 22px;
+            font-size: 19px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.18s;
+        }
+
+            .setting-item:last-child {
+                border-bottom: none;
+            }
+
+            .setting-item:hover {
+                background: #f6fef7;
+            }
+
+        .setting-icon {
+            width: 28px;
+            text-align: center;
+            margin-right: 20px;
+            font-size: 22px;
+            color: #3b9cff;
+            opacity: 0.92;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 62px;
+            background: #fff;
+            border-top: 1.5px solid #e0e0e0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.04);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 15px;
+            color: #222;
+            width: 60px;
+            position: relative;
+            transition: color 0.2s;
+            padding-top: 2px;
+        }
+
+            .nav-item.active {
+                color: #1aad19;
+                font-weight: bold;
+            }
+
+        .nav-icon {
+            font-size: 27px;
+            margin-bottom: 2px;
+            line-height: 1;
+        }
+
+        .nav-dot {
+            position: absolute;
+            top: 4px;
+            right: 16px;
+            width: 8px;
+            height: 8px;
+            background: #f33;
+            border-radius: 50%;
+            box-shadow: 0 0 2px #fff, 0 0 4px #f33;
+        }
+
+        .badge {
+            background: #ff6b35;
+            color: white;
+            border-radius: 12px;
+            padding: 2px 8px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 8px;
+            min-width: 16px;
+            text-align: center;
+            display: inline-block;
+            line-height: 1.2;
+            box-shadow: 0 1px 3px rgba(255, 107, 53, 0.3);
+        }
+
+        .ranking-info {
+            display: flex;
+            gap: 12px;
+            margin-left: 16px;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        /* 数据卡片样式 */
+        .data-cards {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding: 0 16px;
+            max-width: 480px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .data-card {
+            flex: 1;
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            border: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .data-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+                transition: left 0.6s ease;
+            }
+
+            .data-card:hover::before {
+                left: 100%;
+            }
+
+            .data-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+            }
+
+        .left-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .right-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .card-icon {
+            font-size: 20px;
+            margin-right: 8px;
+            opacity: 0.9;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .card-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 4px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .sub-value {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .data-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .data-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            font-size: 13px;
+        }
+
+            .data-item:last-child {
+                border-bottom: none;
+            }
+
+        .date {
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .amount {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .customers {
+            opacity: 0.8;
+            font-size: 12px;
+        }
+
+
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            color: #666;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 4px 8px;
+            border-radius: 12px;
+            border: 1px solid #dee2e6;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .ranking-item::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+                transition: left 0.5s ease;
+            }
+
+            .ranking-item:hover::before {
+                left: 100%;
+            }
+
+            .ranking-item:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                border-color: #adb5bd;
+            }
+
+        .hall-rank {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-color: #90caf9;
+            color: #1976d2;
+        }
+
+        .team-rank {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            border-color: #ce93d8;
+            color: #7b1fa2;
+        }
+
+        .rank-number {
+            font-weight: bold;
+            font-size: 14px;
+            color: #fff;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            padding: 2px 6px;
+            border-radius: 8px;
+            min-width: 20px;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(255, 107, 53, 0.3);
+            position: relative;
+        }
+
+            .rank-number::after {
+                content: '';
+                position: absolute;
+                top: -2px;
+                left: -2px;
+                right: -2px;
+                bottom: -2px;
+                background: linear-gradient(135deg, #ff6b35, #f7931e, #ff6b35);
+                border-radius: 10px;
+                z-index: -1;
+                opacity: 0.3;
+                animation: pulse 2s infinite;
+            }
+
+
+
+        /* 浮动弹窗样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            max-width: 320px;
+            width: 90%;
+            animation: slideIn 0.3s ease;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .modal-subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .button-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .modal-btn {
+            padding: 16px 20px;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .modal-btn::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+                transition: left 0.5s ease;
+            }
+
+            .modal-btn:hover::before {
+                left: 100%;
+            }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+            }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(78, 205, 196, 0.4);
+        }
+
+            .btn-secondary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(78, 205, 196, 0.6);
+            }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+            .close-btn:hover {
+                background: #f5f5f5;
+                color: #666;
+            }
+    </style>
+</head>
+<body>
+    <div class="profile-section">
+        <div class="profile-top">
+            <img class="avatar" src="@img_url" alt="头像" onclick="window.location.href='/Home/SetInfo'">
+            <div class="profile-info">
+                <div class="nickname">@zhubo.user_name</div>
+                @{
+                    <div class="wechat-id">
+                        登录账号：@zhubo.username
+                    </div>
+                    string wechat_username = zhubo.wechat_username;
+                    if (wechat_username.IsNullOrEmpty())
+                    {
+                        <div class="wechat-id">
+                            微信号：<a href="/Home/SetInfo">点击设置微信号</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="wechat-id">
+                            微信号：@zhubo.wechat_username
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        @*<div class="profile-status">
+                <div class="status-btn">+ 状态</div>
+                <div class="friends">
+                    <img src="https://img2.baidu.com/it/u=1812345678,1234567890&fm=253&fmt=auto&app=138&f=JPEG?w=50&h=50" alt="friend1">
+                    <img class="medal" src="https://img.icons8.com/color/48/000000/medal2--v2.png" alt="medal">
+                    <span class="friends-count">2个朋友</span>
+                    <span class="red-dot"></span>
+                </div>
+            </div>*@
+    </div>
+
+
+    <div class="menu-section">
+        <!-- 数据卡片区域 -->
+        <div class="data-cards">
+            <div class="data-card left-card">
+                <div class="card-header">
+                    <span class="card-icon">💰</span>
+                    <span class="card-title">本月音浪</span>
+                </div>
+                <div class="card-content">
+                    <div class="main-value">@ViewBag.Sum <span style="font-size:16px;">抖币</span></div>
+                </div>
+
+                <div class="card-header">
+                    <span class="card-icon">📊</span>
+                    <span class="card-title">团队排名</span>
+                </div>
+                <div class="card-content">
+                    <div class="main-value" style="text-align:center; font-size:26px;">-</div>
+                </div>
+            </div>
+
+            <div class="data-card right-card">
+                <div class="card-header">
+                    <span class="card-icon">📊</span>
+                    <span class="card-title">最近3天数据</span>
+                </div>
+                <div class="card-content">
+                    <div class="data-list">
+                        <div class="data-item">
+                            <span class="date">今天</span>
+                            <span class="amount">@ViewBag.ToDay 抖币</span>
+                            <span class="customers"></span>
+                        </div>
+                        <div class="data-item">
+                            <span class="date">昨天</span>
+                            <span class="amount">@ViewBag.YesterDay 抖币</span>
+                            <span class="customers"></span>
+                        </div>
+                        <div class="data-item">
+                            <span class="date">前天</span>
+                            <span class="amount">@ViewBag.BeforeDay 抖币</span>
+                            <span class="customers"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       
+        @*<div class="menu-list">
+                <div class="menu-item"><span class="menu-icon">💬</span>服务 <span class="menu-arrow">&#8250;</span></div>
+            </div>*@
+        <div class="menu-list">
+            <div class="menu-item" onclick="window.location.href = '/jixiaoday/report/post';"><span class="menu-icon">📈</span>数据提报<span class="menu-arrow">&#8250;</span></div>
+        </div>
+        <div class="menu-list">
+            <div class="menu-item">
+                <span class="menu-icon">👥</span><a href="/PCrm/Info/List" style="color: inherit; text-decoration: none; ">用户维护</a><span class="menu-arrow">&#8250;</span>
+                <span style="margin-left:16px; display:inline-flex; align-items:center; color:#888; font-size:16px;">
+                    <i class="bi bi-ui-checks" style="font-size:18px; margin-right:4px;"></i><a href="/PCrm/Info/LossList" style="color: inherit; text-decoration: none; ">回收站</a>
+                </span>
+            </div>
+            <div class="menu-item" onclick="window.location.href = '';"><span class="menu-icon">🏅</span>主播排名 <span class="menu-arrow">&#8250;</span></div>
+            @if (zhubo.o_type == ModelDb.user_info_zhubo.o_type_enum.线下.ToSByte())
+            {
+                <div class="menu-item">
+                    <span class="menu-icon">👤</span><a href="/JixiaoDay/QingJia/Post" style="color: inherit; text-decoration: none; ">我要请假</a><span class="menu-arrow">&#8250;</span>
+                    <span style="margin-left:16px; display:inline-flex; align-items:center; color:#888; font-size:16px;">
+                        <i class="bi bi-ui-checks" style="font-size:18px; margin-right:4px;"></i><a href="/JixiaoDay/QingJia/List" style="color: inherit; text-decoration: none; ">请假记录</a>
+                    </span>
+                </div>
+            }
+            @*<div class="menu-item" onclick="window.location.href = '';"><span class="menu-icon">💻</span>信息同步 <span class="menu-arrow">&#8250;</span></div>*@
+            <div class="menu-item" onclick="window.location.href = '';"><span class="menu-icon">📋</span>方法记录 <span class="menu-arrow">&#8250;</span></div>
+            <div class="menu-item" onclick="window.location.href = '/service/feedback/confidepost';"><span class="menu-icon">📩</span>倾诉箱 <span class="menu-arrow">&#8250;</span></div>
+        </div>
+        <div class="menu-list">
+            <div class="menu-item" onclick="window.location.href = '/Basic/AuthLogin/Exit';"><span class="menu-icon">📴</span>退出 <span class="menu-arrow">&#8250;</span></div>
+        </div>
+        @*<div class="setting-section">
+                <div class="setting-item"><span class="setting-icon">⚙️</span>设置 <span class="menu-arrow">&#8250;</span></div>
+            </div>*@
+    </div>
+
+    @*<div class="bottom-nav">
+            <div class="nav-item">
+                <span class="nav-icon">💬</span>
+                <span>微信</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">👥</span>
+                <span>通讯录</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">🧭</span>
+                <span>发现</span>
+                <span class="nav-dot"></span>
+            </div>
+            <div class="nav-item active">
+                <span class="nav-icon">👤</span>
+                <span>我</span>
+            </div>
+        </div>*@
+</body>
+</html> 

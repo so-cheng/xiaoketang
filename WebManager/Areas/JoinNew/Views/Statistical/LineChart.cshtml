@@ -1,0 +1,112 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@model Services.Project.PageFactory.TableVO
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+</style>
+
+<form class="layui-form">
+    <div class="layui-input-inline">
+        <label class="layui-form-label">日期</label>
+    </div>
+    <div class="layui-inline">
+        <div class="layui-input-inline">
+            @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("c_date", true)
+            {
+                title = "日期",
+                defaultValue = ViewBag.c_date,
+                mold = ModelBasic.EmtTimeSelect.Mold.date_range
+            })
+        </div>
+        <button type="submit" class="layui-btn search_btn">查询</button>
+    </div>
+</form>
+
+<div id="main_line" style="width: 100%;height:400px;"></div>
+
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/other/echarts.min.4.3.0.js"></script>
+
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main_line'));
+
+    // 指定图表的配置项和数据
+    var dateArray = @Html.Raw(Json.Encode(ViewBag.dateArray));
+
+    var applyList = @Html.Raw(Json.Encode(ViewBag.applyList));
+    var joinList = @Html.Raw(Json.Encode(ViewBag.joinList));
+    var joinRateList = @Html.Raw(Json.Encode(ViewBag.joinRateList));
+
+    // 指定图表的配置项和数据
+    var option = {
+        title: {
+            text: "公会",
+            left: '50%',
+            top: '20px',
+            textAlign: 'center'
+        },
+        tooltip: {},
+        legend: {
+            data: ['提交人数', '已补人数', '补人率'],
+            selected: {
+                '提交人数': true,
+                '已补人数': true,
+                '补人率': true
+            }
+        },
+        xAxis: {
+            data: dateArray
+        },
+        yAxis: {
+        },
+        series: [
+            {
+                name: '提交人数',
+                type: 'line',
+                data: applyList
+            },{
+                name: '已补人数',
+                type: 'line',
+                data: joinList
+            },{
+                name: '补人率',
+                type: 'line',
+                data: joinRateList
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>

@@ -1,0 +1,663 @@
+﻿@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+@using System;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <title>主页</title>
+    <style>
+        .notification-dot {
+            height: 10px;
+            width: 10px;
+            background-color: red;
+            border-radius: 50%;
+            display: inline-block;
+            position: relative; /* 或者 relative, absolute 根据需要调整 */
+            top: -4px; /* 根据需要调整 */
+            left: 5px; /* 根据需要调整 */
+        }
+
+        body {
+            margin: 0;
+            font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+            background: #f3f3f5;
+            color: #222;
+        }
+
+        .profile-section {
+            background: linear-gradient(180deg, #fff 80%, #f3f3f5 100%);
+            padding: 32px 0 18px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-bottom: 8px solid #f3f3f5;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .profile-top {
+            display: flex;
+            align-items: center;
+            width: 92%;
+            margin-bottom: 8px;
+        }
+
+        .avatar {
+            width: 84px;
+            height: 84px;
+            border-radius: 20px;
+            background: #eee;
+            object-fit: cover;
+            margin-right: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 2px solid #f3f3f5;
+        }
+
+        .profile-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .nickname {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+        }
+
+        .wechat-id {
+            color: #888;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .qr {
+            margin-left: 10px;
+            font-size: 22px;
+            color: #b2b2b2;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+            .qr svg {
+                width: 22px;
+                height: 22px;
+                display: block;
+            }
+
+        .profile-status {
+            display: flex;
+            align-items: center;
+            width: 92%;
+            margin-bottom: 6px;
+        }
+
+        .status-btn {
+            border: 1.5px solid #e0e0e0;
+            border-radius: 20px;
+            padding: 3px 18px;
+            font-size: 15px;
+            margin-right: 12px;
+            background: linear-gradient(90deg, #fafafa 60%, #f3f3f5 100%);
+            color: #444;
+            transition: box-shadow 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            cursor: pointer;
+        }
+
+            .status-btn:hover {
+                box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+                border-color: #b2e672;
+            }
+
+        .friends {
+            display: flex;
+            align-items: center;
+            border-radius: 20px;
+            background: #fff;
+            border: 1.5px solid #e0e0e0;
+            padding: 2px 12px 2px 4px;
+            font-size: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+            .friends img {
+                width: 26px;
+                height: 26px;
+                border-radius: 50%;
+                margin-right: 2px;
+                border: 1.5px solid #f3f3f5;
+                background: #fafafa;
+            }
+
+            .friends .medal {
+                width: 22px;
+                height: 22px;
+                margin-right: 2px;
+                background: #fff;
+                border-radius: 50%;
+                border: 1px solid #f3f3f5;
+            }
+
+        .friends-count {
+            margin: 0 4px;
+            color: #444;
+        }
+
+        .red-dot {
+            width: 8px;
+            height: 8px;
+            background: #f33;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 2px;
+            box-shadow: 0 0 2px #fff, 0 0 4px #f33;
+        }
+
+        .menu-section {
+            margin-top: 0;
+            padding: 0 16px;
+        }
+
+        .menu-list {
+            background: #fff;
+            margin-bottom: 16px;
+            border-radius: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            padding: 0;
+            overflow: hidden;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 480px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 18px 22px 18px 22px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 19px;
+            cursor: pointer;
+            transition: background 0.18s;
+        }
+
+            .menu-item:last-child {
+                border-bottom: none;
+            }
+
+            .menu-item:hover {
+                background: #f6fef7;
+            }
+
+        .menu-icon {
+            width: 28px;
+            text-align: center;
+            margin-right: 20px;
+            font-size: 22px;
+            opacity: 0.92;
+        }
+
+        .menu-arrow {
+            margin-left: auto;
+            color: #c8c8c8;
+            font-size: 18px;
+            font-family: Arial, sans-serif;
+            transition: color 0.2s;
+        }
+
+        .menu-item:hover .menu-arrow {
+            color: #1aad19;
+        }
+
+        .setting-section {
+            background: #fff;
+            margin-bottom: 90px;
+            border-radius: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            overflow: hidden;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 480px;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            padding: 18px 22px;
+            font-size: 19px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.18s;
+        }
+
+            .setting-item:last-child {
+                border-bottom: none;
+            }
+
+            .setting-item:hover {
+                background: #f6fef7;
+            }
+
+        .setting-icon {
+            width: 28px;
+            text-align: center;
+            margin-right: 20px;
+            font-size: 22px;
+            color: #3b9cff;
+            opacity: 0.92;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 62px;
+            background: #fff;
+            border-top: 1.5px solid #e0e0e0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.04);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 15px;
+            color: #222;
+            width: 60px;
+            position: relative;
+            transition: color 0.2s;
+            padding-top: 2px;
+        }
+
+            .nav-item.active {
+                color: #1aad19;
+                font-weight: bold;
+            }
+
+        .nav-icon {
+            font-size: 27px;
+            margin-bottom: 2px;
+            line-height: 1;
+        }
+
+        .nav-dot {
+            position: absolute;
+            top: 4px;
+            right: 16px;
+            width: 8px;
+            height: 8px;
+            background: #f33;
+            border-radius: 50%;
+            box-shadow: 0 0 2px #fff, 0 0 4px #f33;
+        }
+
+        @@media (max-width: 500px) {
+            .profile-section, .profile-top, .profile-status, .menu-list, .setting-section {
+                width: 100% !important;
+                min-width: 0;
+                box-sizing: border-box;
+            }
+
+            .profile-top, .profile-status {
+                width: 96vw !important;
+            }
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            height: 20px;
+            margin: 0 8px;
+            padding: 0 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: #ff6b35; /* 橙色徽章，符合常见待办事项设计 */
+            border-radius: 10px; /* 圆角设计 */
+            line-height: 1;
+        }
+
+        /* 浮动弹窗样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            max-width: 320px;
+            width: 90%;
+            animation: slideIn 0.3s ease;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .modal-subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .button-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .modal-btn {
+            padding: 16px 20px;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .modal-btn::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+                transition: left 0.5s ease;
+            }
+
+            .modal-btn:hover::before {
+                left: 100%;
+            }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+                color: white !important;
+            }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(78, 205, 196, 0.4);
+        }
+
+            .btn-secondary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(78, 205, 196, 0.6);
+            }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+            .close-btn:hover {
+                background: #f5f5f5;
+                color: #666;
+            }
+
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @@keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+    </style>
+</head>
+<body>
+    @{
+        var Tg = new ServiceFactory.UserInfo.Tg().GetTgInfoByUsersn(new UserIdentityBag().user_sn);
+
+        string img_url = "/Assets/images/default_head.jpg";
+        if (!Tg.img_url.IsNullOrEmpty())
+        {
+            img_url = Tg.img_url;
+        }
+    }
+    <div class="profile-section">
+        <div class="profile-top">
+            <img class="avatar" src="@img_url" alt="头像" onclick="window.location.href='/Home/SetInfo'">
+            <div class="profile-info">
+                <div class="nickname">@ViewBag.username</div>
+                <div class="wechat-id">
+                    @{
+                        string wechat_username = Tg.wechat_username;
+                        if (wechat_username.IsNullOrEmpty())
+                        {
+                            <div class="wechat-id">
+                                微信号：<a href="/Home/SetInfo">点击设置微信号</a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="wechat-id">
+                                微信号：@Tg.wechat_username
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="menu-section">
+        @*<div class="menu-list">
+                <div class="menu-item"><span class="menu-icon">💬</span>服务 <span class="menu-arrow">&#8250;</span></div>
+            </div>*@
+        <div class="menu-list">
+            <a class="menu-item" href="/jixiaoday/reportday/post"><span class="menu-icon">📈</span>数据提报<span class="menu-arrow">&#8250;</span></a>
+        </div>
+        <div class="menu-list">
+            <a class="menu-item" href="/jixiaoday/reportday/DataList"><span class="menu-icon">📄</span>数据表格<span class="menu-arrow">&#8250;</span></a>
+            <div class="menu-item" onclick="window.location.href = '/TingZhan/Target/Post';">
+                <span class="menu-icon">📊</span>厅战目标<span class="menu-arrow">&#8250;</span>
+                <span style="margin-left:16px; display:inline-flex; align-items:center; color:#888; font-size:16px;">
+                    <i class="bi bi-ui-checks" style="font-size:18px; margin-right:4px;"></i><a href="/TingZhan/Home/MobileView" style="color: inherit; text-decoration: none; ">对方信息</a>
+                </span>
+            </div>
+            <div class="menu-item" onclick="showMethodRecord(1)"><span class="menu-icon">📋</span>申请补人 <span class="menu-arrow">&#8250;</span></div>
+            <!-- 申请补人弹窗 -->
+            <div class="modal-overlay" id="methodRecordModal1">
+                <div class="modal-content">
+                    <button class="close-btn" onclick="closeMethodRecord(1)">&times;</button>
+                    <div class="modal-header">
+                        <div class="modal-title">📋 申请补人</div>
+                        <div class="modal-subtitle">选择要补人的直播厅</div>
+                    </div>
+                    <div class="button-list">
+                        @foreach (var ting in new ServiceFactory.UserInfo.Ting().GetTingsByTgsn(new UserIdentityBag().user_sn))
+                        {
+                            <a class="modal-btn btn-primary" href="/JoinNew/ApplyZb/ApplyZbPost?ting_sn=@ting.ting_sn">@ting.ting_name</a>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="menu-item" onclick="showMethodRecord(2)"><span class="menu-icon">📃</span>介绍补人<span class="menu-arrow">&#8250;</span></div>
+            <!-- 介绍补人弹窗 -->
+            <div class="modal-overlay" id="methodRecordModal2">
+                <div class="modal-content">
+                    <button class="close-btn" onclick="closeMethodRecord(2)">&times;</button>
+                    <div class="modal-header">
+                        <div class="modal-title">📃 介绍补人</div>
+                        <div class="modal-subtitle">选择要补人的直播厅</div>
+                    </div>
+                    <div class="button-list">
+                        @foreach (var ting in new ServiceFactory.UserInfo.Ting().GetTingsByTgsn(new UserIdentityBag().user_sn))
+                        {
+                            <a class="modal-btn btn-primary" href="/JoinNew/InterpolateApply/InterpolateApply?ting_sn=@ting.ting_sn">@ting.ting_name</a>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="menu-item" onclick="window.location.href = '/Work/TodoDay/List';">
+                <span class="menu-icon">📩</span>待办事项 @if (ViewBag.todo_count > 0)
+                {<span class="badge">@ViewBag.todo_count</span>} <span class="menu-arrow">&#8250;</span>
+                <span style="margin-left:16px; display:inline-flex; align-items:center; color:#888; font-size:16px;">
+                    <i class="bi bi-ui-checks" style="font-size:18px; margin-right:4px;"></i><a href="/Work/TodoDay/HistoryList" style="color: inherit; text-decoration: none; ">历史记录</a>
+                </span>
+            </div>
+            @{
+                var p_tenant_config = DoMySql.FindEntity<ModelDb.p_tenant_config>($"tenant_id = '{new DomainBasic.TenantApp().GetInfo().id}'");
+                var p_renwu_saolian_tg = DoMySql.FindEntity<ModelDb.p_renwu_saolian_tg>($"tg_user_sn = '{new UserIdentityBag().user_sn}'", false);
+                string redDot = "";
+                if (p_renwu_saolian_tg.last_time < p_tenant_config.saolian_last_time || p_renwu_saolian_tg.IsNullOrEmpty())
+                {
+                    redDot = "notification-dot";
+                }
+            }
+            <a class="menu-item" href="/Task/Saolian/TingDetail">
+                <span class="menu-icon">📄</span>扫脸任务<div class="@redDot"></div><span class="menu-arrow">&#8250;</span>
+            </a>
+        </div>
+        <div class="menu-list">
+            <a class="menu-item" href="/Basic/AuthLogin/Exit?returnUrl=/Home/MobileView"><span class="menu-icon">📴</span>退出<span class="menu-arrow">&#8250;</span></a>
+        </div>
+        @*<div class="setting-section">
+                <div class="setting-item"><span class="setting-icon">⚙️</span>设置 <span class="menu-arrow">&#8250;</span></div>
+            </div>*@
+    </div>
+    <script>
+
+        page.set = function (data) {
+            Object.keys(page).forEach(key => {
+                if (typeof (page[key]) == "object" && eval("data." + key + " != undefined")) {
+                    eval("page." + key + ".set(data." + key + ");")
+                }
+            });
+        }
+
+        if (parent.layer) {
+            if (parent.layer.getFrameIndex(window.name) != undefined) {
+                window.focus();
+            }
+        }
+
+        $(document).keydown(function (event) {
+            if (event.keyCode == 27) {
+                var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                console.log(index)
+                parent.layer.close(index);
+            }
+        });
+
+        // 弹窗控制函数
+        function showMethodRecord(type) {
+            document.getElementById('methodRecordModal' + type).style.display = 'block';
+        }
+
+        function closeMethodRecord(type) {
+            document.getElementById('methodRecordModal' + type).style.display = 'none';
+        }
+
+        // 点击遮罩层关闭弹窗
+        document.getElementById('methodRecordModal1').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeMethodRecord(1);
+            }
+        });
+        document.getElementById('methodRecordModal2').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeMethodRecord(2);
+            }
+        });
+    </script>
+
+    @*<div class="bottom-nav">
+            <div class="nav-item">
+                <span class="nav-icon">💬</span>
+                <span>微信</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">👥</span>
+                <span>通讯录</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">🧭</span>
+                <span>发现</span>
+                <span class="nav-dot"></span>
+            </div>
+            <div class="nav-item active">
+                <span class="nav-icon">👤</span>
+                <span>我</span>
+            </div>
+        </div>*@
+</body>
+</html> 

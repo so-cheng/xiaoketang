@@ -1,0 +1,136 @@
+﻿<#@ template debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Core" #>
+<#@ Assembly Name="System.Windows.Forms" #>
+<#@ Assembly Name="System.Data" #>
+<#@ assembly name="System.Configuration.dll" #>
+
+<#@ assembly name="$(SolutionDir)\DataBase.Project\lib\MySql.Data.Dll" #>
+<#@ import namespace="System.Data" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #> 
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="MySql.Data.MySqlClient" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #> 
+<#@ include file="EF.Utility.CS.ttinclude"#>
+<#@ import namespace="System.Configuration" #>
+<# var manager = EntityFrameworkTemplateFileManager.Create(this);#>	 
+
+<#
+    string appPath = Path.Combine(Host.ResolveAssemblyReference("$(ProjectDir)"),"App.Config");
+    var configMap = new ExeConfigurationFileMap { ExeConfigFilename = appPath }; 
+    Configuration config = System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
+    AppSettingsSection appSettingSection = (AppSettingsSection)config.GetSection("appSettings");
+
+    string data_server = appSettingSection.Settings["data_server"].Value;
+	string data_userid = appSettingSection.Settings["data_userid"].Value;
+	string data_password = appSettingSection.Settings["data_password"].Value;
+	string data_database = appSettingSection.Settings["data_database"].Value;
+    string connectionString = @"server=" + data_server + ";user id=" + data_userid + "; password=" + data_password + "; database=" + data_database + ";Max Pool Size=10000";
+
+    MySqlConnection conn = new MySqlConnection(connectionString);
+    conn.Open();
+    
+    string selectQuery = "select * from @tableName limit 0 ;";
+    MySqlCommand command = new MySqlCommand(selectQuery, conn);
+    MySqlDataAdapter ad = new MySqlDataAdapter(command);
+    System.Data.DataSet ds = new DataSet();
+
+    System.Data.DataTable schema = conn.GetSchema("Tables"); 
+#>
+
+namespace WeiCode.ModelDbs
+{
+    using System;
+    using System.Collections.Generic;
+	using WeiCode.Utility;
+    using WeiCode.DataBase;
+
+    <#
+	WriteLine("//内置全局枚举");
+	ds.Tables.Clear();      
+    command.CommandText = "SELECT * FROM user_type";
+	ad = new MySqlDataAdapter(command);
+    ad.Fill(ds); 
+	WriteLine("public partial class ModelEnum {");
+    WriteLine("		/// <summary>");
+	WriteLine("     ///用户类型");
+    WriteLine("		/// </summary>");
+	WriteLine("	public enum UserTypeEnum {");
+	foreach (DataRow row in  ds.Tables[0].Rows) {
+        WriteLine("		/// <summary>");
+        WriteLine("		///" + row["name"].ToString());
+        WriteLine("		/// </summary>");
+		WriteLine("		" + row["sys_code"].ToString() + "=" + row["id"].ToString() + ",");
+	}
+	WriteLine("	}");
+
+    ds.Tables.Clear();      
+    command.CommandText = "SELECT * FROM sys_dict_category";
+	ad = new MySqlDataAdapter(command);
+    ad.Fill(ds); 
+    WriteLine("		/// <summary>");
+	WriteLine("     ///字典类别");
+    WriteLine("		/// </summary>");
+	WriteLine("	public enum DictCategory {");
+	foreach (DataRow row1 in  ds.Tables[0].Rows) {
+        WriteLine("		/// <summary>");
+        WriteLine("		///" + row1["name"].ToString());
+        WriteLine("		/// </summary>");
+		WriteLine("		" + row1["name"].ToString() + "=" + row1["id"].ToString() + ",");
+	}
+	WriteLine("	}");
+
+    foreach(System.Data.DataRow row in schema.Rows)
+    {
+        if(row["TABLE_NAME"].ToString() == "user_relation_type")
+        {
+	        ds.Tables.Clear();      
+            command.CommandText = "SELECT * FROM user_relation_type";
+	        ad = new MySqlDataAdapter(command);
+            ad.Fill(ds); 
+            WriteLine("		/// <summary>");
+	        WriteLine("     ///用户关系类型枚举");
+            WriteLine("		/// </summary>");
+	        WriteLine("	public enum UserRelationTypeEnum {");
+	        foreach (DataRow __row in  ds.Tables[0].Rows) {
+                WriteLine("		/// <summary>");
+                WriteLine("		///" + __row["introduce"].ToString());
+                WriteLine("		/// </summary>");
+		        WriteLine("		" + __row["name"].ToString() + "=" + __row["id"].ToString() + ",");
+	        }
+	        WriteLine("	}");
+        }
+    }
+
+    ds.Tables.Clear();      
+    command.CommandText = "SELECT * FROM sys_enum";
+	ad = new MySqlDataAdapter(command);
+    ad.Fill(ds); 
+    foreach (DataRow row in  ds.Tables[0].Rows) {
+        WriteLine("		/// <summary>");
+        WriteLine("     ///" + row["name"].ToString() + "");
+        WriteLine("		/// </summary>");
+	    WriteLine("	public enum " + row["cname"].ToString() + " {");
+        System.Data.DataSet _ds = new DataSet();
+        command.CommandText = "SELECT * FROM sys_enum_item where enum_sn = '" + row["enum_sn"].ToString() + "'";
+	    MySqlDataAdapter _ad = new MySqlDataAdapter(command);
+        _ad.Fill(_ds); 
+	    foreach (DataRow _row in  _ds.Tables[0].Rows) {
+            WriteLine("		/// <summary>");
+            WriteLine("		///" + _row["e_text"].ToString());
+            WriteLine("		/// </summary>");
+		    WriteLine("		" + _row["e_text"].ToString() + "=" + _row["e_value"].ToString() + ",");
+	    }
+	    WriteLine("	}");
+    }
+	WriteLine("}");
+#>
+}
+<#
+    manager.EndBlock();                
+    conn.Close();  
+    manager.Process(true);  
+#> 

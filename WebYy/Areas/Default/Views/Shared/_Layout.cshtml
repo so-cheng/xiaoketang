@@ -1,0 +1,63 @@
+﻿@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.ModelDbs;
+@using WeiCode.Models;
+@using WeiCode.Domain;
+
+
+@model PageModelBase
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>@ViewBag.page.title</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+    <style>
+        .site-demo .layui-row {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header header header-demo" autumn>
+            <div class="layui-fluid">
+                <a class="logo" href="/">
+                    <img src="@(DoMySql.FindEntity<ModelDbSite.site_config>($"keyword = '网站LOGO' AND tenant_id = '{new DomainBasic.TenantApp().GetInfo().id}'").content)" style="width:122px; height:45px;" alt="@(DoMySql.FindEntity<ModelDbSite.site_config>($"keyword = '网站名称' AND tenant_id = '{new DomainBasic.TenantApp().GetInfo().id}'").content)">
+                </a>
+
+                <div class="layui-hide-xs site-notice"></div>
+
+
+                @ViewModelBag.Load(Html, new ModelSite.CtlNavUserMenu("navusermenu")
+                {
+
+                })
+                
+            </div>
+        </div>
+            @RenderBody()
+    </div>
+
+    <script>
+        layui.config({
+            base: '@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/'
+            , version: '2.6.10'
+        }).use('global');
+    </script>
+ </body>
+ </html>

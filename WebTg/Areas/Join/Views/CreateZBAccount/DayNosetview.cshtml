@@ -1,0 +1,143 @@
+﻿
+@{
+    Layout = null;
+}
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.ModelDbs;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Web;
+@using System.Web.Mvc;
+@using WeiCode.Services;
+
+@using WeiCode.ModelDbs;
+@using Services.Project;
+@using WeiCode.Domain;
+@using WeiCode.ModelDbs;
+@using WeiCode.Models;
+@using WeiCode.Domain;
+
+
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 14px;
+    }
+
+    .layui-table td {
+        font-size: 14px;
+    }
+</style>
+
+<style>
+    .layuiadmin-big-font {
+        font-weight: bold;
+        font-size: 42px;
+        margin: 10px;
+    }
+</style>
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>当天未分</title>
+</head>
+
+@{
+    var maleList = DoMySql.FindList<ModelDb.user_info_zb>($" (zb_level = 'A' OR zb_level = 'B') AND zb_level_time = '{ViewBag.c_date}' AND zb_level_time < '{ViewBag.c_date_late}' AND tg_need_id = 0 and zb_sex='男' and tenant_id='{new DomainBasic.TenantApp().GetInfo().id}'");
+    var femaleList = DoMySql.FindList<ModelDb.user_info_zb>($" (zb_level = 'A' OR zb_level = 'B') AND zb_level_time > '{ViewBag.c_date}' AND zb_level_time < '{ViewBag.c_date_late}' AND tg_need_id = 0 and zb_sex='女' and tenant_id='{new DomainBasic.TenantApp().GetInfo().id}'");
+}
+
+<body>
+    <blockquote class="layui-elem-quote news_search">
+
+        <div class="layui-inline">
+            <form class="layui-form">
+                <div class="layui-input-inline">
+                    <label class="layui-form-label">日期</label>
+                </div>
+
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("c_date")
+                        {
+                            title = "日期",
+                            defaultValue = ViewBag.c_date,
+                            mold = ModelBasic.EmtTimeSelect.Mold.date,
+                            eventJsChange = new EmtFormBase.EventJsChange
+                            {
+                                eventJavascript = new EventJavascript
+                                {
+                                    code = "window.location.href = '?c_date=' + page.c_date.value;"
+                                },
+                            }
+                        })
+                    </div>
+                </div>
+                <a href="?c_date=@ViewBag.c_date_early" class="layui-btn">前一天</a>
+                <a href="?c_date=@ViewBag.c_date_late" class="layui-btn">后一天</a>
+            </form>
+        </div>
+    </blockquote>
+
+    <div>
+        <table class="layui-table" style="text-align:center;" id="table1" name="table1">
+            <colgroup>
+                <col width="100">
+                <col width="100">
+                <col width="100">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>性别</th>
+                    <th>男</th>
+                    <th>女</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>总数</td>
+                    <td>@maleList.Count</td>
+                    <td>@femaleList.Count</td>
+                </tr>
+                <tr>
+                    <td>时间段</td>
+                    <td colspan="2">未分配人数</td>
+                </tr>
+
+                @{
+                    foreach (var dang in new DomainBasic.DictionaryApp().GetList(ModelEnum.DictCategory.档位时段))
+                    {
+                        <tr>
+                            <td>@dang.d_key</td>
+                            <td>@maleList.FindAll(x => x.sessions.Contains(dang.d_value)).Count</td>
+                            <td>@femaleList.FindAll(x => x.sessions.Contains(dang.d_value)).Count</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.2.5.6.js"></script>
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+

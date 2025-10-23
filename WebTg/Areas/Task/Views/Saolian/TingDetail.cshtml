@@ -1,0 +1,193 @@
+﻿@using System;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.js"></script>
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 14px;
+    }
+
+    th, td {
+        white-space: nowrap;
+        font-size: 14px;
+    }
+</style>
+<div class="layui-card">
+
+    @foreach (var ting in DoMySql.FindList<ModelDb.user_info_tg>($"tg_user_sn = '{new UserIdentityBag().user_sn}'"))
+    {
+        <div id="table">
+            <table class="layui-table" style="text-align:center; width:100%">
+                <colgroup>
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <td colspan="8" style="text-align: center; background-color: #FFF3CA; font-size: 18px; font-weight: 700 ">@ting.ting_name</td>
+                    </tr>
+                    <tr style="background-color: #FCE4D3;">
+                        <td>主播</td>
+                        <td>天数<br><span style="font-size:10px;">挂麦/剩余</span></td>
+                        <td>时长<br>小时</td>
+                        <td>扫脸<br><span style="font-size:10px;">下发/已扫</span></td>
+                        <td>音浪/考核</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        //有效流水
+                        int validnullah = 0;
+                        //无效流水
+                        int novalidnullah = 0;
+
+                    }
+                    @foreach (var zhubo in new ServiceFactory.UserInfo.Zhubo().GetBaseInfos(
+                        new ServiceFactory.UserInfo.Zhubo.ZbBaseInfoFilter()
+                        {
+                            attachUserType = new ServiceFactory.UserInfo.Zhubo.ZbBaseInfoFilter.AttachUserType
+                            {
+                                userType = ServiceFactory.UserInfo.Zhubo.ZbBaseInfoFilter.AttachUserType.UserType.厅,
+                                UserSn = ting.ting_sn
+                            }
+                        }))
+                    {
+                        var saoma = DoMySql.FindEntity<ModelDb.p_renwu_saolian>($"c_month = '{DateTime.Today.ToString("yyyy-MM")}' and zb_user_sn = '{zhubo.user_sn}'", false);
+                        if (saoma.s_status == 0)
+                        {
+                            validnullah += saoma.s_amount.ToInt();
+                        }
+                        else if(saoma.s_status==1)
+                        {
+                            novalidnullah += saoma.s_amount.ToInt();
+                        }
+
+
+                        DateTime now = DateTime.Now;
+                        //当前月天数 (当月天数-23) - (当天日期-有效天数)
+                        int daysInMonth = DateTime.DaysInMonth(now.Year, now.Month);
+                        int days = daysInMonth - 23 - (now.Day - saoma.s_days.ToInt());
+
+                        var color = " rgb(202 205 211)";//灰色
+                        if (days >= 5)
+                        {
+                            color = "green";//绿色
+                            if(saoma.down_num > 3 && saoma.saoed_num < 2)
+                            {
+                                color = "red";//红色
+                            }
+                            else if (saoma.down_num > 3 && saoma.saoed_num < 3)
+                            {
+                                color = "yellow";//黄色
+                            }
+                        }
+                        else if (days < 5 && days >= 3)
+                        {
+                            color = "yellow";//黄色
+                            if (saoma.down_num > 3 && saoma.saoed_num < 2)
+                            {
+                                color = "red";//红色
+                            }
+
+                        }
+                        else if (0 < days && days < 3)
+                        {
+                            color = "red";//红色
+
+                        }
+                        <tr style="background-color:@color">
+                            <td style="color:#ffffff"><span style="background-color: blue; padding: 4px;">@zhubo.name</span></td>
+                            <td style="color:#ffffff"><span style="background-color: blue; padding: 4px;">@saoma.s_days/@days </span></td>
+                            <td style="color:#ffffff"><span style="background-color: blue; padding: 4px;">@saoma.s_hours</span></td>
+                            <td style="color:#ffffff"><span style="background-color: blue; padding: 4px;">@saoma.down_num/@saoma.saoed_num</span></td>
+                            <td style="color:#ffffff">
+                                <span style="background-color:blue">
+                                @saoma.s_amount
+                                                            @Html.Raw(saoma.s_status == 1 ? "<span style='color:red; font-size:9px;'>高价值</span>" : "")
+                                                        </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div style="font-size:22px;">
+
+                有效流水：@validnullah 无效流水：@novalidnullah
+            </div>
+            绿色表示正常，黄色表示警告，红色表示危险，灰色代表无效流水
+        </div>
+    }
+</div>
+
+<script>
+    layui.use(function () {
+        var form = layui.form;
+        var layer = layui.layer;
+        // select 事件
+        form.on('select(tg)', function (data) {
+            var value = data.value; // 获得被选中的值
+            var c_date = $('#c_date').attr('value');
+            window.location.href = '/jixiao/reportday/list?c_date=' + c_date + '&tg_user_sn=' + value;
+        });
+    });
+</script>
+
+@functions{
+    /// <summary>
+    /// 判断是否为当前档期首行
+    /// </summary>
+    /// <param name="p_jixiao_session"></param>
+    /// <param name="session"></param>
+    /// <param name="color"></param>
+    /// <returns></returns>
+    public bool isFirstRow(ModelDb.p_jixiao_day_session p_jixiao_session, ref int? session, ref string color)
+    {
+        if (p_jixiao_session.session != session)
+        {
+            switch (color)
+            {
+                case "#E3F2D9":
+                    color = "#FADADE";
+                    break;
+                case "#FADADE":
+                    color = "#E3F2D9";
+                    break;
+                default:
+                    break;
+            }
+            session = p_jixiao_session.session;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+
+}

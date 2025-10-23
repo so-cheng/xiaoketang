@@ -1,0 +1,47 @@
+﻿@using System; 
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+
+<!-- 页面通用母版 -->
+@{ Layout = ModelBasic.PageModel.GetLayout(); }
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Page</title>
+    <style>
+        .layui-container {
+            width: 80%; /* 宽度占视口的80% */
+            text-align: center; /* 使内容水平居中 */
+        }
+    </style>
+</head>
+<body>
+    <form class="layui-form" action="SaveHead" method="post">
+        <div class="layui-input-inline">
+            <label class="layui-form-label">上传头像</label>
+        </div>
+        <div class="layui-inline">
+            <div class="layui-input-inline">
+                @ViewModelBag.Load(Html, new ModelBasic.EmtImageSelect("head")
+                {
+                    title = "上传头像",
+                    width = "200px",
+                    height = "200px",
+
+                })
+            </div>
+        </div>
+        <button class="layui-btn" type="submit">提交</button>
+    </form>
+
+    
+</body>
+</html>

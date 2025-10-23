@@ -1,0 +1,122 @@
+﻿
+@{
+    Layout = null;
+}
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.ModelDbs;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Web;
+@using System.Web.Mvc;
+@using WeiCode.Services;
+
+@using WeiCode.ModelDbs;
+@using Services.Project;
+@using WeiCode.Domain;
+@using WeiCode.ModelDbs;
+@using WeiCode.Models;
+@using WeiCode.Domain;
+
+
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 14px;
+    }
+
+    .layui-table td {
+        font-size: 14px;
+    }
+</style>
+
+<style>
+    .layuiadmin-big-font {
+        font-weight: bold;
+        font-size: 42px;
+        margin: 10px;
+    }
+</style>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>所有未分</title>
+</head>
+
+@{
+    var maleApplyList = DoMySql.FindList<ModelDb.p_join_apply_item>($"status = {ModelDb.p_join_apply_item.status_enum.未完成.ToSByte()} and tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and exists (select 1 from p_join_apply where apply_sn = p_join_apply_item.apply_sn and status <= {ModelDb.p_join_apply.status_enum.等待外宣补人.ToSByte()} and tg_sex = '男' and tenant_id = {new DomainBasic.TenantApp().GetInfo().id})");
+    var femaleApplyList = DoMySql.FindList<ModelDb.p_join_apply_item>($"status = {ModelDb.p_join_apply_item.status_enum.未完成.ToSByte()} and tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and exists (select 1 from p_join_apply where apply_sn = p_join_apply_item.apply_sn and status <= {ModelDb.p_join_apply.status_enum.等待外宣补人.ToSByte()} and tg_sex = '女' and tenant_id = {new DomainBasic.TenantApp().GetInfo().id})");
+    var maleList = DoMySql.FindList<ModelDb.p_join_new_info>($"status = {ModelDb.p_join_new_info.status_enum.等待分配.ToSByte()} and zb_sex = '男' and tenant_id = {new DomainBasic.TenantApp().GetInfo().id}");
+    var femaleList = DoMySql.FindList<ModelDb.p_join_new_info>($"status = {ModelDb.p_join_new_info.status_enum.等待分配.ToSByte()} and zb_sex = '女' and tenant_id = {new DomainBasic.TenantApp().GetInfo().id}");
+}
+<body>
+    <div>
+        <table class="layui-table" style="text-align:center;" id="table1" name="table1">
+            <colgroup>
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>性别</th>
+                    <th colspan="2">男</th>
+                    <th colspan="2">女</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th rowspan="2">总数</th>
+                    <th>需求</th>
+                    <th>未分配</th>
+                    <th>需求</th>
+                    <th>未分配</th>
+                </tr>
+                <tr>
+                    <td>@maleApplyList.Sum(c => c.unsupplement_count)</td>
+                    <td>@maleList.Count</td>
+                    <td>@femaleApplyList.Sum(c => c.unsupplement_count)</td>
+                    <td>@femaleList.Count</td>
+                </tr>
+                <tr>
+                    <td>时间段</td>
+                    <td colspan="4"></td>
+                </tr>
+                @{
+                    foreach (var dang in new DomainBasic.DictionaryApp().GetList(ModelEnum.DictCategory.档位时段))
+                    {
+                        <tr>
+                            <td>@dang.d_key</td>
+                            <td>@maleApplyList.FindAll(x => x.dangwei.Equals(dang.d_value)).Sum(c => c.unsupplement_count)</td>
+                            <td>@maleList.FindAll(x => x.sessions.Contains(dang.d_value)).Count</td>
+                            <td>@femaleApplyList.FindAll(x => x.dangwei.Equals(dang.d_value)).Sum(c => c.unsupplement_count)</td>
+                            <td>@femaleList.FindAll(x => x.sessions.Contains(dang.d_value)).Count</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.2.5.6.js"></script>
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+

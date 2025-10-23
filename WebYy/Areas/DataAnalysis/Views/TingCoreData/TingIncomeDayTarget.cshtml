@@ -1,0 +1,181 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@model Services.Project.PageFactory.TableVO
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+    var date = ((string)ViewBag.date).ToDate();
+    var p_jixiao_target_days = DoMySql.FindList<ModelDb.doudata_day_ting_31>($"yy_user_sn = '{new UserIdentityBag().user_sn}' and tenant_id='{new DomainBasic.TenantApp().GetInfo().id}' and yearmonth='{date.ToString("yyyy-MM-dd")}'");
+    var ting_day_nows = DoMySql.FindList<ModelDb.dataanalysis_ting_day_now>($"yy_user_sn = '{new UserIdentityBag().user_sn}' and tenant_id='{new DomainBasic.TenantApp().GetInfo().id}' and c_date='{date}' ");
+
+    var newList = new List<ServiceFactory.TingDay.TingDayNowModel>();
+
+    //获取运营下所有直播厅
+    foreach (var item in new ServiceFactory.UserInfo.Ting().GetBaseInfos(new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter
+    {
+        attachUserType = new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType()
+        {
+            userType = ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType.UserType.运营,
+            UserSn = new UserIdentityBag().user_sn
+        }
+    }))
+    {
+
+        var ting_day_nowsList = ting_day_nows.Where(x => x.ting_sn == item.ting_sn).ToList(); // 实时数据
+        if (ting_day_nowsList.Count > 0)
+        {
+
+            var p_jixiao_target_daysList = p_jixiao_target_days.Where(x => x.tg_user_sn == ting_day_nowsList[0].tg_user_sn).ToList(); // 直播厅绩效数据
+            decimal? target = 0M;
+            if (p_jixiao_target_daysList.Count > 0)
+            {
+                switch (date.Day)
+                {
+                    case 1: target = (p_jixiao_target_daysList[0].income_1); break;
+                    case 2: target = (p_jixiao_target_daysList[0].income_2); break;
+                    case 3: target = (p_jixiao_target_daysList[0].income_3); break;
+                    case 4: target = (p_jixiao_target_daysList[0].income_4); break;
+                    case 5: target = (p_jixiao_target_daysList[0].income_5); break;
+                    case 6: target = (p_jixiao_target_daysList[0].income_6); break;
+                    case 7: target = (p_jixiao_target_daysList[0].income_7); break;
+                    case 8: target = (p_jixiao_target_daysList[0].income_8); break;
+                    case 9: target = (p_jixiao_target_daysList[0].income_9); break;
+                    case 10: target = (p_jixiao_target_daysList[0].income_10); break;
+                    case 11: target = (p_jixiao_target_daysList[0].income_11); break;
+                    case 12: target = (p_jixiao_target_daysList[0].income_12); break;
+                    case 13: target = (p_jixiao_target_daysList[0].income_13); break;
+                    case 14: target = (p_jixiao_target_daysList[0].income_14); break;
+                    case 15: target = (p_jixiao_target_daysList[0].income_15); break;
+                    case 16: target = (p_jixiao_target_daysList[0].income_16); break;
+                    case 17: target = (p_jixiao_target_daysList[0].income_17); break;
+                    case 18: target = (p_jixiao_target_daysList[0].income_18); break;
+                    case 19: target = (p_jixiao_target_daysList[0].income_19); break;
+                    case 20: target = (p_jixiao_target_daysList[0].income_20); break;
+                    case 21: target = (p_jixiao_target_daysList[0].income_21); break;
+                    case 22: target = (p_jixiao_target_daysList[0].income_22); break;
+                    case 23: target = (p_jixiao_target_daysList[0].income_23); break;
+                    case 24: target = (p_jixiao_target_daysList[0].income_24); break;
+                    case 25: target = (p_jixiao_target_daysList[0].income_25); break;
+                    case 26: target = (p_jixiao_target_daysList[0].income_26); break;
+                    case 27: target = (p_jixiao_target_daysList[0].income_27); break;
+                    case 28: target = (p_jixiao_target_daysList[0].income_28); break;
+                    case 29: target = (p_jixiao_target_daysList[0].income_29); break;
+                    case 30: target = (p_jixiao_target_daysList[0].income_30); break;
+                    case 31: target = (p_jixiao_target_daysList[0].income_31); break;
+                }
+
+
+                newList.Add(new ServiceFactory.TingDay.TingDayNowModel
+                {
+                    c_date = ting_day_nowsList[0].c_date,
+                    ting_name = item.ting_name, // 厅名
+                    income = ting_day_nowsList[0].income / 10000.0M,
+                    ting_target = target,
+                });
+            }
+        }
+
+    }
+    newList = newList.OrderByDescending(n => n.income).ToList();
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+</style>
+<!-- 以下书写自己的页面内容代码 -->
+<form id="mainForm" class="layui-form" action="DayTarget">
+    <div class="layui-row">
+        <div class="layui-col-md8">
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("date")
+                   {
+                       mold = WeiCode.Models.ModelBasic.EmtTimeSelect.Mold.date,
+                       placeholder = "选择日期",
+                       defaultValue = date.ToString("yyyy-MM-dd"),
+                       eventJsChange = new EmtFormBase.EventJsChange
+                       {
+                           eventJavascript = new EventJavascript
+                           {
+                               code = "window.location.href = '/Target/TgTarget/IncomeMonth?date=' + page.date.value;"
+                           },
+                       }
+                   })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row" id="table">
+        <div class="layui-col-md12">
+            <table class="layui-table" style="width: 100%; background-color: #E3FEEB" id="table1">
+
+                <thead>
+                    <tr style="background-color: #D9E1F4">
+                        <td colspan="33" style="font-size: 18px; text-align: center; font-weight: bold">@(date.ToString("yyyy年MM月dd日"))日目标完成度</td>
+                    </tr>
+                    <tr style="background-color: #D9E1F4">
+                        <td style="width: 75px; text-align: center">厅名</td>
+                        <td style="text-align: center">日均任务</td>
+                        <td style="text-align: center">已完成</td>
+                        <td style="text-align: center">还差</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        foreach (var item in newList)
+                        {
+                            int baifenbi = (item.ting_target > 0 ? ((int)((item.remain_target / item.ting_target) * 100)) : 0);
+                            <tr>
+                                <td>@item.ting_name</td>
+                                <td>@Math.Round((decimal)item.ting_target, 2)</td>
+                                <td>@Math.Round((decimal)item.income, 2)</td>
+                                @if (baifenbi == 0)
+                                {
+                                    <td>@Math.Round((decimal)item.remain_target, 2)</td>
+                                }
+                                else
+                                {
+                                    <td style="background: linear-gradient(to left, red @baifenbi%, transparent 1%); ">@Math.Round((decimal)item.remain_target, 2)</td>
+                                }
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        var layer = layui.layer;
+
+
+    });
+</script>

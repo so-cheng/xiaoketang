@@ -1,0 +1,455 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@model Services.Project.PageFactory.TableVO
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+
+    /* 表头固定样式 */
+    .layui-table {
+        position: relative;
+    }
+
+        .layui-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: white;
+        }
+
+            .layui-table thead tr:first-child {
+                position: sticky;
+                top: 0;
+                z-index: 11;
+                background-color: #FFF3CA;
+            }
+
+            .layui-table thead tr:nth-child(2) {
+                position: sticky;
+                top: 50px; /* 第一行表头的高度 */
+                z-index: 11;
+                background-color: #FCE4D3;
+            }
+
+            /* 确保表头有足够的背景色 */
+            .layui-table thead th {
+                background-color: inherit;
+            }
+</style>
+<!-- 以下书写自己的页面内容代码 -->
+<form id="mainForm" class="layui-form" action="DayTarget">
+    <div class="layui-row">
+        <div class="layui-col-md8">
+            @{
+                string month = ViewBag.month;
+            }
+            <div class="layui-input-inline">
+                <label class="layui-form-label">日期</label>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("month")
+                    {
+                        title = "日期",
+                        defaultValue = ViewBag.month,
+                        mold = ModelBasic.EmtTimeSelect.Mold.month,
+                        eventJsChange = new EmtFormBase.EventJsChange
+                        {
+                            eventJavascript = new EventJavascript
+                            {
+                                code = "window.location.href = '/JoinNew/PeiXun/Index?month=' + page.month.value;"
+                            },
+                        }
+                    })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <table class="layui-table" style="text-align:center;width:3000px;" id="table1" name="table1">
+                <colgroup>
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <td colspan="31" style="text-align: center; background-color: #FFF3CA; font-size: 18px; font-weight: 700; ">@(ViewBag.username)@(ViewBag.c_date)千广萌新@(month.ToDate().ToString("MM"))月总数据</td>
+                    </tr>
+                    <tr style="font-weight:500;">
+                        <th style="background-color:#FF9C99;">拉群期数</th>
+                        <th style="background-color:#FF9C99;">培训老师</th>
+                        <th style="background-color:#FF9C99;">拉群日期</th>
+                        <th style="background-color:#FF9C99;">入会人数</th>
+                        <th style="background-color:#FF9C99;">拉群总人数</th>
+                        <th style="background-color:#FF9C99;">拉群人数</th>
+                        <th style="background-color:#99DDFF;">第一天在群人数</th>
+                        <th style="background-color:#99DDFF;">第一天到课人数</th>
+                        <th style="background-color:#99DDFF;">第一天回放人数</th>
+                        <th style="background-color:#99DDFF;">第一天到课总人数</th>
+                        <th style="background-color:#99DDFF;">第一天退群人数</th>
+                        <th style="color: red; background-color: #99DDFF;">第一天到课率</th>
+                        <th style="background-color:#98D7B6;">第二天课前人数</th>
+                        <th style="background-color:#98D7B6;">第二天课后人数</th>
+                        <th style="background-color:#98D7B6;">第二天到课人数</th>
+                        <th style="background-color:#98D7B6;">二天回放人数</th>
+                        <th style="background-color:#98D7B6;">第二天到课总人数</th>
+                        <th style="background-color:#98D7B6;">第二天退群人数</th>
+                        <th style="color: red; background-color: #98D7B6;">第二天到课率</th>
+                        <th style="background-color:#D58EFF;">课程结束后退会人数</th>
+                        <th style="background-color:#D58EFF;">首次推出人数</th>
+                        <th style="background-color:#D58EFF;">补考人数</th>
+                        <th style="background-color:#D58EFF;">总推出人数</th>
+                        <th style="color: red; background-color: #D58EFF;">推出率</th>
+                        <th style="background-color:#FFE270;">在群不理</th>
+                        <th style="background-color:#FFE270;">理了没考</th>
+                        <th style="background-color:#FFE270;">每期退出人数</th>
+                        <th style="background-color:#FFE270;">流失人数</th>
+                        <th style="color: red; background-color: #FFE270;">流失率</th>
+                        <th style="background-color:#FFBA84;">未分配人数</th>
+                        <th style="background-color:#FFBA84;">未分配率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var mengxin = DoMySql.FindList<ModelDb.p_mengxin>($"tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and date >= '{month.ToDate().ToString("yyyy-MM-01").ToDate().AddDays(-3).ToString("yyyy-MM-dd")}' and date < '{month.ToDate().AddMonths(1).ToString("yyyy-MM-01").ToDate().AddDays(-3).ToString("yyyy-MM-dd")}' and user_sn = '{new UserIdentityBag().user_sn}' order by date");
+                        int join_num = 0;
+                        int group_sum = 0;
+                        int? first_employ_sum = 0;
+                        int? resit_num_sum = 0;
+                        foreach (var item in mengxin)
+                        {
+                            var list = DoMySql.FindList<ModelDb.p_mengxin>($"tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and date = '{item.date}'");
+                            join_num += list[0].join_num.ToInt();
+                            group_sum += list.Sum(x => x.group_num).ToInt();
+                            <tr>
+                                <!--拉群期数-->
+                                <td style="background-color:#FFC9C7">@item.term</td>
+                                <!--培训老师-->
+                                <td style="background-color:#FFC9C7">@(new DomainBasic.UserApp().GetInfoByUserSn(item.user_sn).username)</td>
+                                <!--拉群日期-->
+                                <td style="background-color:#FFC9C7">@(item.date.ToDate().ToString("MM月dd日"))</td>
+                                <!--入会人数-->
+                                <td class="EditAble" data-name="join_num" data-id="@item.id" style="background-color:#FFC9C7;">@list[0].join_num</td>
+                                <!--拉群总人数-->
+                                <td style="background-color:#FFC9C7">@list.Sum(x => x.group_num)</td>
+                                <!--拉群人数-->
+                                <td class="EditAble" style="background-color:#FFC9C7" data-name="group_num" data-id="@item.id">@item.group_num</td>
+                                <!--第一天在群人数-->
+                                <td class="EditAble" style="background-color:#C7ECFF" data-name="in_group_1" data-id="@item.id">@item.in_group_1</td>
+                                <!--第一天到课人数-->
+                                <td class="EditAble" style="background-color:#C7ECFF" data-name="in_class_1" data-id="@item.id">@item.in_class_1</td>
+                                <!--第一天回放人数-->
+                                <td class="EditAble" style="background-color:#C7ECFF" data-name="playback_1" data-id="@item.id">@item.playback_1</td>
+                                <!--第一天到课总人数-->
+                                <td style="background-color:#C7ECFF">@(item.in_class_1 + item.playback_1)</td>
+                                <!--第一天退群人数-->
+                                <td style="background-color:#C7ECFF">@(item.group_num - item.in_group_1)</td>
+                                <!--第一天到课率-->
+                                <td style="background-color:#C7ECFF">@(getRate((item.in_class_1 + item.playback_1).ToDouble(), item.group_num.ToDouble()))%</td>
+                                <!--第二天课前人数-->
+                                <td class="EditAble" style="background-color:#C3EAD5" data-name="in_group_2" data-id="@item.id">@item.in_group_2</td>
+                                <!--第二天课后人数-->
+                                <td class="EditAble" style="background-color:#C3EAD5" data-name="before_class_2" data-id="@item.id">@item.before_class_2</td>
+                                <!--第二天到课人数-->
+                                <td class="EditAble" style="background-color:#C3EAD5" data-name="in_class_2" data-id="@item.id">@item.in_class_2</td>
+                                <!--二天回放人数-->
+                                <td class="EditAble" style="background-color:#C3EAD5" data-name="playback_2" data-id="@item.id">@item.playback_2</td>
+                                <!--第二天到课总人数-->
+                                <td style="background-color:#C3EAD5">@(item.in_class_2 + item.playback_2)</td>
+                                <!--第二天退群人数-->
+                                <td style="background-color:#C3EAD5">@(item.in_group_1 - item.before_class_2)</td>
+                                <!--第二天到课率-->
+                                <td style="background-color:#C3EAD5">@(getRate((item.in_class_2 + item.playback_2).ToDouble(), item.in_group_2.ToDouble()))%</td>
+                                @{
+                                    // 推出人数自动计算，拉群第三天晚上10点前是首次推出，之后是补考（例：900期  拉群日期为10.1号,当天考核为900期拉群日期后两天晚上十点的填表人（10.1 - 10.3号22：00），补考为900期10.3号22：00之后填表的人）
+                                    string deadline = $"{item.date.ToDate().AddDays(2).ToString("yyyy-MM-dd")} 22:00:00";
+                                    int? first_employ = DoMySql.FindField<ModelDb.p_join_new_info>("count(1)", $"tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and term = '{item.term}' and create_time <= '{deadline}'")[0].ToInt();
+                                    int? resit_num = DoMySql.FindField<ModelDb.p_join_new_info>("count(1)", $"tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and term = '{item.term}' and create_time > '{deadline}'")[0].ToInt();
+
+                                    first_employ_sum += first_employ;
+                                    resit_num_sum += resit_num;
+                                }
+                                <!--课程结束后退会人数-->
+                                <td class="EditAble" style="background-color:#F2C7FF" data-name="leave_group_3" data-id="@item.id">@item.leave_group_3</td>
+                                <!--首次推出人数-->
+                                <td style="background-color:#F2C7FF">@first_employ</td>
+                                <!--补考人数-->
+                                <td style="background-color:#F2C7FF">@resit_num</td>
+                                <!--总推出人数-->
+                                <td style="background-color:#F2C7FF">@(first_employ + resit_num)</td>
+                                <!--推出率-->
+                                <td style="background-color:#F2C7FF">@(getRate((first_employ + resit_num).ToDouble(), item.group_num.ToDouble()))%</td>
+                                <!--在群不理-->
+                                <td class="EditAble" style="background-color:#FFEEAD" data-name="ignore_num" data-id="@item.id">@item.ignore_num</td>
+                                <!--理了没考-->
+                                <td class="EditAble" style="background-color:#FFEEAD" data-name="no_exam_num" data-id="@item.id">@item.no_exam_num</td>
+                                <!--每期退出人数-->
+                                <td style="background-color:#FFEEAD">@(item.group_num - item.before_class_2 + item.leave_group_3)</td>
+                                <!--流失人数-->
+                                <td style="background-color:#FFEEAD">@(item.ignore_num + item.no_exam_num + (item.group_num - item.before_class_2 + item.leave_group_3))</td>
+                                <!--流失率-->
+                                <td style="background-color:#FFEEAD">@(getRate((item.ignore_num + item.no_exam_num + (item.group_num - item.before_class_2 + item.leave_group_3)).ToDouble(), item.group_num))%</td>
+                                <!--未分配人数-->
+                                <td class="EditAble" style="background-color:#FFDCC4" data-name="no_job_num" data-id="@item.id">@item.no_job_num</td>
+                                <!--未分配率-->
+                                <td style="background-color:#FFDCC4">@(getRate(item.no_job_num.ToDouble(), item.group_num.ToDouble()))%</td>
+                            </tr>
+                        }
+                        int quit_num = mengxin.Sum(x => x.group_num - x.before_class_2 + x.leave_group_3).ToInt();
+                        int leave_num = mengxin.Sum(x => x.ignore_num).ToInt() + mengxin.Sum(x => x.no_exam_num).ToInt() + quit_num;
+                        <tr>
+                            <!--拉群期数-->
+                            <td style="background-color:#FFC9C7">合计</td>
+                            <!--培训老师-->
+                            <td style="background-color:#FFC9C7">/</td>
+                            <!--拉群日期-->
+                            <td style="background-color:#FFC9C7">/</td>
+                            <!--入会人数-->
+                            <td style="background-color:#FFC9C7">@join_num</td>
+                            <!--拉群总人数-->
+                            <td style="background-color:#FFC9C7">@group_sum</td>
+                            <!--拉群人数-->
+                            <td style="background-color:#FFC9C7">@mengxin.Sum(x => x.group_num)</td>
+                            <!--第一天在群人数-->
+                            <td style="background-color:#C7ECFF">@mengxin.Sum(x => x.in_group_1)</td>
+                            <!--第一天到课人数-->
+                            <td style="background-color:#C7ECFF">@mengxin.Sum(x => x.in_class_1)</td>
+                            <!--第一天回放人数-->
+                            <td style="background-color:#C7ECFF">@mengxin.Sum(x => x.playback_1)</td>
+                            <!--第一天到课总人数-->
+                            <td style="background-color:#C7ECFF">@mengxin.Sum(x => x.in_class_1 + x.playback_1)</td>
+                            <!--第一天退群人数-->
+                            <td style="background-color:#C7ECFF">@mengxin.Sum(x => x.group_num - x.in_group_1)</td>
+                            <!--第一天到课率-->
+                            <td style="background-color:#C7ECFF">@getRate(mengxin.Sum(x => x.in_class_1 + x.playback_1), mengxin.Sum(x => x.group_num))%</td>
+                            <!--第二天课前人数-->
+                            <td style="background-color:#C3EAD5">@mengxin.Sum(x => x.in_group_2)</td>
+                            <!--第二天课后人数-->
+                            <td style="background-color:#C3EAD5">@mengxin.Sum(x => x.before_class_2)</td>
+                            <!--第二天到课人数-->
+                            <td style="background-color:#C3EAD5">@mengxin.Sum(x => x.in_class_2)</td>
+                            <!--二天回放人数-->
+                            <td style="background-color:#C3EAD5">@mengxin.Sum(x => x.playback_2)</td>
+                            <!--第二天到课总人数-->
+                            <td style="background-color:#C3EAD5">@mengxin.Sum(x => x.in_class_2 + x.playback_2)</td>
+                            <!--第二天退群人数-->
+                            <td style="background-color:#C3EAD5">@mengxin.Sum(x => x.in_group_1 - x.before_class_2)</td>
+                            <!--第二天到课率-->
+                            <td style="background-color:#C3EAD5">@getRate(mengxin.Sum(x => x.in_class_2 + x.playback_2), mengxin.Sum(x => x.in_group_2))%</td>
+                            <!--课程结束后退会人数-->
+                            <td style="background-color:#F2C7FF">@mengxin.Sum(x => x.leave_group_3)</td>
+                            <!--首次推出人数-->
+                            <td style="background-color:#F2C7FF">@first_employ_sum</td>
+                            <!--补考人数-->
+                            <td style="background-color:#F2C7FF">@resit_num_sum</td>
+                            <!--总推出人数-->
+                            <td style="background-color:#F2C7FF">@(first_employ_sum + resit_num_sum)</td>
+                            <!--推出率-->
+                            <td style="background-color:#F2C7FF">@getRate(first_employ_sum + resit_num_sum, mengxin.Sum(x => x.group_num))%</td>
+                            <!--在群不理-->
+                            <td style="background-color:#FFEEAD">@mengxin.Sum(x => x.ignore_num)</td>
+                            <!--理了没考-->
+                            <td style="background-color:#FFEEAD">@mengxin.Sum(x => x.no_exam_num)</td>
+                            <!--每期退出人数-->
+                            <td style="background-color:#FFEEAD">@quit_num</td>
+                            <!--流失人数-->
+                            <td style="background-color:#FFEEAD">@leave_num</td>
+                            <!--流失率-->
+                            <td style="background-color:#FFEEAD">@(getRate(leave_num, mengxin.Sum(x => x.group_num)))%</td>
+                            <!--未分配人数-->
+                            <td style="background-color:#FFDCC4">@mengxin.Sum(x => x.no_job_num)</td>
+                            <!--未分配率-->
+                            <td style="background-color:#FFDCC4">@(getRate(mengxin.Sum(x => x.no_job_num), mengxin.Sum(x => x.group_num)))%</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @ViewModelBag.Load(Html, new ModelBasic.AdjFloatLayer("floatlayer")
+    {
+        position = ModelBasic.AdjFloatLayer.Position.相对定位,
+        positionRelative = new ModelBasic.AdjFloatLayer.PositionRelative
+        {
+            className = $"EditAble",
+            offset_y = 40
+        },
+        emtModelBase = new ModelBasic.EmtGrid("grid")
+        {
+            items = new List<ModelBasic.EmtGrid.Item>
+            {
+                new ModelBasic.EmtGrid.Item
+                {
+                    colLength=6,
+                    emtModelBase = new ModelBasic.EmtInput($"amount_text")
+                    {
+                        //defaultValue="<%=page.amount_text.value%>",
+                        width = "120"
+                    }
+                },
+                new ModelBasic.EmtGrid.Item
+                {
+                    colLength=3,
+                    emtModelBase = new ModelBasic.EmtButton("button")
+                    {
+                        defaultValue = "提交",
+
+                        eventJsChange = new EmtFormBase.EventJsChange
+                        {
+                            eventCsAction=new EmtFormBase.EventJsChange.EventCsAction
+                            {
+                                attachPara=new Dictionary<string, object>
+                                {
+                                    {"id","<%=page.focus.attr('data-id')%>" },
+                                    {"name","<%=page.focus.attr('data-name')%>" },
+                                    {"value","<%=page.amount_text.value%>" }
+                                },
+                                resCallJs="page.floatlayer.hide();location.reload();",
+                                func=new ServiceFactory.MengxinService().FastEdit
+                            }
+                        }
+                    }
+                },
+                new ModelBasic.EmtGrid.Item
+                {
+                    colLength=3,
+                    emtModelBase = new ModelBasic.EmtButton("cancel")
+                    {
+                        defaultValue = "取消",
+
+                        eventJsChange = new EmtFormBase.EventJsChange
+                        {
+                            eventJavascript=new EventJavascript
+                            {
+                                code="page.floatlayer.hide();page.focus.css('font-weight', 'normal');"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        eventJsAnies = new List<ModelBase.EventJsAny>
+        {
+            new ModelBase.EventJsAny
+            {
+                eventName= ModelBasic.AdjFloatLayer.EventJs.show,
+                eventJavascript= new EventJavascript
+                {
+                    code="page.amount_text.set(page.focus.text())",
+                }
+            },
+            new ModelBase.EventJsAny
+            {
+                eventName=ModelBasic.AdjFloatLayer.EventJs.show,
+                eventJavascript=new EventJavascript
+                {
+                    code="page.focus.css('font-weight', 'bold')"
+                }
+            }
+        },
+        width = "300px",
+        height = "50px",
+
+    })
+
+</form>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        var layer = layui.layer;
+
+
+    });
+
+</script>
+@functions{
+    /// <summary>
+    /// 判断是否为当前档期首行
+    /// </summary>
+    /// <param name="p_jixiao_session"></param>
+    /// <param name="session"></param>
+    /// <param name="color"></param>
+    /// <returns></returns>
+    public bool isFirstRow()
+    {
+        return false;
+    }
+
+    public double getRate(double? A, double? B)
+    {
+        if (B == null || B == 0)
+        {
+            return 0;
+        }
+        else
+        {
+            return Math.Round((A * 100 / B).ToDouble(), 0);
+        }
+    }
+}

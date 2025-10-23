@@ -1,0 +1,131 @@
+﻿
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+@using System.Data;
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+<script src="~/Assets/js/layui.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.js"></script>
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+@{
+    Layout = null;
+
+    var tingList = new ServiceFactory.UserInfo.Ting().GetBaseInfos(new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter
+    {
+        attachUserType = new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType()
+        {
+            userType = ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType.UserType.运营,
+            UserSn = new UserIdentityBag().user_sn
+        }
+    }).ToModel<List<ServiceFactory.UserTable.TingZbInfoModel>>();
+    var tgDic = new Dictionary<string, string>();
+    foreach (var item in tingList)
+    {
+        tgDic.Add($"{item.ting_name}（{item.tg_sex}厅）", item.ting_sn);
+    }
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+        border: 1px solid #000 !important;
+    }
+
+    .layui-table td {
+        font-size: 15px;
+        border: 1px solid #000 !important;
+    }
+
+    .layui-table {
+        border: 1px solid #000 !important;
+        border-collapse: collapse !important;
+    }
+</style>
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>等级分类表</title>
+</head>
+
+<body>
+    <div class="layui-card" style="width:95%;margin-top:130px;margin:0 auto">
+        <div class="layui-card-header">主播等级分类统计</div>
+        <header style="color:gray">备注：A类主播包括（厅管、副管、师傅、组长、A类主播）</header>
+        @ViewModelBag.Load(Html, new ModelBasic.EmtAutoTable("autoTable")
+       {
+           group_field = "ting_sn",
+           group_name = "厅名",
+           items = tgDic,
+           table_name = $"(select * from user_info_zb where tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and status = {ModelDb.user_info_zb.status_enum.正常.ToSByte()}) as user_info_zb",
+           attrs = new List<ModelBasic.EmtAutoTable.Attr>
+            {
+                new ModelBasic.EmtAutoTable.Attr
+                {
+                    attr_text = "类型",
+                    attr_field = "full_or_part",
+                    attrVals = new List<ModelBasic.EmtAutoTable.Attr.AttrVal>
+                    {
+                        new ModelBasic.EmtAutoTable.Attr.AttrVal
+                        {
+                            text = "全职",
+                            val = "全职",
+                            isPercent = true
+                        },
+                        new ModelBasic.EmtAutoTable.Attr.AttrVal
+                        {
+                            text = "兼职",
+                            val = "兼职"
+                        }
+                    }
+                },
+                new ModelBasic.EmtAutoTable.Attr
+                {
+                    attr_text = "等级",
+                    attr_field = "level",
+                    attrVals  = new List<ModelBasic.EmtAutoTable.Attr.AttrVal>
+                    {
+                        new ModelBasic.EmtAutoTable.Attr.AttrVal
+                        {
+                            text = "A类",
+                            val = "A",
+                            isPercent = true
+                        },
+                        new ModelBasic.EmtAutoTable.Attr.AttrVal
+                        {
+                            text = "B类",
+                            val = "B",
+                            isPercent = true
+                        },
+                        new ModelBasic.EmtAutoTable.Attr.AttrVal
+                        {
+                            text = "C类",
+                            val = "C",
+                            isPercent = true
+                        }
+                    }
+                }
+            }
+       })
+    </div>
+</body>
+</html>
+<script>
+
+
+</script>

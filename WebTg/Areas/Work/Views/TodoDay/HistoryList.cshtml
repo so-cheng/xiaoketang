@@ -1,0 +1,351 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>历史待办</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+            background: #f3f3f5;
+            color: #222;
+        }
+
+        .header {
+            background: #fff;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .back-btn {
+            font-size: 24px;
+            color: #666;
+            margin-right: 16px;
+            cursor: pointer;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #222;
+            margin: 0;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .todo-list {
+            padding: 16px;
+        }
+
+        /* 日期分组标题 */
+        .date-group {
+            margin-bottom: 20px;
+        }
+
+        .date-group-title {
+            font-size: 16px;
+            color: #333;
+            margin: 20px 0 10px 4px;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-weight: 500;
+        }
+
+        .todo-item {
+            background: #fff;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: all 0.2s ease;
+        }
+
+            .todo-item:hover {
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            }
+
+        .todo-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .todo-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .todo-text {
+            font-size: 16px;
+            color: #222;
+            line-height: 1.4;
+            flex: 1;
+        }
+
+        .todo-item.completed .todo-text {
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        .todo-item.completed .todo-icon {
+            background: #e8f5e8;
+            color: #52c41a;
+        }
+
+        /* 完成按钮样式 */
+        .complete-btn {
+            background: #1aad19;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+            .complete-btn:hover {
+                background: #18a017;
+                transform: translateY(-1px);
+            }
+
+            .complete-btn:active {
+                transform: translateY(0);
+            }
+
+        /* 已完成状态样式 */
+        .completed-status {
+            color: #999;
+            font-size: 14px;
+            font-weight: 500;
+            background: #f5f5f5;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: not-allowed;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-text {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .empty-subtext {
+            font-size: 14px;
+            color: #bbb;
+        }
+
+        .add-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            background: #1aad19;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(26, 173, 25, 0.3);
+            transition: all 0.2s ease;
+        }
+
+            .add-btn:hover {
+                transform: scale(1.1);
+                box-shadow: 0 6px 16px rgba(26, 173, 25, 0.4);
+            }
+    </style>
+</head>
+<body>
+    @{ 
+        var daiban = DoMySql.FindList<ModelDb.p_work_todo>($"tg_sn = '{new UserIdentityBag().user_sn}' and tenant_id='{new DomainBasic.TenantApp().GetInfo().id}' order by c_date DESC, sort");    
+    }
+    <div class="header">
+        <div class="back-btn" onclick="window.location.href = '/Home/MobileView'">←</div>
+        <h1 class="title">历史待办</h1>
+    </div>
+
+    <div class="todo-list" id="todoList">
+        <!-- 待办项目将通过JavaScript动态生成 -->
+    </div>
+
+    <!-- 用于存储服务器数据的隐藏容器 -->
+    <div id="todoData" style="display: none;">
+        @foreach (var item in daiban)
+        {
+            <div class="todo-item-data"
+                 data-id="@item.id"
+                 data-content="@item.content"
+                data-c_date="@(item.s_date_time.HasValue ? item.s_date_time.Value.ToString("yyyy-MM-dd") : string.Empty)"
+                 data-status="@item.status">
+            </div>
+        }
+    </div>
+
+    @*<button class="add-btn" onclick="addTodo()">+</button>*@
+
+    <script>
+        // 待办事项逻辑
+        layui.use(['layer'], function () {
+            const layer = layui.layer;
+            let todos = [];
+
+            // 初始化待办数据
+            function initTodosFromServer() {
+                const dataContainer = document.getElementById('todoData');
+                const dataItems = dataContainer.getElementsByClassName('todo-item-data');
+
+                for (let i = 0; i < dataItems.length; i++) {
+                    const item = dataItems[i];
+                    const status = parseInt(item.dataset.status);
+
+                    todos.push({
+                        id: parseInt(item.dataset.id),
+                        text: item.dataset.content,
+                        c_date: item.dataset.c_date,
+                        status: status,
+                        completed: status === 1,
+                        icon: "📝"
+                    });
+                }
+
+                // 按日期排序，相同日期的待办事项放在一起
+                todos.sort((a, b) => {
+                    // 先按日期降序
+                    if (b.c_date > a.c_date) return 1;
+                    if (b.c_date < a.c_date) return -1;
+                    // 日期相同按状态排序（未完成在前）
+                    return a.status - b.status;
+                });
+            }
+
+            // 渲染待办列表
+            function renderTodos() {
+                const todoList = document.getElementById('todoList');
+
+                if (todos.length === 0) {
+                    todoList.innerHTML = `
+                                        <div class="empty-state">
+                                            <div class="empty-icon">📝</div>
+                                            <div class="empty-text">暂无待办事项</div>
+                                            <div class="empty-subtext">暂无历史待办记录</div>
+                                        </div>
+                                    `;
+                    return;
+                }
+
+                let html = '';
+                let currentDate = '';
+
+                todos.forEach(todo => {
+                    // 如果日期不同，添加新的日期分组标题
+                    if (todo.c_date !== currentDate) {
+                        currentDate = todo.c_date;
+                        html += `<div class="date-group">
+                                        <div class="date-group-title">${currentDate}</div>
+                                    </div>`;
+                    }
+
+                    // 添加待办事项（不包含单独的日期显示）
+                    html += `
+                            <div class="todo-item ${todo.completed ? 'completed' : ''}" data-id="${todo.id}">
+                                <div class="todo-content">
+                                    <div class="todo-icon">${todo.icon}</div>
+                                    <div class="todo-text">${todo.text}</div>
+                                    ${todo.status === 0 ?
+                            `<button class="complete-btn" onclick="completeTodo(${todo.id})">完成</button>` :
+                            '<div class="completed-status">已完成</div>'
+                        }
+                                </div>
+                            </div>
+                        `;
+                });
+
+                todoList.innerHTML = html;
+            }
+
+            // 标记待办为完成
+            window.completeTodo = function (id) {
+                layer.confirm('确定要标记此待办为已完成吗？', {
+                    icon: 3,
+                    title: '确认完成',
+                    btn: ['确认', '取消']
+                }, function (index) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Work/TodoDay/Complete",
+                        data: { id: id },
+                        dataType: 'json',
+                        success: function (res) {
+                            if (res.code === 0) {
+                                layer.msg(res.msg, { icon: 6, shade: 0 });
+                                const todoIndex = todos.findIndex(t => t.id === id);
+                                if (todoIndex !== -1) {
+                                    todos[todoIndex].status = 1;
+                                    todos[todoIndex].completed = true;
+                                    renderTodos();
+                                }
+                                location.href = '/Work/TodoDay/HistoryList';
+                            } else {
+                                layer.msg(res.msg || '操作失败', { icon: 5, shade: 0 });
+                            }
+                        },
+                        error: function () {
+                            layer.msg('网络错误，请重试', { icon: 5 });
+                        }
+                    });
+
+                    layer.close(index);
+                });
+            }
+
+            // 初始化
+            initTodosFromServer();
+            renderTodos();
+        });
+    </script>
+</body>
+</html>

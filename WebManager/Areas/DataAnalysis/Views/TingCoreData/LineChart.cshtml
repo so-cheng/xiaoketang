@@ -1,0 +1,200 @@
+﻿
+@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@model Services.Project.PageFactory.TableVO
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+</style>
+
+<div class="layui-input-inline">
+    <label class="layui-form-label">日期</label>
+</div>
+<div class="layui-inline">
+    <div class="layui-input-inline">
+        @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("c_date", true)
+        {
+            title = "日期",
+            defaultValue = ViewBag.c_date,
+            mold = ModelBasic.EmtTimeSelect.Mold.date_range,
+            eventJsChange = new EmtFormBase.EventJsChange
+            {
+                eventJavascript = new EventJavascript
+                {
+                    code = $"window.location.href = '/DataAnalysis/TingCoreData/LineChart?c_date=' + page.c_date.value + '&yy_user_sn={ViewBag.tg_user_sn}&type={ViewBag.type}';"
+                },
+            }
+        })
+    </div>
+</div>
+
+<div id="main_line" style="width: 100%;height:400px;"></div>
+
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/other/echarts.min.4.3.0.js"></script>
+
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main_line'));
+
+    // 指定图表的配置项和数据
+    var dateArray = @Html.Raw(Json.Encode(ViewBag.dateArray));
+
+    var zb_count = @Html.Raw(Json.Encode(ViewBag.zb_count));
+    var gear = @Html.Raw(Json.Encode(ViewBag.gear));
+    var liveHour = @Html.Raw(Json.Encode(ViewBag.liveHour));
+    var visitor = @Html.Raw(Json.Encode(ViewBag.visitor));
+    var hourly_visitors = @Html.Raw(Json.Encode(ViewBag.hourly_visitors));
+    var interactive_user_count = @Html.Raw(Json.Encode(ViewBag.interactive_user_count));
+    var paying_user_total = @Html.Raw(Json.Encode(ViewBag.paying_user_total));
+    var new_paying_user_count = @Html.Raw(Json.Encode(ViewBag.new_paying_user_count));
+    var avg_second_consumption = @Html.Raw(Json.Encode(ViewBag.avg_second_consumption));
+    var user_count_type_a = @Html.Raw(Json.Encode(ViewBag.user_count_type_a));
+    var user_count_type_b = @Html.Raw(Json.Encode(ViewBag.user_count_type_b));
+    var user_count_type_c = @Html.Raw(Json.Encode(ViewBag.user_count_type_c));
+    var user_count_type_a_last_5d = @Html.Raw(Json.Encode(ViewBag.user_count_type_a_last_5d));
+    var user_count_type_a_last_10d = @Html.Raw(Json.Encode(ViewBag.user_count_type_a_last_10d));
+    var user_count_type_a_last_15 = @Html.Raw(Json.Encode(ViewBag.user_count_type_a_last_15));
+    var old_user_count_last_3d = @Html.Raw(Json.Encode(ViewBag.old_user_count_last_3d));
+    var old_user_count_last_5d = @Html.Raw(Json.Encode(ViewBag.old_user_count_last_5d));
+    var old_user_count_last_7d = @Html.Raw(Json.Encode(ViewBag.old_user_count_last_7d));
+    var old_user_count_last_15d = @Html.Raw(Json.Encode(ViewBag.old_user_count_last_15d));
+    var totalFanTickets = @Html.Raw(Json.Encode(ViewBag.totalFanTickets));
+
+    var username = @Html.Raw(Json.Encode(ViewBag.username));
+    var type = @Html.Raw(Json.Encode(ViewBag.type));
+
+    // 指定图表的配置项和数据
+    var option = {
+        title: {
+            text: username,
+            left: '50%',
+            top: '20px',
+            textAlign: 'center'
+        },
+        tooltip: {},
+        legend: {
+            data: ['总人数', '档位数量', '开播时长', '访客数', '每小时访客数',  '互动人数', '付费用户总数', '新付费用户数', '平均二消', 'A类用户数', 'B类用户数', 'C类用户数', '近5天A类用户数', '近10天A类用户数', '近15天A类用户数', '3天内老用户数', '5天内老用户数	', '7天内老用户数', '15天内老用户数', '5天内升A类的用户数']
+        },
+        xAxis: {
+            data: dateArray
+        },
+        yAxis: {
+        },
+        series: [
+            {
+                name: '总人数',
+                type: 'line',
+                data: zb_count
+            }, {
+                name: '档位数量',
+                type: 'line',
+                data: gear
+            }, {
+                name: '开播时长',
+                type: 'line',
+                data: liveHour
+            }, {
+                name: '访客数',
+                type: 'line',
+                data: visitor
+            }, {
+                name: '每小时访客数',
+                type: 'line',
+                data: hourly_visitors
+            }, {
+                name: '互动人数',
+                type: 'line',
+                data: interactive_user_count
+            }, {
+                name: '付费用户总数',
+                type: 'line',
+                data: paying_user_total
+            }, {
+                name: '新付费用户数',
+                type: 'line',
+                data: new_paying_user_count
+            }, {
+                name: '平均二消',
+                type: 'line',
+                data: avg_second_consumption
+            }, {
+                name: 'A类用户数',
+                type: 'line',
+                data: user_count_type_a
+            }, {
+                name: 'B类用户数',
+                type: 'line',
+                data: user_count_type_b
+            }, {
+                name: 'C类用户数',
+                type: 'line',
+                data: user_count_type_c
+            }, {
+                name: '近5天A类用户数',
+                type: 'line',
+                data: user_count_type_a_last_5d
+            }, {
+                name: '近10天A类用户数',
+                type: 'line',
+                data: user_count_type_a_last_10d
+            }, {
+                name: '近15天A类用户数',
+                type: 'line',
+                data: user_count_type_a_last_15
+            }, {
+                name: '3天内老用户数',
+                type: 'line',
+                data: old_user_count_last_3d
+            }, {
+                name: '5天内老用户数',
+                type: 'line',
+                data: old_user_count_last_5d
+            }, {
+                name: '7天内老用户数',
+                type: 'line',
+                data: old_user_count_last_7d
+            }, {
+                name: '15天内老用户数',
+                type: 'line',
+                data: old_user_count_last_15d
+            }, {
+                name: '5天内升A类的用户数',
+                type: 'line',
+                data: totalFanTickets
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>

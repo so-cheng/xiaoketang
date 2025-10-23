@@ -1,0 +1,631 @@
+﻿@using System;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+@{
+    string c_time = ViewBag.c_time;
+    string endtime = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+    string starttime = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd");
+    if (c_time == "yesterday")
+    {
+        starttime = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+    }
+    else if (c_time == "week")
+    {
+        starttime = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd");
+    }
+    else if (c_time == "month")
+    {
+        starttime = DateTime.Parse(DateTime.Now.AddDays(-1).ToString("yyyy-MM-01")).ToString("yyyy-MM-dd");
+    }
+    else if (c_time == "month30")
+    {
+        starttime = DateTime.Now.AddDays(-30).ToString("yyyy-MM-01");
+    }
+}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据总览</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px 15px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            position: relative;
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .time-filter {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 8px 12px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .time-select {
+            background: transparent;
+            border: none;
+            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+            outline: none;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .time-select option {
+            background: #fff;
+            color: #333;
+            padding: 8px;
+            font-weight: 500;
+        }
+
+        .time-select:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .time-select:focus {
+            background: rgba(102, 126, 234, 0.15);
+        }
+
+        .data-overview {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .category-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 16px 20px;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @@keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .data-row {
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .data-row:hover {
+            background: #f8f9ff;
+            transform: translateX(2px);
+        }
+
+        .data-row:last-child {
+            border-bottom: none;
+        }
+
+        .data-label {
+            padding: 12px 16px;
+            font-size: 14px;
+            color: #555;
+            font-weight: 500;
+            width: 50%;
+            vertical-align: middle;
+            border-right: 1px solid #f0f0f0;
+        }
+
+        .data-value {
+            padding: 12px 16px;
+            font-size: 14px;
+            color: #333;
+            font-weight: 600;
+            text-align: right;
+            width: 50%;
+            vertical-align: middle;
+        }
+
+        .compact-row {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .compact-row:hover {
+            background: #f0f4ff;
+            transform: translateX(2px);
+        }
+
+        .compact-row:last-child {
+            border-bottom: none;
+        }
+
+        .compact-item {
+            flex: 1;
+            padding: 12px 16px;
+            border-right: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .compact-item:last-child {
+            border-right: none;
+        }
+
+        .compact-label {
+            font-size: 16px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .compact-value {
+            font-size: 16px;
+            color: #222;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .value-highlight {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .percentage {
+            color: #27ae60;
+            font-weight: 700;
+        }
+
+        .currency {
+            color: #e74c3c;
+            font-weight: 700;
+        }
+
+        .count {
+            color: #2980b9;
+            font-weight: 700;
+        }
+
+        .category-section {
+            position: relative;
+        }
+
+        .category-section:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            right: 20px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #e0e0e0, transparent);
+        }
+
+        .stats-summary {
+            display: flex;
+            justify-content: space-around;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .summary-item {
+            text-align: center;
+        }
+
+        .summary-number {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .summary-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .refresh-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .refresh-btn:hover {
+            transform: scale(1.1) rotate(180deg);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @@keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+           @@media (max-width: 480px) {
+                body {
+                    padding: 15px 10px;
+                }
+
+                .header h1 {
+                    font-size: 24px;
+                }
+
+                .time-filter {
+                    padding: 6px 10px;
+                }
+
+                .time-select {
+                    font-size: 13px;
+                    padding: 3px 6px;
+                }
+
+                .compact-item {
+                    padding: 10px 12px;
+                }
+
+                .compact-label, .compact-value {
+                    font-size: 15px;
+                }
+
+                .category-header {
+                    padding: 14px 16px;
+                    font-size: 15px;
+                }
+
+                .stats-summary {
+                    padding: 16px;
+                }
+
+                .summary-number {
+                    font-size: 20px;
+                }
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h3>君子阁</h3>
+            <div class="time-filter">
+                @ViewModelBag.Load(Html, new ModelBasic.EmtSelect("c_time")
+                   {
+                       title = "日期",
+                       className = "time-select",
+                       defaultValue = c_time,
+                       options = new Dictionary<string, string>
+                                         {
+                                             {"昨天","yesterday" },
+                                             {"近7天","week" },
+                                             {"本月","month" },
+                                             {"近30天","month30" }
+                                         },
+                       eventJsChange = new EmtFormBase.EventJsChange
+                       {
+                           eventJavascript = new EventJavascript
+                           {
+                               code = "window.location.href = '/DataAnalysis/TingCoreData/ItemM?c_time=' + page.c_time.value&ting_sn=" + ViewBag.ting_sn + ";"
+                           }
+                       }
+                   });
+            </div>
+        </div>
+        @{
+            var sum = DoMySql.FindField<ModelDb.dataanalysis_coredata_ting>("sum(visitor),sum(new_paying_user_count),AVG(entry_rate),AVG(live_rate),sum(totalFanTickets),AVG(avg_second_consumption),sum(user_count_type_a),sum(user_count_type_b),sum(user_count_type_c)", $"yy_user_sn = '{new UserIdentityBag().user_sn}' and tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and ting_sn='{ViewBag.ting_sn}' and c_date>='{starttime}' and c_date<='{endtime}'");
+        }
+            <div class="stats-summary">
+                <div class="summary-item">
+                    <div class="summary-number">@sum[0].ToInt()</div>
+                    <div class="summary-label">总访客</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-number">@sum[1].ToInt()</div>
+                    <div class="summary-label">新付</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-number">10</div>
+                    <div class="summary-label">用户分类</div>
+                </div>
+            </div>
+
+            <div class="data-overview">
+                <div class="data-table">
+                    <!-- 流量数据 -->
+                    <div class="category-section">
+                        <div class="category-header">📊 流量</div>
+                    </div>
+                    <div class="compact-row">
+                        <div class="compact-item">
+                            <span class="compact-label">访客</span>
+                            <span class="compact-value count">@sum[0].ToInt()</span>
+                        </div>
+                        <div class="compact-item">
+                            <span class="compact-label">直播占比</span>
+                            <span class="compact-value percentage">%</span>
+                        </div>
+                    </div>
+                    <div class="compact-row">
+                        <div class="compact-item">
+                            <span class="compact-label">进入率</span>
+                            <span class="compact-value percentage">@sum[2].ToDecimal().ToFixed(2)%</span>
+                        </div>
+                        <div class="compact-item">
+                            <span class="compact-label">直播推荐</span>
+                            <span class="compact-value percentage">@sum[3].ToDecimal().ToFixed(2)%</span>
+                        </div>
+                    </div>
+                    <div class="compact-row">
+                        <div class="compact-item">
+                            <span class="compact-label">音浪</span>
+                            <span class="compact-value currency">@sum[4].ToInt()</span>
+                        </div>
+                        <div class="compact-item">
+                            <!-- 空占位 -->
+                        </div>
+                    </div>
+
+                    <!-- 数据统计 -->
+                    <div class="category-section">
+                        <div class="category-header">📈 数据</div>
+                    </div>
+                    <div class="compact-row">
+                        <div class="compact-item">
+                            <span class="compact-label">新付</span>
+                            <span class="compact-value count">@sum[1].ToInt()</span>
+                        </div>
+                        <div class="compact-item">
+                            <span class="compact-label">新付每小时</span>
+                            <span class="compact-value count"></span>
+                        </div>
+                    </div>
+                    <div class="compact-row">
+                        <div class="compact-item">
+                            <span class="compact-label">拉新</span>
+                            <span class="compact-value count"></span>
+                        </div>
+                        <div class="compact-item">
+                            <span class="compact-label">二消</span>
+                            <span class="compact-value currency">@sum[5].ToInt()</span>
+                        </div>
+                    </div>
+                    <div class="compact-row">
+                        <div class="compact-item">
+                            <span class="compact-label">三关</span>
+                            <span class="compact-value count"></span>
+                        </div>
+                        <div class="compact-item">
+                            <span class="compact-label">拉新音浪占比</span>
+                            <span class="compact-value percentage"></span>
+                        </div>
+                    </div>
+
+                    <!-- 用户分类 -->
+                    <div class="category-section">
+                        <div class="category-header">👥 用户</div>
+                    </div>
+                    <div class="compact-row">
+                        <div class="compact-item">
+                            <span class="compact-label">A类数</span>
+                            <span class="compact-value count">@sum[6].ToInt()</span>
+                        </div>
+                        <div class="compact-item">
+                            <span class="compact-label">B类数</span>
+                            <span class="compact-value count">@sum[7].ToInt()</span>
+                        </div>
+                    </div>
+                    <div class="compact-row">
+                        <div class="compact-item">
+                            <span class="compact-label">C类数</span>
+                            <span class="compact-value count">@sum[8].ToInt()</span>
+                        </div>
+                        <div class="compact-item">
+                            <span class="compact-label">新付数</span>
+                            <span class="compact-value count">@sum[1].ToInt()</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <div>数据加载中...</div>
+            </div>
+        </div>
+
+    <button class="refresh-btn" onclick="refreshData()" title="刷新数据">🔄</button>
+
+    <script>
+        // 模拟数据刷新
+        function refreshData() {
+            const loading = document.getElementById('loading');
+            const refreshBtn = document.querySelector('.refresh-btn');
+
+            // 显示加载状态
+            loading.classList.add('show');
+            refreshBtn.style.transform = 'scale(0.9)';
+            refreshBtn.disabled = true;
+
+            // 模拟数据刷新
+            setTimeout(() => {
+                // 随机更新一些数据 
+                window.location.reload();
+
+                // 隐藏加载状态
+                loading.classList.remove('show');
+                refreshBtn.style.transform = 'scale(1)';
+                refreshBtn.disabled = false;
+
+                // 显示刷新成功提示
+                showNotification('数据已刷新', 'success');
+            }, 1500);
+        }
+          
+        // 显示通知
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: ${type === 'success' ? '#27ae60' : type === 'error' ? '#e74c3c' : '#667eea'};
+                color: white;
+                padding: 12px 24px;
+                border-radius: 25px;
+                font-size: 14px;
+                font-weight: 500;
+                z-index: 1001;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                animation: slideDown 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideUp 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 2000);
+        }
+
+        // 添加CSS动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @@keyframes slideDown {
+                from { transform: translateX(-50%) translateY(-20px); opacity: 0; }
+                to { transform: translateX(-50%) translateY(0); opacity: 1; }
+            }
+            @@keyframes slideUp {
+                from { transform: translateX(-50%) translateY(0); opacity: 1; }
+                to { transform: translateX(-50%) translateY(-20px); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style); 
+ 
+
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 设置默认选中昨天
+            document.getElementById('timeFilter').value = 'yesterday';
+
+            // 添加数据行的进入动画
+            const compactRows = document.querySelectorAll('.compact-row');
+            compactRows.forEach((row, index) => {
+                row.style.opacity = '0';
+                row.style.transform = 'translateY(20px)';
+
+                setTimeout(() => {
+                    row.style.transition = 'all 0.5s ease';
+                    row.style.opacity = '1';
+                    row.style.transform = 'translateY(0)';
+                }, index * 50);
+            });
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,208 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>部门列表</title>
+    <link href="/Assets/layui/css/layui.css" rel="stylesheet" />
+    <link href="/Assets/css/animate.min.css" rel="stylesheet" />
+    <link href="/Assets/css/iconfont.css" rel="stylesheet" />
+    <style>
+        .layui-table {
+            width: 100% !important;
+        }
+
+        .zadmin-blue {
+            color: #1E90FF;
+        }
+    </style>
+</head>
+<body class="animated fadeIn">
+    <div class="page-loading">
+        <div class="rubik-loader"></div>
+    </div>
+    <div style="height: 100%">
+        <div style="height: 100%">
+            <div style="padding: 20px; background-color: #F2F2F2;height:100%;">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md3">
+                        <div class="layui-card">
+                            <div class="layui-card-header"><a href="javascropt:void();" class="topMenus">部门树</a></div>
+                            <div class="layui-card-body" id="toolbarDiv">
+                                <ul id="organizeTree" class="dtree" data-id="0"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md9">
+                        <div class="layui-card">
+                            <div class="layui-card-header" id="card-header">部门列表</div>
+                            <div class="layui-card-body">
+                                <table class="layui-hide" id="organize-table"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/html" id="toolbar">
+        <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" lay-event="add">
+            <i class="zadmin-icon zadmin-icon-xinzeng zadmin-oper-area"></i>
+            新增
+        </button>
+    </script>
+    <script type="text/html" id="column-toolbar">
+        <button lay-event="edit" class="layui-btn layui-btn-xs" type="button">
+            <i class="zadmin-icon zadmin-icon-edit-square zadmin-oper-area"></i>
+            编辑
+        </button>
+        <button lay-event="del" class="layui-btn layui-btn-xs layui-btn-danger" type="button">
+            <i class="zadmin-icon zadmin-icon-delete zadmin-oper-area"></i>
+            删除
+        </button>
+    </script>
+    <script src="/Assets/js/jquery.js"></script>
+    <script src="/Assets/layui/layui.js"></script>
+    <script src="~/Assets/js/common.js"></script>
+    <script>
+        var parentOrganizeId = 0;
+
+        layui.config({
+            base: '/Assets/layui/extend/'
+        }).use(['jquery', 'dtree', 'layer', 'table', 'element', 'tablePlug'], function () {
+            var dtree = layui.dtree;
+            var layer = layui.layer;
+            var table = layui.table;
+            var tablePlug = layui.tablePlug;
+
+            tablePlug.smartReload.enable(true);
+            var DTree = dtree.render({
+                elem: "#organizeTree",
+                url: "/Config/Organize/GetRoot",
+                dataStyle: "layuiStyle",
+                initLevel: 5,   // 初始打开节点级别
+                method: "GET",
+                dot: false,     // 圆点是否显示
+                toolbar: false,  // 右键工具栏
+                menubar: false,  // 树上方工具栏, 展开、收缩、刷新、搜索等
+                toolbarShow: [],
+                toolbarScroll: "#toolbarDiv",
+                response: {
+                    statusCode: 0,
+                    message: "msg",
+                    treeId: "id",
+                    parentId: "parentId",
+                    title: "name"
+                }
+            });
+
+            table.render({
+                elem: '#organize-table'
+                , url: '/Config/Organize/GetRoot'
+                , where: {
+                    parentId: 0
+                }
+                , cellMinWidth: 80
+                , toolbar: '#toolbar'
+                , defaultToolbar: []
+                , smartReloadModel: true
+                , cols: [
+                    [
+                        { type: 'numbers', title: '序号', align: 'center', width: "5%" }
+                        , { field: 'id', title: 'ID', align: 'center', hide: true }
+                        , { field: 'name', title: '部门名称', align: 'center', width: "15%" }
+                        , { title: '操作', align: 'center', toolbar: '#column-toolbar' }
+                    ]
+                ]
+            });
+
+            dtree.on("node('organizeTree')", function (obj) {
+                reloadTable(obj.param.nodeId, "[" + obj.param.context + "]的子部门");
+            });
+
+            table.on('toolbar', function (obj) {
+                var event = obj.event;
+                if (event === 'add') {
+                    add(parentOrganizeId);
+                }
+            });
+
+            table.on('tool', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'edit') {
+                    edit(data.id);
+                } else if (obj.event === 'del') {
+                    del(data.id);
+                }
+            });
+
+            $(".topMenus").on("click", function () {
+                reloadTable(0, "部门列表");
+            });
+
+            // 重新加载列表
+            function reloadTable(parentId, text) {
+                table.reload('organize-table', {
+                    where: {
+                        parentId: parentId
+                    }
+                });
+                parentOrganizeId = parentId;
+                $("#card-header").html(text);
+            }
+
+            function refresh() {
+                table.reload("organize-table");
+                DTree.menubarMethod().refreshTree();
+            }
+
+            function del(id) {
+                layer.confirm("你确定删除此部门吗？", { icon: 3, title: '提示' }, function (index) {
+                    $.post('/Config/Organize/Delete?id=' + id, function (data) {
+                        if (data.code == 0) {
+                            layer.msg(data.msg, { icon: 6 });
+                            refresh();
+                        } else {
+                            layer.msg(data.msg, { icon: 5 });
+                        }
+                    }, 'json');
+                }, function (index) {
+                    layer.close(index);
+                });
+            }
+
+            function add(parentId) {
+                layer.open({
+                    content: "/Config/Organize/Add?parentId=" + parentId,
+                    title: "添加子部门",
+                    area: ['40%', '30%'],
+                    type: 2,
+                    maxmin: true,
+                    //shadeClose: true,
+                    end: function () {
+                        //refresh();
+                    }
+                });
+            }
+
+            function edit(id) {
+                layer.open({
+                    content: "/Config/Organize/Edit?id=" + id,
+                    title: "编辑",
+                    area: ['40%', '30%'],
+                    type: 2,
+                    maxmin: true,
+                    //shadeClose: true,
+                    end: function () {
+                        //refresh();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

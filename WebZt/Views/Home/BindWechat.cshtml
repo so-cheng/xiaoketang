@@ -1,0 +1,53 @@
+﻿@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+
+<!-- 页面通用母版 -->
+@{ Layout = ModelBasic.PageModel.GetLayout(); }
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Page</title>
+    <style>
+        .layui-container {
+            width: 80%; /* 宽度占视口的80% */
+            text-align: center; /* 使内容水平居中 */
+        }
+    </style>
+</head>
+<body>
+    @{
+        string Host = System.Web.HttpContext.Current.Request.Url.Host;
+        string link = $"http://{Host}/Home/WechatRegist";
+    }
+    <div class="layui-container">
+        <div>
+            <h1>绑定微信公众号</h1><br />
+        </div>
+        <span>步骤一：关注千广娱乐公众号</span><br />
+        <img src="/Assets/images/qgcm_gzh.jpg" width="200px" height="200px"></td>
+        <div>
+            <br /><br /><br /><br />
+        </div>
+        <div class="img">
+            <span>步骤二：扫码绑定微信号</span>
+            <!-- 分享二维码按钮 -->
+            @ViewModelBag.Load(Html, new ModelBasic.EmtQRCode("qrcode")
+            {
+                title = "分享二维码",
+                type = ModelBasic.EmtQRCode.Type.QrCode,
+                defaultValue = link,
+                width = "200px",
+                height = "200px",
+            })
+        </div>
+    </div>
+</body>
+</html>

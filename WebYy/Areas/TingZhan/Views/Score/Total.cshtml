@@ -1,0 +1,255 @@
+﻿
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+    var p_tingzhan = new ModelDb.p_tingzhan();
+    if (ViewBag.id > 0)
+    {
+        p_tingzhan = DoMySql.FindEntity<ModelDb.p_tingzhan>($"id = {ViewBag.id}", false);
+    }
+    else
+    {
+        p_tingzhan = new ServiceFactory.TingZhanService().getNewTingzhan();
+    }
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-collapse: collapse;
+        border-style: solid;
+        border-width: 1px;
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    .layui-table td {
+        font-size: 15px;
+        min-width: 50px;
+    }
+
+    /* 表头固定样式 */
+    .layui-table {
+        position: relative;
+    }
+
+        .layui-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: white;
+        }
+
+            .layui-table thead tr:first-child {
+                position: sticky;
+                top: 0;
+                z-index: 11;
+                background-color: #FFF3CA;
+            }
+
+            .layui-table thead tr:nth-child(2) {
+                position: sticky;
+                top: 50px; /* 第一行表头的高度 */
+                z-index: 11;
+                background-color: #FCE4D3;
+            }
+
+            /* 确保表头有足够的背景色 */
+            .layui-table thead th {
+                background-color: inherit;
+            }
+</style>
+<!-- 以下书写自己的页面内容代码 -->
+<form class="layui-form">
+    <div class="layui-row">
+        <div class="layui-col-md12" style="text-align: center; background-color: #ffffff; padding: 8px;">
+            <label class="layui-input-inline" style="font-size:18px; font-weight:bold; padding:10px;">厅战时间：@p_tingzhan.c_date.ToDate().ToString("yyyy-MM-dd")</label>
+            <blockquote class="layui-elem-quote news_search">
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <label class="layui-form-label">直播厅</label>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            @{
+                                var option = new Dictionary<string, string>();
+                                foreach (var item in new ServiceFactory.UserInfo.Ting().GetBaseInfosForKv(new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter
+                                {
+                                    attachUserType = new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType()
+                                    {
+                                        userType = ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType.UserType.运营,
+                                        UserSn = new UserIdentityBag().user_sn
+                                    }
+                                }))
+                                {
+                                    option.Add(item.Key, item.Value);
+                                }
+                            }
+                            @ViewModelBag.Load(Html, new ModelBasic.EmtSelect("ting_sn")
+                            {
+                                placeholder = "请选择直播厅",
+                                options = option,
+                                defaultValue = ViewBag.ting_sn,
+                                eventJsChange = new EmtFormBase.EventJsChange
+                                {
+                                    eventJavascript = new EventJavascript
+                                    {
+                                        code = $"window.location.href = '/TingZhan/Score/Total?ting_sn='+page.ting_sn.value+'&id='+{ViewBag.id};"
+                                    },
+                                }
+                            })
+                        </div>
+                    </div>
+                </div>
+            </blockquote>
+        </div>
+        @if (ViewBag.targets.Count > 0)
+        {
+            <div class="layui-card" style="width:95%;top:30px;margin:0 auto">
+                <table class="layui-table" style="width: 100%; ">
+                    <thead>
+                        <tr style="background-color: #FCE4D3">
+                            @{
+                                int maxSum = 0;
+                                foreach (var item in ViewBag.targets)
+                                {
+                                    if (maxSum < Convert.ToInt32(item.ting_sum)) { maxSum = Convert.ToInt32(item.ting_sum); }
+                                    <td style="text-align: center" colspan="5">@(Convert.ToInt32(item.amont))W档</td>
+                                }
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            for (var i = 0; i < maxSum; i++)
+                            {
+                                <tr style="background-color: #E1EBF5 ">
+                                    @{
+                                        foreach (var item in ViewBag.targets)
+                                        {
+                                            var list = DoMySql.FindList<ModelDb.p_tingzhan_mate>($@"tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and tingzhan_id = {p_tingzhan.id} and (ting_sn1 in {new ServiceFactory.UserInfo.Ting().GetBaseInfosForSql(new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter {
+                                                attachUserType = new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType()
+                                                {
+                                                    userType = ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType.UserType.运营,
+                                                    UserSn = new UserIdentityBag().user_sn
+                                                }
+                                            })} or ting_sn2 in {new ServiceFactory.UserInfo.Ting().GetBaseInfosForSql(new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter {
+                                                attachUserType = new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType()
+                                                {
+                                                    userType = ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType.UserType.运营,
+                                                    UserSn = new UserIdentityBag().user_sn
+                                                }
+                                            })}) and amont = {@item.amont} order by id");
+                                            if (list.Count > i)
+                                            {
+                                                // 获取厅信息
+                                                var ting1 = new ServiceFactory.UserInfo.Ting().GetTingBySn(list[i].tg_user_sn1);
+                                                var ting2 = new ServiceFactory.UserInfo.Ting().GetTingBySn(list[i].tg_user_sn2);
+
+                                                <td style="text-align: center;">@ting1.ting_name<br />（@(new ServiceFactory.UserInfo.Yy().GetInfoByUserSn(ting1.yy_user_sn).name)）</td>
+                                                <td style="text-align: center;">
+                                                    @(list[i].score_1.ToDecimal())W<br />
+                                                    @if (list[i].score_1.ToDecimal() > list[i].score_2.ToDecimal())
+                                                    {
+                                                        <span style="color:red">（胜）</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span style="color:green">（负）</span>
+                                                    }
+                                                </td>
+                                                <td style="text-align: center;">@ting2.ting_name<br />（@(new ServiceFactory.UserInfo.Yy().GetInfoByUserSn(ting2.yy_user_sn).name)）</td>
+                                                <td style="text-align: center;">
+                                                    @(list[i].score_2.ToDecimal())W<br />
+                                                    @if (list[i].score_2.ToDecimal() > list[i].score_1.ToDecimal())
+                                                    {
+                                                        <span style="color:red">（胜）</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span style="color:green">（负）</span>
+                                                    }
+                                                </td>
+                                                <td style="text-align: left;"><div style="width:150px;">@(list[i].cf_content)</div></td>
+                                            }
+                                            else
+                                            {
+                                                <td style="text-align: center;"></td>
+                                                <td style="text-align: center;"></td>
+                                                <td style="text-align: center;"></td>
+                                                <td style="text-align: center;"></td>
+                                                <td style="text-align: center;"></td>
+                                            }
+                                        }
+                                    }
+                                </tr>
+                            }
+                            decimal total = 0;
+                            <tr style="background-color: #E3F2D9 ">
+                                @{
+                                    foreach (var item in ViewBag.targets)
+                                    {
+                                        decimal sum = 0;
+                                        var list = DoMySql.FindList<ModelDb.p_tingzhan_mate>($@"tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and tingzhan_id = {p_tingzhan.id} and (ting_sn1 in {new ServiceFactory.UserInfo.Ting().GetBaseInfosForSql(new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter {
+                                            attachUserType = new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType()
+                                            {
+                                                userType = ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType.UserType.运营,
+                                                UserSn = new UserIdentityBag().user_sn
+                                            }
+                                        })} or ting_sn2 in {new ServiceFactory.UserInfo.Ting().GetBaseInfosForSql(new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter {
+                                            attachUserType = new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType()
+                                            {
+                                                userType = ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType.UserType.运营,
+                                                UserSn = new UserIdentityBag().user_sn
+                                            }
+                                        })}) and amont = {@item.amont} order by id");
+                                        foreach (var p_tingzhan_mate in list)
+                                        {
+                                            sum = sum + p_tingzhan_mate.score_1.ToDecimal() + p_tingzhan_mate.score_2.ToDecimal();
+                                            total += sum;
+                                        }
+                                        <td style="text-align: center;">合计</td>
+                                        <td style="text-align: center;" colspan="4">@(sum)W</td>
+                                    }
+                                }
+                            </tr>
+                            <tr style="background-color: #E3F2D9 ">
+                                <td style="text-align: center;">合计</td>
+                                <td style="text-align: center;" colspan="4">@(total)W</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+    @if (ViewBag.targets.Count == 0)
+    {
+        <div class="layui-card-body layui-text">
+            <blockquote class="layui-elem-quote" style="border: none;">
+                <p style="color: orangered;">无对战数据</p>
+            </blockquote>
+        </div>
+    }
+</form>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        form.render('select'); // 仅渲染 select 元素
+    });
+</script>

@@ -1,0 +1,80 @@
+﻿@{
+    Layout = null;
+}
+
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.ModelDbs;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Web;
+@using System.Web.Mvc;
+@using WeiCode.Services;
+
+@using WeiCode.ModelDbs;
+@using Services.Project;
+@using WeiCode.Domain;
+@using WeiCode.ModelDbs;
+@using WeiCode.Models;
+@using WeiCode.Domain;
+
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 14px;
+    }
+
+    .layui-table td {
+        font-size: 14px;
+    }
+</style>
+
+<style>
+    .layuiadmin-big-font {
+        font-weight: bold;
+        font-size: 42px;
+        margin: 10px;
+    }
+</style>
+
+@{
+
+    ///今日上报
+    var payable_today = DoMySql.FindField<ModelDb.user_base>("COUNT(id)", $"user_sn in(select t_user_sn from user_relation where relation_type_id='1' and f_user_sn in {new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.运营邀厅管, new UserIdentityBag().user_sn)}) and user_sn not in(select zb_user_sn from p_jixiao_vacation where c_date='{DateTime.Today.ToDate()}')");
+
+    var real_today = DoMySql.FindField<ModelDb.p_jixiao_day>("COUNT(id)", $"tg_user_sn in {new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.运营邀厅管, new UserIdentityBag().user_sn)} and c_date = '{DateTime.Today}'");
+
+    ///昨日上报
+    var payable_yesterday = DoMySql.FindField<ModelDb.user_base>("COUNT(id)", $"user_sn in(select t_user_sn from user_relation where relation_type_id='1' and f_user_sn in {new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.运营邀厅管, new UserIdentityBag().user_sn)}) and create_time<'{DateTime.Today}' and user_sn not in(select zb_user_sn from p_jixiao_vacation where c_date='{DateTime.Today.AddDays(-1).ToDate()}')");
+
+    var real_yesterday = DoMySql.FindField<ModelDb.p_jixiao_day>("COUNT(id)", $"tg_user_sn in {new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.运营邀厅管, new UserIdentityBag().user_sn)} and c_date = '{DateTime.Today.AddDays(-1)}'");
+
+}
+
+<div class="layui-card">
+    <div class="layui-card-header">快捷设置</div>
+
+    <div class="layui-card-body" style="background-color:#F6F6F6">
+        <div class="layui-row layui-col-space15">
+
+            <div class="layui-col-sm12 layui-col-md12">
+                <div class="layui-card">
+                    <iframe src="/tgmanage/report/settype?is_show=0" style="width:100%;height:600px;border:none;"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

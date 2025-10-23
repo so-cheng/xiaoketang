@@ -1,0 +1,235 @@
+﻿
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+<script src="~/Assets/js/layui.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.js"></script>
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+        border: 1px solid #000 !important;
+    }
+
+    .layui-table td {
+        font-size: 15px;
+        border: 1px solid #000 !important;
+    }
+
+    .layui-table {
+        border: 1px solid #000 !important;
+        border-collapse: collapse !important;
+    }
+</style>
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>主播二消音浪排名</title>
+</head>
+@{
+    string c_date_e = ViewBag.c_date_e;
+    string c_date_s = ViewBag.c_date_s;
+    string dateRange = c_date_s + " ~ " + c_date_e;
+    string option = ViewBag.option;
+}
+<body>
+    <div class="layui-card" style="width:95%;margin-top:130px;margin:0 auto">
+        <blockquote class="layui-elem-quote news_search">
+            <div class="layui-inline">
+                <form class="layui-form">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">日期范围</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="dateRange" name="dateRange" value="@dateRange" placeholder="选择日期范围">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                <div class="layui-input-inline">
+
+                    @ViewModelBag.Load(Html, new ModelBasic.EmtSelect("option")
+               {
+                   placeholder = "按选择排序",
+                   options = new Dictionary<string, string>
+                        {
+                            {"主播每日平均二消音浪","1"},
+                            {"主播平均二消音浪（用户）","0"},
+                        },
+                   defaultValue = ViewBag.option,
+                   eventJsChange = new EmtFormBase.EventJsChange
+                   {
+                       eventJavascript = new EventJavascript
+                       {
+                           code = "window.location.href = '/jixiao/rank/ZbAmount2RankTable?dateRange=' + page.dateRange.value+'&option='+page.option.value;"
+                       },
+                   }
+               })
+                </div>
+            </div>
+                    <button type="submit" class="layui-btn search_btn">查询</button>
+                </form>
+
+            </div>
+            <a style="color:blue;float:right;font-size:17px;" href="javascript:win_pop_iframe('规则说明', '/jixiao/rank/RuleDefinition', 800,800);">排名规则说明</a>
+
+            
+        </blockquote>
+        <div class="layui-tab layui-tab-brief" lay-filter="test-hash">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                <ul class="layui-tab-title">
+                    <li style="padding: 0 14px;">
+                        <a href="/jixiao/rank/ZbNewNumRankTable?dateRange=@dateRange">主播平均拉新个数</a>
+                    </li>
+                    <li style="padding: 0 14px;">
+                        <a href="/jixiao/rank/ZbNum2RankTable?dateRange=@dateRange">主播平均二消个数</a>
+                    </li>
+                    <li class="layui-this" lay-id="11">主播平均二消音浪</li>
+                    <li style="padding: 0 14px;">
+                        <a href="/jixiao/rank/ZbContactNumRankTable?dateRange=@dateRange">主播平均建联数</a>
+                    </li>
+
+                </ul>
+            </div>
+            <div class="layui-tab-content">
+                @{
+                    var days = (c_date_e.ToDate() - c_date_s.ToDate()).TotalDays.ToInt() + 1;
+                    var jixiaoDayList = DoMySql.FindList<ModelDb.p_jixiao_day>($"yy_user_sn ='{new UserIdentityBag().user_sn}' and DATE(c_date) between '{c_date_s}' and '{c_date_e}'");
+                    var zbList = new ServiceFactory.UserInfo.Yy().YyGetZbInfo(new UserIdentityBag().user_sn);
+                    var list = new List<ServiceFactory.Jixiao.ZbJixiaoRankModel>();
+                    List<ModelDb.p_jixiao_day> jixiaoDays = new List<ModelDb.p_jixiao_day>();
+                    int num2 = 0;
+                    foreach (var item in zbList)
+                    {
+                        ServiceFactory.Jixiao.ZbJixiaoRankModel zb = new ServiceFactory.Jixiao.ZbJixiaoRankModel();
+                        zb.user_sn = item.user_sn;
+                        zb.name = item.name;
+                        jixiaoDays = jixiaoDayList.Where(x => x.zb_user_sn == zb.user_sn).ToList();
+                        zb.zbCount = jixiaoDays.Count();
+                        if (zb.zbCount.ToInt() > 0)
+                        {
+                            zb.jixiaoSum = jixiaoDays.Sum(c => c.amount_2).ToInt();
+                            zb.average = zb.jixiaoSum.ToDouble() / zb.zbCount.ToDouble();
+                            num2 = jixiaoDays.Sum(c => c.num_2).ToInt();
+                            if (num2 > 0)
+                            {
+                                zb.yhAmount2_average = zb.jixiaoSum.ToDouble() / num2.ToDouble();
+                            }
+                            list.Add(zb);
+                        }
+                    }
+
+
+                    <table class="layui-table" style="text-align:center;" id="table" name="table" width="100%">
+                        <colgroup>
+
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                        </colgroup>
+                        <thead>
+                            <tr style="background-color: #DAE3F4; font-weight: 700;">
+
+                                <th> 主播</th>
+                                <th> 所属厅</th>
+                                <th> 总二消音浪</th>
+                                <th> 主播每日平均二消音浪值</th>
+                                <th> 主播平均二消音浪（用户）</th>
+                                <th> 主播排名</th>
+                            </tr>
+                            @{
+                                int rank = 1;
+                                <tr style="background-color: #FBE6D5">
+                                    @{
+                                        var orderList = new List<ServiceFactory.Jixiao.ZbJixiaoRankModel>();
+                                        if (option == "1")
+                                        {
+                                            orderList = list.OrderByDescending(c => c.average).ToList();
+                                        }
+                                        else
+                                        {
+                                            orderList = list.OrderByDescending(c => c.yhAmount2_average).ToList();
+                                        }
+                                    }
+                                    @foreach (var zb in orderList)
+                                    {
+                                    @:</tr><tr style="background-color: #FBE6D5">
+                                        <td>@zb.name</td>
+                                        <td>@zb.tg_name</td>
+                                        <td>@zb.jixiaoSum</td>
+                                        <td>@zb.average.ToDouble().ToString("0.00")</td>
+                                        <td>@zb.yhAmount2_average.ToDouble().ToString("0.00")</td>
+                                        switch (rank)
+                                        {
+                                            case 1:
+                                                <td><img src="/Assets/images/rank1.png" width="30" height="30"></td>
+                                                break;
+                                            case 2:
+                                                <td><img src="/Assets/images/rank2.png" width="30" height="30"></td>
+                                                break;
+                                            case 3:
+                                                <td><img src="/Assets/images/rank3.png" width="30" height="30"></td>
+                                                break;
+                                            case 4:
+                                                <td><img src="/Assets/images/rank4.png" width="30" height="30"></td>
+                                                break;
+                                            case 5:
+                                                <td><img src="/Assets/images/rank5.png" width="30" height="30"></td>
+                                                break;
+                                            default:
+                                                <td>@rank</td>
+                                                break;
+                                        }
+                                        rank++;
+                                    }
+                                </tr>
+                            }
+                        </thead>
+                    </table>
+
+                }
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+@ViewModelBag.Load(Html, new ModelBasic.AdjScreenshot("screenshot")
+{
+    elem = "table"
+})
+<script>
+    //设置时间筛选的数据格式
+    layui.use(['form', 'laydate'], function () {
+        var form = layui.form;
+        var laydate = layui.laydate;
+
+        //日期时间段选择
+        laydate.render({
+            elem: '#dateRange'
+            , range: '~'
+        });
+    });
+
+</script>

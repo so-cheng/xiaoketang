@@ -1,0 +1,910 @@
+﻿
+@using System.Reflection;
+
+@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+    DateTime today = DateTime.Parse(ViewBag.c_date.ToString());
+}
+
+
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+
+
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/other/jquery.tablesort.js"></script>
+
+<script type="text/javascript">
+
+    $(function () {
+        $('table').tablesort().data('tablesort');
+    })
+</script>
+
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-collapse: collapse;
+        border-style: solid;
+        border-width: 1px;
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+        color: black;
+    }
+
+    .layui-table td {
+        font-size: 15px;
+        color: black;
+    }
+</style>
+
+
+
+@{
+    ModelDb.p_cencai_setting setting = DoMySql.FindEntity<ModelDb.p_cencai_setting>($"user_sn='{new UserIdentityBag().user_sn}'", false);
+
+    string tg_user_sn = ViewBag.tg_user_sn;
+    string yy_user_sn = ViewBag.yy_user_sn;
+    string c_date = ViewBag.c_date;
+    int round = ViewBag.round;
+
+    var CencaiService = new ServiceFactory.Cencai.CencaiService();
+}
+
+<div class="forms">
+    <blockquote class="layui-elem-quote news_search">
+
+        <div class="layui-inline">
+            <form class="layui-form">
+                <div class="layui-col-xs12 Line1">
+                    <div class="layui-input-inline">
+                        <label class="layui-form-label">所属运营</label>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            @ViewModelBag.Load(Html, new ModelBasic.EmtSelect("yy_user_sn")
+                            {
+                                placeholder = "请选择运营",
+                                options = DomainBasicStatic.DoMySql.FindKvList<ModelDb.user_base>($"user_type_id='{new DomainBasic.UserTypeApp().GetInfoByCode("yyer").id}' and tenant_id='{new DomainBasic.TenantApp().GetInfo().id}' and status!=9", "username,user_sn"),
+                                defaultValue = ViewBag.yy_user_sn,
+                                eventJsChange = new EmtFormBase.EventJsChange
+                                {
+                                    eventJavascript = new EventJavascript
+                                    {
+                                        code = "window.location.href = '/cencai/zb/list?yy_user_sn=' + page.yy_user_sn.value + '&c_date=' + page.c_date.value + '&tg_user_sn=' + page.tg_user_sn.value"
+                                    },
+                                }
+                            })
+                        </div>
+                    </div>
+
+                    <div class="layui-input-inline">
+                        <label class="layui-form-label">所属厅管</label>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            @ViewModelBag.Load(Html, new ModelBasic.EmtSelect("tg_user_sn")
+                            {
+                                placeholder = "请选择厅管",
+                                options = new ServiceFactory.UserInfo.Tg().GetTreeOptionDic(ViewBag.yy_user_sn),
+                                defaultValue = ViewBag.tg_user_sn,
+                                eventJsChange = new EmtFormBase.EventJsChange
+                                {
+                                    eventJavascript = new EventJavascript
+                                    {
+                                        code = "window.location.href = '/cencai/zb/list?yy_user_sn=' + page.yy_user_sn.value + '&c_date=' + page.c_date.value + '&tg_user_sn=' + page.tg_user_sn.value"
+                                    },
+                                }
+                            })
+                        </div>
+                    </div>
+
+                    <div class="layui-input-inline">
+                        <label class="layui-form-label">日期</label>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("c_date")
+                            {
+                                title = "日期",
+                                defaultValue = today.ToDateString(ConvertExt.DateFormate.yyyy_MM_dd),
+                                mold = ModelBasic.EmtTimeSelect.Mold.date,
+                                eventJsChange = new EmtFormBase.EventJsChange
+                                {
+                                    eventJavascript = new EventJavascript
+                                    {
+                                        code = "window.location.href = '/cencai/zb/list?yy_user_sn=' + page.yy_user_sn.value + '&c_date=' + page.c_date.value + '&tg_user_sn=' + page.tg_user_sn.value"
+                                    },
+                                }
+                            })
+                        </div>
+                    </div>
+
+
+
+                    <a href="?c_date=@ViewBag.c_date_early&yy_user_sn=@ViewBag.yy_user_sn&tg_user_sn=@ViewBag.tg_user_sn" class="layui-btn">前一天</a>
+                    <a href="?c_date=@ViewBag.c_date_late&yy_user_sn=@ViewBag.yy_user_sn&tg_user_sn=@ViewBag.tg_user_sn" class="layui-btn">后一天</a>
+                    <div class="layui-input-inline">
+                        <a href="javascript:win_pop_iframe('添加主播', '/cencai/zb/post', 600, 550, '')" class="layui-btn">添加主播</a>
+                    </div>
+
+                    <div class="layui-input-inline"><input type="text" id="searchInput" class="layui-input" placeholder="输入搜索文本..." /></div>
+                    <div class="layui-input-inline"><a href="javascript:highlightText()" class="layui-btn">查找</a></div>
+                    <div class="layui-input-inline">
+                        <a href="javascript:win_pop_iframe('表格设置', '/cencai/zb/Setting', 600, 550, '')" class="layui-btn">表格设置</a>
+                    </div>
+                </div>
+
+                <script>
+                    function highlightText() {
+                        const searchInput = document.getElementById('searchInput');
+                        const searchValue = searchInput.value.trim();
+                        const contentElement = document.querySelector('.content');
+                        const content = contentElement.innerHTML;
+
+                        if (searchValue !== '') {
+                            //先清除原有的高亮，即将用于高亮的<span>标签删除但保留原有内容
+                            let highlightedContent = content.replace(
+                                new RegExp('<span class="highlight">(.*)</span>', 'gi'),
+                                '$1'
+                            );
+                            //高亮，即将需要高亮的内容用类名为包含高亮格式的css类span标签包裹起来
+                            highlightedContent = highlightedContent.replace(
+                                new RegExp(searchValue, 'gi'),
+                                '<span class="highlight">$&</span>'
+                            );
+                            contentElement.innerHTML = highlightedContent;
+                        } else {
+                            //清除高亮
+                            let highlightedContent = content.replace(
+                                new RegExp('<span class="highlight">(.*)</span>', 'gi'),
+                                '$1'
+                            );
+                        }
+                    }
+
+                </script>
+            </form>
+        </div>
+    </blockquote>
+</div>
+
+
+<div class="tab">
+    <div>
+        <a class="layui-btn" href="?c_date=@ViewBag.c_date&yy_user_sn=@ViewBag.yy_user_sn&tg_user_sn=@ViewBag.tg_user_sn&round=1">第1轮 达标数:@CencaiService.getCencaiQualifyNum(yy_user_sn, tg_user_sn, c_date, 1) 达标率:@CencaiService.getCencaiQualifyRate(yy_user_sn, tg_user_sn, c_date, 1)%</a>
+        <a class="layui-btn" href="?c_date=@ViewBag.c_date&yy_user_sn=@ViewBag.yy_user_sn&tg_user_sn=@ViewBag.tg_user_sn&round=2">第2轮 达标数:@CencaiService.getCencaiQualifyNum(yy_user_sn, tg_user_sn, c_date, 2) 达标率:@CencaiService.getCencaiQualifyRate(yy_user_sn, tg_user_sn, c_date, 2)%</a>
+        <a class="layui-btn" href="?c_date=@ViewBag.c_date&yy_user_sn=@ViewBag.yy_user_sn&tg_user_sn=@ViewBag.tg_user_sn&round=3">第3轮 达标数:@CencaiService.getCencaiQualifyNum(yy_user_sn, tg_user_sn, c_date, 3) 达标率:@CencaiService.getCencaiQualifyRate(yy_user_sn, tg_user_sn, c_date, 3)%</a>
+    </div>
+</div>
+<div class="content">
+    
+    @foreach (ModelDbBasic.user_base tg in new ServiceFactory.YyService().YyGetNextTg(yy_user_sn))
+    {
+        if (!tg_user_sn.IsNullOrEmpty() && tg_user_sn != tg.user_sn)
+        {
+            continue;
+        }
+
+        var list = DoMySql.FindList<ModelDb.p_cencai>($"tger_sn = '{tg.user_sn}' and round='{round}' order by zber_sn,round");
+        if (list.Count == 0)
+        {
+            continue;
+        }
+
+        int baseInfoNum = (setting.teacher == ModelDb.p_cencai_setting.teacher_enum.显示.ToSByte() ? 1 : 0)
+                        + (setting.zber_name == ModelDb.p_cencai_setting.zber_name_enum.显示.ToSByte() ? 1 : 0)
+                        + (setting.join_date == ModelDb.p_cencai_setting.join_date_enum.显示.ToSByte() ? 1 : 0)
+                        + (setting.role == ModelDb.p_cencai_setting.role_enum.显示.ToSByte() ? 1 : 0)
+                        + (setting.MBTI == ModelDb.p_cencai_setting.MBTI_enum.显示.ToSByte() ? 1 : 0)
+                        + (setting.age == ModelDb.p_cencai_setting.age_enum.显示.ToSByte() ? 1 : 0)
+                        + (setting.education == ModelDb.p_cencai_setting.education_enum.显示.ToSByte() ? 1 : 0)
+                        + (setting.zb_status == ModelDb.p_cencai_setting.zb_status_enum.显示.ToSByte() ? 1 : 0)
+                        + (setting.round == ModelDb.p_cencai_setting.round_enum.显示.ToSByte() ? 1 : 0)
+                        + (setting.days == ModelDb.p_cencai_setting.days_enum.显示.ToSByte() ? 1 : 0)
+                        + (setting.live_days_total == ModelDb.p_cencai_setting.live_days_total_enum.显示.ToSByte() ? 1 : 0)
+                        + (setting.vacation_days == ModelDb.p_cencai_setting.vacation_days_enum.显示.ToSByte() ? 1 : 0)
+                        + (setting.live_days == ModelDb.p_cencai_setting.live_days_enum.显示.ToSByte() ? 1 : 0);
+
+        int normInfoNum = (setting.new_num == ModelDb.p_cencai_setting.teacher_enum.显示.ToSByte() ? 1 : 0)
+                        + (setting.amount_2 == ModelDb.p_cencai_setting.zber_name_enum.显示.ToSByte() ? 1 : 0)
+                        + (setting.contact_num == ModelDb.p_cencai_setting.role_enum.显示.ToSByte() ? 1 : 0)
+                        + (setting.new_num_avg == ModelDb.p_cencai_setting.age_enum.显示.ToSByte() ? 1 : 0)
+                        + (setting.amount_2_rate == ModelDb.p_cencai_setting.round_enum.显示.ToSByte() ? 1 : 0)
+                        + (setting.contact_num_rate == ModelDb.p_cencai_setting.days_enum.显示.ToSByte() ? 1 : 0);
+
+        int amountInfoNum = (setting.time_progress == ModelDb.p_cencai_setting.teacher_enum.显示.ToSByte() ? 1 : 0)
+                        + (setting.new_2_amount == ModelDb.p_cencai_setting.zber_name_enum.显示.ToSByte() ? 1 : 0)
+                        + (setting.old_amount == ModelDb.p_cencai_setting.role_enum.显示.ToSByte() ? 1 : 0)
+                        + (setting.activity_amount == ModelDb.p_cencai_setting.age_enum.显示.ToSByte() ? 1 : 0)
+                        + (setting.amount == ModelDb.p_cencai_setting.round_enum.显示.ToSByte() ? 1 : 0)
+                        + (setting.amount_progress == ModelDb.p_cencai_setting.days_enum.显示.ToSByte() ? 1 : 0);
+        if (setting.id == 0)
+        {
+            baseInfoNum = 12;
+            normInfoNum = 6;
+            amountInfoNum = 6;
+        }
+        <div style="overflow:auto;">
+            <table class="layui-table table" id="table1"  style="text-align:center;width:2700px;">
+            <colgroup>
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                <col width="100">
+                @if (setting.id == 0 || setting.teacher.ToBool())
+                {
+                    <col width="100">
+                }
+                @if (setting.id == 0 || setting.zber_name.ToBool())
+                {
+                    <col width="100">
+                }
+                @if (setting.id == 0 || setting.role.ToBool())
+                {
+                    <col width="100">
+                }
+                @if (setting.id == 0 || setting.age.ToBool())
+                {
+                    <col width="100">
+                }
+                @if (setting.id == 0 || setting.days.ToBool())
+                {
+                    <col width="100">
+                }
+                @if (setting.id == 0 || setting.live_days_total.ToBool())
+                {
+                    <col width="100">
+                }
+                @if (setting.id == 0 || setting.vacation_days.ToBool())
+                {
+                    <col width="100">
+                }
+                @if (setting.id == 0 || setting.live_days.ToBool())
+                {
+                    <col width="100">
+                }
+                @if (setting.id == 0 || setting.new_num.ToBool())
+                {
+                    <col width="100">
+                }
+                @if (setting.id == 0 || setting.amount_2.ToBool())
+                {
+                    <col width="100">
+                }
+                @if (setting.id == 0 || setting.contact_num.ToBool())
+                {
+                    <col width="100">
+                }
+                @if (setting.id == 0 || setting.new_num_avg.ToBool())
+                {
+                    <col width="100">
+                }
+                @if (setting.id == 0 || setting.amount_2_rate.ToBool())
+                {
+                    <col width="100">
+                }
+                @if (setting.id == 0 || setting.contact_num_rate.ToBool())
+                {
+                    <col width="100">
+                }
+                @if (setting.id == 0 || setting.time_progress.ToBool())
+                {
+                    <col width="100">
+                }
+                @if (setting.id == 0 || setting.new_2_amount.ToBool())
+                {
+                    <col width="100">
+                }
+                @if (setting.id == 0 || setting.old_amount.ToBool())
+                {
+                    <col width="100">
+                }
+                @if (setting.id == 0 || setting.activity_amount.ToBool())
+                {
+                    <col width="100">
+                }
+                @if (setting.id == 0 || setting.amount.ToBool())
+                {
+                    <col width="100">
+                }
+                @if (setting.id == 0 || setting.amount_progress.ToBool())
+                {
+                    <col width="100">
+                }
+                <col width="300">
+            </colgroup>
+            <thead>
+                <tr style="background-color: #d9d9d9;">
+                    <th colspan="27" style="font-size: 18px; text-align: center; font-weight: bold">第 @round 轮 @tg.username</th>
+                </tr>
+                <tr style="background-color: #d9d9d9;">
+                    <th rowspan="2">序号</th>
+                    @if (baseInfoNum > 0)
+                    {
+                        <th colspan="@baseInfoNum">主播基础信息</th>
+                    }
+                    @if (normInfoNum > 0)
+                    {
+                        <th colspan="@normInfoNum">直播指标进度</th>
+                    }
+                    @if (amountInfoNum > 0)
+                    {
+                        <th colspan="@amountInfoNum">直播流水进度</th>
+
+                    }
+                    <th rowspan="2" style="text-align: center; font-size: 10px;">操作</th>
+
+                </tr>
+                <tr style="background-color: #d9d9d9">
+                    @if (setting.id == 0 || setting.teacher == ModelDb.p_cencai_setting.teacher_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px;">
+                            师父
+                        </th>
+                    }
+                    @if (setting.id == 0 || setting.zber_name == ModelDb.p_cencai_setting.zber_name_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px; ">
+                            昵称
+                        </th>
+                    }
+                    @if (setting.id == 0 || setting.join_date == ModelDb.p_cencai_setting.join_date_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px; ">
+                            入职日期
+                        </th>
+                    }
+                    @if (setting.id == 0 || setting.role == ModelDb.p_cencai_setting.role_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px;">
+                            角色
+                        </th>
+                    }
+                    @if (setting.id == 0 || setting.MBTI == ModelDb.p_cencai_setting.MBTI_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px;">
+                            MBTI
+                        </th>
+                    }
+                    @if (setting.id == 0 || setting.age == ModelDb.p_cencai_setting.age_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px;">
+                            年龄
+                        </th>
+                    }
+
+                    @if (setting.id == 0 || setting.education == ModelDb.p_cencai_setting.education_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px; ">
+                            学历
+                        </th>
+                    }
+
+                    @if (setting.id == 0 || setting.zb_status == ModelDb.p_cencai_setting.zb_status_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px; ">
+                            状态
+                        </th>
+                    }
+
+                    @if (setting.id == 0 || setting.days == ModelDb.p_cencai_setting.days_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px;">
+                            考核天数
+                        </th>
+                    }
+
+                    @if (setting.id == 0 || setting.live_days_total == ModelDb.p_cencai_setting.live_days_total_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px;">
+                            总直播天数
+                        </th>
+                    }
+
+                    @if (setting.id == 0 || setting.vacation_days == ModelDb.p_cencai_setting.vacation_days_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px;">
+                            请假天数
+                        </th>
+                    }
+
+                    @if (setting.id == 0 || setting.live_days == ModelDb.p_cencai_setting.live_days_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px;">
+                            实际直播天数
+                        </th>
+                    }
+
+                    @if (setting.id == 0 || setting.new_num == ModelDb.p_cencai_setting.new_num_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px;">
+                            拉新
+                        </th>
+                    }
+
+                    @if (setting.id == 0 || setting.amount_2 == ModelDb.p_cencai_setting.amount_2_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px;">
+                            二消
+                        </th>
+                    }
+
+                    @if (setting.id == 0 || setting.contact_num == ModelDb.p_cencai_setting.contact_num_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px;">
+                            建联
+                        </th>
+                    }
+
+                    @if (setting.id == 0 || setting.new_num_avg == ModelDb.p_cencai_setting.new_num_avg_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px;">
+                            平均拉新数
+                        </th>
+                    }
+
+                    @if (setting.id == 0 || setting.amount_2_rate == ModelDb.p_cencai_setting.amount_2_rate_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px;">
+                            二消率
+                        </th>
+                    }
+
+                    @if (setting.id == 0 || setting.contact_num_rate == ModelDb.p_cencai_setting.contact_num_rate_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px;">
+                            建联率
+                        </th>
+                    }
+
+                    @if (setting.id == 0 || setting.time_progress == ModelDb.p_cencai_setting.time_progress_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px;">
+                            时间进度
+                        </th>
+                    }
+
+                    @if (setting.id == 0 || setting.new_2_amount == ModelDb.p_cencai_setting.new_2_amount_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px;">
+                            拉新二消流水
+                        </th>
+                    }
+
+                    @if (setting.id == 0 || setting.old_amount == ModelDb.p_cencai_setting.old_amount_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px;">
+                            老用户流水
+                        </th>
+                    }
+
+                    @if (setting.id == 0 || setting.activity_amount == ModelDb.p_cencai_setting.activity_amount_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px;">
+                            活动流水
+                        </th>
+                    }
+
+                    @if (setting.id == 0 || setting.amount == ModelDb.p_cencai_setting.amount_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px;">
+                            流水累计
+                        </th>
+                    }
+
+                    @if (setting.id == 0 || setting.amount_progress == ModelDb.p_cencai_setting.amount_progress_enum.显示.ToSByte())
+                    {
+                        <th style="text-align: center; font-size: 10px;">
+                            流水进度
+                        </th>
+                    }
+
+                </tr>
+            </thead>
+
+            @{
+                //合计人数
+                int zb_total = 0;
+                double num_1 = 0;
+                double num_2 = 0;
+                double num_3 = 0;
+                double num_4 = 0;
+                double num_5 = 0;
+                double num_6 = 0;
+                double num_7 = 0;
+                double num_8 = 0;
+                double num_9 = 0;
+                double num_10 = 0;
+                double num_11 = 0;
+                double num_12 = 0;
+                double num_13 = 0;
+                double num_14 = 0;
+                double num_15 = 0;
+                double num_16 = 0;
+                int sort = 0;
+
+            }
+            @foreach (var item in list)
+            {
+                //排序增加
+                sort++;
+                //未到考核时间、已结束的不显示
+                if (today < item.c_date || item.is_finished == (int)ModelDb.p_cencai.is_finished_enum.已结束) { continue; }
+
+                //合计人数
+                zb_total++;
+                //获取zb请假天数
+                var vacation_days = new ServiceFactory.ZbInfoService().GetZbVacation(item.zber_sn, (DateTime)item.c_date, today);
+
+                //第几天
+                var live_days = UtilityStatic.DateHelper.DateDiff(today, item.c_date, UtilityStatic.DateHelper.DiffType.days) + 1;
+                //实际直播天数
+                var real_live_days = live_days - vacation_days;
+
+                //主播昵称、直播厅
+                var zb_username = new DomainBasic.UserApp().GetInfoByUserSn(item.zber_sn).username;
+                var tg_username = new DomainBasic.UserApp().GetInfoByUserSn(item.tger_sn).username;
+
+                //时间进度
+                var time_progress = item.days == 0 ? 0 : Math.Round(real_live_days * 1.0 / (int)item.days * 100, 2);
+                var p_jixiao_day = DoMySql.FindEntity<ModelDb.p_jixiao_day>($"zb_user_sn='{item.zber_sn}' and c_date='{today.ToDateString(ConvertExt.DateFormate.yyyy_MM_dd)}'", false);
+
+                //找到主播从start到end所有的jixiao_day
+                var p_jixiao_days = DoMySql.FindList<ModelDb.p_jixiao_day>($"zb_user_sn='{item.zber_sn}' and c_date between '{item.c_date.ToDateString(ConvertExt.DateFormate.yyyy_MM_dd)}' and '{today.ToDateString(ConvertExt.DateFormate.yyyy_MM_dd)}'");
+
+                //累计流水
+                var sum_yl = p_jixiao_days.Sum(p => (int)p.amount);
+                var yl_progress = item.target_yl == 0 ? 0 : Math.Round(sum_yl * 1.0 / (int)item.target_yl * 100, 2);
+
+                //目标进度
+                var target_progress = item.target_yl * 1.0 / item.days * live_days;
+
+                //获取未填写天数
+                var unsubmit_days = live_days - p_jixiao_days.Count - vacation_days;
+
+                //拉新累计
+                var newSum = p_jixiao_days.Sum(p => (int)p.new_num);
+                var user_info_zb = DoMySql.FindEntity<ModelDb.user_info_zb>($"user_sn='{item.zber_sn}'", false);
+                <tr style="text-align: center; background-color: #FFF3CA">
+                    <!--排序-->
+                    <td>@zb_total</td>
+                    @if (setting.id == 0 || setting.teacher == ModelDb.p_cencai_setting.teacher_enum.显示.ToSByte())
+                    {
+                        <!--师父-->
+                        <td>@item.teacher</td>
+                    }
+                    @if (setting.id == 0 || setting.zber_name == ModelDb.p_cencai_setting.zber_name_enum.显示.ToSByte())
+                    {
+                        <!--昵称-->
+                        <td>@zb_username</td>
+                    }
+                    @if (setting.id == 0 || setting.join_date == ModelDb.p_cencai_setting.join_date_enum.显示.ToSByte())
+                    {
+                        <!--入职日期-->
+                        <td>@user_info_zb.join_date.ToDateString(ConvertExt.DateFormate.yyyy_MM_dd)</td>
+                    }
+                    @if (setting.id == 0 || setting.role == ModelDb.p_cencai_setting.role_enum.显示.ToSByte())
+                    {
+                        <!--角色-->
+                        <td></td>
+                    }
+                    @if (setting.id == 0 || setting.MBTI == ModelDb.p_cencai_setting.MBTI_enum.显示.ToSByte())
+                    {
+                        <!--MBTI-->
+                        <td data-id="@item.id" data-value="@user_info_zb.mbti">@user_info_zb.mbti</td>
+                    }
+                    @if (setting.id == 0 || setting.age == ModelDb.p_cencai_setting.age_enum.显示.ToSByte())
+                    {
+                        <!--年龄-->
+                        <td>@(user_info_zb.age)</td>
+                    }
+                    @if (setting.id == 0 || setting.education == ModelDb.p_cencai_setting.education_enum.显示.ToSByte())
+                    {
+                        <!--学历-->
+                        <td data-id="@item.id" data-value="@user_info_zb.education">@(new DomainBasic.DictionaryApp().GetKeyFromValue("学历", user_info_zb.education.ToString())) </td>
+                    }
+                    @if (setting.id == 0 || setting.zb_status == ModelDb.p_cencai_setting.zb_status_enum.显示.ToSByte())
+                    {
+                        <!--状态-->
+                        <td>@(item.zb_status)</td>
+                    }
+                    @if (setting.id == 0 || setting.days == ModelDb.p_cencai_setting.days_enum.显示.ToSByte())
+                    {
+                        <!--考核天数-->
+                        <td>
+                            @live_days
+                            <div class="layui-input-inline" style="@((item.is_finished == (int)ModelDb.p_cencai.is_finished_enum.未结束 && today > item.c_date.ToDateTime().AddDays(item.days.ToInt() - 1)) ? "" : "display:none")">
+                                <a href="javascript:win_pop_iframe('下一轮', '/cencai/zb/NewEdit?round=@(item.round+1)&id=@item.id', 600, 550, '')" class="layui-btn layui-btn-xs">下一轮</a>
+                            </div>
+                        </td>
+                    }
+                    @if (setting.id == 0 || setting.live_days_total == ModelDb.p_cencai_setting.live_days_total_enum.显示.ToSByte())
+                    {
+                        <!--总直播天数-->
+                        <td>@(live_days)</td>
+                    }
+                    @if (setting.id == 0 || setting.vacation_days == ModelDb.p_cencai_setting.vacation_days_enum.显示.ToSByte())
+                    {
+                        <!--请假天数-->
+                        <td>@vacation_days</td>
+                    }
+                    @if (setting.id == 0 || setting.live_days == ModelDb.p_cencai_setting.live_days_enum.显示.ToSByte())
+                    {
+                        <!--实际直播天数-->
+                        <td>@real_live_days</td>
+                    }
+                    @if (setting.id == 0 || setting.new_num == ModelDb.p_cencai_setting.new_num_enum.显示.ToSByte())
+                    {
+                        <!--拉新累计-->
+                        <td>@(newSum)</td>
+                    }
+                    @if (setting.id == 0 || setting.amount_2 == ModelDb.p_cencai_setting.amount_2_enum.显示.ToSByte())
+                    {
+                        <!--二消累计-->
+                        <td>@(p_jixiao_days.Sum(p => (int)p.num_2).ToDecimal().ToFixed(2))</td>
+                    }
+                    @if (setting.id == 0 || setting.contact_num == ModelDb.p_cencai_setting.contact_num_enum.显示.ToSByte())
+                    {
+                        <!--建联累计-->
+                        <td>@(p_jixiao_days.Sum(p => (int)p.contact_num))</td>
+                    }
+                    @if (setting.id == 0 || setting.new_num_avg == ModelDb.p_cencai_setting.new_num_avg_enum.显示.ToSByte())
+                    {
+                        <!--日均拉新-->
+                        <td title="日均拉新">@((newSum * 1.0 / real_live_days).ToDecimal().ToFixed(2))</td>
+                    }
+                    @if (setting.id == 0 || setting.amount_2_rate == ModelDb.p_cencai_setting.amount_2_rate_enum.显示.ToSByte())
+                    {
+                        <!--二消率-->
+                        <td title="二消率">@((newSum == 0 ? 0 : p_jixiao_days.Sum(p => (int)p.num_2) * 1.0 / newSum * 100).ToDecimal().ToFixed(2))%</td>
+                    }
+                    @if (setting.id == 0 || setting.contact_num_rate == ModelDb.p_cencai_setting.contact_num_rate_enum.显示.ToSByte())
+                    {
+                        <!--建联率-->
+                        <td title="建联率">@((newSum == 0 ? 0 : p_jixiao_days.Sum(p => (int)p.contact_num) * 1.0 / newSum * 100).ToDecimal().ToFixed(2))%</td>
+                    }
+                    @if (setting.id == 0 || setting.time_progress == ModelDb.p_cencai_setting.time_progress_enum.显示.ToSByte())
+                    {
+                        <!--时间进度-->
+                        <td>@time_progress%</td>
+                    }
+                    @if (setting.id == 0 || setting.new_2_amount == ModelDb.p_cencai_setting.new_2_amount_enum.显示.ToSByte())
+                    {
+                        <!--拉新二消流水-->
+                        <td>@(p_jixiao_days.Sum(p => (int)p.amount_2+(int)p.new_num))</td>
+                    }
+                    @if (setting.id == 0 || setting.old_amount == ModelDb.p_cencai_setting.old_amount_enum.显示.ToSByte())
+                    {
+                        <!--老用户流水-->
+                        <td>@(p_jixiao_days.Sum(p => (int)p.old_amount))</td>
+                    }
+                    @if (setting.id == 0 || setting.activity_amount == ModelDb.p_cencai_setting.activity_amount_enum.显示.ToSByte())
+                    {
+                        <!--活动流水-->
+                        <td>@(p_jixiao_days.Sum(p => (int)p.amount))</td>
+                    }
+                    @if (setting.id == 0 || setting.amount == ModelDb.p_cencai_setting.amount_enum.显示.ToSByte())
+                    {
+                        <!--流水累计<br />(30天目标)-->
+                        <td>@(sum_yl)(@(item.target_yl ?? 0))</td>
+                    }
+                    @if (setting.id == 0 || setting.amount_progress == ModelDb.p_cencai_setting.amount_progress_enum.显示.ToSByte())
+                    {
+                        <!--流水进度-->
+                        <td style="@(sum_yl >= target_progress && yl_progress!=0 ? "background-color:#C3EAD5;" : "background-color:#FFC9C7;")">@yl_progress%</td>
+                    }
+
+                    <!--编辑-->
+                    <td>
+                        <a href="javascript:win_pop_iframe('编辑主播', '/cencai/zb/Edit?id=@(item.id)&end_date=@(today)', 600, 550, '')" class="layui-btn layui-btn-xs">编辑</a>
+                        <a href="javascript:layDel('ReMove?id=@item.id', '', '确定移除');" id-value="@item.id" class="layui-btn layui-btn-xs">移除</a>
+                    </td>
+                </tr>
+                num_1 += p_jixiao_day.new_num ?? 0;
+                num_2 += newSum;
+                num_3 += real_live_days;
+                num_4 += p_jixiao_day.num_2 ?? 0;
+                num_5 += p_jixiao_days.Sum(p => (int)p.num_2).ToDouble().ToFixed(2);
+                num_6 += (newSum == 0 ? 0 : p_jixiao_days.Sum(p => (int)p.num_2) * 1.0 / newSum * 100).ToDouble().ToFixed(2);
+                num_7 += p_jixiao_day.contact_num ?? 0;
+                num_8 += p_jixiao_days.Sum(p => (int)p.contact_num);
+                num_9 += item.target_erx ?? 0;
+                num_10 += p_jixiao_day.amount ?? 0;
+                num_11 += live_days;
+                num_12 += item.days ?? 0;
+                num_13 += sum_yl;
+                num_14 += item.target_yl ?? 0;
+                num_15 += unsubmit_days;
+                num_16 += vacation_days;
+            }
+            <tr style="background-color: #FADADE">
+                <td colspan="@(baseInfoNum+1)">合计(@zb_total)人</td>
+                @if (setting.id == 0 || setting.new_num == ModelDb.p_cencai_setting.new_num_enum.显示.ToSByte())
+                {
+                    <td>@num_2</td>
+                }
+                @if (setting.id == 0 || setting.amount_2 == ModelDb.p_cencai_setting.amount_2_enum.显示.ToSByte())
+                {
+                    <td>@num_5</td>
+                }
+                @if (setting.id == 0 || setting.contact_num == ModelDb.p_cencai_setting.contact_num_enum.显示.ToSByte())
+                {
+                    <td>@num_8</td>
+                }
+                @if (setting.id == 0 || setting.new_num_avg == ModelDb.p_cencai_setting.new_num_avg_enum.显示.ToSByte())
+                {
+                    <td>@num_6</td>
+                }
+                @if (setting.id == 0 || setting.amount_2_rate == ModelDb.p_cencai_setting.amount_2_rate_enum.显示.ToSByte())
+                {
+                    <td>@(num_2 == 0 ? 0:(num_5 / num_2 * 100).ToDouble().ToFixed(2))%</td>
+                }
+                @if (setting.id == 0 || setting.contact_num_rate == ModelDb.p_cencai_setting.contact_num_rate_enum.显示.ToSByte())
+                {
+                    <td>@(num_2 == 0 ? 0:(num_8 / num_2 * 100).ToDouble().ToFixed(2))%</td>
+                }
+                <td colspan="@(amountInfoNum+1)"></td>
+            </tr>
+
+
+@ViewModelBag.Load(Html, new ModelBasic.AdjFloatLayer("floatlayer")
+{
+position = ModelBasic.AdjFloatLayer.Position.相对定位,
+positionRelative = new ModelBasic.AdjFloatLayer.PositionRelative
+{
+    className = $"EditEducation",
+    offset_y = 40
+},
+emtModelBase = new ModelBasic.EmtGrid("grid")
+{
+    items = new List<ModelBasic.EmtGrid.Item>
+        {
+            new ModelBasic.EmtGrid.Item
+            {
+                title="学历",
+                colLength=12,
+                emtModelBase = new ModelBasic.EmtInput($"education")
+                {
+                    width = "120"
+                },
+
+            },
+            new ModelBasic.EmtGrid.Item
+            {
+                colLength=6,
+                emtModelBase = new ModelBasic.EmtButton("button")
+                {
+                    defaultValue = "提交",
+
+                    eventJsChange = new EmtFormBase.EventJsChange
+                    {
+                        eventCsAction=new EmtFormBase.EventJsChange.EventCsAction
+                        {
+                            attachPara=new Dictionary<string, object>
+                            {
+                                {"id","<%=page.focus.attr('data-id')%>"},
+                                {"education","<%=page.education.value%>" }
+                            },
+                            resCallJs="page.floatlayer.hide();location.reload();",
+                            func=ServiceFactory.Cencai.CencaiService.Edit
+                        }
+                    }
+                }
+            },
+            new ModelBasic.EmtGrid.Item
+            {
+                colLength=6,
+                emtModelBase = new ModelBasic.EmtButton("cancel")
+                {
+                    defaultValue = "取消",
+
+                    eventJsChange = new EmtFormBase.EventJsChange
+                    {
+                        eventJavascript=new EventJavascript
+                        {
+                            code="page.floatlayer.hide();page.focus.css('font-weight', 'normal');"
+                        }
+                    }
+                }
+            }
+        }
+},
+width = "300px",
+height = "150px",
+
+})
+
+@ViewModelBag.Load(Html, new ModelBasic.AdjFloatLayer("floatlayer2")
+{
+position = ModelBasic.AdjFloatLayer.Position.相对定位,
+positionRelative = new ModelBasic.AdjFloatLayer.PositionRelative
+{
+    className = $"EditMBTI",
+    offset_y = 40
+},
+emtModelBase = new ModelBasic.EmtGrid("grid2")
+{
+    items = new List<ModelBasic.EmtGrid.Item>
+        {
+            new ModelBasic.EmtGrid.Item
+            {
+                title="MBTI",
+                colLength=12,
+                emtModelBase = new ModelBasic.EmtInput($"MBTI")
+                {
+                    width = "120"
+                },
+
+            },
+            new ModelBasic.EmtGrid.Item
+            {
+                colLength=6,
+                emtModelBase = new ModelBasic.EmtButton("button2")
+                {
+                    defaultValue = "提交",
+
+                    eventJsChange = new EmtFormBase.EventJsChange
+                    {
+                        eventCsAction=new EmtFormBase.EventJsChange.EventCsAction
+                        {
+                            attachPara=new Dictionary<string, object>
+                            {
+                                {"id","<%=page.focus.attr('data-id')%>"},
+                                {"MBTI","<%=page.MBTI.value%>" }
+                            },
+                            resCallJs="page.floatlayer2.hide();location.reload();",
+                            func=ServiceFactory.Cencai.CencaiService.Edit
+                        }
+                    }
+                }
+            },
+            new ModelBasic.EmtGrid.Item
+            {
+                colLength=6,
+                emtModelBase = new ModelBasic.EmtButton("cancel2")
+                {
+                    defaultValue = "取消",
+
+                    eventJsChange = new EmtFormBase.EventJsChange
+                    {
+                        eventJavascript=new EventJavascript
+                        {
+                            code="page.floatlayer2.hide();page.focus.css('font-weight', 'normal');"
+                        }
+                    }
+                }
+            }
+        }
+},
+width = "300px",
+height = "150px",
+
+})
+
+        </table>
+        </div>
+        
+    }
+</div>
+

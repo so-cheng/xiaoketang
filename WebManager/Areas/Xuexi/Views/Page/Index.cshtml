@@ -1,0 +1,101 @@
+﻿
+@{
+    Layout = null;
+}
+@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>文章</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+
+    <style type="text/css">
+        .site-content a {
+            text-decoration: underline;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-container layui-row" style="width:100%;height:100%;">
+        <div class="layui-col-md2">
+            <div class="layui-panel site-menu" style="height:800px; overflow-y:auto; overflow-x:hidden;">
+                <ul class="layui-menu layui-menu-lg">
+                    @{
+                        string url="";
+                        foreach (var item in DoMySql.FindList<ModelDb.xuexi_category>($""))
+                        {
+                            var list = DoMySql.FindList<ModelDb.xuexi_base>($"category_id='{item.id}'");
+                            if (list.Count <= 0) { continue; }
+
+                            string className = "layui-menu-body-title";
+                            
+                            <li class="layui-menu-item-group" lay-options="{type: 'group', isAllowSpread: true}">
+                                <div class="layui-menu-body-title">
+                                    @item.name
+                                </div>
+                                <hr>
+                                <ul>
+                                    @{
+                                        foreach (var xuexi in list)
+                                        {
+                                            if (ViewBag.id == xuexi.id)
+                                            {
+                                                url = xuexi.url;
+                                                className = "layui-menu-item-checked2";
+                                            }
+                                            else
+                                            {
+                                                className = "layui-menu-body-title";
+                                            }
+                                            <li class="@className">
+                                                <a name="p_@xuexi.id"></a>
+                                                <div class="layui-menu-body-title">
+                                                    <a href="?id=@xuexi.id#p_@xuexi.id">
+                                                        <span>@xuexi.title</span>
+                                                    </a>
+                                                </div>
+                                            </li>
+                                        }
+                                    }
+
+
+                                </ul>
+                            </li>
+                        }
+                    }
+
+
+
+
+                </ul>
+            </div>
+            <div class="layui-hide-v"> - </div>
+        </div>
+        <div class="layui-col-md10 site-content" style="background-color: #ffffff; height: 100%; position: relative">
+            <iframe src="@url" style="width: 100%; height: 900px; border:0px;"></iframe>
+        </div>
+    </div>
+    <script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+    <script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.2.5.6.js"></script>
+    <script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+</body>
+</html>
+

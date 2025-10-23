@@ -1,0 +1,590 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+@model Services.Project.PageFactory.TableVO
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+    var date = ((string)ViewBag.date).ToDate();
+
+    var jixiao = new ServiceFactory.JixiaoService().GetTgJixiaoData(ViewBag.yy_user_sn, date);
+    var jixiao_last = new ServiceFactory.JixiaoService().GetTgJixiaoData(ViewBag.yy_user_sn, date.AddMonths(-1));
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .layui-table td {
+        font-size: 13px;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+</style>
+<!-- 以下书写自己的页面内容代码 -->
+<form id="mainForm" class="layui-form" action="DayTarget">
+    <div class="layui-row">
+        <div class="layui-col-md8">
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("date")
+                   {
+                       mold = WeiCode.Models.ModelBasic.EmtTimeSelect.Mold.month,
+                       placeholder = "选择日期",
+                       defaultValue = date.ToString("yyyy-MM"),
+                       eventJsChange = new EmtFormBase.EventJsChange
+                       {
+                           eventJavascript = new EventJavascript
+                           {
+                               code = "window.location.href = '/Target/TgTarget/DayTarget?date=' + page.date.value+ '&tg_user_sn=' + page.tg_user_sn.value+ '&yy_user_sn=' + page.yy_user_sn.value + '&type=' + page.type.value;"
+                           },
+                       }
+                   })
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+
+                    @ViewModelBag.Load(Html, new ModelBasic.EmtSelectFull("yy_user_sn")
+                   {
+                       placeholder = "请选择运营",
+                       options = new DomainBasic.UserApp().GetUsersByUserTypeIdForOption(new DomainBasic.UserTypeApp().GetInfoByCode("yyer").id),
+                       defaultValue = ViewBag.yy_user_sn,
+                       eventJsChange = new EmtFormBase.EventJsChange
+                       {
+                           eventJavascript = new EventJavascript
+                           {
+                               code = "window.location.href = '/Target/TgTarget/DayTarget?date=' + page.date.value+ '&tg_user_sn=' + page.tg_user_sn.value+ '&yy_user_sn=' + page.yy_user_sn.value + '&type=' + page.type.value;"
+                           },
+                       }
+                   })
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+
+                    @ViewModelBag.Load(Html, new ModelBasic.EmtSelectFull("tg_user_sn")
+                   {
+                       placeholder = "请选择厅管",
+                       options = new DomainUserBasic.UserRelationApp().GetNextUsersForOption(ModelEnum.UserRelationTypeEnum.运营邀厅管, ViewBag.yy_user_sn),
+                       defaultValue = ViewBag.tg_user_sn,
+                       eventJsChange = new EmtFormBase.EventJsChange
+                       {
+                           eventJavascript = new EventJavascript
+                           {
+                               code = "window.location.href = '/Target/TgTarget/DayTarget?date=' + page.date.value+ '&tg_user_sn=' + page.tg_user_sn.value+ '&yy_user_sn=' + page.yy_user_sn.value + '&type=' + page.type.value;"
+                           },
+                       }
+                   })
+                </div>
+            </div>
+
+
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+
+                    @ViewModelBag.Load(Html, new ModelBasic.EmtSelectFull("type")
+                   {
+                       options = new List<ModelDoBasic.Option>
+                       {
+                           new ModelDoBasic.Option
+                           {
+                               text="全部",
+                               value=""
+                           },
+                           new ModelDoBasic.Option
+                           {
+                               text="总音浪",
+                               value="amount"
+                           },
+                           new ModelDoBasic.Option
+                           {
+                               text="拉新数",
+                               value="new"
+                           },
+                           new ModelDoBasic.Option
+                           {
+                               text="建联数",
+                               value="contact"
+                           },
+                           new ModelDoBasic.Option
+                           {
+                               text="二消数",
+                               value="num2"
+                           },
+                       },
+                       defaultValue = ViewBag.type,
+                       eventJsChange = new EmtFormBase.EventJsChange
+                       {
+                           eventJavascript = new EventJavascript
+                           {
+                               code = "window.location.href = '/Target/TgTarget/DayTarget?date=' + page.date.value+ '&tg_user_sn=' + page.tg_user_sn.value+ '&yy_user_sn=' + page.yy_user_sn.value + '&type=' + page.type.value;"
+                           },
+                       }
+                   })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <table class="layui-table" style="width: 100%; background-color: #E3FEEB" id="table1">
+                <thead>
+                    <tr style="background-color: #D9E1F4">
+                        <td colspan="33" style="font-size: 18px; text-align: center; font-weight: bold">日目标</td>
+                    </tr>
+                    <tr style="background-color: #D9E1F4">
+                        <td style="width: 75px; text-align: center">主播</td>
+                        <td style="text-align: center">日期</td>
+                        @{
+                            for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                            {
+                                <td style="text-align:center">@(date.Month)-@(i)</td>
+                            }
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var yy_user_sn = ViewBag.yy_user_sn;
+                        int day = 0;
+                        string tg_user_sn = ViewBag.tg_user_sn;
+                        string where = $"yy_user_sn = '{yy_user_sn}' and yearmonth='{date.ToString("yyyy-MM")}'";
+                        if (!tg_user_sn.IsNullOrEmpty())
+                        {
+                            where = $"tg_user_sn='{ViewBag.tg_user_sn}' and yearmonth='{date.ToString("yyyy-MM")}'";
+                        }
+
+                        if (ViewBag.type == "amount" || ((string)ViewBag.type).IsNullOrEmpty())
+                        {
+                            foreach (var item in DoMySql.FindList<ModelDb.p_jixiao_tgtarget_amount>(where))
+                            {
+                                day++;
+                                <tr>
+                                    <td rowspan="5">@(new DomainBasic.UserApp().GetInfoByUserSn(item.tg_user_sn).name)</td>
+                                    <td>目标音浪</td>
+                                    @{
+                                        var amount_target_arr = new decimal[DateTime.DaysInMonth(date.Year, date.Month)];
+                                        for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                                        {
+                                            amount_target_arr[i - 1] = item.GetValue($"amount_{i}").ToDecimal();
+                                            <td class="dayTarget" data-day="@(new DateTime(date.Year,date.Month,i).ToString("yyyy-MM-dd"))" data-name="amount_@i" data-sn="@item.tg_user_sn" data-type="amount">@(item.GetValue($"amount_{i}").ToInt())</td>
+                                        }
+                                    }
+                                </tr>
+                                <tr>
+                                    <td>已完成音浪</td>
+                                    @{
+                                        var amount_complete_arr = new decimal[DateTime.DaysInMonth(date.Year, date.Month)];
+                                        for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                                        {
+                                            DataRow[] tg_jixiao = jixiao.Select($"tg_user_sn = '{item.tg_user_sn}' and c_date='{new DateTime(date.Year, date.Month, i).ToString("yyyy-MM-dd")}'");
+                                            decimal value = tg_jixiao.Length == 0 ? 0 : Convert.ToDecimal(tg_jixiao[0][2]);
+                                            amount_complete_arr[i - 1] = value;
+                                            <td>
+                                                @value
+                                            </td>
+                                        }
+                                    }
+                                </tr>
+                                <tr>
+                                    <td>上月音浪</td>
+                                    @{
+                                        var amount_last_arr = new decimal[DateTime.DaysInMonth(date.Year, date.Month)];
+                                        for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                                        {
+
+
+                                            if (i > DateTime.DaysInMonth(date.AddMonths(-1).Year, date.AddMonths(-1).Month))
+                                            {
+                                                <td>0</td>
+                                                amount_last_arr[i - 1] = 0;
+                                            }
+                                            else
+                                            {
+                                                DataRow[] tg_jixiao = jixiao_last.Select($"tg_user_sn = '{item.tg_user_sn}' and c_date='{new DateTime(date.AddMonths(-1).Year, date.AddMonths(-1).Month, i).ToString("yyyy-MM-dd")}'");
+                                                decimal value = tg_jixiao.Length == 0 ? 0 : Convert.ToDecimal(tg_jixiao[0][2]);
+                                                amount_last_arr[i - 1] = value;
+                                                <td>
+                                                    @value
+                                                </td>
+                                            }
+                                        }
+                                    }
+                                </tr>
+                                <tr>
+                                    <td>同比增长率</td>
+                                    @{
+                                        for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                                        {
+                                            string color = "";
+                                            if (amount_complete_arr[i - 1] - amount_last_arr[i - 1] > 0)
+                                            {
+                                                color = "red";
+                                            }
+                                            if (amount_complete_arr[i - 1] - amount_last_arr[i - 1] < 0)
+                                            {
+                                                color = "green";
+                                            }
+                                            <td style="color:@(color)">
+                                                @((amount_last_arr[i-1]==0?0:Convert.ToDecimal(100*(amount_complete_arr[i - 1] - amount_last_arr[i - 1]) / amount_last_arr[i - 1])).ToString("0.00"))%
+                                            </td>
+                                        }
+                                    }
+                                </tr>
+                                <tr>
+                                    <td>本月完成率</td>
+                                    @{
+
+                                        for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                                        {
+                                            <td>
+                                                @((amount_target_arr[i-1]==0?0:Convert.ToDecimal(100*amount_complete_arr[i - 1] / amount_target_arr[i - 1])).ToString("0.00"))%
+                                            </td>
+                                        }
+                                    }
+                                </tr>
+                            }
+                        }
+
+                        if (ViewBag.type == "new" || ((string)ViewBag.type).IsNullOrEmpty())
+                        {
+                            foreach (var item in DoMySql.FindList<ModelDb.p_jixiao_tgtarget_new>(where))
+                            {
+                                day++;
+                                <tr>
+                                    <td rowspan="5">@(new DomainBasic.UserApp().GetInfoByUserSn(item.tg_user_sn).name)</td>
+                                    <td>目标拉新</td>
+                                    @{
+                                        var amount_target_arr = new decimal[DateTime.DaysInMonth(date.Year, date.Month)];
+                                        for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                                        {
+                                            amount_target_arr[i - 1] = item.GetValue($"new_{i}").ToDecimal();
+                                            <td class="dayTarget" data-day="@(new DateTime(date.Year,date.Month,i).ToString("yyyy-MM-dd"))" data-name="new_@i" data-sn="@item.tg_user_sn" data-type="new">@(item.GetValue($"new_{i}"))</td>
+                                        }
+                                    }
+                                </tr>
+                                <tr>
+                                    <td>已完成拉新</td>
+                                    @{
+                                        var amount_complete_arr = new decimal[DateTime.DaysInMonth(date.Year, date.Month)];
+                                        for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                                        {
+                                            DataRow[] tg_jixiao = jixiao.Select($"tg_user_sn = '{item.tg_user_sn}' and c_date='{new DateTime(date.Year, date.Month, i).ToString("yyyy-MM-dd")}'");
+                                            decimal value = tg_jixiao.Length == 0 ? 0 : Convert.ToDecimal(tg_jixiao[0][3]);
+                                            amount_complete_arr[i - 1] = value;
+                                            <td>
+                                                @value
+                                            </td>
+                                        }
+                                    }
+                                </tr>
+                                <tr>
+                                    <td>上月拉新</td>
+                                    @{
+                                        var amount_last_arr = new decimal[DateTime.DaysInMonth(date.Year, date.Month)];
+                                        for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                                        {
+
+
+                                            if (i > DateTime.DaysInMonth(date.AddMonths(-1).Year, date.AddMonths(-1).Month))
+                                            {
+                                                <td>0</td>
+                                                amount_last_arr[i - 1] = 0;
+                                            }
+                                            else
+                                            {
+                                                DataRow[] tg_jixiao = jixiao_last.Select($"tg_user_sn = '{item.tg_user_sn}' and c_date='{new DateTime(date.Year, date.Month, i).ToString("yyyy-MM-dd")}'");
+                                                decimal value = tg_jixiao.Length == 0 ? 0 : Convert.ToDecimal(tg_jixiao[0][3]);
+                                                amount_last_arr[i - 1] = value;
+                                                <td>
+                                                    @value
+                                                </td>
+                                            }
+                                        }
+                                    }
+                                </tr>
+                                <tr>
+                                    <td>同比增长率</td>
+                                    @{
+                                        for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                                        {
+                                            string color = "";
+                                            if (amount_complete_arr[i - 1] - amount_last_arr[i - 1] > 0)
+                                            {
+                                                color = "red";
+                                            }
+                                            if (amount_complete_arr[i - 1] - amount_last_arr[i - 1] < 0)
+                                            {
+                                                color = "green";
+                                            }
+                                            <td style="color:@(color)">
+                                                @((amount_last_arr[i-1]==0?0:Convert.ToDecimal(100*(amount_complete_arr[i - 1] - amount_last_arr[i - 1]) / amount_last_arr[i - 1])).ToString("0.00"))%
+                                            </td>
+                                        }
+                                    }
+                                </tr>
+                                <tr>
+                                    <td>本月完成率</td>
+                                    @{
+
+                                        for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                                        {
+                                            <td>
+                                                @((amount_target_arr[i-1]==0?0:Convert.ToDecimal(100*amount_complete_arr[i - 1] / amount_target_arr[i - 1])).ToString("0.00"))%
+                                            </td>
+                                        }
+                                    }
+                                </tr>
+                            }
+                        }
+
+                        if (ViewBag.type == "contact" || ((string)ViewBag.type).IsNullOrEmpty())
+                        {
+                            foreach (var item in DoMySql.FindList<ModelDb.p_jixiao_tgtarget_contact>(where))
+                            {
+                                day++;
+                                <tr>
+                                    <td rowspan="5">@(new DomainBasic.UserApp().GetInfoByUserSn(item.tg_user_sn).name)</td>
+                                    <td>目标建联</td>
+                                    @{
+                                        var amount_target_arr = new decimal[DateTime.DaysInMonth(date.Year, date.Month)];
+                                        for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                                        {
+                                            amount_target_arr[i - 1] = item.GetValue($"contact_{i}").ToDecimal();
+                                            <td class="dayTarget" data-day="@(new DateTime(date.Year,date.Month,i).ToString("yyyy-MM-dd"))" data-name="amount_@i" data-sn="@item.tg_user_sn" data-type="contact">@(item.GetValue($"contact_{i}"))</td>
+                                        }
+                                    }
+                                </tr>
+                                <tr>
+                                    <td>已完成建联</td>
+                                    @{
+                                        var amount_complete_arr = new decimal[DateTime.DaysInMonth(date.Year, date.Month)];
+                                        for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                                        {
+                                            DataRow[] tg_jixiao = jixiao.Select($"tg_user_sn = '{item.tg_user_sn}' and c_date='{new DateTime(date.Year, date.Month, i).ToString("yyyy-MM-dd")}'");
+                                            decimal value = tg_jixiao.Length == 0 ? 0 : Convert.ToDecimal(tg_jixiao[0][4]);
+                                            amount_complete_arr[i - 1] = value;
+                                            <td>
+                                                @value
+                                            </td>
+                                        }
+                                    }
+                                </tr>
+                                <tr>
+                                    <td>上月建联</td>
+                                    @{
+                                        var amount_last_arr = new decimal[DateTime.DaysInMonth(date.Year, date.Month)];
+                                        for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                                        {
+
+
+                                            if (i > DateTime.DaysInMonth(date.AddMonths(-1).Year, date.AddMonths(-1).Month))
+                                            {
+                                                <td>0</td>
+                                                amount_last_arr[i - 1] = 0;
+                                            }
+                                            else
+                                            {
+                                                DataRow[] tg_jixiao = jixiao_last.Select($"tg_user_sn = '{item.tg_user_sn}' and c_date='{new DateTime(date.Year, date.Month, i).ToString("yyyy-MM-dd")}'");
+                                                decimal value = tg_jixiao.Length == 0 ? 0 : Convert.ToDecimal(tg_jixiao[0][4]);
+                                                amount_last_arr[i - 1] = value;
+                                                <td>
+                                                    @value
+                                                </td>
+                                            }
+                                        }
+                                    }
+                                </tr>
+                                <tr>
+                                    <td>同比增长率</td>
+                                    @{
+                                        for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                                        {
+                                            string color = "";
+                                            if (amount_complete_arr[i - 1] - amount_last_arr[i - 1] > 0)
+                                            {
+                                                color = "red";
+                                            }
+                                            if (amount_complete_arr[i - 1] - amount_last_arr[i - 1] < 0)
+                                            {
+                                                color = "green";
+                                            }
+                                            <td style="color:@(color)">
+                                                @((amount_last_arr[i-1]==0?0:Convert.ToDecimal(100*(amount_complete_arr[i - 1] - amount_last_arr[i - 1]) / amount_last_arr[i - 1])).ToString("0.00"))%
+                                            </td>
+                                        }
+                                    }
+                                </tr>
+                                <tr>
+                                    <td>本月完成率</td>
+                                    @{
+                                        for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                                        {
+                                            <td>
+                                                @((amount_target_arr[i-1]==0?0:Convert.ToDecimal(100*amount_complete_arr[i - 1] / amount_target_arr[i - 1])).ToString("0.00"))%
+                                            </td>
+                                        }
+                                    }
+                                </tr>
+                            }
+                        }
+
+                        if (ViewBag.type == "num2" || ((string)ViewBag.type).IsNullOrEmpty())
+                        {
+                            foreach (var item in DoMySql.FindList<ModelDb.p_jixiao_tgtarget_num2>(where))
+                            {
+                                day++;
+                                <tr>
+                                    <td rowspan="5">@(new DomainBasic.UserApp().GetInfoByUserSn(item.tg_user_sn).name)</td>
+                                    <td>目标二消</td>
+                                    @{
+                                        var amount_target_arr = new decimal[DateTime.DaysInMonth(date.Year, date.Month)];
+                                        for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                                        {
+                                            amount_target_arr[i - 1] = item.GetValue($"num2_{i}").ToDecimal();
+                                            <td class="dayTarget" data-day="@(new DateTime(date.Year,date.Month,i).ToString("yyyy-MM-dd"))" data-name="num2_@i" data-sn="@item.tg_user_sn" data-type="num2">@(item.GetValue($"num2_{i}"))</td>
+                                        }
+                                    }
+                                </tr>
+                                <tr>
+                                    <td>已完成二消</td>
+                                    @{
+                                        var amount_complete_arr = new decimal[DateTime.DaysInMonth(date.Year, date.Month)];
+                                        for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                                        {
+                                            DataRow[] tg_jixiao = jixiao.Select($"tg_user_sn = '{item.tg_user_sn}' and c_date='{new DateTime(date.Year, date.Month, i).ToString("yyyy-MM-dd")}'");
+                                            decimal value = tg_jixiao.Length == 0 ? 0 : Convert.ToDecimal(tg_jixiao[0][4]);
+                                            amount_complete_arr[i - 1] = value;
+                                            <td>
+                                                @value
+                                            </td>
+                                        }
+                                    }
+                                </tr>
+                                <tr>
+                                    <td>上月二消</td>
+                                    @{
+                                        var amount_last_arr = new decimal[DateTime.DaysInMonth(date.Year, date.Month)];
+                                        for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                                        {
+
+
+                                            if (i > DateTime.DaysInMonth(date.AddMonths(-1).Year, date.AddMonths(-1).Month))
+                                            {
+                                                <td>0</td>
+                                                amount_last_arr[i - 1] = 0;
+                                            }
+                                            else
+                                            {
+                                                DataRow[] tg_jixiao = jixiao_last.Select($"tg_user_sn = '{item.tg_user_sn}' and c_date='{new DateTime(date.Year, date.Month, i).ToString("yyyy-MM-dd")}'");
+                                                decimal value = tg_jixiao.Length == 0 ? 0 : Convert.ToDecimal(tg_jixiao[0][4]);
+                                                amount_last_arr[i - 1] = value;
+                                                <td>
+                                                    @value
+                                                </td>
+                                            }
+                                        }
+                                    }
+                                </tr>
+                                <tr>
+                                    <td>同比增长率</td>
+                                    @{
+                                        for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                                        {
+                                            string color = "";
+                                            if (amount_complete_arr[i - 1] - amount_last_arr[i - 1] > 0)
+                                            {
+                                                color = "red";
+                                            }
+                                            if (amount_complete_arr[i - 1] - amount_last_arr[i - 1] < 0)
+                                            {
+                                                color = "green";
+                                            }
+                                            <td style="color:@(color)">
+                                                @((amount_last_arr[i-1]==0?0:Convert.ToDecimal(100*(amount_complete_arr[i - 1] - amount_last_arr[i - 1]) / amount_last_arr[i - 1])).ToString("0.00"))%
+                                            </td>
+                                        }
+                                    }
+                                </tr>
+                                <tr>
+                                    <td>本月完成率</td>
+                                    @{
+
+                                        for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                                        {
+                                            <td>
+                                                @((amount_target_arr[i-1]==0?0:Convert.ToDecimal(100*amount_complete_arr[i - 1] / amount_target_arr[i - 1])).ToString("0.00"))%
+                                            </td>
+                                        }
+                                    }
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+
+
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        var layer = layui.layer;
+
+
+    });
+
+
+    function setZFP() {
+        $(".zb_" + $("#zfp_dang").val() + "_1_1").val($("#zfp_zb1").val());
+        $(".zb_" + $("#zfp_dang").val() + "_2_1").val($("#zfp_zb2").val());
+        $(".zb_" + $("#zfp_dang").val() + "_3_1").val($("#zfp_zb3").val());
+        $(".zb_" + $("#zfp_dang").val() + "_1_2").val($("#zfp_zb2").val());
+        $(".zb_" + $("#zfp_dang").val() + "_2_2").val($("#zfp_zb3").val());
+        $(".zb_" + $("#zfp_dang").val() + "_3_2").val($("#zfp_zb1").val());
+        $(".zb_" + $("#zfp_dang").val() + "_1_3").val($("#zfp_zb3").val());
+        $(".zb_" + $("#zfp_dang").val() + "_2_3").val($("#zfp_zb1").val());
+        $(".zb_" + $("#zfp_dang").val() + "_3_3").val($("#zfp_zb2").val());
+        countZbNum();
+    }
+
+    function setGW() {
+        $.each(gw_dangs.getValue(), function (i, item) {
+            $(".zb_" + item.value + "_1" + "_" + $("#gw_role_1").val()).val($("#gw_zb1").val());
+            $(".zb_" + item.value + "_2" + "_" + $("#gw_role_1").val()).val($("#gw_zb1").val());
+            $(".zb_" + item.value + "_3" + "_" + $("#gw_role_1").val()).val($("#gw_zb1").val());
+        })
+        countZbNum();
+    }
+
+    function countZbNum() {
+        $(".num").html("0")
+        $.each($(".zb_zfp"), function (i, item) {
+            $("#zfp_" + $(item).val()).html(parseInt($("#zfp_" + $(item).val()).html(), 10) + 1);
+        })
+        $.each($(".zb_gw"), function (i, item) {
+            $("#gw_" + $(item).val()).html(parseInt($("#gw_" + $(item).val()).html(), 10) + 1);
+        })
+    }
+</script>

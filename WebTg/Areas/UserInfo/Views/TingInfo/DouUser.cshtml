@@ -1,0 +1,245 @@
+﻿@using System;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>大头号</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .layadmin-caller {
+            background: #fff;
+            padding: 30px;
+        }
+
+            .layadmin-caller em {
+                font-style: normal;
+            }
+
+            .layadmin-caller .caller-fl {
+                float: left;
+            }
+
+            .layadmin-caller .caller-fr {
+                float: right;
+            }
+
+            .layadmin-caller .caller-seach {
+                position: relative;
+                padding-bottom: 40px;
+            }
+
+                .layadmin-caller .caller-seach .caller-icon {
+                    font-size: 18px;
+                    position: absolute;
+                    top: 9px;
+                }
+
+            .layadmin-caller .caller-seach-icon {
+                left: 6px;
+            }
+
+            .layadmin-caller .caller-dump-icon {
+                right: 6px;
+                cursor: pointer;
+            }
+
+            .layadmin-caller .caller-pl32 {
+                padding: 0 32px;
+            }
+
+            .layadmin-caller .caller-tab {
+                margin: 0;
+            }
+
+            .layadmin-caller .caller-contar {
+                padding-bottom: 20px;
+            }
+
+                .layadmin-caller .caller-contar .caller-item {
+                    padding: 25px 0;
+                    overflow: hidden;
+                    border-bottom: 1px solid #e0e0e0;
+                }
+
+                    .layadmin-caller .caller-contar .caller-item .caller-main {
+                        margin-left: 20px;
+                    }
+
+                        .layadmin-caller .caller-contar .caller-item .caller-main p {
+                            line-height: 100%;
+                            padding: 8px 0;
+                        }
+
+                            .layadmin-caller .caller-contar .caller-item .caller-main p:first-child {
+                                padding-top: 0;
+                            }
+
+                        .layadmin-caller .caller-contar .caller-item .caller-main em {
+                            margin-left: 5px;
+                        }
+
+                        .layadmin-caller .caller-contar .caller-item .caller-main .caller-adds i {
+                            padding-right: 5px;
+                            margin: 0;
+                        }
+
+                        .layadmin-caller .caller-contar .caller-item .caller-main .caller-adds {
+                            padding-bottom: 12px;
+                        }
+
+                .layadmin-caller .caller-contar .caller-iconset i {
+                    margin: 0 5px;
+                }
+
+                    .layadmin-caller .caller-contar .caller-iconset i:first-child {
+                        margin-left: 0;
+                    }
+
+                .layadmin-caller .caller-contar button {
+                    margin-top: 22px;
+                }
+
+                .layadmin-caller .caller-contar .caller-img {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 100%;
+                }
+
+        .caller-title {
+            padding: 25px 0;
+        }
+    </style>
+</head>
+<body layadmin-themealias="default">
+
+    <div class="layui-fluid">
+        <div class="layadmin-caller">
+            <div class="caller-contar">
+                <div>
+                    <div class="caller-title caller-fl">
+                        <p class="caller-adds">大头号1</p>
+                    </div>
+                    <div class="caller-item">
+                        @if (ViewBag.user_info_tg.dou_user == "")
+                        {
+                            <div class="caller-main caller-fl">
+                                <p class="caller-adds">未绑定</p>
+                            </div>
+                            <a class="layui-btn layui-btn-sm caller-fr" href="javascript:win_pop_iframe('绑定大头号', '/UserInfo/TingInfo/SetDouUser?id=@ViewBag.user_info_tg.id&dou_user_type=0', window.innerWidth * 0.8, window.innerHeight * 0.8);
+                               ">
+                                绑定
+                            </a>
+                        }
+                        else
+                        {
+                            <div class="caller-main caller-fl">
+                                <p><strong>@ViewBag.user_info_tg.dou_user</strong></p>
+                            </div>
+                            <a class="layui-btn layui-btn-sm layui-btn layui-btn-primary caller-fr" href="javascript:deltg(@ViewBag.user_info_tg.id, 0);">
+                                解绑
+                            </a>
+                        }
+                    </div>
+                </div>
+                <div>
+                    <div class="caller-title caller-fl">
+                        <p class="caller-adds">大头号2</p>
+                    </div>
+                    <div class="caller-item">
+                        @if (ViewBag.user_info_tg.dou_user1 == "")
+                        {
+                            <div class="caller-main caller-fl">
+                                <p class="caller-adds">未绑定</p>
+                            </div>
+                            <a class="layui-btn layui-btn-sm caller-fr" href="javascript:win_pop_iframe('绑定大头号', '/UserInfo/TingInfo/SetDouUser?id=@ViewBag.user_info_tg.id&dou_user_type=1', window.innerWidth * 0.8, window.innerHeight * 0.8);
+                               ">
+                                绑定
+                            </a>
+                        }
+                        else
+                        {
+                            <div class="caller-main caller-fl">
+                                <p><strong>@ViewBag.user_info_tg.dou_user1</strong></p>
+                            </div>
+                            <a class="layui-btn layui-btn-sm layui-btn layui-btn-primary caller-fr" href="javascript:deltg(@ViewBag.user_info_tg.id, 1);">
+                                解绑
+                            </a>
+                        }
+                    </div>
+                </div>
+                <div>
+                    <div class="caller-title caller-fl">
+                        <p class="caller-adds">大头号3</p>
+                    </div>
+                    <div class="caller-item">
+                        @if (ViewBag.user_info_tg.dou_user2 == "")
+                        {
+                            <div class="caller-main caller-fl">
+                                <p class="caller-adds">未绑定</p>
+                            </div>
+                            <a class="layui-btn layui-btn-sm caller-fr" href="javascript:win_pop_iframe('绑定大头号', '/UserInfo/TingInfo/SetDouUser?id=@ViewBag.user_info_tg.id&dou_user_type=2', window.innerWidth * 0.8, window.innerHeight * 0.8);
+                               ">
+                                绑定
+                            </a>
+                        }
+                        else
+                        {
+                            <div class="caller-main caller-fl">
+                                <p><strong>@ViewBag.user_info_tg.dou_user2</strong></p>
+                            </div>
+                            <a class="layui-btn layui-btn-sm layui-btn layui-btn-primary caller-fr" href="javascript:deltg(@ViewBag.user_info_tg.id, 2);">
+                                解绑
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        form.render('select'); // 仅渲染 select 元素
+    });
+
+    function deltg(id, dou_user_type) {
+        $.ajax({
+            type: "POST",
+            url: "/UserInfo/TingInfo/DelDouUser",
+            data: { id: id, dou_user_type: dou_user_type },
+            async: false,
+            dataType: 'json',
+            success: function (e) {
+                if (e.code == 0) {
+                    layer.msg(e.msg, {
+                        icon: 6
+                        , shade: 0
+                    });
+                    location.reload();
+                } else {
+                    layer.msg(e.msg, {
+                        icon: 5
+                        , shade: 0
+                    });
+                }
+            },
+            error: function (e) {
+                alert('操作失败');
+            }
+        });
+    }
+</script>

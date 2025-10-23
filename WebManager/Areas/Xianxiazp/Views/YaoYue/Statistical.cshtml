@@ -1,0 +1,233 @@
+﻿
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+
+@using WeiCode.Domain;
+@using WeiCode.Models;
+@using WeiCode.ModelDbs;
+@using Services.Project;
+
+
+<!-- 页面通用母版 -->
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+    var c_date = ((string)ViewBag.c_date).ToDate();
+    var organize_id = ViewBag.organize_id;
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-collapse: collapse;
+        border-style: solid;
+        border-width: 1px;
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    .layui-table td {
+        font-size: 15px;
+        min-width: 50px;
+    }
+
+    /* 表头固定样式 */
+    .layui-table {
+        position: relative;
+    }
+
+        .layui-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: white;
+        }
+
+            .layui-table thead tr:first-child {
+                position: sticky;
+                top: 0;
+                z-index: 11;
+                background-color: #FFF3CA;
+            }
+
+            .layui-table thead tr:nth-child(2) {
+                position: sticky;
+                top: 50px; /* 第一行表头的高度 */
+                z-index: 11;
+                background-color: #FCE4D3;
+            }
+
+            /* 确保表头有足够的背景色 */
+            .layui-table thead th {
+                background-color: inherit;
+            }
+
+    /* 合计 */
+    .sum-row {
+        background-color: #e8f5e8 !important;
+        font-weight: bold;
+        color: #2e7d32;
+    }
+
+        .sum-row:hover {
+            background-color: #c8e6c9 !important;
+        }
+
+    .sum-cell {
+        font-weight: bold;
+        color: #2e7d32;
+    }
+</style>
+<!-- 以下书写自己的页面内容代码 -->
+<form class="layui-form">
+    <div class="layui-row">
+        <div class="layui-col-md12" style="text-align: center; background-color: #ffffff; padding: 8px;">
+            <blockquote class="layui-elem-quote news_search">
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        @ViewModelBag.Load(Html, new ModelBasic.EmtSelect("organize_id")
+                        {
+                           width = "120px",
+                           placeholder = "选择团队",
+                           defaultValue = organize_id.ToString(),
+                           options = DoMySql.FindKvList<ModelDb.sys_organize>($"user_type_id = {new DomainBasic.UserTypeApp().GetInfoByCode("wxer").id} and parent_id = (select id from sys_organize where user_type_id = {new DomainBasic.UserTypeApp().GetInfoByCode("wxer").id} and tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and name = '线下') and tenant_id = {new DomainBasic.TenantApp().GetInfo().id} order by sort,id", "name,id"),
+                           eventJsChange = new EmtFormBase.EventJsChange
+                           {
+                               eventJavascript = new EventJavascript
+                               {
+                                   code = "window.location.href = '/Xianxiazp/YaoYue/Statistical?c_date=' + page.c_date.value + '&organize_id=' + page.organize_id.value;"
+                               },
+                           }
+                        })
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("c_date")
+                        {
+                           mold = WeiCode.Models.ModelBasic.EmtTimeSelect.Mold.date,
+                           placeholder = "选择日期",
+                           defaultValue = c_date.ToString("yyyy-MM-dd"),
+                           eventJsChange = new EmtFormBase.EventJsChange
+                           {
+                               eventJavascript = new EventJavascript
+                               {
+                                   code = "window.location.href = '/Xianxiazp/YaoYue/Statistical?c_date=' + page.c_date.value + '&organize_id=' + page.organize_id.value;"
+                               },
+                           }
+                        })
+                    </div>
+                </div>
+            </blockquote>
+        </div>
+        <div class="layui-card" style="width:95%;top:30px;margin:0 auto">
+            <table class="layui-table">
+                <thead>
+                    <tr>
+                        <td colspan="34" style="font-size: 18px; text-align: center; font-weight: bold">@(c_date.ToString("M.dd日"))@(DoMySql.FindEntityById<ModelDb.sys_organize>(organize_id).name)邀约面试数据</td>
+                    </tr>
+                    <tr style="background-color: #D9E1F4">
+                        <td style="text-align: center;">地区</td>
+                        <td style="text-align: center;">邀约当天人数</td>
+                        <td style="text-align: center;">邀约第二天人数</td>
+                        <td style="text-align: center;">邀约第三天人数</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var p_xianxiazp_infos = DoMySql.FindList<ModelDb.p_xianxiazp_info>($"tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and c_date = '{c_date.ToString("yyyy-MM-dd")}' and wx_user_sn in (select user_sn from user_base where organize_id = {organize_id} or organize_id in (SELECT d1.id FROM sys_organize d1 LEFT JOIN sys_organize d2 ON d1.parent_id = d2.id WHERE d2.id = {organize_id}))");
+                        foreach (var item in DoMySql.FindList<ModelDb.user_base>($"user_type_id = {new DomainBasic.UserTypeApp().GetInfoByCode("jder").id} and tenant_id = {new DomainBasic.TenantApp().GetInfo().id} and status = {ModelDb.user_base.status_enum.正常.ToSByte()}"))
+                        {
+                            <tr>
+                                <td style="text-align: center;">@item.name</td>
+                                <td style="text-align: center;">@GetInterviewCount(p_xianxiazp_infos, item.user_sn, c_date.ToString("yyyy-MM-dd"))</td>
+                                <td style="text-align: center;">@GetInterviewCount(p_xianxiazp_infos, item.user_sn, c_date.AddDays(1).ToString("yyyy-MM-dd"))</td>
+                                <td style="text-align: center;">@GetInterviewCount(p_xianxiazp_infos, item.user_sn, c_date.AddDays(2).ToString("yyyy-MM-dd"))</td>
+                            </tr>
+                        }
+                        <tr class="sum-row">
+                            <td style="text-align: center;"><strong>合计</strong></td>
+                            <td style="text-align: center;" data-type="sum" class="sum-cell">-</td>
+                            <td style="text-align: center;" data-type="sum" class="sum-cell">-</td>
+                            <td style="text-align: center;" data-type="sum" class="sum-cell">-</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        form.render('select'); // 仅渲染 select 元素
+    });
+</script>
+<script>
+    // 页面加载完成后自动计算求和
+    document.addEventListener('DOMContentLoaded', function () {
+        calculateSums();
+    });
+
+    // 计算求和行的函数
+    function calculateSums() {
+        const table = document.querySelector('table');
+        const dataRows = table.querySelectorAll('tbody tr:not(.sum-row)');
+        const sumCells = table.querySelectorAll('[data-type="sum"]');
+
+        // 遍历每个需要求和的单元格
+        sumCells.forEach((sumCell, columnIndex) => {
+            let total = 0;
+            let validCount = 0;
+
+            // 遍历数据行，计算该列的总和
+            dataRows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length > columnIndex + 1) {// +1 因为第一列不计算
+                    const cellValue = parseFloat(cells[columnIndex + 1].textContent);
+                    if (!isNaN(cellValue)) {
+                        total += cellValue;
+                        validCount++;
+                    }
+                }
+            });
+
+            // 显示求和结果
+            if (validCount > 0) {
+                sumCell.textContent = total.toFixed(1);
+            } else {
+                sumCell.textContent = '-';
+            }
+        });
+    }
+
+    // 手动重新计算求和的函数（可以在需要时调用）
+    function recalculateSums() {
+        calculateSums();
+    }
+
+            // 示例：如果需要动态添加新行后重新计算
+            // function addNewRow() {
+            //     // 添加新行的代码...
+            //     // 然后调用：
+            //     calculateSums();
+            // }
+</script>
+@functions{
+    /// <summary>
+    /// 根据中台、预约到场时间获取邀约到场人数
+    /// </summary>
+    /// <param name="p_xianxiazp_infos"></param>
+    /// <param name="zt_user_sn"></param>
+    /// <param name="yy_interview_date"></param>
+    /// <returns></returns>
+    public int GetInterviewCount(List<ModelDb.p_xianxiazp_info> p_xianxiazp_infos, string zt_user_sn, string yy_interview_date)
+    {
+        return p_xianxiazp_infos.Where(x => x.zt_user_sn == zt_user_sn && x.yy_interview_date.ToDate().ToString("yyyy-MM-dd") == yy_interview_date).Count();
+    }
+}

@@ -1,0 +1,130 @@
+﻿
+@{
+    Layout = null;
+}
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.ModelDbs;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Web;
+@using System.Web.Mvc;
+@using WeiCode.Services;
+
+@using WeiCode.ModelDbs;
+@using Services.Project;
+@using WeiCode.Domain;
+@using WeiCode.ModelDbs;
+@using WeiCode.Models;
+@using WeiCode.Domain;
+
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+
+<style>
+    .layuiadmin-big-font {
+        font-weight: bold;
+        font-size: 42px;
+        margin: 10px;
+    }
+</style>
+
+<blockquote class="layui-elem-quote news_search">
+    <div class="layui-inline">
+        <form class="layui-form">
+
+            @*主播*@
+            <div class="layui-input-inline">
+                <label class="layui-form-label">主播</label>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="width:160px">
+                    <select name="zhubo" class="layui-input" id="zhubo" value="@ViewBag.zhubo" style="width:120px" placeholder="">
+                        <option value="">请选择主播</option>
+                        @{
+                            foreach (var item in DoMySql.FindList<ModelDb.user_base>($"user_sn in {new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.厅管邀主播, new UserIdentityBag().user_sn)} and status=0"))
+                            {
+                                <option value="@item.username">@item.username</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="layui-btn search_btn">查询</button>
+
+        </form>
+    </div>
+
+</blockquote>
+<table class="layui-table">
+    <colgroup>
+        <col width="150">
+    </colgroup>
+
+    <thead>
+        <tr>
+            <th>主播昵称</th>
+            <th>未提交日期</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @{
+            string zhubo = ViewBag.zhubo;
+            string where = $"user_sn in {new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.厅管邀主播, new UserIdentityBag().user_sn)} and status=0";
+            if (!zhubo.IsNullOrEmpty())
+            {
+                where += $" and username='{zhubo}' and status=0";
+            }
+            string unreprot_days = "";
+            foreach (var item in DoMySql.FindList<ModelDb.user_base>(where))
+            {
+                for (DateTime date = DateTime.Today; date.ToString("MM") == DateTime.Today.ToString("MM"); date = date.AddDays(-1))
+                {
+                    if(date.ToString("yyyy-MM-dd")== DateTime.Today.AddDays(-3).ToString("yyyy-MM-dd"))
+                    {
+                        break;
+                    }
+                    if (DoMySql.FindEntity<ModelDb.p_jixiao_day>($"zb_user_sn='{item.user_sn}' and c_date='{date.ToString("yyyy-MM-dd")}'", false).IsNullOrEmpty()&&DoMySql.FindEntity<ModelDb.p_jixiao_vacation>($"zb_user_sn='{item.user_sn}' and c_date='{date.ToString("yyyy-MM-dd")}'", false).IsNullOrEmpty())
+                    {
+                        unreprot_days += date.ToString("dd") + ",";
+                    }
+                }
+                if (!unreprot_days.IsNullOrEmpty())
+                {
+                    unreprot_days = unreprot_days.Substring(0, unreprot_days.Length - 1);
+                    <tr>
+                        <td>@item.username</td>
+                        <td>@unreprot_days</td>
+                    </tr>
+                }
+                unreprot_days = "";
+            }
+        }
+
+
+
+
+    </tbody>
+
+</table>
+
+
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.js"></script>
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+
+<script>
+    layui.use(['form', 'laydate'], function () {
+        var form = layui.form;
+        var laydate = layui.laydate;
+
+        //日期时间段选择
+        laydate.render({
+            elem: '#dateRange'
+            , range: '~'
+        });
+    });
+</script>

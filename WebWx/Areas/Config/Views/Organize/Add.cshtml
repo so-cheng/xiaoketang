@@ -1,0 +1,100 @@
+﻿@{
+    Layout = null;
+}
+
+@using DataBase.Core;
+@using DataBase.Project;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>添加子部门</title>
+    <link href="/Assets/layui/css/layui.css" rel="stylesheet" />
+    <link href="/Assets/css/animate.min.css" rel="stylesheet" />
+    <style>
+        .z-body {
+            margin: 30px;
+        }
+
+        .rightmenu {
+            position: absolute;
+            width: 110px;
+            z-index: 9999;
+            display: none;
+            background-color: #fff;
+            padding: 2px;
+            color: #333;
+            border: 1px solid #eee;
+            border-radius: 2px;
+            cursor: pointer
+        }
+
+            .rightmenu li {
+                text-align: center;
+                display: block;
+                height: 30px;
+                line-height: 30px;
+                margin: 8px 0 8px 0
+            }
+
+                .rightmenu li:hover {
+                    background-color: #f2f2f2;
+                    color: #000
+                }
+    </style>
+</head>
+<body>
+    <div class="z-body animated fadeIn">
+        <form class="layui-form layui-form-pane">
+            <div class="layui-form-item">
+                <label for="name" class="layui-form-label">
+                    部门名称
+                </label>
+                <div class="layui-input-block">
+                    <input type="text" id="name" name="name" value="" lay-verify="required" lay-vertype="tips" autocomplete="off" placeholder="请输入部门名称" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">
+                    上级部门
+                </label>
+                <div class="layui-input-block">
+                    @{
+                        ModelDb.sys_organize sys_organize = DoMySql.FindEntity<ModelDb.sys_organize>($"id = {ViewBag.parentId}");
+                        @Html.Raw($"<div class='layui-form-mid' style='margin-left: 12px;'>{sys_organize.name}</div>");
+                    }
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" style="margin-left:0;text-align:center;">
+                    <input type="hidden" name="parent_id" value="@ViewBag.parentId" />
+                    <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="add">保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="/Assets/js/jquery.js"></script>
+    <script src="/Assets/layui/layui.js"></script>
+    <script src="~/Assets/js/common.js"></script>
+    <script>
+
+        layui.config({
+            base: '/Assets/layui/extend/'
+        }).use(['form', 'layer', 'element'], function () {
+            var $ = layui.jquery,
+                form = layui.form,
+                layer = layui.layer,
+                element = layui.element;
+
+            // 监听提交
+            form.on('submit(add)', function (form) {
+                $.post('/Config/Organize/Add', form.field, function (result) {
+                    layerMsg_P(result.msg, result.code);
+                }, 'json');
+                return false;
+            });
+        });
+    </script>
+</body>
+</html>

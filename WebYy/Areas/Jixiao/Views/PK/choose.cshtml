@@ -1,0 +1,209 @@
+﻿@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/css/global.css" media="all">
+<script src="~/Assets/js/layui.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/jquery/jquery.js"></script>
+<script type="text/javascript" src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/layui.js"></script>
+<script src="@UtilityStatic.ConfigHelper.GetConfigString("ResourceUrl")/layui/common.2.0.js"></script>
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    .layui-table td {
+        font-size: 15px;
+    }
+</style>
+
+
+
+<form class="layui-form" action="Index">
+
+    <div id="div_c_date" class="layui-col-xs12" style="padding:5px;">
+        <label class="layui-form-label">直播厅</label>
+        <div class="layui-input-block" style="width:200px">
+            @ViewModelBag.Load(Html, new ModelBasic.EmtSelect("tg_user_sn")
+            {
+                title = "直播厅",
+                options = new ServiceFactory.UserInfo.Tg().GetTreeOptionDic(new UserIdentityBag().user_sn),
+                eventJsChange = new EmtFormBase.EventJsChange
+                {
+                    eventCsAction = new EmtFormBase.EventJsChange.EventCsAction
+                    {
+                        attachPara = new Dictionary<string, object>
+                        {
+                            { "tg_user_sn","<%=page.tg_user_sn.value%>"}
+                        },
+                        func = GetZhubo,
+                        resCallJs = $"{new ModelBasic.EmtSelect.Js("zb_user_sn").options(@"JSON.parse(res.data)")};"
+                    }
+                },
+                colLength = 6
+            })
+
+        </div>
+    </div>
+
+    <div id="div_c_date" class="layui-col-xs12" style="padding:5px;">
+        <label class="layui-form-label">主播</label>
+        <div class="layui-input-block" style="width:200px">
+            @ViewModelBag.Load(Html, new ModelBasic.EmtSelect("zb_user_sn")
+            {
+                title = "主播",
+                options = new Dictionary<string, string>(),
+                eventJsChange = new EmtFormBase.EventJsChange
+                {
+                    eventCsAction = new EmtFormBase.EventJsChange.EventCsAction
+                    {
+                        attachPara = new Dictionary<string, object>
+                        {
+                            {"zb_user_sn","<%=page.zb_user_sn.value%>"}
+                        },
+                        func = GetZbInfo,
+                        resCallJs = $"page.l_zbs.addRow(JSON.parse(res.data));"
+                    }
+                },
+            })
+        </div>
+    </div>
+
+    <div id="div_c_date" class="layui-col-xs12" style="padding:5px;">
+        <label class="layui-form-label">列表</label>
+        <div class="layui-input-block" style="width:800px">
+            @ViewModelBag.Load(Html, new ModelBasic.EmtTableDataEdit("l_zbs")
+            {
+                title = "列表",
+                limit = 20,
+                height = "600px",
+                width = "800px",
+                colItems = new List<ModelBasic.EmtTableDataEdit.ColItem>
+                {
+                    new ModelBasic.EmtTableDataEdit.ColItem("id")
+                    {
+                        title = "id",
+                        hide=true,
+                    },
+                    new ModelBasic.EmtTableDataEdit.ColItem("name")
+                    {
+                        title = "主播",
+                    },
+                    new ModelBasic.EmtTableDataEdit.ColItem("mobile")
+                    {
+                        title = "电话",
+                    },
+                },
+                displayStatus = EmtModelBase.DisplayStatus.编辑,
+                defaultValue = DoMySql.FindObjects<ModelDb.user_base>(new DoMySql.Filter
+                {
+                    fields = "id,name,mobile",
+                    where = $"1=0 and tenant_id='{new DomainBasic.TenantApp().GetInfo().id}' and status='{ModelDb.user_base.status_enum.正常.ToInt()}'",
+                }).ToJson(),
+            })
+        </div>
+    </div>
+
+    <button type="submit" class="layui-btn search_btn">主播PK</button>
+</form>
+
+
+@functions{
+    /// <summary>
+    /// 获取厅管名下主播
+    /// </summary>
+    /// <param name="reqJson"></param>
+    /// <returns></returns>
+    public JsonResultAction GetZhubo(JsonRequestAction reqJson)
+    {
+        var result = new JsonResultAction();
+        var req = reqJson.GetPara();
+        var option = new Dictionary<string, string>();
+        option.Add("全部主播", req["tg_user_sn"].ToNullableString());
+        foreach (var item in DoMySql.FindList<ModelDb.user_base>($"user_sn in {new DomainUserBasic.UserRelationApp().GetNextUserSnForSql(ModelEnum.UserRelationTypeEnum.厅管邀主播, req["tg_user_sn"].ToNullableString())}"))
+        {
+            option.Add(item.username, item.user_sn);
+        }
+        result.data = option.ToJson();
+        return result;
+    }
+
+    public JsonResultAction GetZbInfo(JsonRequestAction reqJson)
+    {
+        var result = new JsonResultAction();
+        var req = reqJson.GetPara();
+        string user_sn = req["zb_user_sn"].ToNullableString();
+        var user_base = DoMySql.FindEntity<ModelDb.user_base>($"user_sn='{user_sn}'", false);
+        if (user_base.user_type_id == new DomainBasic.UserTypeApp().GetInfoByCode("tger").id)
+        {
+            result.data = new DomainUserBasic.UserRelationApp().GetNextUsers(ModelEnum.UserRelationTypeEnum.厅管邀主播, user_base.user_sn).ToJson();
+        }
+        else
+        {
+            result.data = user_base.ToJson();
+        }
+        return result;
+    }
+
+}
+
+
+<script>
+    //选择厅管后筛选数据
+    layui.use(function () {
+        var form = layui.form;
+        var layer = layui.layer;
+        // select 事件
+        form.on('select(tg)', function (data) {
+            var value = data.value; // 获得被选中的值
+            var dateRange = $('#dateRange').attr('value');
+            window.location.href = '/jixiao/reportday/datas?dateRange=' + dateRange + '&tg_user_sn=' + value;
+        });
+    });
+
+    //设置时间筛选的数据格式
+    layui.use(['form', 'laydate'], function () {
+        var form = layui.form;
+        var laydate = layui.laydate;
+
+        //日期时间段选择
+        laydate.render({
+            elem: '#dateRange'
+            , range: '~'
+        });
+    });
+
+    //卡片面板切换
+    layui.use(function () {
+        var element = layui.element;
+
+        // hash 地址定位
+        var hashName = 'tabid'; // hash 名称
+        var layid = location.hash.replace(new RegExp('^#' + hashName + '='), ''); // 获取 lay-id 值
+
+        // 初始切换
+        element.tabChange('test-hash', layid);
+        // 切换事件
+        element.on('tab(test-hash)', function (obj) {
+            location.hash = hashName + '=' + this.getAttribute('lay-id');
+        });
+    });
+
+
+</script>

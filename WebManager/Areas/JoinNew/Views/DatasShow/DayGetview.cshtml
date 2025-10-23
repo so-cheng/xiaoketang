@@ -1,0 +1,148 @@
+﻿@using System;
+@using System.Data;
+@using WeiCode.Utility;
+@using WeiCode.DataBase;
+@using WeiCode.Services;
+@using WeiCode.ModelDbs;
+@using WeiCode.Domain;
+@using Services.Project;
+@using WeiCode.Models;
+
+
+@{
+    Layout = ModelBasic.PageModel.GetLayout();
+}
+<style>
+    .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r,
+    .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main,
+    .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+        border-color: gray;
+    }
+
+    .layui-table th {
+        text-align: center;
+        font-weight: 700;
+        font-size: 14px;
+    }
+
+    .layui-table td {
+        font-size: 14px;
+    }
+
+    .layuiadmin-big-font {
+        font-weight: bold;
+        font-size: 42px;
+        margin: 10px;
+    }
+</style>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>当天数据</title>
+</head>
+
+@{
+    string c_date_e = ViewBag.c_date_e;
+    string c_date_s = ViewBag.c_date_s;
+
+    var c_date_late = c_date_e.ToDate().AddDays(1);
+
+    // 当天收到
+    var maleList_get = DoMySql.FindList<ModelDb.p_join_new_info>($"create_time > '{c_date_s}' AND create_time < '{c_date_late}' and zb_sex = '男' and tenant_id = {new DomainBasic.TenantApp().GetInfo().id}");
+    var femaleList_get = DoMySql.FindList<ModelDb.p_join_new_info>($"create_time > '{c_date_s}' AND create_time < '{c_date_late}' and zb_sex = '女' and tenant_id = {new DomainBasic.TenantApp().GetInfo().id}");
+
+    // 当天已分
+    var maleList_set = DoMySql.FindListBySql<ModelDb.p_join_new_info>($"SELECT t1.id, t1.sessions FROM p_join_new_info t1 LEFT JOIN p_join_new_info_log t2 ON t1.id = t2.user_info_zb_id WHERE t1.create_time BETWEEN '{c_date_s}' and '{c_date_late}' AND t1.zb_sex = '男' and t2.c_type = {ModelDb.p_join_new_info_log.c_type_enum.分配.ToInt()} AND t2.create_time BETWEEN '{ViewBag.c_date}' and '{c_date_late}' AND t1.tenant_id = {new DomainBasic.TenantApp().GetInfo().id} GROUP BY t1.id, t1.sessions");
+    var femaleList_set = DoMySql.FindListBySql<ModelDb.p_join_new_info>($"SELECT t1.id, t1.sessions FROM p_join_new_info t1 LEFT JOIN p_join_new_info_log t2 ON t1.id = t2.user_info_zb_id WHERE t1.create_time BETWEEN '{c_date_s}' and '{c_date_late}' AND t1.zb_sex = '女' and t2.c_type = {ModelDb.p_join_new_info_log.c_type_enum.分配.ToInt()} AND t2.create_time BETWEEN '{c_date_s}' and '{c_date_late}' AND t1.tenant_id = {new DomainBasic.TenantApp().GetInfo().id} GROUP BY t1.id, t1.sessions");
+
+    // 当天未分
+    var maleList_no = DoMySql.FindList<ModelDb.p_join_new_info>($"status = {ModelDb.p_join_new_info.status_enum.等待分配.ToInt()} AND create_time > '{c_date_s}' AND create_time < '{c_date_late}' and zb_sex = '男' and tenant_id = {new DomainBasic.TenantApp().GetInfo().id}");
+    var femaleList_no = DoMySql.FindList<ModelDb.p_join_new_info>($"status = {ModelDb.p_join_new_info.status_enum.等待分配.ToInt()} AND create_time > '{c_date_s}' AND create_time < '{c_date_late}' and zb_sex = '女' and tenant_id = {new DomainBasic.TenantApp().GetInfo().id}");
+}
+<body>
+    <blockquote class="layui-elem-quote news_search">
+        <div class="layui-inline">
+            <form class="layui-form">
+                <div class="layui-input-inline">
+                    <label class="layui-form-label">日期范围</label>
+                </div>
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        @ViewModelBag.Load(Html, new ModelBasic.EmtTimeSelect("c_date", true)
+                        {
+                            title = "日期范围",
+                            defaultValue = ViewBag.c_date,
+                            mold = ModelBasic.EmtTimeSelect.Mold.date_range
+                        })
+                    </div>
+                </div>
+                <button type="submit" class="layui-btn search_btn">查询</button>
+                <a href="?c_date=@DateTime.Today.ToString("yyyy-MM-dd") ~ @DateTime.Today.ToString("yyyy-MM-dd")" class="layui-btn">今天</a>
+                <a href="?c_date=@DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd") ~ @DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd")" class="layui-btn">昨天</a>
+                <a href="?c_date=@DateTime.Today.AddDays(-7).ToString("yyyy-MM-dd") ~ @DateTime.Today.ToString("yyyy-MM-dd")" class="layui-btn">最近7天</a>
+                <a href="?c_date=@DateTime.Today.AddDays(-30).ToString("yyyy-MM-dd") ~ @DateTime.Today.ToString("yyyy-MM-dd")" class="layui-btn">最近30天</a>
+            </form>
+        </div>
+    </blockquote>
+    <div>
+        <table class="layui-table" style="text-align:center;" id="table1" name="table1">
+            <colgroup>
+                <col width="100">
+                <col width="80">
+                <col width="80">
+                <col width="80">
+                <col width="80">
+                <col width="80">
+                <col width="80">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>性别</th>
+                    <th colspan="3">男</th>
+                    <th colspan="3">女</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="2">总数</td>
+                    <td>当天收到</td>
+                    <td>当天已分</td>
+                    <td>当天未分</td>
+                    <td>当天收到</td>
+                    <td>当天已分</td>
+                    <td>当天未分</td>
+                </tr>
+                <tr>
+                    <td>@maleList_get.Count</td>
+                    <td>@maleList_set.Count</td>
+                    <td>@maleList_no.Count</td>
+                    <td>@femaleList_get.Count</td>
+                    <td>@femaleList_set.Count</td>
+                    <td>@femaleList_no.Count</td>
+                </tr>
+                <tr>
+                    <td>时间段</td>
+                    <td colspan="6"></td>
+                </tr>
+                @{
+                    foreach (var dang in new DomainBasic.DictionaryApp().GetList(ModelEnum.DictCategory.档位时段))
+                    {
+                        <tr>
+                            <td>@dang.d_key</td>
+                            <td>@maleList_get.FindAll(x => x.sessions.Contains(dang.d_value)).Count</td>
+                            <td>@maleList_set.FindAll(x => x.sessions.Contains(dang.d_value)).Count</td>
+                            <td>@maleList_no.FindAll(x => x.sessions.Contains(dang.d_value)).Count</td>
+                            <td>@femaleList_get.FindAll(x => x.sessions.Contains(dang.d_value)).Count</td>
+                            <td>@femaleList_set.FindAll(x => x.sessions.Contains(dang.d_value)).Count</td>
+                            <td>@femaleList_no.FindAll(x => x.sessions.Contains(dang.d_value)).Count</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
