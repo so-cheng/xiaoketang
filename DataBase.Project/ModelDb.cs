@@ -2121,10 +2121,6 @@ namespace WeiCode.ModelDbs
 		/// </summary>
 		public Nullable<int> category_id{ get; set; }
 		/// <summary>
-		/// 所属公司
-		/// </summary>
-		public string company_id{ get; set; }
-		/// <summary>
 		/// 资产名称
 		/// </summary>
 		public string name{ get; set; }
@@ -2299,10 +2295,6 @@ namespace WeiCode.ModelDbs
 		/// </summary>
 		public string name{ get; set; }
 		/// <summary>
-		/// 筛选所属公司范围
-		/// </summary>
-		public string company_ids{ get; set; }
-		/// <summary>
 		/// 入库开始时间
 		/// </summary>
 		public Nullable<DateTime> in_s_time{ get; set; }
@@ -2378,10 +2370,6 @@ namespace WeiCode.ModelDbs
 		/// 盘点后使用人编号
 		/// </summary>
 		public string user_sn{ get; set; }
-		/// <summary>
-		/// 盘点后所属公司
-		/// </summary>
-		public string company_id{ get; set; }
 		/// <summary>
 		/// 资产状态#enum:空闲=0;在用=1;待入=2
 		/// </summary>

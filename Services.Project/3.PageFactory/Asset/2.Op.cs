@@ -617,6 +617,7 @@ namespace Services.Project
                             return asset.name;
                         }
                     }
+                
 
                     public string user_name
                     {
@@ -1197,7 +1198,7 @@ namespace Services.Project
                             return asset.name;
                         }
                     }
-                  
+                   
                     public string user_name
                     {
                         get
@@ -1730,7 +1731,6 @@ namespace Services.Project
                             return asset.name;
                         }
                     }
-              
                 }
                 #endregion
             }
@@ -1974,7 +1974,7 @@ namespace Services.Project
                             return status.ToEnum<ModelDb.asset.status_enum>();
                         }
                     }
-
+                  
                 }
                 #endregion
             }

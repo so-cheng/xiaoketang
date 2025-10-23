@@ -633,18 +633,6 @@ namespace Services.Project
                         }
                     });
 
-                    listDisplay.listOperateItems.Add(new ModelBasic.EmtModel.ListOperateItem
-                    {
-                        name = "Recall",
-                        style = "",
-                        text = "召回",
-                        actionEvent = ModelBasic.EmtModel.ListOperateItem.ActionEvent.请求处理_回调cs函数,
-                        eventCsAction = new ModelBasic.EmtModel.ListOperateItem.EventCsAction
-                        {
-                            func = RecallAction,
-                            field_paras = "user_sn"
-                        }
-                    });
                     #endregion
                     return listDisplay;
                 }

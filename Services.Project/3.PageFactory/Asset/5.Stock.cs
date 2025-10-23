@@ -347,7 +347,7 @@ namespace Services.Project
                             status = item.status,
                             user_sn = item.user_sn,
                             p_status = ModelDb.asset_stock_item.p_status_enum.待盘点.ToSByte(),
-                            stock_sn = stock_sn,
+                            stock_sn = stock_sn
                         }.InsertTran());
                     }
                     dateRangeTime = UtilityStatic.CommonHelper.DateRangeFormat(dtoReqData.plan_time, 0);
@@ -598,13 +598,7 @@ namespace Services.Project
                         }
                     }
 
-                    public string company_text
-                    {
-                        get
-                        {
-                            return new DomainBasic.DictionaryApp().GetKeyFromValue("公司名称", company_id);
-                        }
-                    }
+                  
                     public string status_text
                     {
                         get

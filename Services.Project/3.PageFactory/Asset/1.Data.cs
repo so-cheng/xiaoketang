@@ -323,6 +323,7 @@ namespace Services.Project
                             return status.ToEnum<ModelDb.asset.status_enum>();
                         }
                     }
+                  
                     public string category
                     {
                         get
@@ -453,6 +454,7 @@ namespace Services.Project
                         defaultValue = asset.brand,
                         colLength = 6
                     });
+
                     formDisplay.formItems.Add(new ModelBasic.EmtSelectFull("cj_user_sn")
                     {
                         options = DoMySql.FindListBySql<ModelDoBasic.Option>($"select user_sn as value,name as text from user_base"),

@@ -499,7 +499,6 @@ namespace Services.Project
                             return asset.name;
                         }
                     }
-                  
                     public string status_text
                     {
                         get
