@@ -6,7 +6,9 @@ using WeiCode.ModelDbs;
 using WeiCode.Models;
 using WeiCode.Services;
 using WeiCode.Utility;
+using static Services.Project.ServiceFactory.Sdk.WeixinSendMsg;
 using static Services.Project.ServiceFactory.UserInfo;
+using static WeiCode.ModelDbs.ModelDb;
 using static WeiCode.Models.ModelBasic;
 
 namespace Services.Project
@@ -1139,21 +1141,11 @@ namespace Services.Project
                     }
                     var user_base = DoMySql.FindEntity<ModelDb.user_base>($"user_sn = '{user_info_zhubo.user_sn}'");
                     user_base.name = user_info_zhubo.user_name;
+                   
+                    Zhubo zhubo1 = new Zhubo();
+                    dynamic dyCheckResult = zhubo1.VerificationDoUser(user_info_zhubo.dou_username.ToNullableString());
 
-                    var dyParam = new ServiceFactory.JoinNew.dyCheckParam()
-                    {
-                        dou_username = user_info_zhubo.dou_username.ToNullableString()
-                    };
-                    var dyCheckResult = UtilityStatic.HttpHelper.HttpPost("http://api.douyinxkt.cn/UserInfo/Zb/GetInfo", dyParam.ToJson(), new UtilityStatic.HttpHelper.HttpPostReq
-                    {
-                        contentType = UtilityStatic.HttpHelper.HttpPostReq.ContentType.PayLoad
-                    }).ToJObject();
-
-                    if (dyCheckResult["code"].ToNullableString().Equals("1"))
-                    {
-                        throw new Exception("错误:抖音号不存在");
-                    }
-                    user_info_zhubo.anchor_id = dyCheckResult["data"]["anchor_id"].ToNullableString();
+                    user_info_zhubo.anchor_id = dyCheckResult != null ? dyCheckResult.dyCheckResult.anchor_id : "";
 
 
 
@@ -1450,25 +1442,10 @@ namespace Services.Project
                     {
                         throw new Exception($"抖音号必填!");
                     }
+                    Zhubo zhubo1 = new Zhubo();
+                    dynamic dyCheckResult = zhubo1.VerificationDoUser(zhubo.dou_username.ToNullableString());
 
-                    var dyParam = new ServiceFactory.JoinNew.dyCheckParam()
-                    {
-                        dou_username = zhubo.dou_username.ToNullableString()
-                    };
-                    var dyCheckResult = UtilityStatic.HttpHelper.HttpPost("http://api.douyinxkt.cn/UserInfo/Zb/GetInfo", dyParam.ToJson(), new UtilityStatic.HttpHelper.HttpPostReq
-                    {
-                        contentType = UtilityStatic.HttpHelper.HttpPostReq.ContentType.PayLoad
-                    }).ToJObject();
-
-                    //暂时取消校验
-                    //if (dyCheckResult["code"].ToNullableString().Equals("1"))
-                    //{
-                    //    throw new Exception("抖音账号输入错误!");
-                    //}
-                    if (!dyCheckResult["code"].ToNullableString().Equals("1"))
-                    {
-                        zhubo.anchor_id = dyCheckResult["data"]["anchor_id"].ToNullableString();
-                    }
+                    zhubo.anchor_id = dyCheckResult != null ? dyCheckResult.dyCheckResult.anchor_id : "";
 
 
                     lSql.Add(zhubo.UpdateTran());

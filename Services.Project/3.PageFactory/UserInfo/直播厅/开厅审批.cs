@@ -7,6 +7,7 @@ using WeiCode.Models;
 using WeiCode.Services;
 using WeiCode.Utility;
 using static Services.Project.ServiceFactory.Sdk.WeixinSendMsg;
+using static Services.Project.ServiceFactory.UserInfo;
 
 namespace Services.Project
 {
@@ -523,38 +524,17 @@ namespace Services.Project
 
                     if (user_info_ting_apply.status > ModelDb.user_info_ting_apply.status_enum.等待超管审批.ToSByte()) throw new Exception("已审批通过不可修改");
 
-
+                        
 
                     //调用抖音接口根据抖音账号查询抖音昵称及抖音作者id（抖音官方主播唯一身份id）
-                    var dyParam = new ServiceFactory.JoinNew.dyCheckParam()
-                    {
-                        dou_username = user_info_ting_apply.dy_account
-                    };
-                    var dyCheckResult = UtilityStatic.HttpHelper.HttpPost("http://api.douyinxkt.cn/UserInfo/Zb/GetInfo", dyParam.ToJson(), new UtilityStatic.HttpHelper.HttpPostReq
-                    {
-                        contentType = UtilityStatic.HttpHelper.HttpPostReq.ContentType.PayLoad
-                    }).ToJObject();
-                    if (dyCheckResult["code"].ToNullableString().Equals("1"))
-                    {
-                        throw new Exception("请输入正确的抖音账号");
-                    }
+
+
+
+                    Zhubo zhubo1 = new Zhubo();
+                    dynamic dyCheckResult1 = zhubo1.VerificationDoUser(user_info_ting_apply.dy_account);
 
                     //查询抖音经纪人是否存在
-                    var dyjjrParam = new
-                    {
-                        dou_username = user_info_ting_apply.jjr_name
-                    };
-                    var dyInfo = UtilityStatic.HttpHelper.HttpPost("http://api.douyinxkt.cn/UserInfo/Tg/GetJjrInfo", dyjjrParam.ToJson(), new UtilityStatic.HttpHelper.HttpPostReq
-                    {
-                        contentType = UtilityStatic.HttpHelper.HttpPostReq.ContentType.PayLoad
-                    }).ToJObject();
-
-                    if (dyInfo["code"].ToNullableString() == "1")
-                    {
-                        throw new WeicodeException($@"运营经营人:""{dyjjrParam.dou_username}""不存在");
-                    }
-
-
+                    dynamic dyInfo = zhubo1.VerificationJjr(user_info_ting_apply.jjr_name);
 
                     #endregion
 

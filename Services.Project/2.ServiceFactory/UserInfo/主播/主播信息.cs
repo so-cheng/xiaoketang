@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using WeiCode.DataBase;
 using WeiCode.Domain;
 using WeiCode.ModelDbs;
@@ -377,6 +378,7 @@ namespace Services.Project
                     List<string> lSql = new List<string>();
                     var user_base = new DomainBasic.UserApp().GetInfoByUserSn(zb_user_sn);
                     var user_info_zhubo = DoMySql.FindEntity<ModelDb.user_info_zhubo>($"user_sn='{zb_user_sn}'", false);
+
                     //判断主播和主播账号是否存在
                     if (user_base == null)
                     {
@@ -430,38 +432,15 @@ namespace Services.Project
                     {
                         dou_username = zhubo.dou_username.ToNullableString()
                     };
-                    var dyCheckResult = UtilityStatic.HttpHelper.HttpPost("http://api.douyinxkt.cn/UserInfo/Zb/GetInfo", dyParam.ToJson(), new UtilityStatic.HttpHelper.HttpPostReq
-                    {
-                        contentType = UtilityStatic.HttpHelper.HttpPostReq.ContentType.PayLoad
-                    }).ToJObject();
-
-                    //暂时取消校验
-                    if (dyCheckResult["code"].ToNullableString().Equals("1"))
-                    {
-                        throw new Exception("抖音账号输入错误!");
-                    }
+                    dynamic dyCheckResult = VerificationDoUser(zhubo.dou_username.ToNullableString());
 
                     if (ting == null)
                     {
                         throw new Exception("当前主播没有经纪人!");
                     }
                     //调用签约接口
-                    var dyqianyueParam = new dyQianyueParam()
-                    {
-                        anchor_id = dyCheckResult["data"]["anchor_id"],
-                        jjranchor_id = ting.jjr_uid,
-                        real_name = zhubo.name.ToNullableString(),
-                        last_four_number = zhubo.mobile.ToNullableString()
-                    };
-                    var dyqianyueapi = UtilityStatic.HttpHelper.HttpPost("http://api.xiaoketang.com/UserInfo/Tg/InnviteAnchor", dyqianyueParam.ToJson(), new UtilityStatic.HttpHelper.HttpPostReq
-                    {
-                        contentType = UtilityStatic.HttpHelper.HttpPostReq.ContentType.PayLoad
-                    }).ToJObject();
-                    if (dyqianyueapi["code"].ToNullableString().Equals("1"))
-                    {
-                        throw new Exception("抖音签约失败，请联系管理员!");
-                    }
-                    //更改主播抖音号
+                    QianYue(dyCheckResult.anchor_id, ting.jjr_uid, zhubo.name.ToNullableString(), zhubo.mobile.ToNullableString());
+                    //更改主播抖音号   
                     zhuo.dou_username = zhubo.dou_username;
                     zhuo.anchor_id = dyCheckResult["data"]["anchor_id"].ToNullableString();
                     zhuo.Update();
@@ -478,51 +457,175 @@ namespace Services.Project
                     {
                         throw new Exception($"经纪人名称不能为空!");
                     }
-                    var dyParam = new ServiceFactory.JoinNew.dyCheckParam()
-                    {
-                        dou_username = zhuo.dou_username.ToNullableString()
-                    };
-                    var dyCheckResult = UtilityStatic.HttpHelper.HttpPost("http://api.douyinxkt.cn/UserInfo/Zb/GetInfo", dyParam.ToJson(), new UtilityStatic.HttpHelper.HttpPostReq
-                    {
-                        contentType = UtilityStatic.HttpHelper.HttpPostReq.ContentType.PayLoad
-                    }).ToJObject();
-                    //查询时候有主播信息
-                    if (dyCheckResult["code"].ToNullableString().Equals("1"))
-                    {
-                        throw new Exception("没有找到主播信息!");
-                    }
+
+                    var dyCheckResult = VerificationDoUser(zhuo.dou_username.ToNullableString());
+
                     //查询经纪人信息
                     var dyjjrParam = new dyQianyueParam()
                     {
                         jjr_name = jjr_username,
                     };
-                    var dyqianyueapi = UtilityStatic.HttpHelper.HttpPost("http://api.douyinxkt.cn/UserInfo/Tg/GetJjrInfo", dyjjrParam.ToJson(), new UtilityStatic.HttpHelper.HttpPostReq
-                    {
-                        contentType = UtilityStatic.HttpHelper.HttpPostReq.ContentType.PayLoad
-                    }).ToJObject();
-                    if (dyqianyueapi["code"].ToNullableString().Equals("1"))
-                    {
-                        throw new Exception("没有找到此运营经济人经纪人!");
-                    }
+                    var dyqianyueapi = VerificationJjr(jjr_username);
 
                     //分配运营经纪人
-                    var dyjjrpostParam = new dyQianyueParam()
-                    {
-                        anchor_id = zhuo.anchor_id,
-                        broker_id = dyqianyueapi["data"]["anchor_id"].ToNullableString(),
-                    };
-                    var dysetjjrapi = UtilityStatic.HttpHelper.HttpPost("http://api.douyinxkt.cn/UserInfo/Tg/GetJjrInfo", dyjjrParam.ToJson(), new UtilityStatic.HttpHelper.HttpPostReq
-                    {
-                        contentType = UtilityStatic.HttpHelper.HttpPostReq.ContentType.PayLoad
-                    }).ToJObject();
-                    if (dysetjjrapi["code"].ToNullableString().Equals("1"))
-                    {
-                        throw new Exception("运营经纪人分配失败，请联系管理员!");
-                    }
+
+                    SetJjr(zhuo.anchor_id, dyqianyueapi.anchor_id);
 
                     ting.jjr_uid = dyqianyueapi["data"]["anchor_id"].ToNullableString();
                     ting.jjr_name = jjr_username;
                     ting.Update();
+                }
+
+                /// <summary>
+                /// 验证主播
+                /// </summary>
+                /// <param name="dou_username"></param>
+                /// <returns></returns>
+                /// <exception cref="Exception"></exception>
+                public dynamic VerificationDoUser(string dou_username)
+                {
+                    dynamic dynamic = null;
+                    var user = DoMySql.FindList<ModelDb.user_base>($"user_sn = '{new UserIdentityBag().user_sn}'");
+                    if (user.Where(a => a.username.Contains("众创未来")).Count() == 0)
+                    {
+                        var dyParam = new ServiceFactory.JoinNew.dyCheckParam()
+                        {
+                            dou_username = dou_username.ToNullableString()
+                        };
+                        var dyCheckResult = UtilityStatic.HttpHelper.HttpPost("http://api.douyinxkt.cn/UserInfo/Zb/GetInfo", dyParam.ToJson(), new UtilityStatic.HttpHelper.HttpPostReq
+                        {
+                            contentType = UtilityStatic.HttpHelper.HttpPostReq.ContentType.PayLoad
+                        }).ToJObject();
+                        //暂时取消校验
+                        if (dyCheckResult["code"].ToNullableString().Equals("1"))
+                        {
+                            throw new Exception("抖音号输入错误!");
+                        }
+                        dynamic.anchor_id = dyCheckResult["data"]["anchor_id"].ToNullableString();
+                    }
+                    return dynamic;
+
+                }
+                /// <summary>
+                /// 查询验证抖音经纪人
+                /// </summary>
+                /// <param name="jjr_name"></param>
+                /// <returns></returns>
+                /// <exception cref="Exception"></exception>
+                public dynamic VerificationJjr(string jjr_name)
+                {
+                    dynamic dynamic = null;
+                    var user = DoMySql.FindList<ModelDb.user_base>($"user_sn = '{new UserIdentityBag().user_sn}'");
+                    if (user.Where(a => a.username.Contains("众创未来")).Count() == 0)
+                    {
+                        var dyjjrParam = new dyQianyueParam()
+                        {
+                            jjr_name = jjr_name,
+                        };
+                        var dyCheckResult = UtilityStatic.HttpHelper.HttpPost("http://api.douyinxkt.cn/UserInfo/Tg/GetJjrInfo", dyjjrParam.ToJson(), new UtilityStatic.HttpHelper.HttpPostReq
+                        {
+                            contentType = UtilityStatic.HttpHelper.HttpPostReq.ContentType.PayLoad
+                        }).ToJObject();
+                        //暂时取消校验
+                        if (dyCheckResult["code"].ToNullableString().Equals("1"))
+                        {
+                            throw new Exception("没有找到此运营经纪人!");
+                        }
+                        dynamic.anchor_id = dyCheckResult["data"]["anchor_id"].ToNullableString();
+                    }
+                    return dynamic;
+                }
+                /// <summary>
+                /// 分配运营经纪人
+                /// </summary>
+                /// <param name="anchor_id"></param>
+                /// <param name="broker_id"></param>
+                /// <exception cref="Exception"></exception>
+                public void SetJjr(string anchor_id, string broker_id)
+                {
+                    dynamic dynamic = null;
+                    var user = DoMySql.FindList<ModelDb.user_base>($"user_sn = '{new UserIdentityBag().user_sn}'");
+                    if (user.Where(a => a.username.Contains("众创未来")).Count() == 0)
+                    {
+                        var dyjjrpostParam = new dyQianyueParam()
+                        {
+                            anchor_id = anchor_id,
+                            broker_id = broker_id
+                        };
+                        var dysetjjrapi = UtilityStatic.HttpHelper.HttpPost("http://api.douyinxkt.cn/UserInfo/Zb/SetTg", dyjjrpostParam.ToJson(), new UtilityStatic.HttpHelper.HttpPostReq
+                        {
+                            contentType = UtilityStatic.HttpHelper.HttpPostReq.ContentType.PayLoad
+                        }).ToJObject();
+                        if (dysetjjrapi["code"].ToNullableString().Equals("1"))
+                        {
+                            throw new Exception("运营经纪人分配失败，请联系管理员!");
+                        }
+                    }
+                }
+                /// <summary>
+                /// 通过抖音号获取经纪人信息
+                /// </summary>
+                /// <param name="dou_username"></param>
+                /// <returns></returns>
+                /// <exception cref="Exception"></exception>
+                public dynamic GetBrokerByAnchorId(string dou_username)
+                {
+                    dynamic dynamic = null;
+                    var user = DoMySql.FindList<ModelDb.user_base>($"user_sn = '{new UserIdentityBag().user_sn}'");
+                    if (user.Where(a => a.username.Contains("众创未来")).Count() == 0)
+                    {
+                        var dyParam = new ServiceFactory.JoinNew.dyCheckParam()
+                        {
+                            dou_username = dou_username.ToNullableString()
+                        };
+                        var dyCheckResult = UtilityStatic.HttpHelper.HttpPost("http://api.douyinxkt.cn/UserInfo/Zb/GetBrokerByAnchorId", dyParam.ToJson(), new UtilityStatic.HttpHelper.HttpPostReq
+                        {
+                            contentType = UtilityStatic.HttpHelper.HttpPostReq.ContentType.PayLoad
+                        }).ToJObject();
+                        //暂时取消校验
+                        if (dyCheckResult["code"].ToNullableString().Equals("1"))
+                        {
+                            throw new Exception("抖音号输入错误!");
+                        }
+                        dynamic.agent_name = dyCheckResult["data"]["agent_name"].ToNullableString();
+                        dynamic.agent_id = dyCheckResult["data"]["agent_id"].ToNullableString();    
+                    }
+                    return dynamic;
+
+                }
+                
+
+                /// <summary>
+                /// 签约
+                /// </summary>
+                /// <param name="anchor_id"></param>
+                /// <param name="broker_id"></param>
+                /// <param name="name"></param>
+                /// <param name="mobile"></param>
+                /// <exception cref="Exception"></exception>
+                public void QianYue(string anchor_id, string broker_id, string name, string mobile)
+                {
+                    var user = DoMySql.FindList<ModelDb.user_base>($"user_sn = '{new UserIdentityBag().user_sn}'");
+                    if (user.Where(a => a.username.Contains("众创未来")).Count() == 0)
+                    {
+                        //调用签约接口
+                        var dyqianyueParam = new dyQianyueParam()
+                        {
+                            anchor_id = anchor_id,
+                            jjranchor_id = broker_id,
+                            real_name = name,
+                            last_four_number = mobile
+                        };
+                        var dyqianyueapi = UtilityStatic.HttpHelper.HttpPost("http://api.xiaoketang.com/UserInfo/Tg/InnviteAnchor", dyqianyueParam.ToJson(), new UtilityStatic.HttpHelper.HttpPostReq
+                        {
+                            contentType = UtilityStatic.HttpHelper.HttpPostReq.ContentType.PayLoad
+                        }).ToJObject();
+                        if (dyqianyueapi["code"].ToNullableString().Equals("1"))
+                        {
+                            throw new Exception("抖音签约失败，请联系管理员!");
+                        }
+                    }
+
                 }
 
                 #region 日志

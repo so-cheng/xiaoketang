@@ -7,6 +7,8 @@ using WeiCode.ModelDbs;
 using WeiCode.Models;
 using WeiCode.Services;
 using WeiCode.Utility;
+using static Services.Project.ServiceFactory.UserInfo;
+using static WeiCode.ModelDbs.ModelDb;
 using static WeiCode.Models.ModelBasic;
 
 namespace Services.Project
@@ -400,7 +402,7 @@ namespace Services.Project
 
                     var dtoReqListData = reqJson.data_json.ToModel<DtoReqListData>();
 
-                    if(!dtoReqListData.yy_user_sn.IsNullOrEmpty())
+                    if (!dtoReqListData.yy_user_sn.IsNullOrEmpty())
                     {
                         where += $" AND (user_base.user_sn IN (SELECT t_user_sn FROM user_relation WHERE relation_type_id = 2 AND f_user_sn = '{dtoReqListData.yy_user_sn}'))";
                     }
@@ -649,7 +651,7 @@ namespace Services.Project
                     pageModel.listFilter = GetListFilter(req);
                     pageModel.buttonGroup = GetButtonGroup(req);
                     pageModel.listDisplay = GetListDisplay(req);
-                    
+
                     return pageModel;
                 }
 
@@ -900,7 +902,7 @@ namespace Services.Project
                 {
                 }
 
-                
+
                 #endregion
 
                 #region ListData
@@ -948,7 +950,7 @@ namespace Services.Project
                         get
                         {
                             var jd_name = new ServiceFactory.UserInfo.Zt().GetInfoByUserSn(zt_user_sn).username;
-                            if (jd_name.IsNullOrEmpty()) 
+                            if (jd_name.IsNullOrEmpty())
                             {
                                 jd_name = "无所属基地";
                             }
@@ -1140,7 +1142,7 @@ namespace Services.Project
                     formDisplay.formItems.Add(new ModelBasic.EmtSelect("p_ting_sn")
                     {
                         title = "所属主厅",
-                        placeholder="训练厅选填",
+                        placeholder = "训练厅选填",
                         colLength = 6,
                         defaultValue = user_info_ting_apply.p_ting_sn,
                         options = new ServiceFactory.UserInfo.Ting().GetBaseInfosForKv(new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter()
@@ -1148,7 +1150,7 @@ namespace Services.Project
                             attachUserType = new ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType()
                             {
                                 userType = ServiceFactory.UserInfo.Ting.TgBaseInfoFilter.AttachUserType.UserType.厅管,
-                                UserSn = user_info_ting_apply.tg_user_sn.IsNullOrEmpty()?tg_user_sn: user_info_ting_apply.tg_user_sn,
+                                UserSn = user_info_ting_apply.tg_user_sn.IsNullOrEmpty() ? tg_user_sn : user_info_ting_apply.tg_user_sn,
                             },
                             attachWhere = "p_ting_sn = ''",
                         }),
@@ -1280,18 +1282,14 @@ namespace Services.Project
                     #endregion
 
                     #region 获取抖音UID
-                    var dyParam = new
-                    {
-                        dou_username = user_info_tg.dou_user
-                    };
-                    var dyInfo = UtilityStatic.HttpHelper.HttpPost("http://api.douyinxkt.cn/UserInfo/Zb/GetInfo", dyParam.ToJson(), new UtilityStatic.HttpHelper.HttpPostReq
-                    {
-                        contentType = UtilityStatic.HttpHelper.HttpPostReq.ContentType.PayLoad
-                    }).ToJObject();
 
-                    if (dyInfo["code"].ToNullableString() == "1") throw new WeicodeException($@"抖音大头号:""{user_info_tg.dou_user}""不存在");
 
-                    user_info_tg.dou_UID = dyInfo["data"]["anchor_id"].ToNullableString();
+                    Zhubo zhubo1 = new Zhubo();
+                    dynamic dyCheckResult = zhubo1.VerificationDoUser(user_info_tg.dou_user);
+
+                    user_info_tg.dou_UID = dyCheckResult != null ? dyCheckResult.dyCheckResult.anchor_id : "";
+
+
                     #endregion
 
 
@@ -1310,7 +1308,7 @@ namespace Services.Project
                     });
 
                     // 日志
-                    new ServiceFactory.UserInfo.Ting().AddTingLog( ModelDb.user_info_ting_log.c_type_enum.开厅, $"创建一个直播厅：{new ServiceFactory.UserInfo.Ting().GetTingBySn(user_info_tg.ting_sn).ting_name},所属厅管：{new DomainBasic.UserApp().GetInfoByUserSn(user_info_tg.tg_user_sn).username}", user_info_tg);
+                    new ServiceFactory.UserInfo.Ting().AddTingLog(ModelDb.user_info_ting_log.c_type_enum.开厅, $"创建一个直播厅：{new ServiceFactory.UserInfo.Ting().GetTingBySn(user_info_tg.ting_sn).ting_name},所属厅管：{new DomainBasic.UserApp().GetInfoByUserSn(user_info_tg.tg_user_sn).username}", user_info_tg);
                     new DomainBasic.SystemBizLogApp().Write("账号维护", ModelDb.sys_biz_log.log_type_enum.产品模块.ToSByte(), new UserIdentityBag().user_sn, $"创建直播厅：{new ServiceFactory.UserInfo.Ting().GetTingBySn(user_info_tg.ting_sn).ting_name},{user_info_tg.ting_sn}");
 
 
@@ -1461,22 +1459,18 @@ namespace Services.Project
 
                     if (JjrInfo["code"].ToNullableString() == "1") throw new WeicodeException($@"运营经营人:""{user_info_tg.jjr_name}""不存在");
 
-                    user_info_tg.jjr_uid = JjrInfo["data"]["broker_id"].ToNullableString();
+
+                    Zhubo zhubo1 = new Zhubo();
+                    dynamic jjrdyCheckResult = zhubo1.VerificationJjr(user_info_tg.jjr_name);
+
+                    user_info_tg.jjr_uid = jjrdyCheckResult != null ? jjrdyCheckResult.dyCheckResult.anchor_id : "";
                     #endregion
 
                     #region 获取抖音UID
-                    var dyParam = new
-                    {
-                        dou_username = user_info_tg.dou_user
-                    };
-                    var dyInfo = UtilityStatic.HttpHelper.HttpPost("http://api.douyinxkt.cn/UserInfo/Zb/GetInfo", dyParam.ToJson(), new UtilityStatic.HttpHelper.HttpPostReq
-                    {
-                        contentType = UtilityStatic.HttpHelper.HttpPostReq.ContentType.PayLoad
-                    }).ToJObject();
+                    dynamic dyCheckResult = zhubo1.VerificationDoUser(user_info_tg.dou_user);
 
-                    if (dyInfo["code"].ToNullableString() == "1") throw new WeicodeException($@"抖音大头号:""{user_info_tg.dou_user}""不存在");
+                    user_info_tg.dou_UID = dyCheckResult != null ? dyCheckResult.dyCheckResult.anchor_id : "";
 
-                    user_info_tg.dou_UID = dyInfo["data"]["anchor_id"].ToNullableString();
                     #endregion
 
                     if (user_base.IsNullOrEmpty()) throw new WeicodeException($@"厅管:""{new ServiceFactory.UserInfo.Tg().GetTgInfoByUsersn(user_info_tg.tg_user_sn).username}""不存在");
@@ -1703,7 +1697,7 @@ namespace Services.Project
 
 
                     #region 操作列按钮
-                 
+
                     listDisplay.listOperateItems.Add(new ModelBasic.EmtModel.ListOperateItem
                     {
                         name = "Restore",
@@ -2098,76 +2092,46 @@ namespace Services.Project
                     var dou_username = reqData.dou_username;
 
                     // 获取UID/主播id/抖音作者id
-                    var dyParamInfo = new dyCheckParam()
-                    {
-                        dou_username = dou_username
-                    };
-                    var infoResult = UtilityStatic.HttpHelper.HttpPost("http://api.douyinxkt.cn/UserInfo/Zb/GetInfo", dyParamInfo.ToJson(), new UtilityStatic.HttpHelper.HttpPostReq
-                    {
-                        contentType = UtilityStatic.HttpHelper.HttpPostReq.ContentType.PayLoad
-                    }).ToJObject();
-                    if (infoResult["code"].ToNullableString().Equals("0")) //接口正常
-                    {
-                        var objInfo = JObject.Parse(infoResult["data"].ToNullableString());
-                        var anchor_id = objInfo["anchor_id"].ToNullableString();
 
-                        // 判断抖音大头号是否绑定过
-                        var dyParam = new dyCheckParam()
+                    Zhubo zhubo1 = new Zhubo();
+                    dynamic dyCheckResult1 = zhubo1.VerificationDoUser(dou_username);
+
+                    var anchor_id = dyCheckResult1.anchor_id;
+
+
+
+                    dynamic jjr = zhubo1.GetBrokerByAnchorId(dou_username);
+                    // 判断抖音大头号是否绑定过
+                    // 经纪人是外宣审核字样的抖音号可以绑定
+                    if (jjr.agent_name.ToNullableString().Contains("外宣审核-") || jjr.agent_name.ToNullableString().Contains("经纪人-"))
+                    {
+                        // 绑定抖音大头号
+
+                        zhubo1.SetJjr(anchor_id, new ServiceFactory.UserInfo.Ting().GetTingBySn(reqData.ting_sn).jjr_uid);
+                        // 保存数据
+                        switch (reqData.dou_user_type)
                         {
-                            anchor_id = anchor_id
-                        };
-                        var dyCheckResult = UtilityStatic.HttpHelper.HttpPost("http://api.douyinxkt.cn/UserInfo/Zb/GetBrokerByAnchorId", dyParam.ToJson(), new UtilityStatic.HttpHelper.HttpPostReq
-                        {
-                            contentType = UtilityStatic.HttpHelper.HttpPostReq.ContentType.PayLoad
-                        }).ToJObject();
-                        if (dyCheckResult["code"].ToNullableString().Equals("0")) // 接口正常
-                        {
-                            var obj = JObject.Parse(dyCheckResult["data"].ToNullableString());
-                            // 经纪人是外宣审核字样的抖音号可以绑定
-                            if (obj["agent_name"].ToNullableString().Contains("外宣审核-") || obj["agent_name"].ToNullableString().Contains("经纪人-"))
-                            {
-                                // 绑定抖音大头号
-                                var JjrParam = new dyCheckParam()
-                                {
-                                    anchor_id = anchor_id,
-                                    broker_id = new ServiceFactory.UserInfo.Ting().GetTingBySn(reqData.ting_sn).jjr_uid,
-                                };
-                                var setResult = UtilityStatic.HttpHelper.HttpPost("http://api.douyinxkt.cn/UserInfo/Zb/SetTg", JjrParam.ToJson(), new UtilityStatic.HttpHelper.HttpPostReq
-                                {
-                                    contentType = UtilityStatic.HttpHelper.HttpPostReq.ContentType.PayLoad
-                                }).ToJObject();
-                                if (setResult["code"].ToNullableString().Equals("0"))
-                                {
-                                    // 保存数据
-                                    switch (reqData.dou_user_type)
-                                    {
-                                        case 0:
-                                            reqData.dou_user = dou_username;
-                                            reqData.dou_UID = anchor_id;
-                                            break;
-                                        case 1:
-                                            reqData.dou_user1 = dou_username;
-                                            reqData.dou_UID1 = anchor_id;
-                                            break;
-                                        case 2:
-                                            reqData.dou_user2 = dou_username;
-                                            reqData.dou_UID2 = anchor_id;
-                                            break;
-                                    }
-                                    reqData.ToModel<ModelDb.user_info_tg>().Update();
-                                }
-                                else
-                                {
-                                    throw new Exception("绑定失败");
-                                }
-                            }
-                            // 已有经纪人
-                            else
-                            {
-                                throw new Exception("已有运营经纪人，先解绑");
-                            }
+                            case 0:
+                                reqData.dou_user = dou_username;
+                                reqData.dou_UID = anchor_id;
+                                break;
+                            case 1:
+                                reqData.dou_user1 = dou_username;
+                                reqData.dou_UID1 = anchor_id;
+                                break;
+                            case 2:
+                                reqData.dou_user2 = dou_username;
+                                reqData.dou_UID2 = anchor_id;
+                                break;
                         }
+                        reqData.ToModel<ModelDb.user_info_tg>().Update();
                     }
+                    // 已有经纪人
+                    else
+                    {
+                        throw new Exception("已有运营经纪人，先解绑");
+                    }
+
 
                     // 日志
                     new DomainBasic.SystemBizLogApp().Write("账号维护", ModelDb.sys_biz_log.log_type_enum.产品模块.ToSByte(), new UserIdentityBag().user_sn, $"绑定厅大头号：{new ServiceFactory.UserInfo.Ting().GetTingBySn(reqData.ting_sn).ting_name},{reqData.ting_sn}");

@@ -156,34 +156,15 @@ namespace Services.Project
                     }
 
                     //调用抖音接口根据抖音账号查询抖音昵称及抖音作者id（抖音官方主播唯一身份id）
-                    var dyParam = new ServiceFactory.JoinNew.dyCheckParam()
-                    {
-                        dou_username = applyInfo.dou_user
-                    };
-                    var dyCheckResult = UtilityStatic.HttpHelper.HttpPost("http://api.douyinxkt.cn/UserInfo/Zb/GetInfo", dyParam.ToJson(), new UtilityStatic.HttpHelper.HttpPostReq
-                    {
-                        contentType = UtilityStatic.HttpHelper.HttpPostReq.ContentType.PayLoad
-                    }).ToJObject();
-                    if (dyCheckResult["code"].ToNullableString().Equals("1"))
-                    {
-                        throw new Exception("请输入正确的抖音账号");
-                    }
-                    applyInfo.dou_uid = dyCheckResult["data"]["anchor_id"].ToNullableString();
+                    Zhubo zhubo1 = new Zhubo();
+                    dynamic dyCheckResult = zhubo1.VerificationDoUser(zhubo.dou_username.ToNullableString());
+
+                    applyInfo.dou_uid = dyCheckResult != null ? dyCheckResult.dyCheckResult.anchor_id : "";
 
                     //查询抖音经纪人是否存在
-                    var dyjjrParam = new
-                    {
-                        dou_username = applyInfo.jjr_name
-                    };
-                    var dyInfo = UtilityStatic.HttpHelper.HttpPost("http://api.douyinxkt.cn/UserInfo/Tg/GetJjrInfo", dyjjrParam.ToJson(), new UtilityStatic.HttpHelper.HttpPostReq
-                    {
-                        contentType = UtilityStatic.HttpHelper.HttpPostReq.ContentType.PayLoad
-                    }).ToJObject();
 
-                    if (dyInfo["code"].ToNullableString() == "1")
-                    {
-                        throw new WeicodeException($@"运营经营人:""{dyjjrParam.dou_username}""不存在");
-                    }
+                    dynamic dyInfo = zhubo1.VerificationJjr(applyInfo.jjr_name);
+                   
                     applyInfo.jjr_uid = dyCheckResult["data"]["anchor_id"].ToNullableString();
                     //租户ID
                     applyInfo.tenant_id = new DomainBasic.TenantApp().GetInfo().id;
