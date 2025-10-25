@@ -30,6 +30,7 @@ namespace WebProject.Areas.UserInfo.Controllers
         {
             var req = new PageFactory.UserInfo.CloseList.DtoReq();
             var pageModel = new PageFactory.UserInfo.CloseList().Get(req);
+            pageModel.listDisplay.listData.attachFilterSql = $"yy_user_sn = '{new UserIdentityBag().user_sn}'";
             return View(pageModel);
         }
         [HttpGet]
