@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using WeiCode.DataBase;
 using WeiCode.Domain;
 using WeiCode.ModelDbs;
@@ -1830,12 +1831,22 @@ namespace Services.Project
                 #endregion
 
                 #region 异步请求处理
-
+                /// <summary>
+                /// 恢复直播厅
+                /// </summary>
+                /// <param name="req"></param>
+                /// <returns></returns>
                 public JsonResultAction RestoreAction(JsonRequestAction req)
                 {
                     var result = new JsonResultAction();
-
+                    List<string> sqls = new List<string>();
                     var user_info_tg = DoMySql.FindEntityById<ModelDb.user_info_tg>(req.GetPara("id").ToInt());
+                    if (user_info_tg.status != ModelDb.user_info_tg.status_enum.正常.ToSByte())
+                    {
+                        var yy = new ServiceFactory.UserInfo.Yy().YyGetNextTg(user_info_tg.yy_user_sn);
+                        user_info_tg.tg_user_sn = yy.SingleOrDefault(a => string.IsNullOrEmpty(a.f_user_sn))?.user_sn;
+                    }
+                    //查到当前运营下所有的厅管，
                     user_info_tg.status = ModelDb.user_info_tg.status_enum.正常.ToSByte();
                     user_info_tg.Update();
                     // 日志
